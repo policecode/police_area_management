@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePeopleTable extends Migration
+class CreateTouristsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,17 @@ class CreatePeopleTable extends Migration
      */
     public function up()
     {
-        Schema::create('people', function (Blueprint $table) {
+        // Lưu thông tin người nước ngoài
+        Schema::create('tourists', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->nullable();
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
             $table->dateTime('birthday');
-            $table->integer('gender', 1);
+            $table->tinyInteger('gender');
             $table->string('country', 20);
             $table->string('passport', 20);
-            $table->integer('status', 1); // 1 - Đang tạm trú, 2 - Không tạm trú
+            $table->tinyInteger('status'); // 1 - Đang tạm trú, 2 - Không tạm trú
             $table->text('note'); // Thông tin thêm của người nước ngoài
             $table->timestamps();
         });
@@ -35,6 +36,6 @@ class CreatePeopleTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('people');
+        Schema::dropIfExists('tourists');
     }
 }

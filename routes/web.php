@@ -35,13 +35,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
             Route::delete('/delete/{user}', 'UserController@delete')->name('delete');
         });
 
-        Route::resource('categories', 'CategoryController');
+        // Route::resource('categories', 'CategoryController');
+        // Route::resource('courses', 'CourseController');
+        // Route::resource('teachers', 'TeacherController');
+        // Route::resource('lessons', 'LessonController');
 
-        Route::resource('courses', 'CourseController');
+        Route::resource('companies', 'CompanyController');
 
-        Route::resource('teachers', 'TeacherController');
-
-        Route::resource('lessons', 'LessonController');
 
     });
 });

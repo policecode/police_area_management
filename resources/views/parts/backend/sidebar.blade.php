@@ -33,8 +33,13 @@
         'page' => 'users',
         'icon' => 'fas fa-users',
     ])
-
     <!-- Nav Item - Pages Collapse Menu -->
+    @include('parts.backend.item_page', [
+        'title' => 'Quản lý doanh nghiệp',
+        'page' => 'companies',
+        'icon' => 'far fa-building',
+    ])
+    {{-- <!-- Nav Item - Pages Collapse Menu -->
     @include('parts.backend.item_page', [
         'title' => 'Quản lý danh mục',
         'page' => 'categories',
@@ -53,7 +58,7 @@
         'title' => 'Quản lý giáo viên',
         'page' => 'teachers',
         'icon' => 'fas fa-users',
-    ])
+    ]) --}}
 
     <!-- Divider -->
     <hr class="sidebar-divider">

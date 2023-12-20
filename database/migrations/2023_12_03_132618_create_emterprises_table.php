@@ -13,16 +13,17 @@ class CreateEmterprisesTable extends Migration
      */
     public function up()
     {
+        // Thông tin doanh nghiệp
         Schema::create('emterprises', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->bigInteger('user_id')->nullable();
-            $table->string('name');
+            $table->string('name'); //Tên doannh nghiệp
             $table->string('slug');
-            $table->bigInteger('code');
-            $table->string('boss');
-            $table->string('address');
-            $table->text('note');
-            $table->text('album');
+            $table->string('code', 30);// Mã đăng ký kinh doanh
+            $table->string('boss');// Giám đốc
+            $table->string('address');// Địa chỉ trụ sở chính
+            $table->text('note');// Thông tin mô tả
+            $table->text('album');// Hình ảnh liên quan
             $table->timestamps();
         });
     }
