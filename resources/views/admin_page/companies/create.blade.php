@@ -65,7 +65,7 @@
         <div class="col-12">
             <div class="mb-3">
                 <label for="">Ghi chú về doanh nghiệp</label>
-                <textarea name="note" class="ckeditor form-control @error('description') is-invalid @enderror" placeholder="Ghi chú..." id="" cols="30" rows="4">{{old('note')}}</textarea>
+                <textarea name="note" class="ckeditor form-control @error('note') is-invalid @enderror" placeholder="Ghi chú..." id="" cols="30" rows="4">{{old('note')}}</textarea>
                 @error('note')
                     <div class="invalid-feedback">
                         {{$message}}
@@ -73,19 +73,21 @@
                 @enderror
             </div>
 
-        <div class="col-6">
+            
+        </div>
+        <div class="col-12">
             <div class="mb-3">
-                <label for="">Ảnh đại diện</label>
+                <label for="">Hình ảnh liên quan</label>
                 <div class="row">
-                    <div class="col-6">
-                        <textarea id="thumbnail" type="text" name="album" class="form-control @error('album') is-invalid @enderror" placeholder="Ảnh đại diện..." >{{old('album')}}</textarea>
+                    <div class="col-9">
+                        <textarea id="thumbnail" type="text" name="album" class="form-control @error('album') is-invalid @enderror" placeholder="Hình ảnh liên quan..." >{{old('album')}}</textarea>
                     </div>
                     <div class="col-3">
                         <button id="lfm"  data-input="thumbnail" data-preview="holder" type="button" class="btn btn-primary">Chọn Ảnh</button>
                     </div>
-                    <div id="holder" class="col-3 custom__thumbnail">
+                    <div id="holder" class="col-12 row mt-2 flex-wrap custom__thumbnail">
                         @if (old('album'))
-                            <img src="{{old('album')}}" alt="">
+                            <img src="{{old('album')}}" class="col-2" alt="">
                         @endif
                     </div>
                 </div>
@@ -96,8 +98,6 @@
                 @enderror
             </div>
         </div>
-
-    </div>
     <div class="col-12">
         <button type="submit" class="btn btn-primary">Lưu lại</button>
         <a href="{{route('admin.companies.index')}}" class="btn btn-danger">Hủy</a>

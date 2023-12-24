@@ -74,6 +74,7 @@ var lfm = function(id, type, options) {
           let img = document.createElement('img')
           img.setAttribute('style', 'height: auto')
           img.setAttribute('src', item.thumb_url)
+          img.classList.add('col-2');
           target_preview.appendChild(img);
         });
   
