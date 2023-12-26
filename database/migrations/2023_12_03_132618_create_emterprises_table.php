@@ -20,10 +20,10 @@ class CreateEmterprisesTable extends Migration
             $table->string('name'); //Tên doannh nghiệp
             $table->string('slug');
             $table->string('code', 30);// Mã đăng ký kinh doanh
-            $table->string('boss');// Giám đốc
-            $table->string('address');// Địa chỉ trụ sở chính
-            $table->text('note');// Thông tin mô tả
-            $table->text('album');// Hình ảnh liên quan
+            $table->string('boss')->nullable();// Giám đốc
+            $table->string('address')->nullable();// Địa chỉ trụ sở chính
+            $table->text('note')->nullable();// Thông tin mô tả
+            $table->text('album')->nullable();// Hình ảnh liên quan
             $table->timestamps();
         });
     }

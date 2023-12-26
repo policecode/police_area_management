@@ -4,11 +4,11 @@
 @if (session('msg'))
 <div class="alert alert-success">{{ session('msg') }}</div>
 @endif
-<form action="{{route('admin.teachers.update', $item->id)}}" method="POST">
+<form action="{{route('admin.companies.update', $item->id)}}" method="POST">
     <div class="row">
         <div class="col-6">
             <div class="mb-3">
-                <label for="">Tên</label>
+                <label for="">Tên doanh nghiệp</label>
                 <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Tên..." value="{{old('name') ??$item->name}}">
                 @error('name')
                     <div class="invalid-feedback">
@@ -32,9 +32,9 @@
 
         <div class="col-6">
             <div class="mb-3">
-                <label for="">Số năm kinh nghiệm</label>
-                <input type="text" name="exp" class="form-control @error('exp') is-invalid @enderror" placeholder="Số năm kinh nghiệm..." value="{{old('exp') ?? $item->exp}}">
-                @error('exp')
+                <label for="">Mã doanh nghiệp</label>
+                <input type="text" name="code" class="form-control @error('code') is-invalid @enderror" placeholder="Mã doanh nghiệp..." value="{{old('code') ?? $item->code}}">
+                @error('code')
                     <div class="invalid-feedback">
                         {{$message}}
                     </div>
@@ -44,22 +44,22 @@
 
         <div class="col-6">
             <div class="mb-3">
-                <label for="">Ảnh đại diện</label>
-                <div class="row">
-                    <div class="col-6">
-                        <input id="thumbnail" type="text" name="image" class="form-control @error('image') is-invalid @enderror" placeholder="Ảnh đại diện..." value="{{old('image') ?? $item->image}}">
+                <label for="">Chủ doanh nghiệp</label>
+                <input type="text" name="boss" class="form-control @error('boss') is-invalid @enderror" placeholder="Chủ doanh nghiệp..." value="{{old('boss') ?? $item->boss}}">
+                @error('boss')
+                    <div class="invalid-feedback">
+                        {{$message}}
                     </div>
-                    <div class="col-3">
-                        <button id="lfm"  data-input="thumbnail" data-preview="holder" type="button" class="btn btn-primary">Chọn Ảnh</button>
-                    </div>
-                    <div id="holder" class="col-3 custom__thumbnail">
-                        @if (old('image') ?? $item->image)
-                            <img src="{{old('image') ?? $item->image}}" alt="">
-                        @endif
-                    </div>
-                </div>
-                @error('image')
-                    <div class="invalid-feedback" style="display: block;">
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="mb-3">
+                <label for="">Địa chỉ trụ sở chính</label>
+                <input type="text" name="address" class="form-control @error('address') is-invalid @enderror" placeholder="Chủ doanh nghiệp..." value="{{old('address') ?? $item->address}}">
+                @error('address')
+                    <div class="invalid-feedback">
                         {{$message}}
                     </div>
                 @enderror
@@ -68,9 +68,9 @@
 
         <div class="col-12">
             <div class="mb-3">
-                <label for="">Thông tin về giáo viên</label>
-                <textarea name="description" class="ckeditor form-control @error('description') is-invalid @enderror" placeholder="Thông tin về giáo viên..." id="" cols="30" rows="4">{{old('description') ?? $item->description}}</textarea>
-                @error('description')
+                <label for="">Ghi chú về doanh nghiệp</label>
+                <textarea name="note" class="ckeditor form-control @error('note') is-invalid @enderror" placeholder="Thông tin về giáo viên..." id="" cols="30" rows="4">{{old('note') ?? $item->note}}</textarea>
+                @error('note')
                     <div class="invalid-feedback">
                         {{$message}}
                     </div>
@@ -78,10 +78,33 @@
             </div>
         </div>
 
+        <div class="col-12">
+            <div class="mb-3">
+                <label for="">Hình ảnh liên quan</label>
+                <div class="row">
+                    <div class="col-9">
+                        <textarea id="thumbnail" type="text" name="album" class="form-control @error('album') is-invalid @enderror" placeholder="Hình ảnh liên quan..." >{{old('album') ?? $item->album}}</textarea>
+                    </div>
+                    <div class="col-3">
+                        <button id="lfm"  data-input="thumbnail" data-preview="holder" type="button" class="btn btn-primary">Chọn Ảnh</button>
+                    </div>
+                    <div id="holder" class="col-12 row mt-2 flex-wrap custom__thumbnail">
+                        @if (old('album') ?? $item->album)
+                            <img src="{{old('album') ?? $item->album}}" class="col-2" alt="">
+                        @endif
+                    </div>
+                </div>
+                @error('album')
+                    <div class="invalid-feedback" style="display: block;">
+                        {{$message}}
+                    </div>
+                @enderror
+            </div>
+        </div>
     </div>
     <div class="col-12">
         <button type="submit" class="btn btn-primary">Lưu lại</button>
-        <a href="{{route('admin.teachers.index')}}" class="btn btn-danger">Hủy</a>
+        <a href="{{route('admin.companies.index')}}" class="btn btn-danger">Hủy</a>
         @csrf
         @method('PUT')
     </div>

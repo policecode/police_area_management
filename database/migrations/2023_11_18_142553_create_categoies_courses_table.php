@@ -13,12 +13,12 @@ class CreateCategoiesCoursesTable extends Migration
      */
     public function up()
     {
-        Schema::create('categoies_courses', function (Blueprint $table) {
-            $table->id();
-            $table->integer('category_id');
-            $table->integer('course_id');
-            $table->timestamps();
-        });
+        // Schema::create('categoies_courses', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->integer('category_id');
+        //     $table->integer('course_id');
+        //     $table->timestamps();
+        // });
 
         // Thêm khóa ngoại
     }
@@ -30,6 +30,6 @@ class CreateCategoiesCoursesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categoies_courses');
+        // Schema::dropIfExists('categoies_courses');
     }
 }

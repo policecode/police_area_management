@@ -48,7 +48,7 @@ function ChangeToSlug(selectorname, selectorSlug)
     })
 }
 
-var lfm = function(id, type, options) {
+function lfm(id, type, options) {
     let button = document.getElementById(id);
   
     button.addEventListener('click', function () {
@@ -74,7 +74,7 @@ var lfm = function(id, type, options) {
           let img = document.createElement('img')
           img.setAttribute('style', 'height: auto')
           img.setAttribute('src', item.thumb_url)
-          img.classList.add('col-2');
+          // img.classList.add('col-2');
           target_preview.appendChild(img);
         });
   
@@ -83,3 +83,7 @@ var lfm = function(id, type, options) {
       };
     });
   };
+
+  function showImage(imageSelector) {
+
+  }

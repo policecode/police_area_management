@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CompanyRequest;
 use App\Models\Emterprise;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
 {
@@ -53,9 +56,12 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CompanyRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data['user_id'] = Auth::user()->id;
+        Emterprise::create($data);
+        return redirect()->route('admin.companies.index')->with('msg', __('messages.success_create'));
     }
 
     /**
@@ -75,9 +81,13 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Emterprise $company)
     {
-        //
+        $dataView = array(
+            'page_title' => 'Chỉnh sửa thông tin công ty',
+            'item' => $company
+        );
+        return view('admin_page.companies.edit', $dataView);
     }
 
     /**
@@ -87,9 +97,11 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CompanyRequest $request, Emterprise $company)
     {
-        //
+        $data = $request->validated();
+        $company->update($data);
+        return back()->with('msg', __('messages.success_update'));
     }
 
     /**

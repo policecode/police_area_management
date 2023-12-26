@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyRequest extends FormRequest
 {
@@ -13,6 +14,14 @@ class CompanyRequest extends FormRequest
      */
     public function authorize()
     {
+        $company = $this->route()->company;
+        if ($company) {
+            $user = Auth::user();
+            if ($company->user_id == $user->id) {
+                return true;
+            }
+            return false;
+        }
         return true;
     }
 
@@ -23,8 +32,7 @@ class CompanyRequest extends FormRequest
      */
     public function rules()
     {
-        // $teacher = $this->route()->teacher;
-        // dd($this->route()->teacher);
+        $company = $this->route()->company;
         $rules = [
             'name' => 'required|max:255|unique:emterprises,name',
             'slug' => 'required|max:255|unique:emterprises,slug',
@@ -35,10 +43,11 @@ class CompanyRequest extends FormRequest
             'album' => '',
 
         ];
-        // if ($teacher) {
-        //     $rules['name'] = 'required|max:200|unique:teachers,name,' . $teacher->id;
-        //     $rules['slug'] = 'required|max:200|unique:teachers,slug,' . $teacher->id;
-        // }
+        if ($company) {
+            $rules['name'] = 'required|max:200|unique:emterprises,name,' . $company->id;
+            $rules['slug'] = 'required|max:200|unique:emterprises,slug,' . $company->id;
+            $rules['code'] = 'required|max:200|unique:emterprises,code,' . $company->id;
+        }
         return $rules;
     }
 

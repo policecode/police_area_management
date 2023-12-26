@@ -49,7 +49,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
 /**
  * Quản lý file, upload ảnh
  */
-Route::group(['prefix' => 'filemanager', 'middleware' => ['web']], function () {
+Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
 

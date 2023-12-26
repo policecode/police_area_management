@@ -98,7 +98,7 @@ return [
 
     'rename_file'              => false,
 
-    'rename_duplicates'        => false,
+    'rename_duplicates'        => true,
 
     'alphanumeric_filename'    => false,
 
@@ -129,7 +129,7 @@ return [
      */
 
     // If true, image thumbnails would be created during upload
-    'should_create_thumbnails' => true,
+    'should_create_thumbnails' => false,
 
     'thumb_folder_name'        => 'thumbs',
 

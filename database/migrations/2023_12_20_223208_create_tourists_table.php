@@ -21,10 +21,10 @@ class CreateTouristsTable extends Migration
             $table->string('slug')->nullable();
             $table->dateTime('birthday');
             $table->tinyInteger('gender');
-            $table->string('country', 20);
+            $table->string('country', 20)->nullable(); //Quốc tịch
             $table->string('passport', 20);
-            $table->tinyInteger('status'); // 1 - Đang tạm trú, 2 - Không tạm trú
-            $table->text('note'); // Thông tin thêm của người nước ngoài
+            // $table->tinyInteger('status'); // 1 - Đang tạm trú, 2 - Không tạm trú
+            $table->text('note')->nullable(); // Thông tin thêm của người nước ngoài
             $table->timestamps();
         });
     }

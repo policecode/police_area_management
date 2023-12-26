@@ -17,7 +17,7 @@
         <div class="col-6">
             <div class="mb-3">
                 <label for="">Slug</label>
-                <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" placeholder="Slug..." value="{{old('slug')}}" disabled>
+                <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" placeholder="Slug..." value="{{old('slug')}}">
                 @error('slug')
                     <div class="invalid-feedback">
                         {{$message}}
@@ -29,7 +29,7 @@
         <div class="col-6">
             <div class="mb-3">
                 <label for="">Mã doanh nghiệp</label>
-                <input type="text" name="code" class="form-control @error('exp') is-invalid @enderror" placeholder="Mã doanh nghiệp..." value="{{old('code')}}">
+                <input type="text" name="code" class="form-control @error('code') is-invalid @enderror" placeholder="Mã doanh nghiệp..." value="{{old('code')}}">
                 @error('code')
                     <div class="invalid-feedback">
                         {{$message}}
@@ -79,15 +79,15 @@
             <div class="mb-3">
                 <label for="">Hình ảnh liên quan</label>
                 <div class="row">
-                    <div class="col-9">
-                        <textarea id="thumbnail" type="text" name="album" class="form-control @error('album') is-invalid @enderror" placeholder="Hình ảnh liên quan..." >{{old('album')}}</textarea>
+                    <div class="col-5">
+                        <input id="thumbnail" type="text" name="album[]" class="form-control @error('album') is-invalid @enderror" placeholder="Hình ảnh liên quan..." value="{{old('album')}}" />
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <button id="lfm"  data-input="thumbnail" data-preview="holder" type="button" class="btn btn-primary">Chọn Ảnh</button>
                     </div>
-                    <div id="holder" class="col-12 row mt-2 flex-wrap custom__thumbnail">
+                    <div id="holder" class="col-5 custom__thumbnail">
                         @if (old('album'))
-                            <img src="{{old('album')}}" class="col-2" alt="">
+                            <img src="{{old('album')}}" alt="">
                         @endif
                     </div>
                 </div>
@@ -104,8 +104,8 @@
         @csrf
         @method('POST')
     </div>
-
 </form>
+
 @endsection
 
 @section('scripts')

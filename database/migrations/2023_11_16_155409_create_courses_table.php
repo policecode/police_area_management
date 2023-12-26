@@ -13,22 +13,22 @@ class CreateCoursesTable extends Migration
      */
     public function up()
     {
-        Schema::create('courses', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->nullable();
-            $table->string('slug')->nullable();
-            $table->text('detail')->nullable();
-            $table->integer('teacher_id');
-            $table->string('thumbnail')->nullable();
-            $table->float('price', 15, 2)->default(0);
-            $table->float('sale_price', 15, 2)->default(0);
-            $table->string('code', 100)->nullable();
-            $table->float('durations')->default(0);
-            $table->boolean('is_document')->default(0);
-            $table->text('supports')->nullable();
-            $table->boolean('status')->default(0);
-            $table->timestamps();
-        });
+        // Schema::create('courses', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('name')->nullable();
+        //     $table->string('slug')->nullable();
+        //     $table->text('detail')->nullable();
+        //     $table->integer('teacher_id');
+        //     $table->string('thumbnail')->nullable();
+        //     $table->float('price', 15, 2)->default(0);
+        //     $table->float('sale_price', 15, 2)->default(0);
+        //     $table->string('code', 100)->nullable();
+        //     $table->float('durations')->default(0);
+        //     $table->boolean('is_document')->default(0);
+        //     $table->text('supports')->nullable();
+        //     $table->boolean('status')->default(0);
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -38,6 +38,6 @@ class CreateCoursesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('courses');
+        // Schema::dropIfExists('courses');
     }
 }

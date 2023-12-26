@@ -13,15 +13,15 @@ class CreateTeachersTable extends Migration
      */
     public function up()
     {
-        Schema::create('teachers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 100)->nullable();
-            $table->string('slug', 100)->nullable();
-            $table->text('description')->nullable();
-            $table->integer('exp')->nullable();
-            $table->string('image')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('teachers', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('name', 100)->nullable();
+        //     $table->string('slug', 100)->nullable();
+        //     $table->text('description')->nullable();
+        //     $table->integer('exp')->nullable();
+        //     $table->string('image')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -31,6 +31,6 @@ class CreateTeachersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teachers');
+        // Schema::dropIfExists('teachers');
     }
 }

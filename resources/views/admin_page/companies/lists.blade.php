@@ -20,8 +20,8 @@
                         <tr>
                             <th>Tên</th>
                             <th>Slug</th>
-                            <th>Số năm kinh nghiệm</th>
-                            <th>Thời gian</th>
+                            <th>Mã doanh nghiệp</th>
+                            <th>Chủ doanh nghiệp</th>
                             <th>Sửa</th>
                             <th>Xóa</th>
                         </tr>
@@ -30,8 +30,8 @@
                         <tr>
                             <th>Tên</th>
                             <th>Slug</th>
-                            <th>Số năm kinh nghiệm</th>
-                            <th>Thời gian</th>
+                            <th>Mã doanh nghiệp</th>
+                            <th>Chủ doanh nghiệp</th>
                             <th>Sửa</th>
                             <th>Xóa</th>
                         </tr>
@@ -39,19 +39,12 @@
                     <tbody>
                         @foreach ($records->toArray() as $item)
                             <tr>
-                                <td class="custom__image">
-                                    @if ($item['image'])
-                                        <img src="{{$item['image']}}" alt="Hình ảnh lỗi">
-                                    @else
-                                        <img src="{{{asset('backend/img/default-avatar.png')}}}" alt="Hình ảnh mặc định">
-                                    @endif
-                                </td>
                                 <td>{{ $item['name'] }}</td>
                                 <td>{{ $item['slug'] }}</td>
-                                <td>{{ $item['exp'] }}</td>
-                                <td>{{ dateFormat($item['created_at']) }}</td>
-                                <td><a href="{{route('admin.teachers.edit', $item['id'])}}" class="btn btn-warning">Sửa</a></td>
-                                <td><a href="{{route('admin.teachers.destroy', $item['id'])}}" data-name="{{$item['name']}}" class="btn btn-danger delete__action">Xóa</a></td>
+                                <td>{{ $item['code'] }}</td>
+                                <td>{{ $item['boss'] }}</td>
+                                <td><a href="{{route('admin.companies.edit', $item['id'])}}" class="btn btn-warning">Sửa</a></td>
+                                <td><a href="{{route('admin.companies.destroy', $item['id'])}}" data-name="{{$item['name']}}" class="btn btn-danger delete__action">Xóa</a></td>
                             </tr>
                         @endforeach
 
