@@ -78,19 +78,10 @@
         <div class="col-12">
             <div class="mb-3">
                 <label for="">Hình ảnh liên quan</label>
-                <div class="row">
-                    <div class="col-5">
-                        <input id="thumbnail" type="text" name="album[]" class="form-control @error('album') is-invalid @enderror" placeholder="Hình ảnh liên quan..." value="{{old('album')}}" />
-                    </div>
-                    <div class="col-2">
-                        <button id="lfm"  data-input="thumbnail" data-preview="holder" type="button" class="btn btn-primary">Chọn Ảnh</button>
-                    </div>
-                    <div id="holder" class="col-5 custom__thumbnail">
-                        @if (old('album'))
-                            <img src="{{old('album')}}" alt="">
-                        @endif
-                    </div>
+                <div id="form__input_image" data-image="{{json_encode(old('album')) }}">
+                   
                 </div>
+                
                 @error('album')
                     <div class="invalid-feedback" style="display: block;">
                         {{$message}}
@@ -111,7 +102,8 @@
 @section('scripts')
 <script>
     ChangeToSlug('input[name="name"]', 'input[name="slug"]');
-    lfm('lfm', 'image', {});
+    showBoxImage('#form__input_image', 'album');
+    // addInputImage('#add_input_image', '#form__input_image','album');
 
 </script>
 @endsection

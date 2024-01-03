@@ -84,6 +84,91 @@ function lfm(id, type, options) {
     });
   };
 
-  function showImage(imageSelector) {
-
+  /**
+   * Hiển thị các hình ảnh có sẵn
+   */
+  function showBoxImage(boxImageSelector, nameInput) {
+    let boxImage = document.querySelector(boxImageSelector);
+    let dataImageArr = JSON.parse(boxImage.getAttribute('data-image'));
+    if (dataImageArr) {
+      dataImageArr.forEach((value, index) => {
+        formInputImage(boxImageSelector, nameInput, value, index);
+      });
+    }
+    // Thêm btn add (Thêm ô input mới)
+    let idAddBtn = 'add_input_image_' + (new Date()).getTime();
+    let addHTML = `<button id="${idAddBtn}" type="button" title="Thêm ảnh" class="btn btn-success mt-2">
+                    <i class="fas fa-plus"></i>
+                </button>`;
+    boxImage.insertAdjacentHTML('afterend', addHTML);
+    addInputImage('#'+idAddBtn, boxImageSelector, nameInput);
   }
+
+  /**
+   * Chức năng thêm input mới
+   */
+function addInputImage(btnSelector, formInputSelector, nameInput) {
+  const btn = document.querySelector(btnSelector);
+  btn.addEventListener('click', () => {
+    let time = (new Date()).getTime();
+    formInputImage(formInputSelector, nameInput, '', time);
+  });
+}
+/**
+ * Form thẻ input thêm ảnh
+ */
+function formInputImage(formInputSelector, nameInput, value, index) {
+  let thumbnail = 'thumbnail_' + index;
+      let holder = 'holder_' + index;
+      let lfmUnique = 'lfm_' + index;
+      let remove = 'remove_input_image_' + index;
+
+      let inputHTML = `<div class="row mt-2">
+                            <div class="col-5">
+                              <input id="${thumbnail}" type="text" name="${nameInput}[]" class="form-control" placeholder="Hình ảnh liên quan..." value="${value}" />
+                          </div>
+                          <div class="col-2">
+                              <button id="${lfmUnique}"  data-input="${thumbnail}" data-preview="${holder}" type="button" class="btn btn-primary">Chọn Ảnh</button>
+                          </div>
+                          <div class="col-1">
+                              <button id="${remove}" type="button" class="btn btn-danger">
+                                  <i class="fas fa-times"></i>
+                              </button>
+                          </div>
+                          <div id="${holder}" class="col-4 custom__thumbnail">`;
+            if (value) {
+              inputHTML += `<img style="height: auto" src="${value}">`
+            }
+          inputHTML +=  `</div></div>`;
+
+      let formInput = document.querySelector(formInputSelector);
+      formInput.insertAdjacentHTML('beforeend', inputHTML);
+      lfm(lfmUnique, 'image', {});
+      removeInputImage('#'+remove, 'row');
+}
+
+  /**
+   * Xóa thẻ input
+   */
+  function removeInputImage(btnSelector, classHtmlRemove) {
+    const btn = document.querySelector(btnSelector);
+    btn.addEventListener('click', () => {
+      let elementRemove = findParent(btn, classHtmlRemove);
+      elementRemove.remove();
+    })
+  }
+
+  /**
+   * Timf element cha theo class
+   */
+  function findParent(child, parentClass) {
+    let parent = child.parentElement;
+    while (parent) {
+        if (parent.classList.contains(parentClass)) 
+        {
+            break;
+        }
+        parent = parent.parentElement;
+    }
+    return parent;
+}
