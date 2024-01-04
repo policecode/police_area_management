@@ -41,6 +41,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         // Route::resource('lessons', 'LessonController');
 
         Route::resource('companies', 'CompanyController');
+        Route::resource('businesses', 'BusinessController');
 
 
     });

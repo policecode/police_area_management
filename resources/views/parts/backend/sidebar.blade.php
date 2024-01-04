@@ -32,34 +32,28 @@
         'title' => 'Quản lý tài khoản',
         'page' => 'users',
         'icon' => 'fas fa-users',
+        'child_route' => array()
     ])
     <!-- Nav Item - Pages Collapse Menu -->
     @include('parts.backend.item_page', [
         'title' => 'Quản lý doanh nghiệp',
         'page' => 'companies',
         'icon' => 'far fa-building',
-    ])
-    {{-- <!-- Nav Item - Pages Collapse Menu -->
-    @include('parts.backend.item_page', [
-        'title' => 'Quản lý danh mục',
-        'page' => 'categories',
-        'icon' => 'fas fa-users',
-    ])
-   
-    <!-- Nav Item - Pages Collapse Menu -->
-    @include('parts.backend.item_page', [
-        'title' => 'Quản lý khóa học',
-        'page' => 'courses',
-        'icon' => 'fas fa-users',
+        'child_route' => array()
+
     ])
 
     <!-- Nav Item - Pages Collapse Menu -->
     @include('parts.backend.item_page', [
-        'title' => 'Quản lý giáo viên',
-        'page' => 'teachers',
-        'icon' => 'fas fa-users',
-    ]) --}}
+        'title' => 'Địa điểm kinh doanh',
+        'page' => 'businesses',
+        'icon' => 'fas fa-business-time',
+        'child_route' => array(
+            // [ 'page' => 'admin.users.index', 'title' => 'Danh sách User'],
+            // [ 'page' => 'admin.users.create',  'title' => 'Thêm mới user']
+        )
 
+    ])
     <!-- Divider -->
     <hr class="sidebar-divider">
 

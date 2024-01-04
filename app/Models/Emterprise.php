@@ -20,4 +20,9 @@ class Emterprise extends Model
     protected $fillable = [
         'user_id', 'name', 'slug', 'code', 'boss', 'address', 'note', 'album'
     ];
+
+    public function scopeGetSelect2($query)
+    {
+        return $query->select('id AS value')->selectRaw('CONCAT(name," - ", address) AS display');
+    }
 }

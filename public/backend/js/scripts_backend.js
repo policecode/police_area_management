@@ -89,7 +89,10 @@ function lfm(id, type, options) {
    */
   function showBoxImage(boxImageSelector, nameInput) {
     let boxImage = document.querySelector(boxImageSelector);
-    let dataImageArr = JSON.parse(boxImage.getAttribute('data-image'));
+    let dataImageArr = null;
+    if (boxImage.getAttribute('data-image')) {
+      dataImageArr = JSON.parse(boxImage.getAttribute('data-image'));
+    }
     if (dataImageArr) {
       dataImageArr.forEach((value, index) => {
         formInputImage(boxImageSelector, nameInput, value, index);

@@ -23,9 +23,10 @@
     <link href="{{asset('backend/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('backend/css/sb-admin-2.min.css')}}" rel="stylesheet">
     <link href="{{asset('backend/css/custom.css')}}" rel="stylesheet">
-
-    <script src="{{asset('backend/js/jQuery3.7.1.min.js')}}"></script>
-    
+    <script src="{{asset('backend/js/jQuery3.6.0.min.js')}}"></script>
+   
+    <link href="{{asset('backend/css/select2.min.css')}}" rel="stylesheet">
+    <script src="{{asset('backend/js/select2.min.js')}}"></script>
 
 </head>
 
@@ -82,17 +83,15 @@
 
 
     <!-- Bootstrap core JavaScript-->
-    <script src="{{asset('backend/vendor/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('backend/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="{{asset('backend/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
 
-
     {{-- <script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script> --}}
     <script src="{{asset('backend/plugin/ckeditor/ckeditor.js')}}"></script>
-    <script src="{{asset('backend/js/scripts_backend.js?v='.rand())}}"></script>
-    <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
+    <script src="{{asset('backend/js/scripts_backend.js?v='.FVN_VERSION_LARAVEL)}}"></script>
+    {{-- <script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script> --}}
     @yield('scripts')
 </body>
 

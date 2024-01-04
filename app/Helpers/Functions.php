@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+define('FVN_VERSION_LARAVEL', '1.0.0');
 
 function getCategories($categories, $old='', $current='', $parent_id=0, $char='') {
     if ($categories) {

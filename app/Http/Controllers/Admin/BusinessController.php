@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Business as EnumsBusiness;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CompanyRequest;
+use App\Http\Requests\BusinessRequest;
+use App\Models\Business;
 use App\Models\Emterprise;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
-class CompanyController extends Controller
+class BusinessController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,18 +24,18 @@ class CompanyController extends Controller
         );
         // Thêm dữ liệu vào trong query
         $request->merge(array_merge($queryDefault, $request->query()));
-        $query = Emterprise::filter($request);
+        $query = Business::filter($request);
         // echo '<pre>';
         // print_r($query->get()->toArray());
         // echo '</pre>'; die;
         $dataView = array(
-            'page_title' => 'Quản lý doanh ngiệp',
+            'page_title' => 'Quản lý các địa điểm kinh doanh',
             'records' => $query->get(),
             'page' => $query->getPageNumber(),
             'per_page' => $query->getPerPage(),
             'total_records' => $query->getTotal()
         );
-        return view('admin_page.companies.lists', $dataView);
+        return view('admin_page.businesses.lists', $dataView);
     }
 
     /**
@@ -45,9 +46,11 @@ class CompanyController extends Controller
     public function create()
     {
         $dataView = array(
-            'page_title' => 'Thêm doanh nghiệp mới',
+            'page_title' => 'Thêm địa điểm kinh doanh mới',
+            'type' => EnumsBusiness::getValues(),
+            'emterprises' => Emterprise::getSelect2()->get()
         );
-        return view('admin_page.companies.create', $dataView);
+        return view('admin_page.businesses.create', $dataView);
     }
 
     /**
@@ -56,12 +59,12 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CompanyRequest $request)
+    public function store(BusinessRequest $request)
     {
-        $data = $request->validated();
-        $data['user_id'] = Auth::user()->id;
-        Emterprise::create($data);
-        return redirect()->route('admin.companies.index')->with('msg', __('messages.success_create'));
+       $data = $request->validated();
+       $data['user_id'] = Auth::user()->id;
+       Business::create($data);
+       return redirect()->route('admin.businesses.index')->with('msg', __('messages.success_create'));
     }
 
     /**
@@ -81,13 +84,15 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Emterprise $company)
+    public function edit(Business $business)
     {
         $dataView = array(
-            'page_title' => 'Chỉnh sửa thông tin công ty',
-            'item' => $company
+            'page_title' => 'Chỉnh sửa thông tin địa điểm kinh doanh',
+            'item' => $business,
+            'type' => EnumsBusiness::getValues(),
+            'emterprises' => Emterprise::getSelect2()->get()
         );
-        return view('admin_page.companies.edit', $dataView);
+        return view('admin_page.businesses.edit', $dataView);
     }
 
     /**
@@ -97,10 +102,10 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CompanyRequest $request, Emterprise $company)
+    public function update(BusinessRequest $request, Business $business)
     {
         $data = $request->validated();
-        $company->update($data);
+        $business->update($data);
         return back()->with('msg', __('messages.success_update'));
     }
 
@@ -110,9 +115,9 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Emterprise $company)
+    public function destroy(Business $business)
     {
-        $company->delete();
+        $business->delete();
         return back()->with('msg', __('messages.success_destroy'));
     }
 }
