@@ -52,7 +52,19 @@
             // [ 'page' => 'admin.users.index', 'title' => 'Danh sách User'],
             // [ 'page' => 'admin.users.create',  'title' => 'Thêm mới user']
         )
+    ])
 
+     <!-- Nav Item - Pages Collapse Menu -->
+     @include('parts.backend.item_page', [
+        'title' => 'Người nước ngoài',
+        'page' => 'tourists',
+        'icon' => 'fa-solid fa-person',
+        'child_route' => array(
+            // [ 'page' => 'admin.users.index', 'title' => 'Danh sách User'],
+            // [ 'page' => 'admin.users.create',  'title' => 'Thêm mới user']
+        )
+
+        
     ])
     <!-- Divider -->
     <hr class="sidebar-divider">

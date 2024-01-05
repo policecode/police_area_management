@@ -42,8 +42,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
 
         Route::resource('companies', 'CompanyController');
         Route::resource('businesses', 'BusinessController');
-
-
+        Route::resource('tourists', 'TouristController');
     });
 });
 

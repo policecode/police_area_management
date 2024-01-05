@@ -207,7 +207,7 @@ final class Country extends Enum
     const RUS = 'RUS - Liên bang Nga';
     const RWA = 'RWA - Ru-an-đa';
     const SAU = 'SAU - A-rập Xau-đi';
-    const SC = - 'SC- - Xcô-lent';
+    const SC = 'SC- - Xcô-lent';
     const SDN = 'SDN - Xu-đăng';
     const SEN = 'SEN - Xe-ne-gan';
     const SGP = 'SGP - Xin-ga-po';

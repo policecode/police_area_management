@@ -11,8 +11,8 @@ use BenSampo\Enum\Enum;
  */
 final class Business extends Enum
 {
-    const HOTEL =   ['value' => 1, 'display' => 'Lưu trú ngắn hạn'];
-    const HOUSE =   ['value' => 2, 'display' => 'Nhà cho thuê'];
-    const TRAVEL =   ['value' => 3, 'display' => 'Du lịch'];
+    const HOTEL =   ['key' => 1, 'value' => 'Lưu trú ngắn hạn'];
+    const HOUSE =   ['key' => 2, 'value' => 'Nhà cho thuê'];
+    const TRAVEL =   ['key' => 3, 'value' => 'Du lịch'];
 
 }

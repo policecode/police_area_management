@@ -3,7 +3,7 @@
     style="width: 100%">
     <option value="0">{{$title_option}}</option>
     @foreach ($list_option as $t)
-        <option value="{{$t['value']}}" @if ($t['value'] == (old($name)??$value_current)) selected @endif>{{$t['display']}}</option>
+        <option value="{{$t['key']}}" @if ($t['key'] == (old($name)??$value_current)) selected @endif>{{$t['value']}}</option>
     @endforeach
 </select>
 @error($name)

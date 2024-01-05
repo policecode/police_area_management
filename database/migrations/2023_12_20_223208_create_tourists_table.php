@@ -23,6 +23,7 @@ class CreateTouristsTable extends Migration
             $table->tinyInteger('gender');
             $table->string('country', 20)->nullable(); //Quốc tịch
             $table->string('passport', 20);
+            $table->text('album')->nullable(); // Lưu trữ hình ảnh
             // $table->tinyInteger('status'); // 1 - Đang tạm trú, 2 - Không tạm trú
             $table->text('note')->nullable(); // Thông tin thêm của người nước ngoài
             $table->timestamps();
