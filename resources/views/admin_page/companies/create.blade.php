@@ -89,12 +89,12 @@
                 @enderror
             </div>
         </div>
-    <div class="col-12">
-        <button type="submit" class="btn btn-primary">Lưu lại</button>
-        <a href="{{route('admin.companies.index')}}" class="btn btn-danger">Hủy</a>
-        @csrf
-        @method('POST')
-    </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Lưu lại</button>
+            <a href="{{route('admin.companies.index')}}" class="btn btn-danger">Hủy</a>
+            @csrf
+            @method('POST')
+        </div>
 </form>
 
 @endsection

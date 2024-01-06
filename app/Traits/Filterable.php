@@ -8,7 +8,7 @@ trait Filterable {
     public $per_page = 0;
     public $page_number = 0;
     public $total_records;
-
+    
     public function scopeFilter($query, $request) {
         $filters = is_array($request) ? $request : $request->all();
         $isPaginate = isset($filters['is_paginate']) ? (int) $filters['is_paginate'] : 1;
@@ -61,7 +61,7 @@ trait Filterable {
                 } 
             }
         }
-
+        $this->total_records = $query->count();
         if ($this->per_page) {
             $query = $query->orderBy($orderField, $orderType)->skip(($page - 1) * $perPage)->take($perPage);
         } else {
@@ -80,6 +80,6 @@ trait Filterable {
     }
 
     public function scopeGetTotal($query) {
-        return $query->count();
+        return $this->total_records;
     }
 }

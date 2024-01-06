@@ -19,8 +19,9 @@
                     <thead>
                         <tr>
                             <th>Tên</th>
-                            <th>Loại hình</th>
-                            <th>Địa chỉ</th>
+                            <th>Giới tính</th>
+                            <th>Ngày sinh</th>
+                            <th>Quốc tịch</th>
                             <th>Sửa</th>
                             <th>Xóa</th>
                         </tr>
@@ -28,8 +29,9 @@
                     <tfoot>
                         <tr>
                             <th>Tên</th>
-                            <th>Loại hình</th>
-                            <th>Địa chỉ</th>
+                            <th>Ngày sinh</th>
+                            <th>Giới tính</th>
+                            <th>Quốc tịch</th>
                             <th>Sửa</th>
                             <th>Xóa</th>
                         </tr>
@@ -38,8 +40,9 @@
                         @foreach ($records->toArray() as $item)
                             <tr>
                                 <td>{{ $item['name'] }}</td>
-                                <td>{{ $item['type_display'] }}</td>
-                                <td>{{ $item['address'] }}</td>
+                                <td>{{ $item['gender_display'] }}</td>
+                                <td>{{ dateFormat($item['birthday'], 'd/m/Y') }}</td>
+                                <td>{{ $item['country_display'] }}</td>
                                 <td><a href="{{route('admin.tourists.edit', $item['id'])}}" class="btn btn-warning">Sửa</a></td>
                                 <td><a href="{{route('admin.tourists.destroy', $item['id'])}}" data-name="{{$item['name']}}" class="btn btn-danger delete__action">Xóa</a></td>
                             </tr>

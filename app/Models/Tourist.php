@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Country;
+use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
@@ -18,6 +20,27 @@ class Tourist extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'name', 'slug', 'address', 'type', 'emterprises_id', 'note', 'manager'
+        'user_id', 'name', 'slug', 'birthday', 'gender', 'country', 'note', 'passport', 'album'
     ];
+
+    protected $appends = ['gender_display', 'country_display'];
+    /**
+     * get typeDisplay
+     */
+    public function getGenderDisplayAttribute()
+    {
+        $enumsGenderArr = Gender::getValues();
+        $result = '';
+        foreach ($enumsGenderArr as $key => $enum) {
+            if ($enum['key'] == $this->gender) {
+                $result=$enum['value'];
+                break;
+            }
+        }
+        return $result;
+    }
+    public function getCountryDisplayAttribute()
+    {
+        return Country::fromKey($this->country);
+    }
 }

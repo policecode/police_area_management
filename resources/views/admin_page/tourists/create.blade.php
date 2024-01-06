@@ -5,7 +5,7 @@
         <div class="col-6">
             <div class="mb-3">
                 <label for="">Họ tên</label>
-                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Tên cơ sở kinh doanh..." value="{{old('name')}}">
+                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Tên người nước ngoài..." value="{{old('name')}}">
                 @error('name')
                     <div class="invalid-feedback">
                         {{$message}}
@@ -62,11 +62,12 @@
                 ])
             </div>
         </div>
-        <div class="col-12">
+
+        <div class="col-6">
             <div class="mb-3">
-                <label for="">Thông tin người quản lý</label>
-                <textarea name="manager" class="ckeditor form-control @error('manager') is-invalid @enderror" placeholder="Thông tin người quản lý..." id="" cols="30" rows="4">{{old('manager')}}</textarea>
-                @error('manager')
+                <label for="">Số hộ chiếu</label>
+                <input type="text" name="passport" class="form-control @error('passport') is-invalid @enderror" placeholder="Hộ chiếu..." value="{{old('passport')}}">
+                @error('passport')
                     <div class="invalid-feedback">
                         {{$message}}
                     </div>
@@ -76,7 +77,7 @@
 
         <div class="col-12">
             <div class="mb-3">
-                <label for="">Ghi chú về doanh nghiệp</label>
+                <label for="">Ghi chú</label>
                 <textarea name="note" class="ckeditor form-control @error('note') is-invalid @enderror" placeholder="Ghi chú..." id="" cols="30" rows="4">{{old('note')}}</textarea>
                 @error('note')
                     <div class="invalid-feedback">
@@ -84,8 +85,21 @@
                     </div>
                 @enderror
             </div>
+        </div>
 
-            
+        <div class="col-12">
+            <div class="mb-3">
+                <label for="">Hình ảnh liên quan</label>
+                <div id="form__input_image" data-image="{{json_encode(old('album')) }}">
+                   
+                </div>
+                
+                @error('album')
+                    <div class="invalid-feedback" style="display: block;">
+                        {{$message}}
+                    </div>
+                @enderror
+            </div>
         </div>
   
     <div class="col-12">
@@ -101,6 +115,7 @@
 @section('scripts')
 <script>
     ChangeToSlug('input[name="name"]', 'input[name="slug"]');
+    showBoxImage('#form__input_image', 'album');
 
 
 </script>

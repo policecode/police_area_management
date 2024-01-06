@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\Country;
 use App\Enums\Gender;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TouristRequest;
 use App\Models\Tourist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TouristController extends Controller
 {
@@ -17,15 +20,16 @@ class TouristController extends Controller
      */
     public function index(Request $request)
     {
+
         $queryDefault = array(
             'per_page' => 10,
         );
         // Thêm dữ liệu vào trong query
         $request->merge(array_merge($queryDefault, $request->query()));
         $query = Tourist::filter($request);
-        // echo '<pre>';
-        // print_r($query->get()->toArray());
-        // echo '</pre>'; die;
+        // DB::enableQueryLog();
+        // echo $query->getTotal();
+        // dd(DB::getQueryLog());
         $dataView = array(
             'page_title' => 'Quản lý người nước ngoài',
             'records' => $query->get(),
@@ -43,11 +47,13 @@ class TouristController extends Controller
      */
     public function create()
     {
-        // dd( (array)Country::getInstances());
+        $country = array_map(function ($item) {
+            return (array)$item;
+        }, Country::getInstances());
         $dataView = array(
             'page_title' => 'Thêm người nước ngoài mới',
             'gender' => Gender::getValues(),
-            'country' => (array)Country::getInstances(),
+            'country' => $country,
         );
         return view('admin_page.tourists.create', $dataView);
     }
@@ -58,9 +64,12 @@ class TouristController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TouristRequest $request)
     {
-        //
+        $data = $request->validated();
+       $data['user_id'] = Auth::user()->id;
+       Tourist::create($data);
+       return redirect()->route('admin.tourists.index')->with('msg', __('messages.success_create'));
     }
 
     /**
@@ -80,9 +89,18 @@ class TouristController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Tourist $tourist)
     {
-        //
+        $country = array_map(function ($item) {
+            return (array)$item;
+        }, Country::getInstances());
+        $dataView = array(
+            'page_title' => 'Chỉnh sửa thông tin người nước ngoài',
+            'item' => $tourist,
+            'gender' => Gender::getValues(),
+            'country' => $country,
+        );
+        return view('admin_page.tourists.edit', $dataView);
     }
 
     /**
@@ -92,9 +110,11 @@ class TouristController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TouristRequest $request, Tourist $tourist)
     {
-        //
+        $data = $request->validated();
+        $tourist->update($data);
+        return back()->with('msg', __('messages.success_update'));
     }
 
     /**
@@ -103,8 +123,9 @@ class TouristController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Tourist $tourist)
     {
-        //
+        // $tourist->delete();
+        return back()->with('msg', __('messages.success_destroy'));
     }
 }

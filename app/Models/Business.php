@@ -29,8 +29,8 @@ class Business extends Model
         $enumsBusinessArr = EnumsBusiness::getValues();
         $result = '';
         foreach ($enumsBusinessArr as $key => $enum) {
-            if ($enum['value'] == $this->type) {
-                $result=$enum['display'];
+            if ($enum['key'] == $this->type) {
+                $result=$enum['value'];
                 break;
             }
         }

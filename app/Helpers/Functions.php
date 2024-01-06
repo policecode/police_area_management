@@ -54,3 +54,23 @@ function currency_format($number, $suffix = 'đ') {
         return number_format($number, 0, ',', '.') . "{$suffix}";
     }
 }
+
+/**
+ * Lấy đường dẫn hiện tại và loại bỏ thành phần query chỉ định
+ */
+function getUrl($exeptQuery) {
+    $currentUrl = url()->current().'?';
+    $query_arr = $_GET;
+    $index = 0;
+    foreach ($query_arr as $key => $value) {
+        if (!in_array($key, $exeptQuery)) {
+            if ($index == 0) {
+                $currentUrl .= $key.'='.$value;
+            } else {
+                $currentUrl .= '&'.$key.'='.$value;
+            }
+            $index++;
+        }
+    }
+    return $currentUrl;
+}
