@@ -24,14 +24,21 @@
     <link href="{{asset('backend/css/sb-admin-2.min.css')}}" rel="stylesheet">
     <link href="{{asset('backend/css/custom.css')}}" rel="stylesheet">
     <script src="{{asset('backend/js/jQuery3.6.0.min.js')}}"></script>
-   
+    <script src="{{asset('backend/js/vuejs3.3.13.js')}}"></script>
+    <script src="{{asset('backend/js/admin.js')}}"></script>
+
     <link href="{{asset('backend/css/select2.min.css')}}" rel="stylesheet">
     <script src="{{asset('backend/js/select2.min.js')}}"></script>
 
 </head>
 
 <body id="page-top">
-
+    <script>
+        var URLHOME = '{{route('index')}}';
+    </script>
+    <?php 
+        // echo route('comment.show', ['post' => 1, 'comment' => 3]);
+    ?>
     <!-- Page Wrapper -->
     <div id="wrapper">
 

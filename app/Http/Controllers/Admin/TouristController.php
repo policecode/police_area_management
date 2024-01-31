@@ -10,9 +10,10 @@ use App\Models\Tourist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use App\Traits\FileCsv;
 class TouristController extends Controller
 {
+    use FileCsv;
     /**
      * Display a listing of the resource.
      *
@@ -127,5 +128,11 @@ class TouristController extends Controller
     {
         // $tourist->delete();
         return back()->with('msg', __('messages.success_destroy'));
+    }
+    public function import(Request $request)
+    {
+        $this.readCsv();
+        // $tourist->delete();
+        return back()->with('msg', __('Thêm dữ liệu thành công'));
     }
 }

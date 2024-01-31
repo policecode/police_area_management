@@ -2,7 +2,7 @@
 @section('content')
 <form action="{{route('admin.tourists.store')}}" method="POST">
     <div class="row">
-        <div class="col-6">
+        <div class="col-sm-6 col-12">
             <div class="mb-3">
                 <label for="">Họ tên</label>
                 <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Tên người nước ngoài..." value="{{old('name')}}">
@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <div class="col-6">
+        <div class="col-sm-6 col-12">
             <div class="mb-3">
                 <label for="">Slug</label>
                 <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" placeholder="Slug..." value="{{old('slug')}}">
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <div class="col-6">
+        <div class="col-sm-6 col-12">
             <div class="mb-3">
                 <label for="">Ngày, tháng, năm sinh</label>
                 <input type="date" name="birthday" class="form-control @error('birthday') is-invalid @enderror" value="{{old('birthday')}}">
@@ -38,7 +38,7 @@
             </div>
         </div>
 
-        <div class="col-6">
+        <div class="col-sm-6 col-12">
             <div class="mb-3">
                 <label for="">Giới tính</label>
                 @include('parts.template.select', [
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="col-6">
+        <div class="col-sm-6 col-12">
             <div class="mb-3">
                 <label for="">Quốc tịch</label>
                 @include('parts.template.select2', [
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <div class="col-6">
+        <div class="col-sm-6 col-12">
             <div class="mb-3">
                 <label for="">Số hộ chiếu</label>
                 <input type="text" name="passport" class="form-control @error('passport') is-invalid @enderror" placeholder="Hộ chiếu..." value="{{old('passport')}}">
@@ -116,7 +116,6 @@
 <script>
     ChangeToSlug('input[name="name"]', 'input[name="slug"]');
     showBoxImage('#form__input_image', 'album');
-
 
 </script>
 @endsection

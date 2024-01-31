@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
-Route::get('/home', function () {
-    dd(Auth::guard());
+})->name('index');
+Route::middleware('auth_two')->get('/home', function () {
+    dd('Page home');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth_two']], function() {
@@ -43,6 +43,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::resource('companies', 'CompanyController');
         Route::resource('businesses', 'BusinessController');
         Route::resource('tourists', 'TouristController');
+        Route::post('tourists/import', 'TouristController@');
     });
 });
 
