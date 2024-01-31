@@ -4,16 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\Country;
 use App\Enums\Gender;
+use App\Exports\TouristExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TouristRequest;
+use App\Imports\TouristImport;
 use App\Models\Tourist;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Traits\FileCsv;
+use Maatwebsite\Excel\Facades\Excel;
+
 class TouristController extends Controller
 {
-    use FileCsv;
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +25,11 @@ class TouristController extends Controller
      */
     public function index(Request $request)
     {
-
+        // $userCollection = User::all();
+        // $user = $userCollection->filter(function ($item, $index) {
+        //     return $item['id'] == 5;
+        // });
+        // dd($user->count());
         $queryDefault = array(
             'per_page' => 10,
         );
@@ -126,13 +134,16 @@ class TouristController extends Controller
      */
     public function destroy(Tourist $tourist)
     {
-        // $tourist->delete();
+        $tourist->delete();
         return back()->with('msg', __('messages.success_destroy'));
     }
-    public function import(Request $request)
+    public function export(Request $request)
     {
-        $this.readCsv();
-        // $tourist->delete();
-        return back()->with('msg', __('Thêm dữ liệu thành công'));
+        return Excel::download(new TouristExport, 'list-tourist.xlsx');
+        // return back()->with('msg', __('Thêm dữ liệu thành công'));
+    }
+    public function import(Request $request) {
+        Excel::import(new TouristImport, $request->file('file_import'));
+        return 'Import success';
     }
 }
