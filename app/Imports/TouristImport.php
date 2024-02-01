@@ -23,7 +23,7 @@ class TouristImport implements ToModel, WithHeadingRow, WithUpserts
         $dateArr = explode('/', $row['birthday']);
         $date = Carbon::create($dateArr[2], $dateArr[1], $dateArr[0]);
         // echo '<pre>';
-        // print_r($date->toDateTimeString());
+        // print_r($row);
         // echo '</pre>'; die;
         return new Tourist([
             'user_id' => $row['user_id'],
