@@ -116,3 +116,13 @@ function create_slug($string)
         $string = strtolower($string);
         return $string;
     }
+
+    function getQuery($name='') {
+        if ($name) {
+            if (!empty($_GET[$name])) {
+                return $_GET[$name];
+            }
+            return '';
+        }
+        return $_GET;
+    }

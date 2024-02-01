@@ -25,26 +25,26 @@ class TouristController extends Controller
      */
     public function index(Request $request)
     {
-        // $userCollection = User::all();
-        // $user = $userCollection->filter(function ($item, $index) {
-        //     return $item['id'] == 5;
-        // });
-        // dd($user->count());
+        $per_page = $request->per_page ? $request->per_page : 20;
         $queryDefault = array(
-            'per_page' => 10,
+            'per_page' => $per_page,
         );
         // Thêm dữ liệu vào trong query
-        $request->merge(array_merge($queryDefault, $request->query()));
+        $request->merge($queryDefault);
         $query = Tourist::filter($request);
         // DB::enableQueryLog();
         // echo $query->getTotal();
         // dd(DB::getQueryLog());
+        $country = array_map(function ($item) {
+            return (array)$item;
+        }, Country::getInstances());
         $dataView = array(
             'page_title' => 'Quản lý người nước ngoài',
             'records' => $query->get(),
             'page' => $query->getPageNumber(),
             'per_page' => $query->getPerPage(),
-            'total_records' => $query->getTotal()
+            'total_records' => $query->getTotal(),
+            'country' => $country,
         );
         return view('admin_page.tourists.lists', $dataView);
     }

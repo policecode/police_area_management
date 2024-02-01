@@ -15,10 +15,15 @@
                 @if (session('msg'))
                     <div class="alert alert-success">{{ session('msg') }}</div>
                 @endif
+
+                @include('admin_page.tourists.filter')
+
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Tên</th>
+                            <th>Slug</th>
+                            <th>Hộ chiếu</th>
                             <th>Giới tính</th>
                             <th>Ngày sinh</th>
                             <th>Quốc tịch</th>
@@ -29,6 +34,8 @@
                     <tfoot>
                         <tr>
                             <th>Tên</th>
+                            <th>Slug</th>
+                            <th>Hộ chiếu</th>
                             <th>Ngày sinh</th>
                             <th>Giới tính</th>
                             <th>Quốc tịch</th>
@@ -40,6 +47,8 @@
                         @foreach ($records->toArray() as $item)
                             <tr>
                                 <td>{{ $item['name'] }}</td>
+                                <td>{{ $item['slug'] }}</td>
+                                <td>{{ $item['passport'] }}</td>
                                 <td>{{ $item['gender_display'] }}</td>
                                 <td>{{ dateFormat($item['birthday'], 'd/m/Y') }}</td>
                                 <td>{{ $item['country_display'] }}</td>

@@ -46,7 +46,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
 
         // TouristController
         Route::get('tourists/export', 'TouristController@export')->name('tourists.export');
-        // Route::post('tourists/import', 'TouristController@import')->name('tourists.import');
+        Route::post('tourists/import', 'TouristController@import')->name('tourists.import');
         Route::resource('tourists', 'TouristController');
     });
 });
