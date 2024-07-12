@@ -117,12 +117,12 @@ function create_slug($string)
         return $string;
     }
 
-    function getQuery($name='') {
+    function getQuery($name='', $default = '') {
         if ($name) {
             if (!empty($_GET[$name])) {
                 return $_GET[$name];
             }
-            return '';
+            return $default;
         }
         return $_GET;
     }
