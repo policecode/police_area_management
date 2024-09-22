@@ -27,8 +27,8 @@ class CreateUsersTable extends Migration
 
         User::create([
             'name' => 'Nguyễn Hoàng Đạt',
-            'email' => 'hoangdat@gmail.com',
-            'password' => Hash::make('123456789'),
+            'email' => 'adminlaravelexample@gmail.com',
+            'password' => Hash::make('f4v8a6Zfa5j'),
             'group_id' => 1
         ]);
     }
