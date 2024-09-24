@@ -19,6 +19,7 @@ class UserController extends Controller
         $dataView = array(
             'page_title' => 'Quản lý người dùng',
         );
+       
         return view('admin_page.users.lists', $dataView);
     }
 

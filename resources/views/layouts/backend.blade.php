@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{$page_title}}</title>
     <link rel="icon" href="{{asset('backend/img/icons8-beautiful-85.png')}}">
 
@@ -54,9 +54,6 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
-                    <!-- Page Heading -->
-                    @include('parts.backend.page_heading')
 
                     <!-- Content Row -->
                     @yield('content')

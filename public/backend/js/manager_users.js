@@ -4,7 +4,7 @@ var vue_data = {
     currentAction: '',
     getItemUrl: '',
     items: [],
-    screen: 'list',
+    screen: 'detail',
     itemDetail: {},
     queryToDate: '',
     queryFromDate: '',
@@ -84,18 +84,18 @@ var app = new Vue({
             
             if (jsonData.result) {
                 this.items = jsonData.data;
-                // if (this.itemDetail.id) {
-                //     for (i in this.items) {
-                //         if (this.items[i].id == this.itemDetail.id) {
-                //             this.itemDetail = this.items[i];
-                //             break;
-                //         }
-                //     }
-                // } else {
-                //     if (this.items.length > 0) {
-                //         this.itemDetail = this.items[0];
-                //     }
-                // }
+                if (this.itemDetail.id) {
+                    for (i in this.items) {
+                        if (this.items[i].id == this.itemDetail.id) {
+                            this.itemDetail = this.items[i];
+                            break;
+                        }
+                    }
+                } else {
+                    if (this.items.length > 0) {
+                        this.itemDetail = this.items[0];
+                    }
+                }
             } else {
                 this.items = [];
                 // jAlert(jsonData.message);

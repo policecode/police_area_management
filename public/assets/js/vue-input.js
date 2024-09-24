@@ -460,11 +460,8 @@ Vue.component('fvn-paging', {
             </div>
             <div class="d-flex justify-content-center align-items-center">
                 <label class="flex-shrink-0 mr-2">{{limitLabel}}</label>
-                <select class="form-control">
-                    <option selected>Per page...</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select class="form-control"  v-model="comPerPage" @change="$emit('change-limit',comPerPage)">
+                     <option v-for="i in [10,20,30]" :value="i">{{i}}</option>
                 </select>
             </div>
         </div>
