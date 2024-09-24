@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -14,33 +16,28 @@ class UserController extends Controller
         
     }
     public function index (Request $request) {
-        // echo $request->route()->getName();
-        // return response()->json(User::paginate(10));
-        $queryDefault = array(
-            'per_page' => 10
-        );
-        // Thêm dữ liệu vào trong query
-        $request->merge(array_merge($queryDefault, $request->query()));
-        // dd($request->all());
-        $query = User::filter($request);
         $dataView = array(
             'page_title' => 'Quản lý người dùng',
-            'records' => $query->get(),
-            'page' => $query->getPageNumber(),
-            'per_page' => $query->getPerPage(),
-            'total_records' => $query->getTotal()
         );
         return view('admin_page.users.lists', $dataView);
     }
 
-    public function data(Request $request) {
+    public function getItems(Request $request) {
+          // Thêm dữ liệu vào trong query
+        // $request->merge(array_merge($queryDefault, $request->query()));
         $query = User::filter($request);
         $res = [
-            'records' => $query->get(),
+            'result' => 1,
+            'data' => [],
             'page' => $query->getPageNumber(),
             'per_page' => $query->getPerPage(),
-            'total_records' => $query->getTotal()
+            'total' => 0
         ];
+        if($request->is_paginate){
+            $res['total'] = $query->getTotal();
+        }else{
+            $res['data'] = $query->get();
+        }
         return response()->json($res);
     }
 

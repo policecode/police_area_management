@@ -28,7 +28,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
 
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', 'UserController@index')->name('index');
-            Route::get('/data', 'UserController@data')->name('data');
+            Route::get('/get-items', 'UserController@getItems')->name('getItems');
             Route::get('/create', 'UserController@create')->name('create');
             Route::post('/create', 'UserController@store')->name('store');
             Route::get('/edit/{user}', 'UserController@edit')->name('edit');

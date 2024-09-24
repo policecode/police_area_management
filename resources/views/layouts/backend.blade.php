@@ -38,7 +38,6 @@
     ?>
     <!-- Page Wrapper -->
     <div id="wrapper">
-
         <!-- Sidebar -->
         @include('parts.backend.sidebar')
         <!-- End of Sidebar -->

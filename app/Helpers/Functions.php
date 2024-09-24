@@ -94,23 +94,7 @@ function create_slug($string)
             '#(Đ)#',
             "/[^a-zA-Z0-9\-\_]/",
         );
-        $replace = array(
-            'a',
-            'e',
-            'i',
-            'o',
-            'u',
-            'y',
-            'd',
-            'A',
-            'E',
-            'I',
-            'O',
-            'U',
-            'Y',
-            'D',
-            '-',
-        );
+        $replace = array('a','e','i','o','u','y','d','A','E','I','O','U','Y','D','-',);
         $string = preg_replace($search, $replace, $string);
         $string = preg_replace('/(-)+/', '-', $string);
         $string = strtolower($string);

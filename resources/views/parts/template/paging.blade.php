@@ -53,3 +53,22 @@ if ($page + 5 <= $max_page) {
         </li>
     </ul>
 </div>
+
+
+{{-- <div v-show="totalPage>1" class="fvn-pagination d-flex gap-s mb-2">
+    <div class="pagination__status showing-status d-flex gap-s"> 
+        <span class="showing-status__pages text-nowrap">{{page}} – {{currentPage}}</span> of 
+        <span class="showing-status__total">{{total}}</span>
+    </div>
+    <div class="d-flex paging-limit gap-s"> 
+        <div class="label text-nowrap">{{limitLabel}}:</div> 
+        <select class="dropdown mb-0" v-model="comPerPage" @change="$emit('change-limit',comPerPage)">
+            <option v-for="i in [10,20,30]" :value="i">{{i}}</option>
+        </select>
+    </div>
+    <div class="d-flex pagination__nav gap-s">
+        <button type="button" class="button pagination__nav--prev m-0" @click="$emit('back-page')" :disabled="page==1"> < </button> 
+        <span class="current-page">{{page}}/{{totalPage}}</span>
+        <button type="button" class="button pagination__nav--next m-0" @click="$emit('next-page')" :disabled="page==totalPage"> > </button>
+    </div>
+    </div> --}}

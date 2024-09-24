@@ -4,3 +4,6 @@
 .custom__image img {
     height: 50px;
 }
+.cursor-pointer {
+    cursor: pointer;
+}
