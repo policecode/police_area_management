@@ -9,11 +9,55 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     public function __construct() {
         
+    }
+    private function rules($request)
+    {
+        $rules = [
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'group_id' => ['required', 'integer', function($attr, $value, $fail) {
+                                                        if ($value === 0) {
+                                                            $fail('Vui lòng chọn nhóm');
+                                                        }                                        
+                                                    }]
+        ];
+        if ($request->id) {
+            $rules['email'] = 'required|email|unique:users,email,'.$request->id;
+            if ($request->password) {
+                $rules['password'] = 'min:6';
+            } else {
+                unset($rules['password']);
+            }
+        }
+        return $rules;
+    }
+
+    private function messages()
+    {
+        return [
+            'required' => ':attribute bắt buộc phải nhập',
+            'email' => ':attribute không đúng định dạng',
+            'unique' => ':attribute đã tồn tại',
+            'min' => ':attribute phải từ :min ký tự',
+            'integer' => ':attribute phải là số'
+        ];
+    }
+
+    private function attributes()
+    {
+        return [
+            'name' => 'Tên',
+            'email' => 'Email',
+            'password' => 'Mật khâu',
+            'group_id' => 'Nhóm'
+        ];
     }
     public function index (Request $request) {
         $dataView = array(
@@ -49,14 +93,31 @@ class UserController extends Controller
         return view('admin_page.users.create', $dataView);
     }
 
-    public function store(UserRequest $request) {
-        $data = $request->validated();
-     
-        User::create(array_merge($data, array(
-            'password' => bcrypt($request->password),
-            'group_id' => (int) $request->group_id
-        )));
-        return redirect()->route('admin.users.index')->with('msg', __('messages.success_user'));
+    public function store(Request $request) {
+        $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0, 
+                'errors' => $validator->errors(),
+                'message' => 'validation'
+            ]);
+        }
+        $data = $validator->validated();
+        try {
+            $result = User::create(array_merge($data, array(
+                'password' => bcrypt($request->password),
+                'group_id' => (int) $request->group_id
+            )));
+            return response()->json([
+                'status' => 1, 
+                'data' => $result,
+                'message' => 'Create success'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 0, 'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function edit(Request $request, User $user) {
@@ -68,17 +129,44 @@ class UserController extends Controller
 
     }
 
-    public function update(UserRequest $request, User $user) {
-        $data = $request->validated();
-        if (!empty($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
+    public function update(Request $request, User $user) {
+        $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0, 
+                'errors' => $validator->errors(),
+                'message' => 'validation'
+            ]);
         }
-        $user->update($data);
-        return back()->with('msg', __('messages.success_update_user'));
+        $data = $validator->validated();
+        try {
+            if (!empty($data['password'])) {
+                $data['password'] = bcrypt($data['password']);
+            }
+            $user->update($data);
+            return response()->json([
+                'status' => 1, 
+                'data' => $user,
+                'message' => 'Update success'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 0, 'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function delete(Request $request, User $user) {
-        $user->delete();
-        return back()->with('msg', __('messages.success_delete_user'));
+        try {
+            $status = $user->delete();
+            return response()->json([
+                'status' => $status, 
+                'message' => 'Delete success'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 0, 'message' => $e->getMessage()
+            ], 400);
+        }
     }
 }

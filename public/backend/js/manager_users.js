@@ -4,8 +4,12 @@ var vue_data = {
     currentAction: '',
     getItemUrl: '',
     items: [],
-    screen: 'detail',
-    itemDetail: {},
+    screen: 'list',
+    itemDetail: {
+        group_id: ""
+    },
+    listId: [],
+    errors: {},
     queryToDate: '',
     queryFromDate: '',
     querySearch: {
@@ -16,22 +20,9 @@ var vue_data = {
         order_by: 'id',
         order_type: 'DESC'
     },
-    queryUser: {
-        id: '',
-        name: ''
-    },
     token: '',
-    searchUserList: [],
     searchUserQuery: '',
-    apiUrl: FVN_LARAVEL_HOME + '/admin/users',
-    listId: [],
-    dialogSelectSeat: false,
-    setting: {
-        fields: {}
-    },
-    itemSeats: [],
-    itemDetailTime: [],
-    dialogSelectSeat: false
+    apiUrl: FVN_LARAVEL_HOME + '/admin/users'
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
 // Vue.component('datepicker', vuejsDatepicker);
@@ -41,7 +32,7 @@ var app = new Vue({
     el: '#app',
     data: vue_data,
     mounted: function () {
-        // this.loaded = true;
+        this.loaded = true;
         this.updateQueryFromUrl();
         this.searchItem();
     },
@@ -64,12 +55,18 @@ var app = new Vue({
             this.itemDetail = item;
             this.screen = 'detail';
         },
-        deleteItem(item) {
-            if (confirm('Do you want to delete the Item')) {
-                new RouteApi().post(this.apiUrl + '?task=delete', { id: this.listId }).then(function (jsonData) {
-                    jAlert(jsonData.message);
-                    app.getItems();
-                });
+        closeItem() {
+            this.itemDetail = {
+                group_id: ""
+            };
+            this.errors = {};
+            this.screen = 'list';
+        },
+        async deleteItem(item) {
+            if (confirm(`Do you want to delete the User: ${item.email}`)) {
+                let jsonData = await new RouteApi().delete(`${this.apiUrl}/delete/${item.id}`, {});
+                jnotice(jsonData.message);
+                this.getItems();
             }
         },
         searchItem() {
@@ -81,7 +78,6 @@ var app = new Vue({
             this.buildQueryItem();
             const jsonData = await new RouteApi().get(this.getItemUrl)
             this.loading = false;
-            
             if (jsonData.result) {
                 this.items = jsonData.data;
                 if (this.itemDetail.id) {
@@ -90,10 +86,6 @@ var app = new Vue({
                             this.itemDetail = this.items[i];
                             break;
                         }
-                    }
-                } else {
-                    if (this.items.length > 0) {
-                        this.itemDetail = this.items[0];
                     }
                 }
             } else {
@@ -127,39 +119,27 @@ var app = new Vue({
             return this[this.currentAction]();
         },
         async save() {
-            const jsonData = await new RouteApi().post(this.apiUrl + '.save', { data: this.itemDetail })
-            if (jsonData.result) {
-                jnotice(jsonData.message);
-                for (const i in this.items) {
-                    if (this.items[i].id == this.itemDetail.id) {
-                        this.items[i] = this.itemDetail;
-                    }
-                }
+            this.loading = true;
+            let jsonData;
+            if (this.itemDetail.id) {
+                jsonData = await new RouteApi().put(`${this.apiUrl}/update/${this.itemDetail.id}`,this.itemDetail )
             } else {
-                let msg = '';
-                if (jsonData.hasOwnProperty('errors')) {
-                    for (key in jsonData.errors) {
-                        msg += jsonData.errors[key][0] + '<br>';
-                    }
-                } else {
-                    msg = jsonData.message;
-                }
-                jAlert(msg);
+                jsonData = await new RouteApi().post(`${this.apiUrl}/create`,this.itemDetail );
             }
-        },
-
-  
-        removeSlot(index) {
-            if (confirm('Xóa slot?')) {
-                this.loading = true;
-                new RouteApi().post(this.apiUrl + '.delete', { id: this.itemDetail.seats[index].id }).then(function (jsonData) {
-                    app.loading = false;
-                    if (jsonData.result) {
-                        app.itemDetail.seats.splice(index, 1);
-                    } else {
-                        jAlert(jsonData.message);
-                    }
-                });
+            this.loading = false;
+            if (jsonData.status) {
+                jnotice(jsonData.message);
+                if (this.itemDetail.id) {
+                    this.itemDetail = jsonData.data;
+                } else {
+                    this.items.unshift(jsonData.data)
+                }
+                this.closeItem();
+            } else {
+                if (jsonData.errors) {
+                    this.errors = jsonData.errors;
+                }
+                jAlert(jsonData.message);
             }
         },
         displayDate(date, timezone) {
@@ -172,7 +152,6 @@ var app = new Vue({
             }
         },
         updateOrdering(key) {
-
             if (this.querySearch.order_by != key) {
                 this.querySearch.order_type = 'DESC';
             } else {
@@ -225,19 +204,12 @@ var app = new Vue({
                 parent.location.hash = objectToQuery(paramSearch);
             }
         },
-        selectUser(item) {
-            this.queryUser.id = item.ID;
-            this.queryUser.name = item.user_nicename + ' ' + item.user_email;
-        },
         clearFilter() {
             this.querySearch = {
                 total: 0,
                 page: 1,
                 per_page: 20,
                 keyword: '',
-                book_date_min: '',
-                book_date_max: '',
-                book_time: '',
                 order_by: 'id',
                 order_type: 'DESC'
             };
@@ -246,81 +218,10 @@ var app = new Vue({
         formatMoney(value) {
             return formatMoney(value);
         },
-        async allowDisplayLevel(item, flg) {
-            const jsonData = await new RouteApi().post(this.apiUrl + '.save', {
-                data: {
-                    id: item.id,
-                    is_show_player_level: flg
-                }
-            })
-            if (jsonData.result) {
-                jnotice(jsonData.message);
-                for (const i in this.items) {
-                    if (this.items[i].id == item.id) {
-                        this.items[i].is_show_player_level = flg;
-                    }
-                }
-            } else {
-                jAlert(jsonData.message);
-            }
-        },
-        async updateOrderStatus(item) {
-            const jsonData = await new RouteApi().post(this.apiUrl + '.save', {
-                data: {
-                    id: item.id,
-                    order_status: item.order_status
-                }
-            })
-            if (jsonData.result) {
-                jnotice(jsonData.message);
-            } else {
-                this.searchItem();
-                jnotice(msg);
-            }
-        },
-        async updatePaymentStatus(item) {
-            const jsonData = await new RouteApi().post(this.apiUrl + '.save', {
-                data: {
-                    id: item.id,
-                    pay_status: item.pay_status
-                }
-            })
-            if (jsonData.result) {
-                jnotice(jsonData.message);
-            } else {
-                app.searchItem();
-                jnotice(msg);
-            }
-        },
+
     },
     watch: {
-        searchUserQuery(newQuery) {
-            console.log(newQuery);
 
-            if (newQuery == '') {
-                this.queryUser.id = '';
-                this.queryUser.name = '';
-                return;
-            }
-            // fetch(fvnUrl + 'includes/admin/user/action.php?task=getUserByName&keyword=' + newQuery, {
-            // 	method: 'get'
-            // })
-            new RouteApi().get(FVN_PLUGIN_URL + 'ajax.php?task=account.account.index',
-                { keyword: newQuery }
-            ).then((response) => {
-                return response.json()
-            })
-                .then((jsonData) => {
-                    this.searchUserList = jsonData.data;
-                });
-        },
-        selectedStatus(value) {
-            if (value) {
-                this.querySearch.filter_order_status = value.value;
-            } else {
-                this.querySearch.filter_order_status = '';
-            }
-        },
 
     },
 });
