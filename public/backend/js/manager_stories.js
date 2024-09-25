@@ -4,10 +4,12 @@ var vue_data = {
     currentAction: '',
     getItemUrl: '',
     items: [],
-    screen: 'list',
+    screen: 'detail',
     itemDetail: {
-        group_id: ""
+        thumbnail: "",
+        status: ""
     },
+    files: {},
     listId: [],
     errors: {},
     queryToDate: '',
@@ -20,11 +22,17 @@ var vue_data = {
         order_by: 'id',
         order_type: 'DESC'
     },
-    apiUrl: FVN_LARAVEL_HOME + '/admin/users'
+    apiUrl: FVN_LARAVEL_HOME + '/admin/stories',
+    statusStory: statusStory,
+    options: [
+        {value:1,display: 'list'},
+        {value:2,display: 'of'},
+        {value:3,display: 'options'},
+    ]
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
 // Vue.component('datepicker', vuejsDatepicker);
-// Vue.component('multiselect', window.VueMultiselect.default);
+Vue.component('multiselect', window.VueMultiselect.default);
 // Vue.component('star-rating', VueStarRating.default);
 var app = new Vue({
     el: '#app',
@@ -55,7 +63,8 @@ var app = new Vue({
         },
         closeItem() {
             this.itemDetail = {
-                group_id: ""
+                thumbnail: "",
+                status: ""
             };
             this.errors = {};
             this.screen = 'list';
@@ -115,6 +124,29 @@ var app = new Vue({
                 return jAlert('Please choose an action');
             }
             return this[this.currentAction]();
+        },
+        async uploadFile(e, name) {
+            let files = e.target.files || e.dataTransfer.files;
+            if (!files.length) return;
+            
+            let reader = new FileReader();
+            if (name == 'thumbnail') {
+                this.files.thumbnail = files[0];
+                
+                await reader.readAsDataURL(files[0]);
+                reader.onload = function() {
+                    // console.log(reader.result);
+                    app.itemDetail.thumbnail = reader.result;
+                }
+                
+            }
+            // if (name == 'resume') {
+            //     if (!(files[0].size < 5 * 1024 * 1024)) {
+            //         e.target.value = '';
+            //         return jAlert('File size less than 5MB');
+            //     }
+            //     appCandidateList.itemDetail.resume_file = files[0];
+            // }
         },
         async save() {
             this.loading = true;
@@ -219,7 +251,8 @@ var app = new Vue({
 
     },
     watch: {
-
-
+        'itemDetail.title' (newVal) {
+            this.itemDetail.slug = fvnChangeToSlug(newVal);
+        }
     },
 });

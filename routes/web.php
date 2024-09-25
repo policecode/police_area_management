@@ -43,6 +43,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::get('tourists/export', 'TouristController@export')->name('tourists.export');
         Route::post('tourists/import', 'TouristController@import')->name('tourists.import');
         Route::resource('tourists', 'TouristController');
+
+        // Stories
+        Route::get('/stories/get-items', 'StoriesController@getItems')->name('getItems');
+        Route::resource('stories', 'StoriesController');
     });
 });
 

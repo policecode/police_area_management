@@ -1,4 +1,3 @@
-
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
@@ -32,40 +31,44 @@
         'title' => 'Quản lý tài khoản',
         'page' => 'users',
         'icon' => 'fas fa-users',
-        'child_route' => array()
+        'child_route' => [],
+    ])
+    @include('parts.backend.item_page', [
+        'title' => 'Quản lý truyện',
+        'page' => 'stories',
+        'icon' => 'fas fa-users',
+        'child_route' => [],
     ])
     <!-- Nav Item - Pages Collapse Menu -->
-    @include('parts.backend.item_page', [
+    {{-- @include('parts.backend.item_page', [
         'title' => 'Quản lý doanh nghiệp',
         'page' => 'companies',
         'icon' => 'far fa-building',
         'child_route' => array()
 
-    ])
+    ]) --}}
 
     <!-- Nav Item - Pages Collapse Menu -->
-    @include('parts.backend.item_page', [
+    {{-- @include('parts.backend.item_page', [
         'title' => 'Địa điểm kinh doanh',
         'page' => 'businesses',
         'icon' => 'fas fa-business-time',
         'child_route' => array(
-            // [ 'page' => 'admin.users.index', 'title' => 'Danh sách User'],
-            // [ 'page' => 'admin.users.create',  'title' => 'Thêm mới user']
+            [ 'page' => 'admin.users.index', 'title' => 'Danh sách User'],
+            [ 'page' => 'admin.users.create',  'title' => 'Thêm mới user']
         )
-    ])
+    ]) --}}
 
-     <!-- Nav Item - Pages Collapse Menu -->
-     @include('parts.backend.item_page', [
+    <!-- Nav Item - Pages Collapse Menu -->
+    {{-- @include('parts.backend.item_page', [
         'title' => 'Người nước ngoài',
         'page' => 'tourists',
         'icon' => 'fa-solid fa-person',
         'child_route' => array(
-            // [ 'page' => 'admin.users.index', 'title' => 'Danh sách User'],
-            // [ 'page' => 'admin.users.create',  'title' => 'Thêm mới user']
+            [ 'page' => 'admin.users.index', 'title' => 'Danh sách User'],
+            [ 'page' => 'admin.users.create',  'title' => 'Thêm mới user']
         )
-
-        
-    ])
+    ]) --}}
     <!-- Divider -->
     <hr class="sidebar-divider">
 

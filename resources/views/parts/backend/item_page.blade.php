@@ -13,7 +13,7 @@ $show = strpos($routeName, 'admin.'.$page) !== false;
     <div id="collapse_{{$page}}" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item @if($routeName == 'admin.'.$page.'.index') active @endif" href="{{ route('admin.'.$page.'.index') }}">Danh sách</a>
-            <a class="collapse-item @if($routeName == 'admin.'.$page.'.create') active @endif" href="{{ route('admin.'.$page.'.create') }}">Thêm mới</a>
+            {{-- <a class="collapse-item @if($routeName == 'admin.'.$page.'.create') active @endif" href="{{ route('admin.'.$page.'.create') }}">Thêm mới</a> --}}
             @if ($child_route)
                 @foreach ( $child_route as $route)
                     <a class="collapse-item @if($routeName == $route['page']) active @endif" href="{{ route($route['page']) }}">{{$route['title']}}</a>
