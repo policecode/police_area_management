@@ -7,8 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="Nguyễn Hoàng Đạt">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>{{$page_title}}</title>
     <link rel="icon" href="{{asset('backend/img/icons8-beautiful-85.png')}}">
 

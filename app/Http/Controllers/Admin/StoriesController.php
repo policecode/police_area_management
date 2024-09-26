@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Story;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 class StoriesController extends Controller
 {
     /**
@@ -104,5 +104,23 @@ class StoriesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getthumbnail(Request $request) {
+           // $images = Storage::disk('public')->put('example.txt', 'Anh Là Nguyễn Hoàng Đạt');
+        // $images = $request->file('thumbnail')->store('stories/thumbnail');
+        //  asset('storage/photos/131622436_2878115665801114_8573924252147972299_n.jpg')
+        // $contents = Storage::url('example.txt');
+        // $file = $request->hasFile('thumbnail');
+        // Tạo ảnh cục bộ, phòng ngừa bị download
+        return Storage::get('photos/3DVeDHCK808EGGEAfQV90ePa1PUrnf650WLOV7Fu.jpg');
+    }
+
+    public function toolUploadStory(Request $request) {
+        
+        return response()->json( $request->all() );
+    }
+    public function toolUploadChaper(Request $request) {
+        return response()->json('Nguyễn Hoàng Đạt');
     }
 }

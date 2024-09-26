@@ -25,9 +25,9 @@ var vue_data = {
     apiUrl: FVN_LARAVEL_HOME + '/admin/stories',
     statusStory: statusStory,
     options: [
-        {value:1,display: 'list'},
-        {value:2,display: 'of'},
-        {value:3,display: 'options'},
+        {value:1,display: 'list',text:'danh sách'},
+        {value:2,display: 'of',text:'THuộc về'},
+        {value:3,display: 'options',text:'Lựa chọn'},
     ]
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
@@ -45,6 +45,35 @@ var app = new Vue({
     computed: {
     },
     methods: {
+        async testUpload() {
+            var data = new FormData();
+            // this.itemDetail.wp_meta.birthday = this.dateFormatCurrent(this.itemDetail.wp_meta.birthday);
+            // for (let i in this.itemDetail) {
+            //     if ((Array.isArray(this.itemDetail[i]) || (typeof this.itemDetail[i] == 'object')) &&
+            //         (i != 'avatar') && (i != 'resume_file')) {
+            //         let arrayGrade_1 = this.itemDetail[i];
+            //         for (const key in arrayGrade_1) {
+            //             if (Array.isArray(arrayGrade_1[key]) || (typeof arrayGrade_1[key] == 'object')) {
+            //                 let arrayGrade_2 = arrayGrade_1[key];
+            //                 for (const key_1 in arrayGrade_2) {
+            //                     data.append(i + '[' + key + '][' + key_1 + ']', arrayGrade_2[key_1]);
+            //                 }
+            //             } else {
+            //                 data.append(i + '[' + key + ']', arrayGrade_1[key]);
+            //             }
+            //         }
+            //     } else {
+            //         if (this.itemDetail[i]) {
+            //             data.append(i, this.itemDetail[i]);
+            //         }
+            //     }
+            // }
+            
+            data.append('thumbnail', this.files.thumbnail);
+            let jsonData = await new RouteApi().post(`${FVN_LARAVEL_HOME}/api/manager/stories/tool-upload-story`,data, 'form' );
+            console.log(jsonData);
+            
+        },
         updateQueryFromUrl() {
             if (window.location.hash) {
                 let querySearch = queryToObject(window.location.hash.substring(1));

@@ -8,7 +8,7 @@ use App\Enums\StatusStory;
     <script src="{{ asset('assets/js/vue-input.js') }}"></script>
     @include('parts.template.importQuilleditor')
     <script src="{{ asset('assets/js/vue-multiselect.min.js') }}"></script>
-    <script src="{{ asset('assets/css/vue-multiselect.min.css') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets/css/vue-multiselect.min.css') }}">
     <script>
         var statusStory = <?= json_encode(StatusStory::getValues()) ?>
     </script>
@@ -120,8 +120,10 @@ use App\Enums\StatusStory;
                                 <label for="">Ảnh đại diện</label>
                                 <div class="input-group mb-3">
                                     <input type="file" @change="uploadFile($event, 'thumbnail')" class="form-control" id="inputUploadThumbnail">
+                                    <button @click="testUpload" type="button" class="btn btn-warning">test upload</button>
                                 </div>
                                 <img v-if="itemDetail.thumbnail" :src="itemDetail.thumbnail" class="rounded mx-auto d-block w-100" alt="Image thumbnail">
+                                <img src="http://unicode-study.test/api/manager/stories/get-thumbnail" class="rounded mx-auto d-block w-100" alt="" srcset="">
                             </div>
                         </div>
     
@@ -156,7 +158,8 @@ use App\Enums\StatusStory;
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="">Thể loại</label>
-                                <multiselect v-model="itemDetail.category" :options="options" :multiple="false" :close-on-select="true" :searchable="false" placeholder="Trạng thái order" label="display" track-by="value" class="alignleft actions" :show-labels="false" :allow-empty="true" style="width: 200px;"></multiselect> 
+                                @{{itemDetail.category}}
+                                <multiselect v-model="itemDetail.category" :options="options" :multiple="true" :close-on-select="true" :searchable="true" placeholder="Trạng thái order" label="display" track-by="value" class="alignleft actions" :show-labels="false" :allow-empty="true" style="width: 200px;"></multiselect> 
                             </div>
                         </div>
                         <div class="col-12">
