@@ -3,33 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\StoryCategory;
+use App\Models\Author;
+use App\Models\Story;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CategoryController extends Controller
+class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         $dataView = array(
-            'page_title' => 'Quản lý thể loại sách',
+            'page_title' => 'Quản lý tác giả',
         );
        
-        return view('admin_page.category.lists', $dataView);
+        return view('admin_page.author.lists', $dataView);
     }
+
     public function getItems(Request $request) {
         // Thêm dữ liệu vào trong query
       // $request->merge(array_merge($queryDefault, $request->query()));
 
       try {
         //code...
-        $query = Category::filter($request);
+        $query = Author::filter($request);
         $res = [
             'result' => 1,
             'data' => [],
@@ -50,7 +51,6 @@ class CategoryController extends Controller
       }
   }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -58,7 +58,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-       
+        //
     }
 
     /**
@@ -79,7 +79,7 @@ class CategoryController extends Controller
         }
         $data = $validator->validated();
         try {
-            $result = Category::create($data);
+            $result = Author::create($data);
             return response()->json([
                 'status' => 1, 
                 'data' => $result,
@@ -98,9 +98,13 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Author $author)
     {
-        //
+        return response()->json([
+            'status' => 1, 
+            'data' => $author,
+            'message' => 'Get Author'
+        ]);
     }
 
     /**
@@ -109,9 +113,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
-       
+        //
     }
 
     /**
@@ -121,7 +125,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Author $author)
     {
         $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
         if ($validator->fails()) {
@@ -134,10 +138,10 @@ class CategoryController extends Controller
         $data = $validator->validated();
         try {
     
-            $category->update($data);
+            $author->update($data);
             return response()->json([
                 'status' => 1, 
-                'data' => $category,
+                'data' => $author,
                 'message' => 'Update success'
             ]);
         } catch (\Throwable $e) {
@@ -153,17 +157,17 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Author $author)
     {
         try {
-            $count = StoryCategory::select('id')->where('category_id', $category->id)->count();
+            $count = Story::select('id')->where('author_id', $author->id)->count();
             if ($count > 0) {
                 return response()->json([
                     'status' => 0, 
-                    'message' => 'Tag này đã có truyện, không thể xóa'
+                    'message' => 'Tác giả đã có tác phẩm, không thể xóa'
                 ]);
             }
-            $status = $category->delete();
+            $status = $author->delete();
             return response()->json([
                 'status' => $status, 
                 'message' => 'Delete success'
@@ -178,13 +182,13 @@ class CategoryController extends Controller
     private function rules($request)
     {
         $rules = [
-            'name' => 'required|max:255|unique:categories,name',
-            'slug' => 'required|unique:categories,slug',
+            'name' => 'required|max:255|unique:authors,name',
+            'slug' => 'required|unique:authors,slug',
             'description' => '',
         ];
         if ($request->id) {
-            $rules['name'] = 'required|unique:categories,name,'.$request->id;
-            $rules['slug'] = 'required|unique:categories,slug,'.$request->id;
+            $rules['name'] = 'required|unique:authors,name,'.$request->id;
+            $rules['slug'] = 'required|unique:authors,slug,'.$request->id;
       
         }
         return $rules;
@@ -204,12 +208,11 @@ class CategoryController extends Controller
     private function attributes()
     {
         return [
-            'name' => 'Thể loại truyện',
+            'name' => 'Tác giả',
             'slug' => 'Đường dẫn tĩnh',
             'email' => 'Email',
             'password' => 'Mật khâu',
             'group_id' => 'Nhóm'
         ];
     }
-
 }

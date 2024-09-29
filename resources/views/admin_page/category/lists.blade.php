@@ -1,5 +1,4 @@
 <?php 
-use App\Enums\StatusStory;
 ?>
 @extends('layouts.backend')
 @section('content')
@@ -9,9 +8,7 @@ use App\Enums\StatusStory;
     @include('parts.template.importQuilleditor')
     <script src="{{ asset('assets/js/vue-multiselect.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/vue-multiselect.min.css') }}">
-    <script>
-        var statusStory = <?= json_encode(StatusStory::getValues()) ?>
-    </script>
+
     <div id="app">
         <template v-if="screen=='list'">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -21,19 +18,20 @@ use App\Enums\StatusStory;
             </div>
             <a @click="changeScreen('detail')" class="btn btn-primary">Thêm mới</a>
             <div class="row mt-4">
-                <div class="col-3">
+                {{-- <div class="col-3">
                     <select class="form-select">
                         <option selected>Open this select menu</option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
                         <option value="3">Three</option>
                       </select>
-                </div>
+                </div> --}}
                 <div class="col-3">
                     <input v-model="querySearch.keyword" type="text" class="form-control" placeholder="Search...">
                 </div>
-                <div class="col-1">
+                <div class="col-2">
                     <button @click="searchItem" class="btn btn-success">Fillter</button>
+                    <button @click="clearFilter" class="btn btn-danger">Clear Fillter</button>
                 </div>
             </div>
             <div class="card shadow mb-4 mt-2">
@@ -47,11 +45,10 @@ use App\Enums\StatusStory;
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Ảnh bìa</th>
-                                    <th>Tên truyện</th>
-                                    <th>Đường dẫn</th>
-                                    <th>Số lượt xem</th>
-                                    <th>Cập nhật gần đây nhất</th>
+                                    <th>Thể loại</th>
+                                    <th>Đường dẫn tĩnh</th>
+                                    <th>Số lượng truyện</th>
+                                    
                                     <th>Sửa</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -59,11 +56,10 @@ use App\Enums\StatusStory;
                             <tfoot>
                                 <tr>
                                     <th></th>
-                                    <th>Ảnh bìa</th>
-                                    <th>Tên truyện</th>
-                                    <th>Đường dẫn</th>
-                                    <th>Số lượt xem</th>
-                                    <th>Cập nhật gần đây nhất</th>
+                                    <th>Tên tác giả</th>
+                                    <th>Đường dẫn tĩnh</th>
+                                    <th>Số lượng truyện</th>
+                                    
                                     <th>Sửa</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -71,11 +67,9 @@ use App\Enums\StatusStory;
                             <tbody>
                                 <tr v-for="(item, index) in items">
                                     <td>@{{ index + 1 }}</td>
-                                    <td><img :src="item.thumbnail" class="img-thumbnail" /></td>
-                                    <td>@{{ item.title }}</td>
+                                    <td>@{{ item.name }}</td>
                                     <td>@{{ item.slug }}</td>
-                                    <td>@{{ item.view_count }}</td>
-                                    <td>@{{ displayDate(item.updated_at) }}</td>
+                                    <td>@{{ item.story_count }}</td>
                                     <td><a @click="showItem(item)" class="btn btn-warning">Sửa</a></td>
                                     <td><a @click="deleteItem(item)" class="btn btn-danger">Xóa</a></td>
                                 </tr>
@@ -97,15 +91,15 @@ use App\Enums\StatusStory;
         <template v-if="screen=='detail'">
             <div>
                 <form @submit="save">
-                    <legend v-if="itemDetail.id" class="text-primary">Thêm người dùng mới</legend>
-                    <legend v-else class="text-primary">Thêm người dùng mới</legend>
+                    <legend v-if="itemDetail.id" class="text-primary">Cập nhật thông tin tác giả</legend>
+                    <legend v-else class="text-primary">Thêm tác giả mới</legend>
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
-                                <label for="">Tên truyện</label>
-                                <input type="text" v-model="itemDetail.title" class="form-control"
-                                    :class={'is-invalid':errors.title} placeholder="Tên truyện...">
-                                <div v-if="errors.title" class="invalid-feedback">@{{ errors.title[0] }}</div>
+                                <label for="">Tên tác giả</label>
+                                <input type="text" v-model="itemDetail.name" class="form-control"
+                                    :class={'is-invalid':errors.name} placeholder="Tên tác giả...">
+                                <div v-if="errors.name" class="invalid-feedback">@{{ errors.name[0] }}</div>
                             </div>
                         </div>
     
@@ -118,48 +112,13 @@ use App\Enums\StatusStory;
                             </div>
                         </div>
     
-                        <div class="col-6">
-                            <div class="mb-3">
-                                <label for="">Ảnh đại diện</label>
-                                <div class="input-group mb-3">
-                                    <input type="file" @change="uploadFile($event, 'thumbnail')" class="form-control" id="inputUploadThumbnail">
-                                </div>
-                                <img v-if="itemDetail.thumbnail" :src="itemDetail.thumbnail" class="rounded mx-auto d-block w-100" alt="Image thumbnail">
-                            </div>
-                        </div>
-    
-                        <div class="col-6">
-                            <div class="mb-3">
-                                <label for="">Trạng thái truyện</label>
-                                <select v-model="itemDetail.status" class="form-control"
-                                    :class={'is-invalid':errors.status}>
-                                    <option value="">Trạng thái truyện</option>
-                                    <option v-for="item in statusStory" :value="item.key">@{{item.value}}</option>
-                                </select>
-                                <div v-if="errors.status" class="invalid-feedback">@{{ errors.status[0] }}</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="mb-3">
-                                <label for="">Tác giả</label>
-                                <multiselect v-model="selectedAuthor" :class={'is-invalid':errors.author_id} @search-change="getAuthors" :options="authors" :multiple="false" :close-on-select="true" :searchable="true" placeholder="Tìm kiếm tác giả" label="name" track-by="id" class="alignleft actions" :show-labels="false" :allow-empty="true"></multiselect> 
-                                <div v-if="errors.author_id" class="invalid-feedback">@{{ errors.author_id[0] }}</div>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="mb-3">
-                                <label for="">Thể loại</label>
-                                <multiselect v-model="selectedCat" :options="categories" :multiple="true" :close-on-select="true" :searchable="true" placeholder="Thể loại" label="name" track-by="id" class="alignleft actions" :show-labels="false" :allow-empty="true" ></multiselect> 
-                            </div>
-                        </div>
                         <div class="col-12">
                             <div class="mb-3">
-                                <label for="">Giới thiệu truyện</label>
-                                <fvn-text-editor v-model="itemDetail.description" label="Giới thiệu về sản phẩm"></fvn-text-editor>
+                                <label for="">Giới thiệu về tác giả</label>
+                                <fvn-text-editor v-model="itemDetail.description" label="Giới thiệu về tác giả"></fvn-text-editor>
                             </div>
                         </div>
+
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Lưu lại</button>
                             <button @click="closeItem" class="btn btn-danger">Hủy</button>
@@ -172,7 +131,7 @@ use App\Enums\StatusStory;
 
     </div>
     
-    <script src="{{ asset('backend/js/manager_stories.js?version=' . FVN_VERSION_LARAVEL) }}"></script>
+    <script src="{{ asset('backend/js/manager_category.js?version=' . FVN_VERSION_LARAVEL) }}"></script>
 @endsection
 
 

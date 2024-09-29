@@ -11,6 +11,6 @@ use BenSampo\Enum\Enum;
  */
 final class StatusStory extends Enum
 {
-    const FULL =   ['key' => 1, 'value' => 'Full'];
-    const COMMINGOUT =   ['key' => 2, 'value' => 'Đang ra'];
+    const FULL =   ['key' => 1, 'value' => 'Full', 'slug' => 'full'];
+    const COMMINGOUT =   ['key' => 2, 'value' => 'Đang ra', 'slug' => 'dang-ra' ];
 }

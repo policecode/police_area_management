@@ -14,7 +14,7 @@ class CreateStoriesTable extends Migration
     public function up()
     {
         Schema::create('stories', function (Blueprint $table) {
-            $table->integer('id');
+            $table->integer('id')->autoIncrement();
             $table->integer('user_id');
             $table->string('title')->unique();
             $table->string('slug')->unique();

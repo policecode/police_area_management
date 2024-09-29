@@ -647,6 +647,11 @@ function RouteApi() {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		};
 	}
+	this.setHeaderCSRF = function () {
+		return {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+		};
+	}
 
 	this.processResponse = async function (response) {
 		console.log(response.status);
@@ -672,6 +677,7 @@ function RouteApi() {
 		if (header == 'form') {
 			return fetch(url, {
 				method: 'POST',
+				headers: this.setHeaderCSRF(),
 				body: data
 			})
 				.then((response) => {
@@ -700,6 +706,7 @@ function RouteApi() {
 		if (header == 'form') {
 			return fetch(url, {
 				method: 'put',
+				headers: this.setHeaderCSRF(),
 				body: data
 			})
 				.then((response) => {

@@ -45,8 +45,17 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::resource('tourists', 'TouristController');
 
         // Stories
-        Route::get('/stories/get-items', 'StoriesController@getItems')->name('getItems');
+        Route::get('/stories/get-items', 'StoriesController@getItems')->name('stories.getItems');
+        Route::post('/stories/update/{story}', 'StoriesController@update')->name('update-fix');
         Route::resource('stories', 'StoriesController');
+
+        // Author
+        Route::get('/author/get-items', 'AuthorController@getItems')->name('author.getItems');
+        Route::resource('author', 'AuthorController');
+
+        // Category
+        Route::get('/category/get-items', 'CategoryController@getItems')->name('category.getItems');
+        Route::resource('category', 'CategoryController');
     });
 });
 

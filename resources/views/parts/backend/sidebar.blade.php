@@ -37,7 +37,10 @@
         'title' => 'Quản lý truyện',
         'page' => 'stories',
         'icon' => 'fas fa-users',
-        'child_route' => [],
+        'child_route' => [
+            [ 'page' => 'admin.author.index', 'title' => 'Danh sách tác giả'],
+            [ 'page' => 'admin.category.index', 'title' => 'Thể loại truyện'],
+        ],
     ])
     <!-- Nav Item - Pages Collapse Menu -->
     {{-- @include('parts.backend.item_page', [

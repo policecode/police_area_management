@@ -6,12 +6,9 @@ var vue_data = {
     items: [],
     screen: 'list',
     itemDetail: {
-        thumbnail: "",
-        status: "",
-        category: []
+        slug: "",
+        name: ""
     },
-    selectedCat: [],
-    selectedAuthor: null,
     files: {},
     listId: [],
     errors: {},
@@ -25,15 +22,16 @@ var vue_data = {
         order_by: 'id',
         order_type: 'DESC'
     },
-    apiUrl: FVN_LARAVEL_HOME + '/admin/stories',
-    statusStory: statusStory,
-    categories: [],
-    authors: [],
-    pointInTime: null
+    apiUrl: FVN_LARAVEL_HOME + '/admin/category',
+    options: [
+        {value:1,display: 'list',text:'danh sách'},
+        {value:2,display: 'of',text:'THuộc về'},
+        {value:3,display: 'options',text:'Lựa chọn'},
+    ]
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
 // Vue.component('datepicker', vuejsDatepicker);
-Vue.component('multiselect', window.VueMultiselect.default);
+// Vue.component('multiselect', window.VueMultiselect.default);
 // Vue.component('star-rating', VueStarRating.default);
 var app = new Vue({
     el: '#app',
@@ -42,40 +40,11 @@ var app = new Vue({
         this.loaded = true;
         this.updateQueryFromUrl();
         this.searchItem();
-        this.getCategories();
     },
     computed: {
     },
     methods: {
-        async testUpload() {
-            var data = new FormData();
-            // this.itemDetail.wp_meta.birthday = this.dateFormatCurrent(this.itemDetail.wp_meta.birthday);
-            // for (let i in this.itemDetail) {
-            //     if ((Array.isArray(this.itemDetail[i]) || (typeof this.itemDetail[i] == 'object')) &&
-            //         (i != 'avatar') && (i != 'resume_file')) {
-            //         let arrayGrade_1 = this.itemDetail[i];
-            //         for (const key in arrayGrade_1) {
-            //             if (Array.isArray(arrayGrade_1[key]) || (typeof arrayGrade_1[key] == 'object')) {
-            //                 let arrayGrade_2 = arrayGrade_1[key];
-            //                 for (const key_1 in arrayGrade_2) {
-            //                     data.append(i + '[' + key + '][' + key_1 + ']', arrayGrade_2[key_1]);
-            //                 }
-            //             } else {
-            //                 data.append(i + '[' + key + ']', arrayGrade_1[key]);
-            //             }
-            //         }
-            //     } else {
-            //         if (this.itemDetail[i]) {
-            //             data.append(i, this.itemDetail[i]);
-            //         }
-            //     }
-            // }
-            
-            data.append('thumbnail', this.files.thumbnail);
-            let jsonData = await new RouteApi().post(`${FVN_LARAVEL_HOME}/api/manager/stories/tool-upload-story`,data, 'form' );
-            console.log(jsonData);
-            
-        },
+
         updateQueryFromUrl() {
             if (window.location.hash) {
                 let querySearch = queryToObject(window.location.hash.substring(1));
@@ -88,41 +57,27 @@ var app = new Vue({
         changeScreen(scr) {
             this.screen = scr;
         },
-        async showItem(item) {
-            console.log(item);
-            
-            // Selected Author
-            let jsonData = await new RouteApi().get(`${FVN_LARAVEL_HOME}/admin/author/${item.author_id}`);
-            this.selectedAuthor = jsonData.data;
-            // Selected Catefory
-            for (let i = 0; i < item.category.length; i++) {
-                for (let j = 0; j < this.categories.length; j++) {
-                    if (item.category[i] == this.categories[j].id) {
-                        this.selectedCat.push(this.categories[j]);
-                        break;
-                    }
-                    
-                }
-                
-            }
+        showItem(item) {
             this.itemDetail = item;
             this.screen = 'detail';
         },
         closeItem() {
             this.itemDetail = {
-                thumbnail: "",
-                status: "",
-                category: []
+                slug: "",
+                name: ""
             };
-            this.selectedCat = [];
             this.errors = {};
             this.screen = 'list';
         },
         async deleteItem(item) {
-            if (confirm(`Do you want to delete the Story: ${item.title}`)) {
+            if (confirm(`Do you want to delete the Author: ${item.name}`)) {
                 let jsonData = await new RouteApi().delete(`${this.apiUrl}/${item.id}`, {});
-                jnotice(jsonData.message);
-                this.getItems();
+                if (jsonData.status) {
+                    jnotice(jsonData.message);
+                    this.getItems();
+                } else {
+                    jAlert(jsonData.message);
+                }
             }
         },
         searchItem() {
@@ -134,6 +89,8 @@ var app = new Vue({
             this.buildQueryItem();
             const jsonData = await new RouteApi().get(this.getItemUrl)
             this.loading = false;
+            // console.log(jsonData);
+            
             if (jsonData.result) {
                 this.items = jsonData.data;
                 if (this.itemDetail.id) {
@@ -153,19 +110,6 @@ var app = new Vue({
             this.buildQueryItem(true);
             let jsonData = await new RouteApi().get(this.getItemUrl);
             this.querySearch.total = jsonData.total;
-        },
-        async getCategories() {
-            let jsonData = await new RouteApi().get(`${FVN_LARAVEL_HOME}/admin/category/get-items?per_page=0`);
-            this.categories = jsonData.data;
-        },
-        async getAuthors(newKey) {
-            if (this.pointInTime) {
-                clearTimeout(this.pointInTime);
-            }
-            this.pointInTime = setTimeout(async () => {
-                let jsonData = await new RouteApi().get(`${FVN_LARAVEL_HOME}/admin/author/get-items?keyword=${newKey}&per_page=5`);
-                this.authors = jsonData.data;
-            }, 300)
         },
         nextPage(page) {
             this.querySearch.page = page;
@@ -211,30 +155,12 @@ var app = new Vue({
             // }
         },
         async save(e) {
-            e.preventDefault()
-            var data = new FormData();
-            
-            for (let i in this.itemDetail) {
-                if ((Array.isArray(this.itemDetail[i]) || (typeof this.itemDetail[i] == 'object'))) {
-                    let valueObj = this.itemDetail[i];
-                    for (const key in valueObj) {
-                        data.append(i + '[' + key + ']', valueObj[key]);
-                    }
-                } else {
-                    if (this.itemDetail[i]) {
-                        data.append(i, this.itemDetail[i]);
-                    }
-                }
-            }
-            if (this.files.thumbnail) {
-                data.append('thumbnail', this.files.thumbnail);
-            }
             this.loading = true;
             let jsonData;
             if (this.itemDetail.id) {
-                jsonData = await new RouteApi().post(`${this.apiUrl}/update/${this.itemDetail.id}`,data, 'form' )
+                jsonData = await new RouteApi().put(`${this.apiUrl}/${this.itemDetail.id}`,this.itemDetail )
             } else {
-                jsonData = await new RouteApi().post(`${this.apiUrl}`,data, 'form' );
+                jsonData = await new RouteApi().post(`${this.apiUrl}`,this.itemDetail );
             }
             this.loading = false;
             
@@ -332,17 +258,8 @@ var app = new Vue({
 
     },
     watch: {
-        'itemDetail.title' (newVal) {
+        'itemDetail.name' (newVal) {
             this.itemDetail.slug = fvnChangeToSlug(newVal);
-        },
-        selectedCat(newVal) {
-            this.itemDetail.category = [];
-            for (let i = 0; i < newVal.length; i++) {
-                this.itemDetail.category.push(newVal[i].id);
-            }
-        },
-        selectedAuthor(newVal) {
-            this.itemDetail.author_id = newVal.id;
         }
     },
 });
