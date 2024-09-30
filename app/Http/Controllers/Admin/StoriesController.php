@@ -318,11 +318,15 @@ class StoriesController extends Controller
             $isCheckStory = Story::getBySlug(Str::slug($data['title'], "-"))->first();
             if ($isCheckStory) {
                 $lastChaper = Chaper::getByStory($isCheckStory->id)->orderBy('position', 'DESC')->first();
+                $skip_position = 1;
+                if ($lastChaper) {
+                    $skip_position = $lastChaper->position + 1;
+                }
                 return response()->json([
                     'status' => 1, 
                     'data' => $isCheckStory,
                     'message' => $data['title'].' đã tồn tại',
-                    'skip_position' => $lastChaper->position + 1
+                    'skip_position' => $skip_position
                 ]);
             } 
             // return response()->json([
@@ -410,13 +414,16 @@ class StoriesController extends Controller
             foreach ($list_chapers as $key => $chaper_obj) {
                 $listPosition[] = $chaper_obj['position'];
             }
-            $resultChapers = Chaper::getByStory($story->id)->whereIn($listPosition)->get();
+            $resultChapers = Chaper::getByStory($story->id)->whereIn('position',$listPosition)->get();
+ 
             $dataInsert = [];
             foreach ($list_chapers as $key => $chaper_obj) {
-                $flag = false;
-                foreach ($resultChapers as $k => $obj) {
-                    if ($obj->position == $chaper_obj['position']) {
-                        $flag = true;
+                $flag = true;
+                if (count($resultChapers) > 0) {
+                    foreach ($resultChapers as $k => $obj) {
+                        if ($obj->position == $chaper_obj['position']) {
+                            $flag = false;
+                        }
                     }
                 }
                 # code...
@@ -434,7 +441,6 @@ class StoriesController extends Controller
             $result = '';
             if (count($dataInsert) > 0) {
                 $result = Chaper::insert($dataInsert);
-                $story->update([]);
             }
             DB::commit();
             return response()->json([
@@ -448,6 +454,5 @@ class StoriesController extends Controller
                 'status' => 0, 'data'=> [], 'message' => $e->getMessage()
             ], 200);
         }
-        return response()->json('Nguyễn Hoàng Đạt');
     }
 }
