@@ -1,5 +1,4 @@
 <?php 
-use App\Enums\StatusStory;
 ?>
 @extends('layouts.backend')
 @section('content')
@@ -10,7 +9,7 @@ use App\Enums\StatusStory;
     <script src="{{ asset('assets/js/vue-multiselect.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/vue-multiselect.min.css') }}">
     <script>
-        var statusStory = <?= json_encode(StatusStory::getValues()) ?>
+        var story = <?= json_encode($story) ?>;
     </script>
     <div id="app">
         <template v-if="screen=='list'">
@@ -38,7 +37,7 @@ use App\Enums\StatusStory;
             </div>
             <div class="card shadow mb-4 mt-2">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Quản lý người dùng</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Truyện: @{{story.title}} </h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -47,9 +46,9 @@ use App\Enums\StatusStory;
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Ảnh bìa</th>
-                                    <th>Tên truyện</th>
-                                    <th>Đường dẫn</th>
+                                    <th>Chương</th>
+                                    <th>Đường dẫn tĩnh</th>
+                                    <th>Vị trí</th>
                                     <th>Số lượt xem</th>
                                     <th>Cập nhật gần đây nhất</th>
                                     <th>Hành động</th>
@@ -58,9 +57,9 @@ use App\Enums\StatusStory;
                             <tfoot>
                                 <tr>
                                     <th></th>
-                                    <th>Ảnh bìa</th>
-                                    <th>Tên truyện</th>
-                                    <th>Đường dẫn</th>
+                                    <th>Chương</th>
+                                    <th>Đường dẫn tĩnh</th>
+                                    <th>Vị trí</th>
                                     <th>Số lượt xem</th>
                                     <th>Cập nhật gần đây nhất</th>
                                     <th>Hành động</th>
@@ -69,15 +68,14 @@ use App\Enums\StatusStory;
                             <tbody>
                                 <tr v-for="(item, index) in items">
                                     <td>@{{ index + 1 }}</td>
-                                    <td><img :src="item.thumbnail" class="img-thumbnail w-75" /></td>
-                                    <td>@{{ item.title }}</td>
+                                    <td>@{{ item.name }}</td>
                                     <td>@{{ item.slug }}</td>
-                                    <td>@{{ item.view_count }}</td>
+                                    <td>@{{ item.position }}</td>
+                                    <td>@{{ item.view }}</td>
                                     <td>@{{ displayDate(item.updated_at) }}</td>
                                     <td>
                                         <a @click="showItem(item)" class="btn btn-warning">Sửa</a>
                                         <a @click="deleteItem(item)" class="btn btn-danger mt-1">Xóa</a>
-                                        <a :href="linkChapers(item.id)" class="btn btn-success mt-1">Chapers</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -98,15 +96,15 @@ use App\Enums\StatusStory;
         <template v-if="screen=='detail'">
             <div>
                 <form @submit="save">
-                    <legend v-if="itemDetail.id" class="text-primary">Thêm người dùng mới</legend>
-                    <legend v-else class="text-primary">Thêm người dùng mới</legend>
+                    <legend v-if="itemDetail.id" class="text-primary">Cập nhật chương mới</legend>
+                    <legend v-else class="text-primary">Thêm chương mới</legend>
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
-                                <label for="">Tên truyện</label>
-                                <input type="text" v-model="itemDetail.title" class="form-control"
-                                    :class={'is-invalid':errors.title} placeholder="Tên truyện...">
-                                <div v-if="errors.title" class="invalid-feedback">@{{ errors.title[0] }}</div>
+                                <label for="">Thông tin chương</label>
+                                <input type="text" v-model="itemDetail.name" class="form-control"
+                                    :class={'is-invalid':errors.name} placeholder="Thông tin chương truyện...">
+                                <div v-if="errors.name" class="invalid-feedback">@{{ errors.name[0] }}</div>
                             </div>
                         </div>
     
@@ -118,49 +116,24 @@ use App\Enums\StatusStory;
                                 <div v-if="errors.slug" class="invalid-feedback">@{{ errors.slug[0] }}</div>
                             </div>
                         </div>
-    
-                        <div class="col-6">
-                            <div class="mb-3">
-                                <label for="">Ảnh đại diện</label>
-                                <div class="input-group mb-3">
-                                    <input type="file" @change="uploadFile($event, 'thumbnail')" class="form-control" id="inputUploadThumbnail">
-                                </div>
-                                <img v-if="itemDetail.thumbnail" :src="itemDetail.thumbnail" class="rounded mx-auto d-block w-100" alt="Image thumbnail">
-                            </div>
-                        </div>
-    
-                        <div class="col-6">
-                            <div class="mb-3">
-                                <label for="">Trạng thái truyện</label>
-                                <select v-model="itemDetail.status" class="form-control"
-                                    :class={'is-invalid':errors.status}>
-                                    <option value="">Trạng thái truyện</option>
-                                    <option v-for="item in statusStory" :value="item.key">@{{item.value}}</option>
-                                </select>
-                                <div v-if="errors.status" class="invalid-feedback">@{{ errors.status[0] }}</div>
-                            </div>
-                        </div>
 
                         <div class="col-6">
                             <div class="mb-3">
-                                <label for="">Tác giả</label>
-                                <multiselect v-model="selectedAuthor" :class={'is-invalid':errors.author_id} @search-change="getAuthors" :options="authors" :multiple="false" :close-on-select="true" :searchable="true" placeholder="Tìm kiếm tác giả" label="name" track-by="id" class="alignleft actions" :show-labels="false" :allow-empty="true"></multiselect> 
-                                <div v-if="errors.author_id" class="invalid-feedback">@{{ errors.author_id[0] }}</div>
+                                <label for="">Vị trí chương truyện</label>
+                                <input type="number" min="1" v-model="itemDetail.position" class="form-control"
+                                    :class={'is-invalid':errors.position} placeholder="Vị trí...">
+                                <div v-if="errors.position" class="invalid-feedback">@{{ errors.position[0] }}</div>
                             </div>
                         </div>
-
-                        <div class="col-6">
-                            <div class="mb-3">
-                                <label for="">Thể loại</label>
-                                <multiselect v-model="selectedCat" :options="categories" :multiple="true" :close-on-select="true" :searchable="true" placeholder="Thể loại" label="name" track-by="id" class="alignleft actions" :show-labels="false" :allow-empty="true" ></multiselect> 
-                            </div>
-                        </div>
+    
                         <div class="col-12">
                             <div class="mb-3">
-                                <label for="">Giới thiệu truyện</label>
-                                <fvn-text-editor v-model="itemDetail.description" label="Giới thiệu về sản phẩm"></fvn-text-editor>
+                                <label for="">Nội dung chương truyện - Số ký tự: @{{countContent}}</label>
+                                <fvn-text-editor v-model="itemDetail.content" label="Nội dung chương truyện" :class={'is-invalid':errors.content} ></fvn-text-editor>
+                                <div v-if="errors.content" class="invalid-feedback">@{{ errors.content[0] }}</div>
                             </div>
                         </div>
+    
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Lưu lại</button>
                             <button @click="closeItem" class="btn btn-danger">Hủy</button>
@@ -173,7 +146,7 @@ use App\Enums\StatusStory;
 
     </div>
     
-    <script src="{{ asset('backend/js/manager_stories.js?version=' . FVN_VERSION_LARAVEL) }}"></script>
+    <script src="{{ asset('backend/js/manager_chapers.js?version=' . FVN_VERSION_LARAVEL) }}"></script>
 @endsection
 
 

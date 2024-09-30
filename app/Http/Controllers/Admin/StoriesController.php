@@ -63,7 +63,7 @@ class StoriesController extends Controller
             'result' => 0, 'data'=> [], 'message' => $e->getMessage()
         ], 400);
       }
-  }
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -406,11 +406,21 @@ class StoriesController extends Controller
         try {
             DB::beginTransaction();
             $list_chapers = $request->list_chaper;
+            $listPosition = [];
+            foreach ($list_chapers as $key => $chaper_obj) {
+                $listPosition[] = $chaper_obj['position'];
+            }
+            $resultChapers = Chaper::getByStory($story->id)->whereIn($listPosition)->get();
             $dataInsert = [];
             foreach ($list_chapers as $key => $chaper_obj) {
+                $flag = false;
+                foreach ($resultChapers as $k => $obj) {
+                    if ($obj->position == $chaper_obj['position']) {
+                        $flag = true;
+                    }
+                }
                 # code...
-                $isCheckChaper = Chaper::getByPosition($chaper_obj['position'])->getByStory($story->id)->first();
-                if (!$isCheckChaper) {
+                if ($flag) {
                     $dataInsert[] = array_merge((array)$chaper_obj, array(
                         'user_id' => 1,
                         'slug' => Str::slug($chaper_obj['name'], "-"),

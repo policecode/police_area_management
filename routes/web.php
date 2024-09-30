@@ -49,6 +49,14 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::post('/stories/update/{story}', 'StoriesController@update')->name('update-fix');
         Route::resource('stories', 'StoriesController');
 
+         // Chapers
+         Route::get('/chapers/get-items', 'ChaperController@getItems')->name('chapers.getItems');
+         Route::get('/chapers/{story}', 'ChaperController@index')->name('chapers.index');
+         Route::post('/chapers/{story}', 'ChaperController@store')->name('chapers.store');
+         Route::get('/chapers/{story}/{chaper}', 'ChaperController@show')->name('chapers.show');
+         Route::put('/chapers/{story}/{chaper}', 'ChaperController@update')->name('chapers.update');
+         Route::delete('/chapers/{story}/{chaper}', 'ChaperController@destroy')->name('chapers.destroy');
+
         // Author
         Route::get('/author/get-items', 'AuthorController@getItems')->name('author.getItems');
         Route::resource('author', 'AuthorController');

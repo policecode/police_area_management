@@ -329,11 +329,15 @@ var app = new Vue({
         formatMoney(value) {
             return formatMoney(value);
         },
-
+        linkChapers(story_id) {
+            return `${FVN_LARAVEL_HOME}/admin/chapers/${story_id}`;
+        }
     },
     watch: {
         'itemDetail.title' (newVal) {
-            this.itemDetail.slug = fvnChangeToSlug(newVal);
+            if (newVal) {
+                this.itemDetail.slug = fvnChangeToSlug(newVal);
+            }
         },
         selectedCat(newVal) {
             this.itemDetail.category = [];

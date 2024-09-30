@@ -18,9 +18,9 @@ class CreateChapersTable extends Migration
             $table->integer('user_id');
             $table->string('name');
             $table->string('slug');
-            $table->integer('story_id');
+            $table->integer('story_id')->index();
             $table->integer('view')->default(0);
-            $table->text('content');
+            $table->text('content')->fulltext();
             $table->smallInteger('position');
             $table->timestamps();
         });

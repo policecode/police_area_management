@@ -260,7 +260,9 @@ var app = new Vue({
     },
     watch: {
         'itemDetail.name' (newVal) {
-            this.itemDetail.slug = fvnChangeToSlug(newVal);
+            if (newVal) {
+                this.itemDetail.slug = fvnChangeToSlug(newVal);
+            }
         }
     },
 });

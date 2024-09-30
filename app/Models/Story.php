@@ -10,7 +10,8 @@ class Story extends Model
     use HasFactory, Filterable;
     protected $appends = ['category'];
     public $filterKeywords = ['title', ]; // Sử dụng trong trường hợp có trường keyword
-    public $filterFields  = ['title', ]; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
+    public $filterFields  = ['title']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
+    public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
     /**
      * The attributes that are mass assignable.
      *

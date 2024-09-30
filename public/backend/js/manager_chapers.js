@@ -5,9 +5,8 @@ var vue_data = {
     getItemUrl: '',
     items: [],
     screen: 'list',
-    itemDetail: {
-        slug: "",
-        name: ""
+    itemDetail: { 
+        content: ""
     },
     files: {},
     listId: [],
@@ -19,19 +18,17 @@ var vue_data = {
         page: 1,
         per_page: 20,
         keyword: '',
-        order_by: 'id',
-        order_type: 'DESC'
+        order_by: 'position',
+        order_type: 'DESC',
+        story_id: story.id
     },
-    apiUrl: FVN_LARAVEL_HOME + '/admin/category',
-    options: [
-        {value:1,display: 'list',text:'danh sách'},
-        {value:2,display: 'of',text:'THuộc về'},
-        {value:3,display: 'options',text:'Lựa chọn'},
-    ]
+    apiUrl: FVN_LARAVEL_HOME + '/admin/chapers',
+    story: story,
+    pointInTime: null
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
 // Vue.component('datepicker', vuejsDatepicker);
-// Vue.component('multiselect', window.VueMultiselect.default);
+Vue.component('multiselect', window.VueMultiselect.default);
 // Vue.component('star-rating', VueStarRating.default);
 var app = new Vue({
     el: '#app',
@@ -42,9 +39,16 @@ var app = new Vue({
         this.searchItem();
     },
     computed: {
+        countContent() {
+            str1 = this.itemDetail.content.replace(/(^\s*)|(\s*$)/gi,"");
+            //convert 2 or more spaces to 1  
+            str1 = str1.replace(/[ ]{2,}/gi," ");
+            // exclude newline with a start spacing  
+            str1 = str1.replace(/\n /,"\n");
+		    return str1.split(' ').length;
+        }
     },
     methods: {
-
         updateQueryFromUrl() {
             if (window.location.hash) {
                 let querySearch = queryToObject(window.location.hash.substring(1));
@@ -57,27 +61,22 @@ var app = new Vue({
         changeScreen(scr) {
             this.screen = scr;
         },
-        showItem(item) {
+        async showItem(item) {
             this.itemDetail = item;
             this.screen = 'detail';
         },
         closeItem() {
             this.itemDetail = {
-                slug: "",
-                name: ""
+                content: ""
             };
             this.errors = {};
             this.screen = 'list';
         },
         async deleteItem(item) {
-            if (confirm(`Do you want to delete the Author: ${item.name}`)) {
-                let jsonData = await new RouteApi().delete(`${this.apiUrl}/${item.id}`, {});
-                if (jsonData.status) {
-                    jnotice(jsonData.message);
-                    this.getItems();
-                } else {
-                    jAlert(jsonData.message);
-                }
+            if (confirm(`Do you want to delete the Chaper: ${item.name}`)) {
+                let jsonData = await new RouteApi().delete(`${this.apiUrl}/${this.story.id}/${item.id}`, {});
+                jnotice(jsonData.message);
+                this.getItems();
             }
         },
         searchItem() {
@@ -87,10 +86,9 @@ var app = new Vue({
         async getItems() {
             this.loading = true;
             this.buildQueryItem();
-            const jsonData = await new RouteApi().get(this.getItemUrl)
-            this.loading = false;
-            // console.log(jsonData);
+            const jsonData = await new RouteApi().get(this.getItemUrl);
             
+            this.loading = false;
             if (jsonData.result) {
                 this.items = jsonData.data;
                 if (this.itemDetail.id) {
@@ -155,15 +153,15 @@ var app = new Vue({
             // }
         },
         async save(e) {
+            e.preventDefault()
             this.loading = true;
             let jsonData;
             if (this.itemDetail.id) {
-                jsonData = await new RouteApi().put(`${this.apiUrl}/${this.itemDetail.id}`,this.itemDetail )
+                jsonData = await new RouteApi().put(`${this.apiUrl}/${this.story.id}/${this.itemDetail.id}`,this.itemDetail )
             } else {
-                jsonData = await new RouteApi().post(`${this.apiUrl}`,this.itemDetail );
+                jsonData = await new RouteApi().post(`${this.apiUrl}/${this.story.id}`,this.itemDetail );
             }
             this.loading = false;
-            
             if (jsonData.status) {
                 jnotice(jsonData.message);
                 if (this.itemDetail.id) {
@@ -262,6 +260,7 @@ var app = new Vue({
             if (newVal) {
                 this.itemDetail.slug = fvnChangeToSlug(newVal);
             }
-        }
+        },
+      
     },
 });
