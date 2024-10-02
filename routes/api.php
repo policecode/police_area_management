@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TouristController;
+use App\Http\Controllers\Client\HomeController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,6 +28,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
             Route::post('/tool-upload-story', 'StoriesController@toolUploadStory');
             Route::post('/tool-upload-chaper/{story}', 'StoriesController@toolUploadChaper');
         });
-// D:\ProgramWork\laragon\www\unicode-study\app\Http\Controllers\Admin\StoriesController.php
     });
 });
+Route::get('search/keyword', [HomeController::class, 'searchKeyword']);

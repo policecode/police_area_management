@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Client\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 // use App\Http\Controllers\Admin\UserController;
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +17,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('index');
-Route::middleware('auth_two')->get('/home', function () {
-    dd('Page home');
+Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/tag/{tag_slug}', function(Request $request, $tag_slug) {{
+    dd($tag_slug);
+}})->name('client.tag');
+Route::get('/story/{story_slug}', function(Request $request, $story_slug) {{
+    dd($story_slug);
+}})->name('client.story');
+Route::get('/read/{story_slug}/{chaper_slug}', function(Request $request, $story_slug, $chaper_slug) {{
+    dd($story_slug);
+}})->name('client.chaper');
+Route::get('/test_client', function (Request $request) {
+    dd($request->ip());
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth_two']], function() {
@@ -36,13 +45,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
             Route::delete('/delete/{user}', 'UserController@delete')->name('delete');
         });
 
-        Route::resource('companies', 'CompanyController');
-        Route::resource('businesses', 'BusinessController');
+        // Route::resource('companies', 'CompanyController');
+        // Route::resource('businesses', 'BusinessController');
 
         // TouristController
-        Route::get('tourists/export', 'TouristController@export')->name('tourists.export');
-        Route::post('tourists/import', 'TouristController@import')->name('tourists.import');
-        Route::resource('tourists', 'TouristController');
+        // Route::get('tourists/export', 'TouristController@export')->name('tourists.export');
+        // Route::post('tourists/import', 'TouristController@import')->name('tourists.import');
+        // Route::resource('tourists', 'TouristController');
 
         // Stories
         Route::get('/stories/get-items', 'StoriesController@getItems')->name('stories.getItems');

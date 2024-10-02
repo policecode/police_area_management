@@ -158,7 +158,7 @@ use App\Enums\StatusStory;
                         <div class="col-12">
                             <div class="mb-3">
                                 <label for="">Giới thiệu truyện</label>
-                                <fvn-text-editor v-model="itemDetail.description" label="Giới thiệu về sản phẩm"></fvn-text-editor>
+                                <fvn-text-editor v-model="itemDetail.description" label="Giới thiệu truyện"></fvn-text-editor>
                             </div>
                         </div>
                         <div class="col-12">

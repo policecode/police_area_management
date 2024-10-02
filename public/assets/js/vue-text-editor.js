@@ -31,6 +31,7 @@ Vue.component("fvn-text-editor", {
                         },
                     },
                 },
+                placeholder: this.label
             },
         };
     },
@@ -58,9 +59,11 @@ Vue.component("fvn-text-editor", {
             input.setAttribute("accept", "image/*");
             input.click();
             input.onchange = async function () {
-                //   const file = input.files[0];
-                //   let quill = this.$refs.myQuillEditor.quill
-                //   const range = quill.getSelection();
+                  const file = input.files[0];
+                  let quill = this.$refs.myQuillEditor.quill
+                  const range = quill.getSelection();
+                  console.log(file);
+                  
                 //   let formData = new FormData();
                 //   formData.append('path','public')
                 //   formData.append('file',file)

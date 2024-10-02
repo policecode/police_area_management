@@ -52,9 +52,19 @@ class StoriesController extends Controller
             $res['total'] = $query->getTotal();
         }else{
             $results = $query->get();
-            foreach ($results as $key => $item) {
-                $results[$key]->thumbnail = route('index').'/'.$item->thumbnail;
+            $story_arr= $results->pluck('id');
+            $listStoryCat = StoryCategory::whereIn('story_id', $story_arr)->get()->groupBy('story_id');
+            $listCat = [];
+            foreach ($listStoryCat as $key => $items) {
+                for ($i=0; $i < $items->count(); $i++) { 
+                    $listCat[$key][] = $items[$i]->category_id;
+                }
             }
+            $results->each(function ($item, $key) use($listCat){
+                $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                $item->url = route('client.story', ['story_slug' => $item->slug]);
+                $item->category = $listCat[$item->id];
+            });
             $res['data'] = $results;
         }
         return response()->json($res);
