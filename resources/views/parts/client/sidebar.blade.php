@@ -203,7 +203,7 @@ $all_categories = get_all_categories();
         per_page: 10,
         keyword: '',
         order_by: 'id',
-        order_type: 'ASC'
+        order_type: 'DESC'
     },
     apiUrl: FVN_LARAVEL_HOME + '/api',
     pointInTime: null

@@ -36,11 +36,12 @@
                                         <span class="story-item__badge badge text-bg-success">Full</span>
                                     @endif
 
-                                    <span
-                                        class="story-item__badge story-item__badge-hot badge text-bg-danger">Hot</span>
+                                    @if ($item['star_average'] > 7)
+                                        <span class="story-item__badge story-item__badge-hot badge text-bg-danger">Hot</span>
+                                    @endif
+
                                     @if ($item['after_day'] < 30)
-                                    <span
-                                        class="story-item__badge story-item__badge-new badge text-bg-info text-light">New</span>
+                                    <span class="story-item__badge story-item__badge-new badge text-bg-info text-light">New</span>
                                     @endif
 
                                 </div>
@@ -85,7 +86,7 @@
         per_page: 15,
         cat_id: '',
         order_by: 'star_count',
-        order_type: 'ASC'
+        order_type: 'DESC'
     },
     apiUrl: FVN_LARAVEL_HOME + '/api',
     pointInTime: null,

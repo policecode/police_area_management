@@ -25,6 +25,9 @@ class CreateStoriesTable extends Migration
             $table->integer('view_count')->default(0);
             $table->integer('author_id')->nullable();
             $table->tinyInteger('status')->nullable();
+            $table->tinyInteger('status')->nullable();
+            $table->timestamp('last_chapers')->nullable();
+            $table->bigInteger('chaper_id')->nullable();
             $table->timestamps();
         });
     }

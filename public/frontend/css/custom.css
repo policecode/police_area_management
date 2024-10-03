@@ -1,1 +1,4 @@
 .hover-darkgrey:hover{background-color: darkgrey;}
+.hover_primary:hover {
+    color: var(--bs-primary) !important;
+}

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -21,12 +22,13 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/tag/{tag_slug}', function(Request $request, $tag_slug) {{
     dd($tag_slug);
 }})->name('client.tag');
-Route::get('/story/{story_slug}', function(Request $request, $story_slug) {{
-    dd($story_slug);
-}})->name('client.story');
+Route::get('/story/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
 Route::get('/read/{story_slug}/{chaper_slug}', function(Request $request, $story_slug, $chaper_slug) {{
     dd($story_slug);
 }})->name('client.chaper');
+Route::get('/author/{author_slug}', function(Request $request, $author_slug) {{
+    dd($author_slug);
+}})->name('client.author');
 Route::get('/test_client', function (Request $request) {
     dd($request->ip());
 });

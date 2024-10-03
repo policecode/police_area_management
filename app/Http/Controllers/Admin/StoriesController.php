@@ -360,7 +360,7 @@ class StoriesController extends Controller
                 }
             $enumStatus = [];
             foreach (StatusStory::getValues() as $key => $enumObj) {
-                if ($enumObj['slug'] == 'full') {
+                if ($enumObj['slug'] == Str::slug($data['status'])) {
                     $enumStatus = $enumObj;
                 }
             }
@@ -451,6 +451,11 @@ class StoriesController extends Controller
             $result = '';
             if (count($dataInsert) > 0) {
                 $result = Chaper::insert($dataInsert);
+                $last_record = Chaper::orderBy('id', 'DESC')->first();
+                $story->update([
+                    'last_chapers' => Carbon::now(),
+                    'chaper_id' => $last_record->id
+                ]);
             }
             DB::commit();
             return response()->json([

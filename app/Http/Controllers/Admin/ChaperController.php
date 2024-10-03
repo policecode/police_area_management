@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Chaper;
 use App\Models\Story;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -93,7 +94,11 @@ class ChaperController extends Controller
                 'content' => $data['content'],
                 'position' => $data['position']
             ]);
-      
+            Story::find($story)->update([
+                'last_chapers' => Carbon::now(),
+                'chaper_id' => $chaper->id
+            ]);
+     
             DB::commit();
             return response()->json([
                 'status' => 1, 

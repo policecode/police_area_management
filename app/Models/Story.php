@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\StatusStory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
 class Story extends Model
 {
     use HasFactory, Filterable;
-    protected $appends = [];
+    protected $appends = ['status_name'];
     public $filterKeywords = ['title', ]; // Sử dụng trong trường hợp có trường keyword
     public $filterFields  = ['title']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
     public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
@@ -18,33 +19,30 @@ class Story extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'title', 'slug', 'thumbnail', 'description', 'star_count', 'star_average', 'view_count', 'author_id', 'status', 'created_at', 'updated_at'
+        'user_id', 'title', 'slug', 'thumbnail', 'description', 'star_count', 'star_average', 'view_count', 'author_id', 'status', 'created_at', 'updated_at', 'last_chapers', 'chaper_id'
     ];
 
     private $joinAuthor = false;
     private $joinCategories = false;
+    private $joinLastChapers = false;
 
     public function categories() {
         return $this->belongsToMany(Category::class, 'story_categories', 'story_id', 'category_id');
     }
-    // public function getCategoryAttribute()
-    // {
-    //     // Không nên dùng attribute để query dữ liệu
-    //     if ($this->id) {
-    //         $results = StoryCategory::where('story_id', $this->id)->get();
-
-    //         if ($results) {
-    //             $tmpCat = [];
-    //             foreach ($results as $key => $item) {
-    //                 $tmpCat[] = $item->category_id;
-    //             }
-    //             return $tmpCat;
-    //         }
-    //     }
-    //     return [];
-    // }
+    public function getStatusNameAttribute()
+    {
+        // Không nên dùng attribute để query dữ liệu
+        if ($this->status) {
+            foreach (StatusStory::asArray() as $key => $item) {
+                if ($item['key'] == $this->status) {
+                    return $item['value'];
+                }
+            }
+        }
+        return '';
+    }
     public function scopeGetBySlug($query, $slug) {
-        $query->where('slug', $slug);
+        $query->where('stories.slug', $slug);
         return $query;
     }
 
@@ -52,7 +50,7 @@ class Story extends Model
         if ($this->joinAuthor ) {
             return $query;
         }
-        $query->select('stories.title', 'stories.slug', 'stories.thumbnail', 'authors.name AS author_name')
+        $query->select('stories.*', 'authors.name AS author_name', 'authors.slug AS author_slug')
         ->leftJoin('authors', function($join) {
             $join->on('stories.author_id', '=', 'authors.id');
         });
@@ -72,6 +70,18 @@ class Story extends Model
         return $query;
     }
 
+    public function scopeJoinChapers($query) {
+        if ($this->joinLastChapers ) {
+            return $query;
+        }
+        $query->select('stories.*', 'chapers.name AS chaper_name', 'chapers.slug AS chaper_slug', 'chapers.position')
+        ->leftJoin('chapers', function($join) {
+            $join->on('stories.chaper_id', '=', 'chapers.id');
+        });
+        $this->joinLastChapers = true;
+        return $query;
+    }
+
     public function scopeSearchByAuthor($query, $author_name) {
         $query->joinAuthor();
         $query->orWhere('authors.name', 'LIKE', '%' . $author_name . '%');
@@ -83,4 +93,6 @@ class Story extends Model
         $query->where('story_categories.category_id', '=', $cat_id);
         return $query;
     }
+
+
 }
