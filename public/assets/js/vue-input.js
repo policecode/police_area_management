@@ -491,6 +491,71 @@ Vue.component('fvn-paging', {
     </div>`
 });
 
+Vue.component('fvn-paging-client', {
+    props: ['page', 'total', 'per_page', 'show_page'],
+    data: function () {
+        return {
+            comPerPage: this.per_page,
+            limitLabel: __('Rows per page'),
+            showPage: this.show_page ? this.show_page : 2
+        }
+    },
+    computed: {
+        currentPage() {
+            return this.per_page * this.page < this.total ? this.per_page * this.page : this.total
+        },
+        totalPage() {
+            return Math.ceil(this.total / this.per_page)
+        },
+        isPrevBtn() {
+            return this.page > 1;
+        },
+        isNextBtn() {
+            return this.per_page * this.page < this.total;
+        },
+        listPage() {
+            let beforePage = 0;
+            let afterPage = 0;
+            if (this.page - this.showPage >= 1) {
+                beforePage = this.page - this.showPage;
+            } else {
+                beforePage = 1;
+            }
+            if (this.page + this.showPage <= this.totalPage) {
+                afterPage = this.page + this.showPage;
+            } else {
+                afterPage = this.totalPage;
+            }
+            let listPage = [];
+            for (let i = beforePage; i <= afterPage; i++) {
+                listPage.push(i);
+            }
+            return listPage;
+        }
+
+    },
+    method: {
+    },
+    template: `<div v-show="totalPage>1" class="pagination justify-content-center" >
+        <ul>
+            <li class="pagination__arrow pagination__item" :class="{'disabled': !isPrevBtn}">
+                <a v-if="isPrevBtn" @click="$emit('change-page', 1)" class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center cursor-pointer"><<</a>
+                <a v-else class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center"><<</a>
+            </li>
+  
+            <li v-for="item in listPage" class="pagination__item " :class="{'page-current':item==page}">
+                <a v-if="item==page" class="page-link">{{item}}</a>
+                <a v-else @click="$emit('change-page', item)" class="page-link cursor-pointer">{{item}}</a>
+            </li>
+ 
+            <li class="pagination__arrow pagination__item" :class="{'disabled': !isNextBtn}">
+                <a v-if="isNextBtn" @click="$emit('change-page', totalPage)" class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center cursor-pointer">>></a>
+                <a v-else class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center">>></a>
+            </li>
+        </ul>
+    </div>`
+});
+
 Vue.component('fvn-ordering', {
     props: ['label', 'orderBy', 'orderType', 'active'],
     data: function () {

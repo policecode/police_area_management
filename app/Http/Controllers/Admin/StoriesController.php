@@ -267,6 +267,18 @@ class StoriesController extends Controller
         }
     }
 
+    public function autoConvertDescriptionToHtml() {
+        $listStory = Story::where('description', 'LIKE','%\n%')->get();
+        foreach ($listStory as $key => $story) {
+            $story->description = nl2br($story->description);
+            $story->update();
+        }
+        return response()->json([
+            'data' => [], 
+            'status' => 1,
+        ]);
+    }
+
     private function rules($request)
     {
         $rules = [

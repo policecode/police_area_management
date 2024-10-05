@@ -169,7 +169,7 @@ function jtrigger_error(message, style) {
 	 */
 	jAlert = function (message, title, type) {
 		title = title == undefined ? __('Notice') : title;
-		var html = `<div id="fvn-popup-error" class="toast fade show position-fixed bottom-0 end-0 text-bg-danger">
+		var html = `<div id="fvn-popup-error" class="toast fade show position-fixed bottom-0 end-0 text-bg-danger" style="z-index: 9999;">
         <div class="toast-header">
             <strong class="me-auto">${title}</strong>
             <small>just now</small>
@@ -593,7 +593,7 @@ function display_processing_form(enable) {
 
 
 function jnotice(msg) {
-	var html = `<div id="fvn-popup-success" class="toast text-bg-success position-fixed bottom-0 end-0 border-0 show">
+	var html = `<div id="fvn-popup-success" class="toast text-bg-success position-fixed bottom-0 end-0 border-0 show" style="z-index: 9999;">
 		<div class="d-flex align-items-center justify-content-between">
 			<div class="toast-body">
 			${msg}

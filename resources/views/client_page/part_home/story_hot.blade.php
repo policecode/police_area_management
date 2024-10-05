@@ -77,7 +77,7 @@
 </div>
 
 <script>
-    var vue_homet_story_hot_app = {
+    var vue_home_story_hot_app = {
     loading: false,
     items: [],
     querySearch: {
@@ -94,7 +94,7 @@
 };
 var appHomeStoryHot = new Vue({
     el: '#fvn_home_story_hot',
-    data: vue_homet_story_hot_app,
+    data: vue_home_story_hot_app,
     mounted: function () {
         
     },

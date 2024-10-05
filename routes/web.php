@@ -22,10 +22,15 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/tag/{tag_slug}', function(Request $request, $tag_slug) {{
     dd($tag_slug);
 }})->name('client.tag');
+
+Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
+Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->name('story.rating');
 Route::get('/story/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
+
 Route::get('/read/{story_slug}/{chaper_slug}', function(Request $request, $story_slug, $chaper_slug) {{
     dd($story_slug);
 }})->name('client.chaper');
+
 Route::get('/author/{author_slug}', function(Request $request, $author_slug) {{
     dd($author_slug);
 }})->name('client.author');

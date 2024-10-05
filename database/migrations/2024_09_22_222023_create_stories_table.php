@@ -21,10 +21,9 @@ class CreateStoriesTable extends Migration
             $table->string('thumbnail', 800);
             $table->text('description')->nullable();
             $table->integer('star_count')->default(0);
-            $table->float('star_average', 2, 2)->default(0);
+            $table->float('star_average', 3, 1)->default(0);
             $table->integer('view_count')->default(0);
             $table->integer('author_id')->nullable();
-            $table->tinyInteger('status')->nullable();
             $table->tinyInteger('status')->nullable();
             $table->timestamp('last_chapers')->nullable();
             $table->bigInteger('chaper_id')->nullable();

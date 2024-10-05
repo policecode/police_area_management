@@ -20,13 +20,25 @@ class Chaper extends Model
     protected $fillable = [
         'user_id', 'name', 'slug', 'story_id', 'content', 'position', 'view',
     ];
-
+    private $joinStory = false;
     public function scopeGetByPosition($query, $position) {
         $query->where('position', $position);
         return $query;
     }
     public function scopeGetByStory($query, $story_id) {
         $query->where('story_id', $story_id);
+        return $query;
+    }
+
+    public function scopeJoinStory($query) {
+        if ($this->joinStory ) {
+            return $query;
+        }
+        $query->select('chapers.id', 'chapers.name', 'chapers.slug', 'chapers.view', 'chapers.position', 'chapers.created_at', 'chapers.updated_at', 'stories.slug AS story_slug')
+        ->leftJoin('stories', function($join) {
+            $join->on('chapers.story_id', '=', 'stories.id');
+        });
+        $this->joinStory = true;
         return $query;
     }
 }

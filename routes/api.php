@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TouristController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +28,11 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
             Route::get('/get-thumbnail', 'StoriesController@getthumbnail');
             Route::post('/tool-upload-story', 'StoriesController@toolUploadStory');
             Route::post('/tool-upload-chaper/{story}', 'StoriesController@toolUploadChaper');
+            Route::get('/auto-convert-story-description', 'StoriesController@autoConvertDescriptionToHtml');
+
         });
     });
 });
 Route::get('search/keyword', [HomeController::class, 'searchKeyword']);
+
+Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->name('story.rating');

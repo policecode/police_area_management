@@ -2,3 +2,12 @@
 .hover_primary:hover {
     color: var(--bs-primary) !important;
 }
+.cursor-pointer {
+    cursor: pointer;
+}
+.pagination__item.disabled {
+    background-color: #ccc;
+}
+.pagination__item.disabled:hover {
+    border: unset;
+}
