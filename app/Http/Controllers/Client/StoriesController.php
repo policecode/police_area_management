@@ -50,7 +50,7 @@ class StoriesController extends Controller
                 $now = Carbon::now();
                 $res['data']  = $query->get()->each(function ($item, $key) use($now){
                     $item->url = route('client.chaper', [
-                        'story_slug' => $item->slug,
+                        'story_slug' => $item->story_slug,
                         'chaper_slug' => $item->slug,
                     ]);
                     $item->after_minutes = $now->diffInMinutes(new Carbon($item->created_at));

@@ -17,7 +17,7 @@ class CreateViewWeeksTable extends Migration
             $table->id();
             $table->string('story_id');
             $table->integer('view');
-            $table->tinyInteger('key');
+            $table->integer('key');
         });
     }
 

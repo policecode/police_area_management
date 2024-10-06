@@ -867,3 +867,77 @@ function fvnChangeToSlug(str) {
 	  //In slug ra textbox có id “slug”
 	  return slug;
 }
+
+const LocalStorageHelper = {
+	set(key, value) {
+		return localStorage.setItem(key, value)
+	},
+	__setArrayKeyToObject(treeKey, value, beforeValue) {
+	  if (beforeValue === undefined || beforeValue === false) {
+		beforeValue = {}
+	  }
+  
+	  if (treeKey.length === 1) {
+		beforeValue[treeKey[0]] = value
+		return beforeValue
+	  } else {
+		// array[key1][key2]
+		const key1 = treeKey[0]
+		treeKey.shift()
+		beforeValue[key1] = this.__setArrayKeyToObject(treeKey, value, beforeValue[key1])
+		return beforeValue
+	  }
+	},
+	get(key, defaultVal) {
+		const result = localStorage.getItem(key)
+		if (result) {
+			return result
+		}
+		return defaultVal
+	},
+	getObject(key, defaultValue) {
+	  try {
+		if (defaultValue === undefined) {
+		  defaultValue = {}
+		}
+		let result = this.get(key)
+		if (result === undefined || result === null) {
+		  result = defaultValue
+		} else {
+		  result = JSON.parse(result)
+		}
+		return result
+	  }
+	  catch (e) {
+		console.log('ERROR LocalStorage Helper getObject' + key, e)
+		return defaultValue
+	  }
+	},
+	setObject(key, value) {
+	  try {
+		this.set(key, JSON.stringify(value));
+	  }
+	  catch (e) {
+		if (process.browser) {
+		  localStorage.setItem(key, value);
+		}
+	  }
+	},
+	getArray(key, defaultValue) {
+	  if (defaultValue === undefined) {
+		defaultValue = []
+	  }
+	  let result = this.get(key)
+	  if (result === undefined) {
+		result = defaultValue
+	  } else {
+		result = JSON.parse(result)
+	  }
+	  return result
+	},
+	remove(key) {
+	  if (process.browser) {
+		localStorage.removeItem(key);
+	  }
+	}
+  }

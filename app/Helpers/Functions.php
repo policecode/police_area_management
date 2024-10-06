@@ -64,8 +64,18 @@ function get_string_after_time($after_minutes) {
     }
 }
 
-function get_key_by_day() {
+function get_key_by_day($name='date') {
     $now = Carbon::now();
-    $key_date = $now->year.$now->month.$now->day;
-    return (int) $key_date;
+    if ($name=='date') {
+        $key = $now->year.$now->month.$now->day;
+        return (int) $key;
+    }
+    if ($name=='week') {
+        $key = $now->year.$now->weekOfYear;
+        return (int) $key;
+    }
+    if ($name=='month') {
+        $key = $now->year.$now->month;
+        return (int) $key;
+    }
 }

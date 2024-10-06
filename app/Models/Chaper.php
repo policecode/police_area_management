@@ -29,7 +29,14 @@ class Chaper extends Model
         $query->where('story_id', $story_id);
         return $query;
     }
-
+    public function scopeGetById($query, $id) {
+        $query->where('id', $id);
+        return $query;
+    }
+    public function scopeGetBySlug($query, $slug) {
+        $query->where('slug', $slug);
+        return $query;
+    }
     public function scopeJoinStory($query) {
         if ($this->joinStory ) {
             return $query;
@@ -39,6 +46,11 @@ class Chaper extends Model
             $join->on('chapers.story_id', '=', 'stories.id');
         });
         $this->joinStory = true;
+        return $query;
+    }
+
+    public function scopeSelectNotContent($query) {
+        $query->select('id', 'name', 'slug', 'view', 'position', 'created_at', 'updated_at');
         return $query;
     }
 }

@@ -269,12 +269,18 @@ class StoriesController extends Controller
 
     public function autoConvertDescriptionToHtml() {
         $listStory = Story::where('description', 'LIKE','%\n%')->get();
+        $count = 0;
         foreach ($listStory as $key => $story) {
+            $story->description = preg_replace("/[\n]+/", "\n\n",$story->description);
             $story->description = nl2br($story->description);
+            $story->description = preg_replace("/\n/", "",$story->description);
             $story->update();
+            $count++;
         }
+ 
         return response()->json([
-            'data' => [], 
+            'data' => $listStory[0], 
+            'count' =>  $count,
             'status' => 1,
         ]);
     }

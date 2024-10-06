@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TouristController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
-
+use App\Http\Controllers\Client\ChapersController AS ChapersClientController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -35,4 +35,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
 });
 Route::get('search/keyword', [HomeController::class, 'searchKeyword']);
 
-Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->name('story.rating');
+// Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar']);
+Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews']);
+

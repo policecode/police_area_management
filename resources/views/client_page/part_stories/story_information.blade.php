@@ -44,7 +44,7 @@
                         </div>
                     </div>
 
-                    <div class="story-detail__top--desc px-3" style="max-height: 285px;">
+                    <div class="story-detail__top--desc px-3" style="max-height: 285px; text-align: justify">
                         {!! $story['description']!!}
                     </div>
 

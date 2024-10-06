@@ -19,4 +19,14 @@ class ViewMonth extends Model
     protected $fillable = [
         'story_id', 'view', 'key'
     ];
+    public $timestamps = false;
+    
+    public function scopeGetByStory($query, $story_id) {
+        $query->where('story_id', $story_id);
+        return $query;
+    }
+    public function scopeGetByKey($query, $key) {
+        $query->where('key', $key);
+        return $query;
+    }
 }
