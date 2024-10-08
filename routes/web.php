@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Client\ChapersController AS ChapersClientController;
+use App\Http\Controllers\Client\AuthorController AS AuthorClientController;
+use App\Http\Controllers\Client\CategoriesController AS CategoriesClientController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
 use Illuminate\Support\Facades\Auth;
@@ -19,20 +21,17 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/tag/{tag_slug}', function(Request $request, $tag_slug) {{
-    dd($tag_slug);
-}})->name('client.tag');
+
+Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
 
 Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
 Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->name('story.rating');
 Route::get('/story/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
 
 Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
-Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index'])->name('client.chaper');
+Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index'])->middleware('throttle:60,1')->name('client.chaper');
 
-Route::get('/author/{author_slug}', function(Request $request, $author_slug) {{
-    dd($author_slug);
-}})->name('client.author');
+Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
 Route::get('/test_client', function (Request $request) {
     dd($request->ip());
 });
@@ -79,6 +78,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         // Category
         Route::get('/category/get-items', 'CategoryController@getItems')->name('category.getItems');
         Route::resource('category', 'CategoryController');
+
+        // Setting
+        Route::resource('setting', 'SettingController');
+
     });
 });
 

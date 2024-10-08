@@ -61,7 +61,7 @@
 
                                 <div class="list-badge">
                                     <span v-if="item.status == 1" class="story-item__badge badge text-bg-success">Full</span>
-                                    <span class="story-item__badge story-item__badge-hot badge text-bg-danger">Hot</span>
+                                    <span v-if="item.star_average > 7" class="story-item__badge story-item__badge-hot badge text-bg-danger">Hot</span>
                                     <span v-if="item.after_day < 30" class="story-item__badge story-item__badge-new badge text-bg-info text-light">New</span>
                                 </div>
                             </a>
@@ -115,7 +115,7 @@ var appHomeStoryHot = new Vue({
             }
         },
         buildQueryItem() {
-            this.getItemUrl = this.apiUrl + '/search/keyword?is_paginate=0';
+            this.getItemUrl = this.apiUrl + '/search/keyword?is_paginate=0&star_average_min=7';
             let paramSearch = {};
             for (const i in this.querySearch) {
                 let value = this.querySearch[i];

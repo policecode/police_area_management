@@ -19,8 +19,8 @@ var vue_data = {
         page: 1,
         per_page: 20,
         keyword: '',
-        order_by: 'id',
-        order_type: 'DESC'
+        order_by: 'name',
+        order_type: 'ASC'
     },
     apiUrl: FVN_LARAVEL_HOME + '/admin/author',
     options: [

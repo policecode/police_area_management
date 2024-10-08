@@ -39,7 +39,20 @@ class ChapersController extends Controller
             }
             # code...
         }
-
+        $breadcrumb = [
+            [
+                "title" => "Trang chủ",
+                "url" => route('index', [])
+            ],
+            [
+                "title" => $story['title'],
+                "url" => route('client.story', ['story_slug' => $story['slug']])
+            ],
+            [
+                "title" => $chaper['name'],
+                "url" => ""
+            ]
+        ];
         $dataView = array(
             'page_title' => ucwords($story['title']) . ' - ' . ucwords($chaper['name']),
             'story' => $story,
@@ -47,6 +60,7 @@ class ChapersController extends Controller
             'chaper_list' => $chaperList,
             'link_prev' => $linkPrev,
             'link_next' => $linkNext,
+            'breadcrumb' => $breadcrumb
         );
         return view('client_page.chapers', $dataView);
     }

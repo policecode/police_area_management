@@ -17,7 +17,7 @@ class CreateOptionsTable extends Migration
             $table->id();
             $table->string('option_key')->unique();
             $table->text('option_value');
-            $table->tinyInteger('autoload')->default('1');
+            $table->tinyInteger('autoload')->index()->default('1');
         });
     }
 

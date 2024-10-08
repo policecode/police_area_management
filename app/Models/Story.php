@@ -45,6 +45,10 @@ class Story extends Model
         $query->where('stories.slug', $slug);
         return $query;
     }
+    public function scopeGetByAuthor($query, $author_id) {
+        $query->where('stories.author_id', $author_id);
+        return $query;
+    }
 
     public function scopeJoinAuthor($query) {
         if ($this->joinAuthor ) {

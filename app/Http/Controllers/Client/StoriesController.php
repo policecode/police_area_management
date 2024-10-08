@@ -25,9 +25,21 @@ class StoriesController extends Controller
         $story->thumbnail = route('index') . '/' . $story->thumbnail;
         $story = $story->toArray();
         // dd($story);
+        $breadcrumb = [
+            [
+                "title" => "Trang chủ",
+                "url" => route('index', [])
+            ],
+            [
+                "title" => $story['title'],
+                "url" => ''
+            ]
+        ];
+
         $dataView = array(
             'page_title' => ucwords($story['title']),
-            'story' => $story
+            'story' => $story,
+            'breadcrumb' => $breadcrumb
         );
         return view('client_page.stories', $dataView);
 

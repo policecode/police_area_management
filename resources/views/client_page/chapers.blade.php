@@ -7,11 +7,11 @@
                 <h1 class="text-center text-success">{{ ucwords($story['title']) }}</h1>
             </a>
             <p class="text-center text-dark">{{ $chaper['name'] }}</p>
-      
+
             <hr class="chapter-start container-fluid">
             <div class="chapter-nav text-center">
                 <div class="chapter-actions chapter-actions-origin d-flex align-items-center justify-content-center">
-                    <a class="btn btn-success me-1 chapter-prev" href="{{$link_prev}}" title=""> <span>Chương
+                    <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title=""> <span>Chương
                         </span>trước</a>
                     <button @click="barBtn.desktop = !barBtn.desktop" class="btn btn-success chapter_jump me-1">
                         <span>
@@ -19,16 +19,17 @@
                         </span>
                     </button>
 
-                    <div class="dropdown select-chapter me-1" :class="{'d-none': barBtn.desktop}">
+                    <div class="dropdown select-chapter me-1" :class="{ 'd-none': barBtn.desktop }">
                         <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            {{$chaper['name']}}
+                            {{ $chaper['name'] }}
                         </a>
 
                         <ul class="dropdown-menu select-chapter__list" aria-labelledby="dropdownMenuLink">
                             @foreach ($chaper_list as $item)
                                 <li class="">
-                                    <a class="dropdown-item {{$item['id'] == $chaper['id'] ? 'active' : ''}}" href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{$item['name']}}</a>
+                                    <a class="dropdown-item {{ $item['id'] == $chaper['id'] ? 'active' : '' }}"
+                                        href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -41,10 +42,11 @@
                             </option>
                         @endforeach
                     </select> --}}
-                    <a class="btn btn-success chapter-next" href="{{$link_next}}" title="">
+                    <a class="btn btn-success chapter-next" href="{{ $link_next }}" title="">
                         <span>Chương</span> tiếp
                     </a>
-                    <button @click="barBtn.setting = !barBtn.setting" class="btn btn-success chapter_jump ms-1" title="cài đặt">
+                    <button @click="barBtn.setting = !barBtn.setting" class="btn btn-success chapter_jump ms-1"
+                        title="cài đặt">
                         <span>
                             <i class="fa-solid fa-gear"></i>
                         </span>
@@ -57,8 +59,9 @@
                     <div class="col-lg-2 col-sm-4 col-6"></div>
                     <div class="col-lg-2 col-sm-4 col-6">
                         <div class="input-group flex-nowrap ">
-                            <span class="input-group-text bg-success text-white" >Cỡ chữ</span>
-                            <input  type="number" v-model="styles.fontSize" class="form-control ms-1" min="10" max="40" />
+                            <span class="input-group-text bg-success text-white">Cỡ chữ</span>
+                            <input type="number" v-model="styles.fontSize" class="form-control ms-1" min="10"
+                                max="40" />
                         </div>
                     </div>
                 </div>
@@ -66,13 +69,41 @@
             <hr class="chapter-end container-fluid">
 
 
-            <div class="chapter-content mb-3" style="text-align: justify;" :style="{'fontSize': `${styles.fontSize}px`}">
+            <div class="chapter-content mb-3" style="text-align: justify;" :style="{ 'fontSize': `${styles.fontSize}px` }">
                 {!! $chaper['content'] !!}
             </div>
 
+            <div class="chapter-actions chapter-actions-origin d-flex align-items-center justify-content-center">
+                <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title=""> <span>Chương
+                    </span>trước</a>
+                <button @click="barBtn.desktop = !barBtn.desktop" class="btn btn-success chapter_jump me-1">
+                    <span>
+                        <i class="fa-solid fa-bars"></i>
+                    </span>
+                </button>
+
+                <div class="dropdown select-chapter me-1" :class="{ 'd-none': barBtn.desktop }">
+                    <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ $chaper['name'] }}
+                    </a>
+
+                    <ul class="dropdown-menu select-chapter__list" aria-labelledby="dropdownMenuLink">
+                        @foreach ($chaper_list as $item)
+                            <li class="">
+                                <a class="dropdown-item {{ $item['id'] == $chaper['id'] ? 'active' : '' }}"
+                                    href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                <a class="btn btn-success chapter-next" href="{{ $link_next }}" title="">
+                    <span>Chương</span> tiếp
+                </a>
+            </div>
 
             <div class="chapter-actions chapter-actions-mobile d-flex align-items-center justify-content-center">
-                <a class="btn btn-success me-2 chapter-prev" href="{{$link_prev}}" title=""> <span>Chương
+                <a class="btn btn-success me-2 chapter-prev" href="{{ $link_prev }}" title=""> <span>Chương
                     </span>trước</a>
                 <button @click="barBtn.mobile = !barBtn.mobile" class="btn btn-success chapter_jump me-2">
                     <span>
@@ -95,7 +126,8 @@
                         @endforeach
                     </ul>
                 </div>
-                <a class="btn btn-success chapter-next" href="{{$link_next}}" title=""><span>Chương </span>tiếp</a>
+                <a class="btn btn-success chapter-next" href="{{ $link_next }}" title=""><span>Chương
+                    </span>tiếp</a>
             </div>
     </main>
     <script>
@@ -105,7 +137,6 @@
                 desktop: true,
                 mobile: true,
                 setting: false
-
             },
             styles: {
                 fontSize: LocalStorageHelper.get('chaper_font_size', 20)
@@ -118,8 +149,9 @@
                 order_by: 'id',
                 order_type: 'ASC'
             },
-            itemDetail: {{ Illuminate\Support\Js::from($story) }},
-
+            itemDetail: {},
+            story: {{ Illuminate\Support\Js::from($story) }},
+            chaper: {{ Illuminate\Support\Js::from($chaper) }},
             apiUrl: FVN_LARAVEL_HOME + '/read',
             pointInTime: null,
         };
@@ -128,13 +160,26 @@
             data: vue_chapter_app,
             mounted: function() {
                 // this.searchItem();
+                this.addViewStory();
             },
             computed: {
 
             },
             methods: {
-     
-                
+                addViewStory() {
+                    setTimeout(async () => {
+                        let jsonData = await new RouteApi().post(`${this.apiUrl}/increase-views`, {
+                            story_id: this.story.id,
+                            chaper_id: this.chaper.id
+                        });
+                        if (jsonData.status) {
+                            console.log(jsonData.message);
+                        } else {
+                            console.log(jsonData.message);
+                        }
+                    }, 60000);
+                }
+
 
             },
             watch: {

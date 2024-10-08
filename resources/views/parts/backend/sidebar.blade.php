@@ -36,10 +36,17 @@
     @include('parts.backend.item_page', [
         'title' => 'Quản lý truyện',
         'page' => 'stories',
-        'icon' => 'fas fa-users',
+        'icon' => 'fa-solid fa-book',
         'child_route' => [
             [ 'page' => 'admin.author.index', 'title' => 'Danh sách tác giả'],
             [ 'page' => 'admin.category.index', 'title' => 'Thể loại truyện'],
+        ],
+    ])
+     @include('parts.backend.item_page', [
+        'title' => 'Cài đặt',
+        'page' => 'setting',
+        'icon' => 'fa-solid fa-gear',
+        'child_route' => [
         ],
     ])
     <!-- Nav Item - Pages Collapse Menu -->

@@ -387,13 +387,17 @@ class StoriesController extends Controller
             if (count($enumStatus) > 0) {
                 $status = $enumStatus['key'];
             }
+
+            $description = preg_replace("/[\n]+/", "\n\n",$data['description']);
+            $description = nl2br($description);
+            $description = preg_replace("/\n/", "",$description);
         
             $story = Story::create([
                 'user_id' => 1,
                 'title' => $data['title'],
                 'slug' => Str::slug($data['title'], "-"),
                 'thumbnail' => $thumbnail,
-                'description' => $data['description'],
+                'description' => $description,
                 'author_id' => $author->id,
                 'status' => $status
             ]);

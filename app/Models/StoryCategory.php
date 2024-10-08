@@ -18,6 +18,8 @@ class StoryCategory extends Model
      */
     public $timestamps = false;
     private $joinCategory = false;
+    private $joinStory = false;
+
     protected $fillable = [
         'story_id', 'category_id'
     ];
@@ -33,4 +35,17 @@ class StoryCategory extends Model
         $this->joinCategory = true;
         return $query;
     }
+
+    public function scopeJoinStory($query) {
+        if ($this->joinStory ) {
+            return $query;
+        }
+        $query->select('stories.*', 'categories.*')
+        ->leftJoin('stories', function($join) {
+            $join->on('story_categories.story_id', '=', 'stories.id');
+        });
+        $this->joinStory = true;
+        return $query;
+    }
+
 }

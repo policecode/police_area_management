@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
         $now = Carbon::now();
         // Truyện hot
-        $hot_stories = Story::orderBy('star_count', 'DESC')->skip(0)->take(15)->get()->each(function ($item, $key) use ($now) {
+        $hot_stories = Story::where('star_average', '>', 7)->orderBy('star_average', 'DESC')->skip(0)->take(15)->get()->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $dt = new Carbon($item->created_at); //Tạo 1 datetime
             $item->after_day = $now->diffInDays($dt);;

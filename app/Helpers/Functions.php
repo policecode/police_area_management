@@ -8,7 +8,7 @@ function get_all_categories() {
     if (session('fvn_categories')) {
         return session('fvn_categories', []);
     }
-    session(['fvn_categories' => Category::get()->toArray()]);
+    session(['fvn_categories' => Category::orderBy('name', 'ASC')->get()->toArray()]);
     return session('fvn_categories', []);
 }
 

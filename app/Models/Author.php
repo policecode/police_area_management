@@ -26,8 +26,6 @@ class Author extends Model
         return $query;
     }
 
-    
-
     public function getStoryCountAttribute()
     {
         if ($this->id) {
