@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\SettingHelpers;
 use App\Models\Author;
 use App\Models\Story;
 use Carbon\Carbon;
@@ -17,6 +18,7 @@ class AuthorController extends Controller
      */
     public function index(Request $request, $author_slug)
     {
+        $option = SettingHelpers::getInstance();
         $queryDefault = array(
             'page' => 1,
             'per_page' => 25,
@@ -52,7 +54,7 @@ class AuthorController extends Controller
         ];
 
         $dataView = array(
-            'page_title' => ucwords($author['name']),
+            'page_title' => ucwords($author['name']).' - '.$option->getOptionValue('fvn_web_title'),
             'author' => $author,
             'records' => $listStory,
             'total_records' => $count,

@@ -53,4 +53,13 @@ class Chaper extends Model
         $query->select('id', 'name', 'slug', 'view', 'position', 'created_at', 'updated_at');
         return $query;
     }
+
+    public function scopeGetTotalChapers($query, $listStory) {
+        $resutls = $query->selectRaw('count(story_id) as total, story_id')->whereIn('story_id', $listStory)->groupBy('story_id')->get();
+        $tmpArr = [];
+        foreach ($resutls as $key => $item) {
+            $tmpArr[$item->story_id] = $item->total;
+        }
+        return $tmpArr;
+    }
 }

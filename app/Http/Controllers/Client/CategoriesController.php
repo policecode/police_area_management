@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\SettingHelpers;
 use App\Models\Category;
+use App\Models\Chaper;
 use App\Models\Story;
 use App\Models\StoryCategory;
 use Carbon\Carbon;
@@ -18,6 +20,7 @@ class CategoriesController extends Controller
      */
     public function index(Request $request, $tag_slug)
     {
+        $option = SettingHelpers::getInstance();
         $queryDefault = array(
             'page' => 1,
             'per_page' => 25,
@@ -30,11 +33,16 @@ class CategoriesController extends Controller
             return abort(404);
         }
         $now = Carbon::now();
-        $query = Story::getByCategory($category['id']);
+        $query = Story::getByCategory($category['id'])->joinAuthor();
         $count = $query->count();
-        $listStory = $query->filter($request)->get()->each(function ($item, $key) use ($now)  {
+        $storyCollection = $query->filter($request)->get();
+        $listId = $storyCollection->pluck('id')->toArray();
+        $totalChapers = Chaper::getTotalChapers($listId);
+        $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
+            $item->last_update = $now->diffInMinutes(new Carbon($item->last_chapers));
+            $item->total_chapers = $totalChapers[$item->id];
         })->toArray();
         // dd($listStory);
         $breadcrumb = [
@@ -51,9 +59,8 @@ class CategoriesController extends Controller
                 "url" => ''
             ]
         ];
-
         $dataView = array(
-            'page_title' => ucwords($category['name']),
+            'page_title' => ucwords($category['name']).' - '.$option->getOptionValue('fvn_web_title'),
             'category' => $category,
             'records' => $listStory,
             'total_records' => $count,

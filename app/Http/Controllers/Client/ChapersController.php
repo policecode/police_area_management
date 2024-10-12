@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
 use App\Models\Story;
 use App\Models\ViewDay;
@@ -21,6 +22,7 @@ class ChapersController extends Controller
      */
     public function index(Request $request, $story_slug, $chaper_slug)
     {
+        $option = SettingHelpers::getInstance();
         $story = Story::getBySlug($story_slug)->first();
         $chaperList = Chaper::getByStory($story['id'])->orderBy('position', 'ASC')->get();
         $chaper = [];
@@ -54,7 +56,7 @@ class ChapersController extends Controller
             ]
         ];
         $dataView = array(
-            'page_title' => ucwords($story['title']) . ' - ' . ucwords($chaper['name']),
+            'page_title' => ucwords($story['title']) . ' - ' . ucwords($chaper['name']).' | '.$option->getOptionValue('fvn_web_title'),
             'story' => $story,
             'chaper' => $chaper,
             'chaper_list' => $chaperList,

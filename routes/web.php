@@ -80,7 +80,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::resource('category', 'CategoryController');
 
         // Setting
-        Route::resource('setting', 'SettingController');
+        Route::get('/settings', 'SettingController@index')->name('setting.index');
+        Route::post('/settings/page-one', 'SettingController@settingPageOne')->name('setting.pageOne');
 
     });
 });

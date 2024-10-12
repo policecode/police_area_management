@@ -1,5 +1,6 @@
 <?php
-
+use App\Http\Helpers\SettingHelpers;
+$option = SettingHelpers::getInstance();
 $all_categories = get_all_categories();
 ?>
 <div id="client_sidebar_app">
@@ -8,8 +9,7 @@ $all_categories = get_all_categories();
         <nav class="navbar navbar-expand-lg navbar-dark header__navbar p-md-0">
             <div class="container">
                 <a class="navbar-brand" href="{{ route('index') }}">
-                    <img src="{{ asset('assets/images/logo_text.png') }}" alt="Logo Suu Truyen" srcset=""
-                        class="img-fluid" style="width: 200px;">
+                    <img src="{{ $option->getOptionImage('fvn_logo')?$option->getOptionImage('fvn_logo'):asset('assets/images/logo_text.png') }}" alt="{{$option->getOptionValue('fvn_web_title')}}" srcset="" class="img-fluid" style="width: 200px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -111,8 +111,7 @@ $all_categories = get_all_categories();
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ route('index') }}">
-                    <img src="{{ asset('assets/images/logo_text.png') }}" alt="Logo Suu Truyen" srcset=""
-                        class="img-fluid" style="width: 200px;">
+                    <img src="{{ $option->getOptionImage('fvn_logo')?$option->getOptionImage('fvn_logo'):asset('assets/images/logo_text.png') }}" alt="{{$option->getOptionValue('fvn_web_title')}}" srcset="" class="img-fluid" style="width: 200px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
@@ -121,8 +120,7 @@ $all_categories = get_all_categories();
                 <div class="offcanvas offcanvas-end text-bg-dark w-75" tabindex="-1" id="offcanvasDarkNavbar"
                     aria-labelledby="offcanvasDarkNavbarLabel">
                     <div class="offcanvas-header">
-                        <img src="{{ asset('assets/images/logo_text.png') }}" alt="Logo Suu Truyen" srcset=""
-                            class="img-fluid" style="width: 200px;">
+                        <img src="{{ $option->getOptionImage('fvn_logo')?$option->getOptionImage('fvn_logo'):asset('assets/images/logo_text.png') }}" alt="{{$option->getOptionValue('fvn_web_title')}}" srcset="" class="img-fluid" style="width: 200px;">
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                             aria-label="Close"></button>
                     </div>
@@ -217,9 +215,9 @@ $all_categories = get_all_categories();
                     </ol>
                 </nav>
             @else
-                <p class="mb-0">Đọc truyện online, đọc truyện chữ, truyện full, truyện hay. Tổng hợp đầy đủ và cập
-                    nhật liên
-                    tục.</p>
+                <p class="mb-0">
+                    {{$option->getOptionValue('fvn_content_top')}}
+                </p>
             @endif
         </div>
     </div>

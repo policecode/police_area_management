@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
 use App\Models\StarRating;
 use App\Models\Story;
@@ -21,6 +22,7 @@ class StoriesController extends Controller
      */
     public function index(Request $request, $story_slug)
     {
+        $option = SettingHelpers::getInstance();
         $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
         $story->thumbnail = route('index') . '/' . $story->thumbnail;
         $story = $story->toArray();
@@ -37,7 +39,7 @@ class StoriesController extends Controller
         ];
 
         $dataView = array(
-            'page_title' => ucwords($story['title']),
+            'page_title' => ucwords($story['title']).' - '.$option->getOptionValue('fvn_web_title'),
             'story' => $story,
             'breadcrumb' => $breadcrumb
         );

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\SettingHelpers;
 use App\Models\Story;
 use App\Models\StoryCategory;
 use Carbon\Carbon;
@@ -18,6 +19,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $option = SettingHelpers::getInstance();
         $now = Carbon::now();
         // Truyện hot
         $hot_stories = Story::where('star_average', '>', 7)->orderBy('star_average', 'DESC')->skip(0)->take(15)->get()->each(function ($item, $key) use ($now) {
@@ -47,7 +49,7 @@ class HomeController extends Controller
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
         })->toArray();
         $dataView = array(
-            'page_title' => 'Trang chủ',
+            'page_title' => $option->getOptionValue('fvn_web_title').' - Trang chủ',
             'hot_stories' => $hot_stories,
             'new_stories' => $new_stories,
             'full_stories' => $full_stories

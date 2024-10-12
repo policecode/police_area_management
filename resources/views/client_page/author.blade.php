@@ -13,7 +13,6 @@
                             </h2>
                         </div>
                     </div>
-
                     <div class="list-story-in-category section-stories-hot__list">
                         @foreach ($records as $item)
                             <div class="story-item">

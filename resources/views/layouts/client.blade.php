@@ -1,3 +1,7 @@
+<?php 
+use App\Http\Helpers\SettingHelpers;
+$option = SettingHelpers::getInstance();
+?>
 <!DOCTYPE html>
 <!-- saved from url=(0021)https://suustore.com/ -->
 <html lang="en">
@@ -15,7 +19,7 @@
 
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link rel="shortcut icon" href="{{asset('frontend/images/book_512x512_35977.ico')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{$option->getOptionImage('fvn_shortcut_icon')?$option->getOptionImage('fvn_shortcut_icon'):asset('frontend/images/book_512x512_35977.ico')}}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{asset('frontend/css/app.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/css/custom.css')}}">
@@ -44,11 +48,6 @@
     <script src="{{asset('frontend/js/app.js')}}"></script>
     <script src="{{asset('frontend/js/common.js')}}"></script>
 
-    <div id="loadingPage" class="loading-full">
-        <div class="loading-full_icon">
-            <div class="spinner-grow"><span class="visually-hidden">Loading...</span></div>
-        </div>
-    </div>
     @yield('scripts')
 
 </body>
