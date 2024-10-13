@@ -63,7 +63,7 @@
           
                     @include('parts.template.paging_client')
                 </div>
-                <div class="col-12 col-md-4 col-lg-3 sticky-md-top d-none d-sm-block">
+                <div class="col-12 col-md-4 col-lg-3 d-none d-sm-block">
                     <div class="category-description bg-light p-2 rounded mb-3 card-custom">
                         <p class="mb-0 text-secondary">{{ $category['name'] }}</p>
                         {!! $category['description'] !!}

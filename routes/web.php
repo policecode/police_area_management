@@ -19,21 +19,23 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', [HomeController::class, 'index'])->name('index');
-
-Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
-
-Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
-Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->name('story.rating');
-Route::get('/story/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
-
-Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
-Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index'])->middleware('throttle:60,1')->name('client.chaper');
-
-Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
-Route::get('/test_client', function (Request $request) {
-    dd($request->ip());
+Route::group(['middleware' => ['throttle:30,1']], function() {
+    Route::get('/', [HomeController::class, 'index'])->name('index');
+    
+    Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
+    
+    Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
+    Route::get('/story/top-rating', [StoriesClientController::class, 'getTopViewStories'])->name('story.top-rating');
+    Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->name('story.rating');
+    Route::get('/story/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
+    
+    Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
+    Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index'])->name('client.chaper');
+    
+    Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
+    Route::get('/test_client', function (Request $request) {
+        dd($request->ip());
+    });
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth_two']], function() {

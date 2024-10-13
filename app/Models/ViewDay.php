@@ -20,6 +20,7 @@ class ViewDay extends Model
         'story_id', 'view', 'key'
     ];
     public $timestamps = false;
+    private $joinStory = false;
     
     public function scopeGetByStory($query, $story_id) {
         $query->where('story_id', $story_id);
@@ -27,6 +28,18 @@ class ViewDay extends Model
     }
     public function scopeGetByKey($query, $key) {
         $query->where('key', $key);
+        return $query;
+    }
+
+    public function scopeJoinStory($query) {
+        if ($this->joinStory ) {
+            return $query;
+        }
+        $query->select('stories.*', 'view_days.view', 'view_days.key')
+        ->leftJoin('stories', function($join) {
+            $join->on('view_days.story_id', '=', 'stories.id');
+        });
+        $this->joinStory = true;
         return $query;
     }
 }

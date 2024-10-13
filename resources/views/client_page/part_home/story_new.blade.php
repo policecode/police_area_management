@@ -73,10 +73,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-4 col-lg-3 sticky-md-top">
+        <div class="col-12 col-md-4 col-lg-3">
             <div class="row">
                 <div class="col-12">
-                    @include('parts.client.table_categories')
+                    @include('client_page.part_stories.table_categories', [])
                 </div>
             </div>
         </div>

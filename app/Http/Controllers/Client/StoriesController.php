@@ -7,6 +7,10 @@ use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
 use App\Models\StarRating;
 use App\Models\Story;
+use App\Models\StoryCategory;
+use App\Models\ViewDay;
+use App\Models\ViewMonth;
+use App\Models\ViewWeek;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -132,6 +136,45 @@ class StoriesController extends Controller
             DB::rollBack();
             return response()->json([
                 'status' => 0, 'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function getTopViewStories(Request $request) {
+        try {
+            if ($request->view == 'day') {
+                $query = ViewDay::filter($request)->getByKey(get_key_by_day('date'));
+            } elseif ($request->view == 'week') {
+                $query = ViewWeek::filter($request)->getByKey(get_key_by_day('week'));
+            } elseif ($request->view == 'month') {
+                $query = ViewMonth::filter($request)->getByKey(get_key_by_day('month'));
+            } elseif ($request->view == 'all') {
+                # code...
+            }
+            $res = [
+                'result' => 1,
+                'data' => [],
+                'page' => $query->getPageNumber(),
+                'per_page' => $query->getPerPage(),
+                'total' => 0
+            ];
+            if($request->is_paginate){
+                $res['total'] = $query->getTotal();
+            }else{
+                $colection = $query->joinStory()->get();
+                $story_arr= $colection->pluck('id');
+                $listStoryCat = StoryCategory::getListCategoryByStory( $story_arr);
+                $res['data']  = $colection->each(function ($item, $key) use($listStoryCat) {
+                    $item->url = route('client.story', [
+                        'story_slug' => $item->slug,
+                    ]);
+                    $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+                });
+            }
+            return response()->json($res);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0, 'data'=> [], 'message' => $e->getMessage()
             ], 400);
         }
     }

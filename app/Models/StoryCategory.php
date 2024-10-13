@@ -48,4 +48,12 @@ class StoryCategory extends Model
         return $query;
     }
 
+    public function scopeGetListCategoryByStory($query, $list_stories_id) {
+        $query->joinCategory();
+        $results = $query->whereIn('story_id', $list_stories_id)->get()->each(function ($item, $key) {
+            $item->url = route('client.tag', ['tag_slug' => $item['slug']]);
+        })->groupBy('story_id')->toArray();
+        return $results;
+    }
+
 }

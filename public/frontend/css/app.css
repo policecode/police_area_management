@@ -773,7 +773,7 @@ main {
 }
 
 .story-detail__top--image {
-    position: sticky;
+    /* position: sticky; */
     top: 10px
 }
 
