@@ -19,15 +19,11 @@ var vue_data = {
         page: 1,
         per_page: 20,
         keyword: '',
-        order_by: 'name',
+        order_by: 'id',
         order_type: 'ASC'
     },
-    apiUrl: FVN_LARAVEL_HOME + '/admin/category',
-    options: [
-        {value:1,display: 'list',text:'danh sách'},
-        {value:2,display: 'of',text:'THuộc về'},
-        {value:3,display: 'options',text:'Lựa chọn'},
-    ]
+    apiUrl: FVN_LARAVEL_HOME + '/admin/groups',
+    groups: groups
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
 // Vue.component('datepicker', vuejsDatepicker);
@@ -44,7 +40,6 @@ var app = new Vue({
     computed: {
     },
     methods: {
-
         updateQueryFromUrl() {
             if (window.location.hash) {
                 let querySearch = queryToObject(window.location.hash.substring(1));
@@ -57,9 +52,9 @@ var app = new Vue({
         changeScreen(scr) {
             this.screen = scr;
         },
-        showItem(item) {
+        showItem(item, action='detail') {
             this.itemDetail = item;
-            this.screen = 'detail';
+            this.screen = action;
         },
         closeItem() {
             this.itemDetail = {
@@ -70,7 +65,7 @@ var app = new Vue({
             this.screen = 'list';
         },
         async deleteItem(item) {
-            if (confirm(`Do you want to delete the Category: ${item.name}`)) {
+            if (confirm(`Do you want to delete the Author: ${item.name}`)) {
                 let jsonData = await new RouteApi().delete(`${this.apiUrl}/${item.id}`, {});
                 if (jsonData.status) {
                     jnotice(jsonData.message);
@@ -171,6 +166,22 @@ var app = new Vue({
                 } else {
                     this.items.unshift(jsonData.data)
                 }
+                this.closeItem();
+            } else {
+                if (jsonData.errors) {
+                    this.errors = jsonData.errors;
+                }
+                jAlert(jsonData.message);
+            }
+        },
+        async savePermission(e) {
+            this.loading = true;
+            let jsonData = await new RouteApi().put(`${this.apiUrl}/permission/${this.itemDetail.id}`,this.itemDetail )
+            this.loading = false;
+            
+            if (jsonData.status) {
+                jnotice(jsonData.message);
+                this.itemDetail = jsonData.data;
                 this.closeItem();
             } else {
                 if (jsonData.errors) {

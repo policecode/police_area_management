@@ -3,33 +3,33 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\StoryCategory;
+use App\Models\Group;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CategoryController extends Controller
+class GroupController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         $dataView = array(
-            'page_title' => 'Quản lý thể loại sách',
+            'page_title' => 'Phân quyền',
         );
-       
-        return view('admin_page.category.lists', $dataView);
+        return view('admin_page.groups.lists', $dataView);
     }
+
     public function getItems(Request $request) {
         // Thêm dữ liệu vào trong query
       // $request->merge(array_merge($queryDefault, $request->query()));
 
       try {
         //code...
-        $query = Category::filter($request);
+        $query = Group::filter($request);
         $res = [
             'result' => 1,
             'data' => [],
@@ -40,7 +40,7 @@ class CategoryController extends Controller
         if($request->is_paginate){
             $res['total'] = $query->getTotal();
         }else{
-            $res['data'] = $query->get();
+            $res['data']  = $query->get();
         }
         return response()->json($res);
       } catch (\Throwable $e) {
@@ -48,7 +48,7 @@ class CategoryController extends Controller
             'result' => 0, 'data'=> [], 'message' => $e->getMessage()
         ], 400);
       }
-  }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -67,8 +67,9 @@ class CategoryController extends Controller
             ]);
         }
         $data = $validator->validated();
+        $data['permissions'] = [];
         try {
-            $result = Category::create($data);
+            $result = Group::create($data);
             return response()->json([
                 'status' => 1, 
                 'data' => $result,
@@ -99,7 +100,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Group $group)
     {
         $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
         if ($validator->fails()) {
@@ -112,11 +113,39 @@ class CategoryController extends Controller
         $data = $validator->validated();
         try {
     
-            $category->update($data);
+            $group->update($data);
             return response()->json([
                 'status' => 1, 
-                'data' => $category,
+                'data' => $group,
                 'message' => 'Update success'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 0, 'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function permission(Request $request, Group $group)
+    {
+        $validator = Validator::make($request->all(), [
+            'permissions' => 'array'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0, 
+                'errors' => $validator->errors(),
+                'message' => 'validation'
+            ]);
+        }
+        $data = $validator->validated();
+        try {
+    
+            $group->update($data);
+            return response()->json([
+                'status' => 1, 
+                'data' => $group,
+                'message' => 'Update Permission success'
             ]);
         } catch (\Throwable $e) {
             return response()->json([
@@ -131,20 +160,21 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Group $group)
     {
         try {
-            $count = StoryCategory::select('id')->where('category_id', $category->id)->count();
+            $count = User::select('id')->where('group_id', $group->id)->count();
             if ($count > 0) {
                 return response()->json([
                     'status' => 0, 
-                    'message' => 'Tag này đã có truyện, không thể xóa'
+                    'message' => 'Nhóm này đã có người sử dụng, không thể xóa'
                 ]);
             }
-            $status = $category->delete();
+            $status = $group->delete();
             return response()->json([
                 'status' => $status, 
-                'message' => 'Delete success'
+                'message' => 'Delete success',
+                'group' => $group
             ]);
         } catch (\Throwable $e) {
             return response()->json([
@@ -156,13 +186,12 @@ class CategoryController extends Controller
     private function rules($request)
     {
         $rules = [
-            'name' => 'required|max:255|unique:categories,name',
-            'slug' => 'required|unique:categories,slug',
-            'description' => '',
+            'name' => 'required|max:255|unique:groups,name',
+            'slug' => 'required|unique:groups,slug',
         ];
         if ($request->id) {
-            $rules['name'] = 'required|unique:categories,name,'.$request->id;
-            $rules['slug'] = 'required|unique:categories,slug,'.$request->id;
+            $rules['name'] = 'required|unique:groups,name,'.$request->id;
+            $rules['slug'] = 'required|unique:groups,slug,'.$request->id;
       
         }
         return $rules;
@@ -182,12 +211,11 @@ class CategoryController extends Controller
     private function attributes()
     {
         return [
-            'name' => 'Thể loại truyện',
-            'slug' => 'Đường dẫn tĩnh',
+            'name' => 'Tên nhóm',
+            'slug' => 'Key của nhóm',
             'email' => 'Email',
             'password' => 'Mật khâu',
             'group_id' => 'Nhóm'
         ];
     }
-
 }

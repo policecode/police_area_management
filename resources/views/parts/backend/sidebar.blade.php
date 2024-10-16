@@ -49,6 +49,13 @@
         'child_route' => [
         ],
     ])
+       @include('parts.backend.item_page', [
+        'title' => 'Phân quyền',
+        'page' => 'groups',
+        'icon' => 'fa-solid fa-people-group',
+        'child_route' => [
+        ],
+    ])
     <!-- Nav Item - Pages Collapse Menu -->
     {{-- @include('parts.backend.item_page', [
         'title' => 'Quản lý doanh nghiệp',

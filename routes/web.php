@@ -38,7 +38,7 @@ Route::group(['middleware' => ['throttle:30,1']], function() {
     });
 });
 
-Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth_two']], function() {
+Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth']], function() {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', 'DashboardController@index')->name('dashboard');
 
@@ -49,7 +49,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
             Route::post('/create', 'UserController@store')->name('store');
             Route::get('/edit/{user}', 'UserController@edit')->name('edit');
             Route::put('/update/{user}', 'UserController@update')->name('update');
-            Route::delete('/delete/{user}', 'UserController@delete')->name('delete');
+            Route::delete('/delete/{user}', 'UserController@delete')->name('destroy');
         });
 
         // Route::resource('companies', 'CompanyController');
@@ -61,29 +61,52 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         // Route::resource('tourists', 'TouristController');
 
         // Stories
-        Route::get('/stories/get-items', 'StoriesController@getItems')->name('stories.getItems');
-        Route::post('/stories/update/{story}', 'StoriesController@update')->name('update-fix');
-        Route::resource('stories', 'StoriesController');
+        Route::prefix('stories')->name('stories.')->group(function () {
+            Route::get('/', 'StoriesController@index')->name('index');
+            Route::get('/get-items', 'StoriesController@getItems')->name('getItems');
+            Route::post('/', 'StoriesController@store')->name('store');
+            Route::post('/update/{story}', 'StoriesController@update')->name('update');
+            Route::delete('/{story}', 'StoriesController@destroy')->name('destroy');
+        });
+        // Route::resource('stories', 'StoriesController');
 
          // Chapers
          Route::get('/chapers/get-items', 'ChaperController@getItems')->name('chapers.getItems');
          Route::get('/chapers/{story}', 'ChaperController@index')->name('chapers.index');
          Route::post('/chapers/{story}', 'ChaperController@store')->name('chapers.store');
-         Route::get('/chapers/{story}/{chaper}', 'ChaperController@show')->name('chapers.show');
          Route::put('/chapers/{story}/{chaper}', 'ChaperController@update')->name('chapers.update');
          Route::delete('/chapers/{story}/{chaper}', 'ChaperController@destroy')->name('chapers.destroy');
 
         // Author
-        Route::get('/author/get-items', 'AuthorController@getItems')->name('author.getItems');
-        Route::resource('author', 'AuthorController');
+        // Route::get('/author/get-items', 'AuthorController@getItems')->name('author.getItems');
+        Route::prefix('author')->name('author.')->group(function () {
+            Route::get('/', 'AuthorController@index')->name('index');
+            Route::get('/get-items', 'AuthorController@getItems')->name('getItems');
+            Route::post('/', 'AuthorController@store')->name('store');
+            Route::put('/{author}', 'AuthorController@update')->name('update');
+            Route::delete('/{author}', 'AuthorController@destroy')->name('destroy');
+        });
 
         // Category
-        Route::get('/category/get-items', 'CategoryController@getItems')->name('category.getItems');
-        Route::resource('category', 'CategoryController');
+        Route::prefix('category')->name('category.')->group(function () {
+            Route::get('/', 'CategoryController@index')->name('index');
+            Route::get('/get-items', 'CategoryController@getItems')->name('getItems');
+            Route::post('/', 'CategoryController@store')->name('store');
+            Route::put('/{category}', 'CategoryController@update')->name('update');
+            Route::delete('/{category}', 'CategoryController@destroy')->name('destroy');
+        });
 
         // Setting
         Route::get('/settings', 'SettingController@index')->name('setting.index');
         Route::post('/settings/page-one', 'SettingController@settingPageOne')->name('setting.pageOne');
+
+        // Groups: Phân quyền
+        Route::get('/groups', 'GroupController@index')->name('groups.index');
+        Route::get('/groups/get-items', 'GroupController@getItems')->name('groups.getItems');
+        Route::post('/groups', 'GroupController@store')->name('groups.store');
+        Route::put('/groups/{group}', 'GroupController@update')->name('groups.update');
+        Route::put('/groups/permission/{group}', 'GroupController@permission')->name('groups.permission');
+        Route::delete('/groups/{group}', 'GroupController@destroy')->name('groups.destroy');
 
     });
 });

@@ -19,29 +19,16 @@
                         </span>
                     </button>
 
-                    <div class="dropdown select-chapter me-1" :class="{ 'd-none': barBtn.desktop }">
-                        <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ $chaper['name'] }}
-                        </a>
-
-                        <ul class="dropdown-menu select-chapter__list" aria-labelledby="dropdownMenuLink">
+                    <div class="me-1 w-25" :class="{ 'd-none': barBtn.desktop }">
+                        <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.desktop }">
                             @foreach ($chaper_list as $item)
-                                <li class="">
-                                    <a class="dropdown-item {{ $item['id'] == $chaper['id'] ? 'active' : '' }}"
+                                <option value="{{ $item['id'] }}" {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>
+                                    <a
                                         href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
-                                </li>
+                                </option>
                             @endforeach
-                        </ul>
+                        </select>
                     </div>
-                    {{-- <select class="form-select w-175 btn btn-success mt-2" :class="{ 'd-none': barBtn.desktop }">
-                        @foreach ($chaper_list as $item)
-                            <option value="{{ $item['id'] }}" {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>
-                                <a
-                                    href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
-                            </option>
-                        @endforeach
-                    </select> --}}
                     <a class="btn btn-success chapter-next" href="{{ $link_next }}" title="">
                         <span>Chương</span> tiếp
                     </a>
@@ -55,51 +42,68 @@
                 </div>
 
                 <div v-if="barBtn.setting" class="chapter-actions chapter-actions-origin row mt-3">
-                    <div class="col-lg-2 col-sm-4 col-6"></div>
-                    <div class="col-lg-2 col-sm-4 col-6"></div>
-                    <div class="col-lg-2 col-sm-4 col-6">
+                    <div class="col-lg-3 col-sm-4 col-6"></div>
+                    <div class="col-lg-3 col-sm-4 col-6">
                         <div class="input-group flex-nowrap ">
-                            <span class="input-group-text bg-success text-white">Cỡ chữ</span>
+                            <span class="input-group-text bg-success text-white">Size</span>
+                            <span class="btn btn-danger" @click="reduceSize">-</span>
                             <input type="number" v-model="styles.fontSize" class="form-control ms-1" min="10"
-                                max="40" />
+                                max="35" />
+                            <span class="btn btn-primary" @click="increaseSize">+</span>
                         </div>
                     </div>
                 </div>
             </div>
             <hr class="chapter-end container-fluid">
 
-
             <div class="chapter-content mb-3" style="text-align: justify;" :style="{ 'fontSize': `${styles.fontSize}px` }">
                 {!! $chaper['content'] !!}
             </div>
 
-            <div class="chapter-actions chapter-actions-origin d-flex align-items-center justify-content-center">
-                <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title=""> <span>Chương
-                    </span>trước</a>
-                <button @click="barBtn.desktop = !barBtn.desktop" class="btn btn-success chapter_jump me-1">
-                    <span>
-                        <i class="fa-solid fa-bars"></i>
-                    </span>
-                </button>
+            <div class="chapter-nav text-center">
+                <div class="chapter-actions chapter-actions-origin d-flex align-items-center justify-content-center">
+                    <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title=""> <span>Chương
+                        </span>trước</a>
+                    <button @click="barBtn.desktop = !barBtn.desktop" class="btn btn-success chapter_jump me-1">
+                        <span>
+                            <i class="fa-solid fa-bars"></i>
+                        </span>
+                    </button>
 
-                <div class="dropdown select-chapter me-1" :class="{ 'd-none': barBtn.desktop }">
-                    <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ $chaper['name'] }}
+                    <div class="me-1 w-25" :class="{ 'd-none': barBtn.desktop }">
+                        <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.desktop }">
+                            @foreach ($chaper_list as $item)
+                                <option value="{{ $item['id'] }}" {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>
+                                    <a
+                                        href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <a class="btn btn-success chapter-next" href="{{ $link_next }}" title="">
+                        <span>Chương</span> tiếp
                     </a>
+                    <button @click="barBtn.setting = !barBtn.setting" class="btn btn-success chapter_jump ms-1"
+                        title="cài đặt">
+                        <span>
+                            <i class="fa-solid fa-gear"></i>
+                        </span>
+                    </button>
 
-                    <ul class="dropdown-menu select-chapter__list" aria-labelledby="dropdownMenuLink">
-                        @foreach ($chaper_list as $item)
-                            <li class="">
-                                <a class="dropdown-item {{ $item['id'] == $chaper['id'] ? 'active' : '' }}"
-                                    href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
                 </div>
-                <a class="btn btn-success chapter-next" href="{{ $link_next }}" title="">
-                    <span>Chương</span> tiếp
-                </a>
+
+                <div v-if="barBtn.setting" class="chapter-actions chapter-actions-origin row mt-3">
+                    <div class="col-lg-3 col-sm-4 col-6"></div>
+                    <div class="col-lg-3 col-sm-4 col-6">
+                        <div class="input-group flex-nowrap ">
+                            <span class="input-group-text bg-success text-white">Size</span>
+                            <span class="btn btn-danger" @click="reduceSize">-</span>
+                            <input type="number" v-model="styles.fontSize" class="form-control ms-1" min="10"
+                                max="35" />
+                            <span class="btn btn-primary" @click="increaseSize">+</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="chapter-actions chapter-actions-mobile d-flex align-items-center justify-content-center">
@@ -111,20 +115,15 @@
                     </span>
                 </button>
 
-                <div class="dropup select-chapter me-2" :class="{ 'd-none': barBtn.mobile }">
-                    <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ $chaper['name'] }}
-                    </a>
-
-                    <ul class="dropdown-menu select-chapter__list" aria-labelledby="dropdownMenuLink">
+                <div class="me-1 w-25" :class="{ 'd-none': barBtn.mobile }">
+                    <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.mobile }">
                         @foreach ($chaper_list as $item)
-                            <li class="">
-                                <a class="dropdown-item {{ $item['id'] == $chaper['id'] ? 'active' : '' }}"
+                            <option value="{{ $item['id'] }}" {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>
+                                <a
                                     href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
-                            </li>
+                            </option>
                         @endforeach
-                    </ul>
+                    </select>
                 </div>
                 <a class="btn btn-success chapter-next" href="{{ $link_next }}" title=""><span>Chương
                     </span>tiếp</a>
@@ -178,9 +177,19 @@
                             console.log(jsonData.message);
                         }
                     }, 60000);
+                },
+                reduceSize() {
+                    if (this.styles.fontSize <= 15) {
+                        return;
+                    }
+                    --this.styles.fontSize;
+                },
+                increaseSize() {
+                    if (this.styles.fontSize >= 35) {
+                        return;
+                    }
+                    ++this.styles.fontSize;
                 }
-
-
             },
             watch: {
                 'styles.fontSize'(newVal) {

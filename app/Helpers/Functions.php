@@ -56,11 +56,10 @@ function getQuery($name='', $default = '') {
 function get_string_after_time($after_minutes) {
     if ($after_minutes < 60) {
         return $after_minutes.' phút trước';
-    } else if ($after_minutes < 3600) {
+    } else if ($after_minutes < 1440) {
         return floor($after_minutes/60).' giờ trước';
     } else {
         return floor($after_minutes/(60*24)).' ngày trước';
-
     }
 }
 
