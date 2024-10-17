@@ -19,10 +19,13 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware' => ['throttle:30,1']], function() {
+// 'throttle:30,1'
+Route::group(['middleware' => []], function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
     
     Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
+
+    Route::get('/total-chapter/{slug_total}', [CategoriesClientController::class, 'getTotalChapter'])->name('client.total-chapter');
     
     Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
     Route::get('/story/top-rating', [StoriesClientController::class, 'getTopViewStories'])->name('story.top-rating');

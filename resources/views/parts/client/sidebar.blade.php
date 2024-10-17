@@ -1,7 +1,10 @@
 <?php
 use App\Http\Helpers\SettingHelpers;
+use App\Enums\TotalChapter;
 $option = SettingHelpers::getInstance();
 $all_categories = get_all_categories();
+$totalChapter = TotalChapter::asArray();
+
 ?>
 <div id="client_sidebar_app">
     <header class="header d-none d-lg-block">
@@ -9,7 +12,9 @@ $all_categories = get_all_categories();
         <nav class="navbar navbar-expand-lg navbar-dark header__navbar p-md-0">
             <div class="container">
                 <a class="navbar-brand" href="{{ route('index') }}">
-                    <img src="{{ $option->getOptionImage('fvn_logo')?$option->getOptionImage('fvn_logo'):asset('assets/images/logo_text.png') }}" alt="{{$option->getOptionValue('fvn_web_title')}}" srcset="" class="img-fluid" style="width: 200px;">
+                    <img src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
+                        alt="{{ $option->getOptionValue('fvn_web_title') }}" srcset="" class="img-fluid"
+                        style="width: 200px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -38,18 +43,13 @@ $all_categories = get_all_categories();
                                 Theo số chương
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom">
-                                <li><a class="dropdown-item" href="#">Dưới
-                                        100</a>
-                                </li>
-                                <li><a class="dropdown-item" href="#">100
-                                        - 500</a>
-                                </li>
-                                <li><a class="dropdown-item" href="#">500
-                                        - 1000</a>
-                                </li>
-                                <li><a class="dropdown-item" href="#">Trên
-                                        1000</a>
-                                </li>
+                                @foreach ($totalChapter as $item)
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('client.total-chapter', ['slug_total' => $item['key']]) }}">{{ $item['value'] }}</a>
+                                    </li>
+                                @endforeach
+
                             </ul>
                         </li>
                     </ul>
@@ -63,7 +63,8 @@ $all_categories = get_all_categories();
                                 </path>
                             </svg>
                         </label>
-                        <input v-model="isThemeLight" @change="changeThemes" value="1" class="form-check-input theme_mode" type="checkbox"
+                        <input v-model="isThemeLight" @change="changeThemes" value="1"
+                            class="form-check-input theme_mode" type="checkbox"
                             style="transform: scale(1.3); margin-left: 12px; margin-right: 12px;" />
 
                         <label class="form-check-label">
@@ -85,7 +86,8 @@ $all_categories = get_all_categories();
                                     <ul v-if="items.length > 0" class="list-group list-group-flush">
                                         <li v-for="(item, index) in items" class="list-group-item hover-darkgrey">
                                             <a :href="item.url" :title="titleAuthor(item.author_name)"
-                                                class="text-dark hover-title d-block">@{{ item.title }} (@{{ item.author_name }})</a>
+                                                class="text-dark hover-title d-block">@{{ item.title }}
+                                                (@{{ item.author_name }})</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -94,12 +96,14 @@ $all_categories = get_all_categories();
                         <div v-if="(items.length == 0) && (querySearch.keyword.length > 3)"
                             class="col-12 search-result shadow no-result">
                             <div class="card text-white bg-light">
-                                <div class="card-body p-0 text-dark text-align">Không tìm thấy truyện nào</div>
+                                <div class="card-body p-0 text-dark text-align">
+                                    <i v-if="loading" class="fa-solid fa-spinner spin_circle"></i>
+                                    <span v-else>Không tìm thấy truyện nào</span>
+                                </div>
                             </div>
                         </div>
                         <button class="btn" type="submit">
-                            <i v-if="loading" class="fa-solid fa-spinner"></i>
-                            <i v-else class="fa-solid fa-magnifying-glass"></i>
+                            <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
                     </div>
                 </div>
@@ -111,7 +115,9 @@ $all_categories = get_all_categories();
         <nav class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{ route('index') }}">
-                    <img src="{{ $option->getOptionImage('fvn_logo')?$option->getOptionImage('fvn_logo'):asset('assets/images/logo_text.png') }}" alt="{{$option->getOptionValue('fvn_web_title')}}" srcset="" class="img-fluid" style="width: 200px;">
+                    <img src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
+                        alt="{{ $option->getOptionValue('fvn_web_title') }}" srcset="" class="img-fluid"
+                        style="width: 200px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
@@ -120,7 +126,9 @@ $all_categories = get_all_categories();
                 <div class="offcanvas offcanvas-end text-bg-dark w-75" tabindex="-1" id="offcanvasDarkNavbar"
                     aria-labelledby="offcanvasDarkNavbarLabel">
                     <div class="offcanvas-header">
-                        <img src="{{ $option->getOptionImage('fvn_logo')?$option->getOptionImage('fvn_logo'):asset('assets/images/logo_text.png') }}" alt="{{$option->getOptionValue('fvn_web_title')}}" srcset="" class="img-fluid" style="width: 200px;">
+                        <img src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
+                            alt="{{ $option->getOptionValue('fvn_web_title') }}" srcset="" class="img-fluid"
+                            style="width: 200px;">
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                             aria-label="Close"></button>
                     </div>
@@ -140,6 +148,21 @@ $all_categories = get_all_categories();
                                     @endforeach
                                 </ul>
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Theo số chương
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-custom">
+                                    @foreach ($totalChapter as $item)
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="{{ route('client.total-chapter', ['slug_total' => $item['key']]) }}">{{ $item['value'] }}</a>
+                                        </li>
+                                    @endforeach
+
+                                </ul>
+                            </li>
                         </ul>
 
                         <div class="form-check form-switch d-flex align-items-center mb-3 p-0">
@@ -152,8 +175,8 @@ $all_categories = get_all_categories();
                                     </path>
                                 </svg>
                             </label>
-                            <input v-model="isThemeLight" @change="changeThemes" class="form-check-input theme_mode" type="checkbox"
-                                style="transform: scale(1.3); margin-left: 12px; margin-right: 12px;">
+                            <input v-model="isThemeLight" @change="changeThemes" class="form-check-input theme_mode"
+                                type="checkbox" style="transform: scale(1.3); margin-left: 12px; margin-right: 12px;">
 
                             <label class="form-check-label">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
@@ -173,7 +196,8 @@ $all_categories = get_all_categories();
                                     <div class="card-body p-0">
                                         <ul v-if="items.length > 0" class="list-group list-group-flush">
                                             <li v-for="(item, index) in items" class="list-group-item">
-                                                <a :href="item.url" :title="titleAuthor(item.author_name)" class="text-dark hover-title d-block">
+                                                <a :href="item.url" :title="titleAuthor(item.author_name)"
+                                                    class="text-dark hover-title d-block">
                                                     @{{ item.title }} (@{{ item.author_name }})
                                                 </a>
                                             </li>
@@ -184,13 +208,16 @@ $all_categories = get_all_categories();
                             <div v-if="(items.length == 0) && (querySearch.keyword.length > 3)"
                                 class="col-12 search-result shadow no-result">
                                 <div class="card text-white bg-light">
-                                    <div class="card-body p-0 text-dark text-align">Không tìm thấy truyện nào</div>
+                                    <div class="card-body p-0 text-dark text-align">
+                                        <i v-if="loading" class="fa-solid fa-spinner spin_circle"></i>
+                                        <span v-else>Không tìm thấy truyện nào</span>
+                                    </div>
+
                                 </div>
                             </div>
 
                             <button class="btn" type="submit">
-                                <i v-if="loading" class="fa-solid fa-spinner"></i>
-                                <i v-else class="fa-solid fa-magnifying-glass"></i>
+                                <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
                         </div>
                     </div>
@@ -216,7 +243,7 @@ $all_categories = get_all_categories();
                 </nav>
             @else
                 <p class="mb-0">
-                    {{$option->getOptionValue('fvn_content_top')}}
+                    {{ $option->getOptionValue('fvn_content_top') }}
                 </p>
             @endif
         </div>
@@ -249,10 +276,9 @@ $all_categories = get_all_categories();
         methods: {
             async getItems() {
                 this.items = [];
-                this.loading = true;
+
                 this.buildQueryItem();
                 const jsonData = await new RouteApi().get(this.getItemUrl)
-                this.loading = false;
                 if (jsonData.result) {
                     this.items = jsonData.data;
                 } else {
@@ -287,13 +313,16 @@ $all_categories = get_all_categories();
         },
         watch: {
             'querySearch.keyword'(newVal) {
+                this.loading = true;
+                this.items = [];
                 if (this.pointInTime) {
                     clearTimeout(this.pointInTime);
                 }
                 if (newVal.length > 3) {
                     this.pointInTime = setTimeout(() => {
                         this.getItems();
-                    }, 300)
+                        this.loading = false;
+                    }, 1000)
                 }
             }
         },

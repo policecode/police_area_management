@@ -45,8 +45,6 @@ $option = SettingHelpers::getInstance();
     @include('parts.client.footer')
     <script src="{{asset('frontend/js/popper.min.js')}}"></script>
     <script src="{{asset('assets/js/boostrap.min.js')}}"></script>
-    <script src="{{asset('frontend/js/app.js')}}"></script>
-    <script src="{{asset('frontend/js/common.js')}}"></script>
 
     @yield('scripts')
 

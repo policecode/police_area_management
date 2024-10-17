@@ -11,3 +11,12 @@
 .pagination__item.disabled:hover {
     border: unset;
 }
+
+.spin_circle {
+    animation: spinCircle 1.5s infinite linear;
+}
+@keyframes spinCircle {
+    to {
+        transform: rotate(360deg);
+    }
+}

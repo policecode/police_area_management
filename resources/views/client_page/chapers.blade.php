@@ -11,26 +11,29 @@
             <hr class="chapter-start container-fluid">
             <div class="chapter-nav text-center">
                 <div class="chapter-actions chapter-actions-origin d-flex align-items-center justify-content-center">
-                    <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title=""> <span>Chương
-                        </span>trước</a>
+                    <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title="">
+                        <i class="fa-solid fa-chevron-left d-sm-none"></i>
+                        <span class="d-none d-sm-block">Chương trước</span>
+                    </a>
                     <button @click="barBtn.desktop = !barBtn.desktop" class="btn btn-success chapter_jump me-1">
                         <span>
                             <i class="fa-solid fa-bars"></i>
                         </span>
                     </button>
 
-                    <div class="me-1 w-25" :class="{ 'd-none': barBtn.desktop }">
-                        <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.desktop }">
+                    <div class="me-1 w-50" :class="{ 'd-none': barBtn.desktop }">
+                        <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.desktop }"
+                            onchange="location = this.value;">
                             @foreach ($chaper_list as $item)
-                                <option value="{{ $item['id'] }}" {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>
-                                    <a
-                                        href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
-                                </option>
+                                <option
+                                    value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
+                                    {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>{{ $item['name'] }}</option>
                             @endforeach
                         </select>
                     </div>
                     <a class="btn btn-success chapter-next" href="{{ $link_next }}" title="">
-                        <span>Chương</span> tiếp
+                        <span class="d-none d-sm-block">Chương tiếp</span>
+                        <i class="fa-solid fa-chevron-right d-sm-none"></i>
                     </a>
                     <button @click="barBtn.setting = !barBtn.setting" class="btn btn-success chapter_jump ms-1"
                         title="cài đặt">
@@ -62,71 +65,58 @@
 
             <div class="chapter-nav text-center">
                 <div class="chapter-actions chapter-actions-origin d-flex align-items-center justify-content-center">
-                    <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title=""> <span>Chương
-                        </span>trước</a>
+                    <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title="">
+                        <i class="fa-solid fa-chevron-left d-sm-none"></i>
+                        <span class="d-none d-sm-block">Chương trước</span>
+                    </a>
                     <button @click="barBtn.desktop = !barBtn.desktop" class="btn btn-success chapter_jump me-1">
                         <span>
                             <i class="fa-solid fa-bars"></i>
                         </span>
                     </button>
 
-                    <div class="me-1 w-25" :class="{ 'd-none': barBtn.desktop }">
-                        <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.desktop }">
+                    <div class="me-1 w-50" :class="{ 'd-none': barBtn.desktop }">
+                        <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.desktop }"
+                            onchange="location = this.value;">
                             @foreach ($chaper_list as $item)
-                                <option value="{{ $item['id'] }}" {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>
-                                    <a
-                                        href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
-                                </option>
+                                <option
+                                    value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
+                                    {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>{{ $item['name'] }}</option>
                             @endforeach
                         </select>
                     </div>
                     <a class="btn btn-success chapter-next" href="{{ $link_next }}" title="">
-                        <span>Chương</span> tiếp
+                        <span class="d-none d-sm-block">Chương tiếp</span>
+                        <i class="fa-solid fa-chevron-right d-sm-none"></i>
                     </a>
-                    <button @click="barBtn.setting = !barBtn.setting" class="btn btn-success chapter_jump ms-1"
-                        title="cài đặt">
-                        <span>
-                            <i class="fa-solid fa-gear"></i>
-                        </span>
-                    </button>
 
-                </div>
 
-                <div v-if="barBtn.setting" class="chapter-actions chapter-actions-origin row mt-3">
-                    <div class="col-lg-3 col-sm-4 col-6"></div>
-                    <div class="col-lg-3 col-sm-4 col-6">
-                        <div class="input-group flex-nowrap ">
-                            <span class="input-group-text bg-success text-white">Size</span>
-                            <span class="btn btn-danger" @click="reduceSize">-</span>
-                            <input type="number" v-model="styles.fontSize" class="form-control ms-1" min="10"
-                                max="35" />
-                            <span class="btn btn-primary" @click="increaseSize">+</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="chapter-actions chapter-actions-mobile d-flex align-items-center justify-content-center">
-                <a class="btn btn-success me-2 chapter-prev" href="{{ $link_prev }}" title=""> <span>Chương
-                    </span>trước</a>
+                <a class="btn btn-success me-2 chapter-prev" href="{{ $link_prev }}" title="">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
                 <button @click="barBtn.mobile = !barBtn.mobile" class="btn btn-success chapter_jump me-2">
                     <span>
                         <i class="fa-solid fa-bars"></i>
                     </span>
                 </button>
 
-                <div class="me-1 w-25" :class="{ 'd-none': barBtn.mobile }">
-                    <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.mobile }">
+                <div class="me-1 w-100" :class="{ 'd-none': barBtn.mobile }">
+                    <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.mobile }"
+                        onchange="location = this.value;">
                         @foreach ($chaper_list as $item)
-                            <option value="{{ $item['id'] }}" {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>
-                                <a
-                                    href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}">{{ $item['name'] }}</a>
-                            </option>
+                            <option
+                                value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
+                                {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>{{ $item['name'] }}</option>
                         @endforeach
                     </select>
                 </div>
-                <a class="btn btn-success chapter-next" href="{{ $link_next }}" title=""><span>Chương
-                    </span>tiếp</a>
+                <a class="btn btn-success chapter-next" href="{{ $link_next }}" title="">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
             </div>
     </main>
     <script>
