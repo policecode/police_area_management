@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\GroupRole;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller
 {
@@ -29,7 +33,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = RouteServiceProvider::REGISTER;
 
     /**
      * Create a new controller instance.
@@ -48,18 +52,43 @@ class RegisterController extends Controller
         return view('auth.register', $dataView);
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        if ($response = $this->registered($request, $user)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+                    ? new JsonResponse([], 201)
+                    : redirect($this->redirectPath())->with('msg', 'Đăng ký tài khoản thành công, mời bạn  đăng nhập vào email '.$request->email.' để kích hoạt tài khoản');
+    }
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8'],
+            'password_confirmation' => ['required', 'string', 'min:8', 'same:password'],
+        ],
+        [
+            'required' => ':attribute bắt buộc phải nhập',
+            'string' => ':attribute là chuỗi ký tự',
+            'max' => ':attribute không được nhiều hơn :max ký tự',
+            'email' => ':attribute không đúng định dạng email',
+            'unique' => ':attribute đã tồn tại',
+            'min' => ':attribute không được ít hơn :min ký tự',
+            'same' => ':attribute không trùng khớp'
+        ],
+        [
+            'name' => 'Họ và tên',
+            'email' => 'Tài khoản',
+            'password' => 'Mật khẩu',
+            'password_confirmation' => 'Mật khẩu nhập lại'
         ]);
     }
 
@@ -75,6 +104,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'group_id' => GroupRole::READER['id']
         ]);
     }
 }

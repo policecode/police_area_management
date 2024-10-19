@@ -8,6 +8,7 @@ use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 // use App\Http\Controllers\Admin\UserController;
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +42,7 @@ Route::group(['middleware' => []], function() {
     });
 });
 
-Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth']], function() {
+Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth', 'verified']], function() {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', 'DashboardController@index')->name('dashboard');
 
@@ -128,5 +129,25 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth'], function() {
     Route::get('/logout', 'LoginController@logout')->name('auth.logout');
 
     Route::get('/register', 'RegisterController@showRegistrationForm')->name('auth.register_form');
+    Route::post('/register', 'RegisterController@register')->name('auth.store');
 
+    // Link thông báo vertify khi người dùng đăng ký tài khoản, chưa xác thực email
+    Route::get('/email/verify', function () {
+        $dataView = array(
+            'title' => 'Vertify Email'
+        );
+        return view('auth.verify', $dataView);
+    })->middleware('auth')->name('verification.notice');
+    // Liên kết sẽ được gửi vào email của người đăng ký
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+     
+        return redirect('/');
+    })->middleware(['auth', 'signed'])->name('verification.verify');
+    // Xử lý hành động gửi lại email
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+     
+        return back()->with('message', 'Verification link sent!');
+    })->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
 });

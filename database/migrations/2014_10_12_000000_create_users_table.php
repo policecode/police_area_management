@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -29,7 +30,8 @@ class CreateUsersTable extends Migration
             'name' => 'Nguyễn Hoàng Đạt',
             'email' => 'adminlaravelexample@gmail.com',
             'password' => Hash::make('f4v8a6Zfa5j'),
-            'group_id' => 1
+            'group_id' => 1,
+            'email_verified_at' => Carbon::now()
         ]);
     }
 

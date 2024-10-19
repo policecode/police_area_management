@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\GroupRole;
 use App\Models\Group;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -20,26 +21,12 @@ class CreateGroupsTable extends Migration
             $table->string('slug')->unique();
             $table->text('permissions');
         });
-        Group::insert([
-            [
-                'id' => 1,
-                'name' => 'Admin',
-                'slug' => 'admin',
-                'permissions' => json_encode([])
-            ],
-            [
-                'id' => 2,
-                'name' => 'Author',
-                'slug' => 'author',
-                'permissions' => json_encode([])
-            ],
-            [
-                'id' => 3,
-                'name' => 'Reader',
-                'slug' => 'reader',
-                'permissions' => json_encode([])
-            ]
-        ]);
+
+        $groups = GroupRole::asArray();
+        foreach ($groups as $key => $item) {
+            $groups[$key]['permissions'] = json_encode([], JSON_UNESCAPED_UNICODE);
+        }
+        Group::insert($groups);
     }
 
     /**
