@@ -68,11 +68,11 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
 
         // Stories
         Route::prefix('stories')->name('stories.')->group(function () {
-            Route::get('/', 'StoriesController@index')->name('index')->middleware('can:admin.stpries.getItems');
-            Route::get('/get-items', 'StoriesController@getItems')->name('getItems')->middleware('can:admin.stpries.getItems');
+            Route::get('/', 'StoriesController@index')->name('index')->middleware('can:admin.stories.getItems');
+            Route::get('/get-items', 'StoriesController@getItems')->name('getItems')->middleware('can:admin.stories.getItems');
             Route::post('/', 'StoriesController@store')->name('store')->middleware('can:admin.stpries.store');
-            Route::post('/update/{story}', 'StoriesController@update')->name('update')->middleware('can:admin.stpries.update');
-            Route::delete('/{story}', 'StoriesController@destroy')->name('destroy')->middleware('can:admin.stpries.destroy');
+            Route::post('/update/{story}', 'StoriesController@update')->name('update')->middleware('can:admin.stories.update');
+            Route::delete('/{story}', 'StoriesController@destroy')->name('destroy')->middleware('can:admin.stories.destroy');
         });
         // Route::resource('stories', 'StoriesController');
 
@@ -107,8 +107,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::post('/settings/page-one', 'SettingController@settingPageOne')->name('setting.pageOne')->middleware('can:admin.setting.pageOne');
 
         // Groups: Phân quyền
-        Route::get('/groups', 'GroupController@index')->name('groups.index')->middleware('can:admin.groups.getItem');
-        Route::get('/groups/get-items', 'GroupController@getItems')->name('groups.getItems')->middleware('can:admin.groups.getItem');
+        Route::get('/groups', 'GroupController@index')->name('groups.index')->middleware('can:admin.groups.getItems');
+        Route::get('/groups/get-items', 'GroupController@getItems')->name('groups.getItems')->middleware('can:admin.groups.getItems');
         Route::post('/groups', 'GroupController@store')->name('groups.store')->middleware('can:admin.groups.store');
         Route::put('/groups/{group}', 'GroupController@update')->name('groups.update')->middleware('can:admin.groups.update');
         Route::put('/groups/permission/{group}', 'GroupController@permission')->name('groups.permission')->middleware('can:admin.groups.permission');
