@@ -10,7 +10,7 @@ use App\Traits\Filterable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, Filterable;
-
+    protected $appends = ['group'];
     public $filterKeywords = ['email', 'name']; // Sử dụng trong trường hợp có trường keyword
     public $filterFields  = ['email', 'name']; // SỬ dụng khi tìm kiếm dữ liệu cùng với tên trường trong DB
     /**
@@ -39,4 +39,13 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getGroupAttribute()
+    {
+        // Không nên dùng attribute để query dữ liệu
+        if ($this->group_id) {
+            return Group::find($this->group_id);
+        }
+        return [];
+    }
 }

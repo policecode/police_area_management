@@ -1,5 +1,8 @@
 @extends('layouts.backend')
 @section('content')
+<script>
+    var groups = {{ Illuminate\Support\Js::from($groups) }};
+</script>
     <script src="{{ asset('assets/js/vue.js') }}"></script>
     <script src="{{ asset('assets/js/routeapi.js') }}"></script>
     <script src="{{ asset('assets/js/vue-input.js') }}"></script>
@@ -62,7 +65,7 @@
                                     <td>@{{ index + 1 }}</td>
                                     <td>@{{ item.name }}</td>
                                     <td>@{{ item.email }}</td>
-                                    <td>@{{ item.group_id }}</td>
+                                    <td>@{{ item.group.name }}</td>
                                     <td>@{{ displayDate(item.created_at) }}</td>
                                     <td><a @click="showItem(item)" class="btn btn-warning">Sửa</a></td>
                                     <td><a @click="deleteItem(item)" class="btn btn-danger">Xóa</a></td>
@@ -112,7 +115,9 @@
                                 <select v-model="itemDetail.group_id" class="form-control"
                                     :class={'is-invalid':errors.group_id}>
                                     <option value="">Chọn nhóm</option>
-                                    <option value="1">admin</option>
+                                    @foreach ($groups as $item)
+                                        <option value="{{$item['id']}}">{{$item['name']}}</option>
+                                    @endforeach
                                 </select>
                                 <div v-if="errors.name" class="invalid-feedback">@{{ errors.group_id[0] }}</div>
                             </div>

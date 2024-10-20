@@ -9,7 +9,7 @@ use App\Models\StoryCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Str;
 class HomeController extends Controller
 {
     /**
@@ -69,6 +69,9 @@ class HomeController extends Controller
                 ]);
             }
             // DB::enableQueryLog();
+            $request->merge([
+                'keyword' => Str::slug($request->keyword, " ")
+            ]);
             $query = Story::filter($request);
             $res = [
                 'result' => 1,

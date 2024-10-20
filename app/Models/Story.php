@@ -10,7 +10,7 @@ class Story extends Model
 {
     use HasFactory, Filterable;
     protected $appends = ['status_name'];
-    public $filterKeywords = ['title', ]; // Sử dụng trong trường hợp có trường keyword
+    public $filterKeywords = ['title', 'title_eng']; // Sử dụng trong trường hợp có trường keyword
     public $filterFields  = ['title']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
     public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
     /**
@@ -19,7 +19,7 @@ class Story extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'title', 'slug', 'thumbnail', 'description', 'star_count', 'star_average', 'view_count', 'author_id', 'status', 'created_at', 'updated_at', 'last_chapers', 'chaper_id'
+        'user_id', 'title', 'title_eng', 'slug', 'thumbnail', 'description', 'star_count', 'star_average', 'view_count', 'author_id', 'status', 'created_at', 'updated_at', 'last_chapers', 'chaper_id'
     ];
 
     private $joinAuthor = false;

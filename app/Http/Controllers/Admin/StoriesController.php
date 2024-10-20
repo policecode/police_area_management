@@ -76,16 +76,6 @@ class StoriesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -115,6 +105,7 @@ class StoriesController extends Controller
             $story = Story::create([
                 'user_id' => $user->id,
                 'title' => $data['title'],
+                'title_eng' => Str::slug($data['title'], " "),
                 'slug' => $data['slug'],
                 'thumbnail' => $thumbnail,
                 'description' => $data['description'],
@@ -151,28 +142,6 @@ class StoriesController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -196,6 +165,7 @@ class StoriesController extends Controller
     
             $dataUpdate = [
                 'title' => $data['title'],
+                'title_eng' => Str::slug($data['title'], " "),
                 'slug' => $data['slug'],
                 'description' => $data['description'],
                 'author_id' => $data['author_id'],
@@ -221,7 +191,7 @@ class StoriesController extends Controller
             }
             StoryCategory::where('story_id', $story->id)->delete();
             if ((count($listStoryCategory) > 0)) {
-                StoryCategory::insert($listStoryCategory);
+                StoryCategory::insert($listStoryCategory); 
             }
             DB::commit();
             return response()->json([
@@ -267,24 +237,6 @@ class StoriesController extends Controller
         }
     }
 
-    public function autoConvertDescriptionToHtml() {
-        $listStory = Story::where('description', 'LIKE','%\n%')->get();
-        $count = 0;
-        foreach ($listStory as $key => $story) {
-            $story->description = preg_replace("/[\n]+/", "\n\n",$story->description);
-            $story->description = nl2br($story->description);
-            $story->description = preg_replace("/\n/", "",$story->description);
-            $story->update();
-            $count++;
-        }
- 
-        return response()->json([
-            'data' => $listStory[0], 
-            'count' =>  $count,
-            'status' => 1,
-        ]);
-    }
-
     private function rules($request)
     {
         $rules = [
@@ -326,6 +278,24 @@ class StoriesController extends Controller
             'status' => 'Trạng thái truyện',
             'description' => 'Thông tin về truyện'
         ];
+    }
+    
+    public function autoConvertDescriptionToHtml() {
+        $listStory = Story::where('description', 'LIKE','%\n%')->get();
+        $count = 0;
+        foreach ($listStory as $key => $story) {
+            $story->description = preg_replace("/[\n]+/", "\n\n",$story->description);
+            $story->description = nl2br($story->description);
+            $story->description = preg_replace("/\n/", "",$story->description);
+            $story->update();
+            $count++;
+        }
+ 
+        return response()->json([
+            'data' => $listStory[0], 
+            'count' =>  $count,
+            'status' => 1,
+        ]);
     }
 
     public function getthumbnail(Request $request) {
@@ -395,6 +365,7 @@ class StoriesController extends Controller
             $story = Story::create([
                 'user_id' => 1,
                 'title' => $data['title'],
+                'title_eng' => Str::slug($data['title'], " "),
                 'slug' => Str::slug($data['title'], "-"),
                 'thumbnail' => $thumbnail,
                 'description' => $description,
