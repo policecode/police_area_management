@@ -363,7 +363,7 @@ class StoriesController extends Controller
             //     'message' => $data['title'].' đã tồn tại'
             // ]);
             // Add Author
-            $author = Author::getBySlug($data['author'])->first();
+            $author = Author::getBySlug(Str::slug($data['author'], "-"))->first();
             if (!$author) {
                 $author = Author::create([
                     'name' => $data['author'],
