@@ -4,9 +4,9 @@
     <main id="app_chapter">
         <div class="chapter-wrapper container my-5">
             <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" class="text-decoration-none">
-                <h1 class="text-center text-success">{{ ucwords($story['title']) }}</h1>
+                <h2 class="text-center text-success">{{ ucwords($story['title']) }}</h2>
             </a>
-            <p class="text-center text-dark">{{ $chaper['name'] }}</p>
+            <h1 class="text-center text-dark fs-6">{{ $chaper['name'] }}</h1>
 
             <hr class="chapter-start container-fluid">
             <div class="chapter-nav text-center">

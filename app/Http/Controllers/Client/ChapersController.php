@@ -54,7 +54,7 @@ class ChapersController extends Controller
             ],
             [
                 "title" => $chaper['name'],
-                "url" => ""
+                "url" => $chaper['link']
             ]
         ];
         $dataView = array(

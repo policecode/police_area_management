@@ -38,7 +38,9 @@ class StoriesController extends Controller
             ],
             [
                 "title" => $story['title'],
-                "url" => ''
+                "url" => route('client.story', [
+                    'story_slug' => $story['slug']
+                ])
             ]
         ];
 

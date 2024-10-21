@@ -13,7 +13,7 @@
         <div class="story-detail__top d-flex align-items-start">
             <div class="row align-items-start">
                 <div class="col-12 mb-2 d-block d-lg-none">
-                    <h3 class="text-center story-name text-capitalize">{{ $story['title'] }}</h3>
+                    <h1 class="text-center story-name text-capitalize fs-4">{{ $story['title'] }}</h1>
                     <div class="rate-story mb-2">
                         <div @mouseleave="leaveStar" class="rate-story__holder">
                             <img v-for="(item, index) in renderStar" @mouseover="hoverStar(index + 1)"
@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-12 col-lg-8 d-none d-lg-block">
-                    <h3 class="text-center story-name text-capitalize">{{ $story['title'] }}</h3>
+                    <h1 class="text-center story-name text-capitalize fs-4">{{ $story['title'] }}</h1>
                     <div class="rate-story mb-2">
                         <div @mouseleave="leaveStar" class="rate-story__holder">
                             <img v-for="(item, index) in renderStar" @mouseover="hoverStar(index + 1)"

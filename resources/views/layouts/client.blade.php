@@ -1,6 +1,7 @@
 <?php 
 use App\Http\Helpers\SettingHelpers;
 $option = SettingHelpers::getInstance();
+
 ?>
 <!DOCTYPE html>
 <!-- saved from url=(0021)https://suustore.com/ -->
@@ -8,14 +9,18 @@ $option = SettingHelpers::getInstance();
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="{{$option->getOptionValue('fvn_content_bottom')}}">
+    <meta name="keywords" content="truyện hay, tiên hiệp, huyền huyễn, khoa huyễn, đô thị, võng du" />
+    <meta name="robots" content="INDEX,FOLLOW" />
+    <meta name="author" content="" />
+    <link rel="canonical" href="{{url()->current()}}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{$page_title}}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-
 
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet">
@@ -24,10 +29,6 @@ $option = SettingHelpers::getInstance();
     <link rel="stylesheet" href="{{asset('frontend/css/app.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/css/custom.css')}}">
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{$page_title}}</title>
-    <meta name="description"
-        content="Đọc truyện online, truyện hay. Demo Truyện luôn tổng hợp và cập nhật các chương truyện một cách nhanh nhất.">
     <script src="{{asset('assets/js/jQuery3.6.0.min.js')}}"></script>
     <script src="{{ asset('assets/js/vue.js') }}"></script>
     <script src="{{ asset('assets/js/routeapi.js') }}"></script>
