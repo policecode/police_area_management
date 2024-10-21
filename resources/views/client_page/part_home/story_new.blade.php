@@ -1,5 +1,15 @@
 <div class="container">
-    <div class="row align-items-start">
+    <div class="row align-items-start flex-row-reverse">
+        <div class="col-12 col-md-4 col-lg-3 ">
+            <div class="row">
+                <div class="col-12 mb-4">
+                    @include('client_page.part_stories.follow_story', [])
+                </div>
+                <div class="col-12 d-none d-lg-block">
+                    @include('client_page.part_stories.table_categories', [])
+                </div>
+            </div>
+        </div>
         <div class="col-12 col-md-8 col-lg-9">
             <div class="section-stories-new mb-3">
                 <div class="row">
@@ -22,14 +32,7 @@
                                 <div class="story-item-no-image">
                                     <div class="story-item-no-image__name d-flex align-items-center">
                                         <h3 class="me-1 mb-0 d-flex align-items-center">
-
-                                            <svg style="width: 10px; margin-right: 5px;"
-                                                xmlns="http://www.w3.org/2000/svg" height="1em"
-                                                viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                                                <path
-                                                    d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z">
-                                                </path>
-                                            </svg>
+                                            <i class="fa-solid fa-angle-right fs-6 me-1"></i>
                                             <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
                                                 class="text-decoration-none text-dark fs-6 hover-title text-one-row story-name">{{ $item['title'] }}</a>
                                         </h3>
@@ -73,13 +76,5 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-4 col-lg-3">
-            <div class="row">
-                <div class="col-12">
-                    @include('client_page.part_stories.table_categories', [])
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>

@@ -1,3 +1,7 @@
+:root {
+    --height-margin-top: 30px;
+}
+
 .hover-darkgrey:hover{background-color: darkgrey;}
 .hover_primary:hover {
     color: var(--bs-primary) !important;
@@ -11,12 +15,26 @@
 .pagination__item.disabled:hover {
     border: unset;
 }
-
+.text-one-row {
+    text-overflow: ellipsis;
+}
 .spin_circle {
     animation: spinCircle 1.5s infinite linear;
 }
+.fvn__user {
+    height: var(--height-margin-top);
+    background-color: var(--bs-gray-100);
+    color: var(--bs-gray-700);
+    z-index: 9999;
+}
+
 @keyframes spinCircle {
     to {
         transform: rotate(360deg);
+    }
+}
+@media (max-width: 576px) {
+    :root {
+        --height-margin-top: 25px;
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Group;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +24,6 @@ class UserController extends Controller
     {
         $rules = [
             'name' => 'required|max:255',
-            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'group_id' => ['required', 'integer', function($attr, $value, $fail) {
                                                         if ($value === 0) {
@@ -32,12 +32,13 @@ class UserController extends Controller
                                                     }]
         ];
         if ($request->id) {
-            $rules['email'] = 'required|email|unique:users,email,'.$request->id;
             if ($request->password) {
                 $rules['password'] = 'min:6';
             } else {
                 unset($rules['password']);
             }
+        } else {
+            $rules['email'] = 'required|email|unique:users,email';
         }
         return $rules;
     }
@@ -111,7 +112,8 @@ class UserController extends Controller
         try {
             $result = User::create(array_merge($data, array(
                 'password' => bcrypt($request->password),
-                'group_id' => (int) $request->group_id
+                'group_id' => (int) $request->group_id,
+                'email_verified_at' => Carbon::now()
             )));
             return response()->json([
                 'status' => 1, 

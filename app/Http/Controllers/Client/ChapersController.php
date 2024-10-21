@@ -41,6 +41,8 @@ class ChapersController extends Controller
             }
             # code...
         }
+        $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]);
+        $story['link'] = route('client.story', ['story_slug' => $story['slug']]);
         $breadcrumb = [
             [
                 "title" => "Trang chủ",
@@ -48,7 +50,7 @@ class ChapersController extends Controller
             ],
             [
                 "title" => $story['title'],
-                "url" => route('client.story', ['story_slug' => $story['slug']])
+                "url" => $story['link']
             ],
             [
                 "title" => $chaper['name'],

@@ -1,12 +1,44 @@
 <?php
 use App\Http\Helpers\SettingHelpers;
 use App\Enums\TotalChapter;
+use Illuminate\Support\Facades\Auth;
+
 $option = SettingHelpers::getInstance();
 $all_categories = get_all_categories();
 $totalChapter = TotalChapter::asArray();
-
+$user = Auth::user();
 ?>
 <div id="client_sidebar_app">
+    {{-- Đang xây dựng --}}
+    {{-- <div class="header fvn__user d-flex justify-content-end align-items-center">
+        @if ($user)
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fa-solid fa-user-pen"></i>
+                    <span>{{$user->name}}</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Trang cá nhân</a></li>
+                    <hr>
+                    <li><a class="dropdown-item" href="{{route('auth.logout')}}">
+                        Đăng xuất
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    </a></li>
+                </ul>
+            </div>
+        @else
+            <a href="{{ route('auth.form_login') }}" class="mx-2 link-dark text-decoration-none">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                Đăng nhập
+            </a>
+            <span class="">/</span>
+            <a href="{{ route('auth.register_form') }}" class="mx-2 link-dark text-decoration-none">
+                <i class="fa-solid fa-user-plus"></i>
+                Đăng ký
+            </a>
+        @endif
+    </div> --}}
     <header class="header d-none d-lg-block">
         <!-- place navbar here -->
         <nav class="navbar navbar-expand-lg navbar-dark header__navbar p-md-0">

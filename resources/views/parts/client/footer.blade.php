@@ -13,7 +13,7 @@ $all_categories = get_all_categories();
                 @foreach ($all_categories as $key => $cat)
                     <li class="me-1">
                         <span class="badge text-bg-light">
-                            <a class="text-dark text-decoration-none" href="{{ route('client.tag', ['tag_slug' => $cat['slug']]) }}" title="đam mỹ hài">{{ $cat['name'] }}</a>
+                            <a class="text-dark text-decoration-none" href="{{ route('client.tag', ['tag_slug' => $cat['slug']]) }}" title="{{ $cat['name'] }}">{{ $cat['name'] }}</a>
                         </span>
                     </li>
                 @endforeach

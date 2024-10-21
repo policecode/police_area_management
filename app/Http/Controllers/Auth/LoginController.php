@@ -55,7 +55,7 @@ class LoginController extends Controller
     protected function loggedOut(Request $request)
     {
         // Xử lý sau khi logout
-        return redirect(RouteServiceProvider::LOGIN);
+        return redirect(RouteServiceProvider::HOME);
 
     }
 

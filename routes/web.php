@@ -23,7 +23,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 // 'throttle:30,1'
-Route::group(['middleware' => []], function() {
+Route::group(['middleware' => ['visit_website']], function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
     
     Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
@@ -113,6 +113,10 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::put('/groups/{group}', 'GroupController@update')->name('groups.update')->middleware('can:admin.groups.update');
         Route::put('/groups/permission/{group}', 'GroupController@permission')->name('groups.permission')->middleware('can:admin.groups.permission');
         Route::delete('/groups/{group}', 'GroupController@destroy')->name('groups.destroy')->middleware('can:admin.groups.destroy');
+
+        // Follow web: Theo dõi các thông số trang web
+        Route::get('/visit-website', 'FollowWebController@index')->name('visitWebsite.index');
+        Route::get('/visit-website/get-items', 'FollowWebController@getItems')->name('visitWebsite.getItems');
 
     });
 });

@@ -150,6 +150,7 @@
             mounted: function() {
                 // this.searchItem();
                 this.addViewStory();
+                this.addHistoryReadStory();
             },
             computed: {
 
@@ -179,6 +180,33 @@
                         return;
                     }
                     ++this.styles.fontSize;
+                },
+                addHistoryReadStory() {
+                    let listStoryHistory = LocalStorageHelper.getObject('fvn_story_history',[]);
+                    let story = {
+                        id: this.story.id,
+                        title: this.story.title,
+                        slug: this.story.slug,
+                        link: this.story.link,
+                        chapter_name: this.chaper.name,
+                        slug_chapter: this.chaper.slug,
+                        position: this.chaper.position,
+                        link_chapter: this.chaper.link
+                    }
+                    let results = [];
+                    results.push(story);
+                    if (listStoryHistory.length > 0) {
+                        for (let i = 0; i < listStoryHistory.length; i++) {
+                            if (listStoryHistory[i].id != story.id) {
+                                results.push(listStoryHistory[i]);
+                            }
+                            if (results.length >= 5) {
+                                break;
+                            }
+                        }
+                    }
+                    LocalStorageHelper.setObject('fvn_story_history',results);
+                    
                 }
             },
             watch: {

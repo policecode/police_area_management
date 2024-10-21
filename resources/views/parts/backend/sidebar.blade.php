@@ -33,28 +33,33 @@
         'icon' => 'fas fa-users',
         'child_route' => [],
     ])
+
+    @include('parts.backend.item_page', [
+        'title' => 'Thông số sử dụng',
+        'page' => 'visitWebsite',
+        'icon' => 'fa-solid fa-globe',
+        'child_route' => [],
+    ])
     @include('parts.backend.item_page', [
         'title' => 'Quản lý truyện',
         'page' => 'stories',
         'icon' => 'fa-solid fa-book',
         'child_route' => [
-            [ 'page' => 'admin.author.index', 'title' => 'Danh sách tác giả'],
-            [ 'page' => 'admin.category.index', 'title' => 'Thể loại truyện'],
+            ['page' => 'admin.author.index', 'title' => 'Danh sách tác giả'],
+            ['page' => 'admin.category.index', 'title' => 'Thể loại truyện'],
         ],
     ])
-     @include('parts.backend.item_page', [
+    @include('parts.backend.item_page', [
         'title' => 'Cài đặt',
         'page' => 'setting',
         'icon' => 'fa-solid fa-gear',
-        'child_route' => [
-        ],
+        'child_route' => [],
     ])
-       @include('parts.backend.item_page', [
+    @include('parts.backend.item_page', [
         'title' => 'Phân quyền',
         'page' => 'groups',
         'icon' => 'fa-solid fa-people-group',
-        'child_route' => [
-        ],
+        'child_route' => [],
     ])
     <!-- Nav Item - Pages Collapse Menu -->
     {{-- @include('parts.backend.item_page', [
