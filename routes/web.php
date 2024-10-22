@@ -23,7 +23,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 |
 */
 // 'throttle:30,1'
-Route::group(['middleware' => ['visit_website']], function() {
+Route::group(['middleware' => ['visit_website', 'throttle:60,1']], function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
     
     Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');

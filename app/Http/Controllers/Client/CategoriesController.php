@@ -39,8 +39,8 @@ class CategoriesController extends Controller
         $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
-            $item->last_update = $now->diffInMinutes(new Carbon($item->last_chapers));
-            $item->total_chapers = $totalChapers[$item->id];
+            $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
+            $item->total_chapers = empty($totalChapers[$item->id])?0:$totalChapers[$item->id];
         })->toArray();
         // dd($listStory);
         $breadcrumb = [
