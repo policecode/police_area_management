@@ -27,7 +27,7 @@ Route::group(['middleware' => ['visit_website', 'throttle:60,1']], function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
     
     Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
-
+    Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
     Route::get('/total-chapter/{slug_total}', [CategoriesClientController::class, 'getTotalChapter'])->name('client.total-chapter');
     
     Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
@@ -38,7 +38,6 @@ Route::group(['middleware' => ['visit_website', 'throttle:60,1']], function() {
     Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
     Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index'])->name('client.chaper');
     
-    Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
     Route::get('/test_client', function (Request $request) {
         dd($request->ips());
     });
@@ -115,8 +114,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::delete('/groups/{group}', 'GroupController@destroy')->name('groups.destroy')->middleware('can:admin.groups.destroy');
 
         // Follow web: Theo dõi các thông số trang web
-        Route::get('/visit-website', 'FollowWebController@index')->name('visitWebsite.index');
-        Route::get('/visit-website/get-items', 'FollowWebController@getItems')->name('visitWebsite.getItems');
+        Route::get('/visit-website', 'FollowWebController@index')->name('visitWebsite.index')->middleware('can:admin.visitWebsite.getItems');
+        Route::get('/visit-website/get-items', 'FollowWebController@getItems')->name('visitWebsite.getItems')->middleware('can:admin.visitWebsite.getItems');
 
     });
 });

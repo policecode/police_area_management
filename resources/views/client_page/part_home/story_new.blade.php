@@ -5,8 +5,11 @@
                 <div class="col-12 mb-4">
                     @include('client_page.part_stories.follow_story', [])
                 </div>
-                <div class="col-12 d-none d-lg-block">
+                {{-- <div class="col-12 mb-4 d-none d-lg-block">
                     @include('client_page.part_stories.table_categories', [])
+                </div> --}}
+                <div class="col-12 d-none d-lg-block">
+                    @include('client_page.part_stories.story_top_ratings', [])
                 </div>
             </div>
         </div>

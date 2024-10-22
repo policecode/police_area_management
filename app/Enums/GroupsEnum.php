@@ -133,4 +133,12 @@ final class GroupsEnum extends Enum
             'name' => 'Xóa'
         ],
     ]];
+
+    const VISITWWEBSITE =   ['value' => 'Theo dõi thông số trang web', 'permission' => [
+        [
+            'role' => 'admin.visitWebsite.getItems',
+            'name' => 'Xem'
+        ],
+
+    ]];
 }
