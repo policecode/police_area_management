@@ -95,7 +95,7 @@
                 this.loading = true;
                 this.buildQueryItem();
                 const jsonData = await new RouteApi().get(this.getItemUrl);
-                console.log(jsonData);
+                // console.log(jsonData);
 
                 this.loading = false;
                 if (jsonData.result) {

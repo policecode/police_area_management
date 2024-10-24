@@ -24,7 +24,8 @@ class ChapersController extends Controller
     {
         $option = SettingHelpers::getInstance();
         $story = Story::getBySlug($story_slug)->first();
-        $chaperList = Chaper::getByStory($story['id'])->orderBy('position', 'ASC')->get();
+        $chaperList = Chaper::selectNotContent()->getByStory($story['id'])->orderBy('position', 'ASC')->get();
+        // $chaper = Chaper::getBySlug($chaper_slug)->getByStory($story['id'])->first();
         $chaper = [];
         $linkPrev = '#';
         $linkNext = '#';
@@ -58,7 +59,7 @@ class ChapersController extends Controller
             ]
         ];
         $dataView = array(
-            'page_title' => ucwords($story['title']) . ' - ' . ucwords($chaper['name']).' | '.$option->getOptionValue('fvn_web_title'),
+            'page_title' => ucwords($story['title']) . ' - ' . ucwords($chaper['name']) . ' | ' . $option->getOptionValue('fvn_web_title'),
             'story' => $story,
             'chaper' => $chaper,
             'chaper_list' => $chaperList,
@@ -69,12 +70,32 @@ class ChapersController extends Controller
         return view('client_page.chapers', $dataView);
     }
 
-    public function increaseViews(Request $request) {
+    public function callChapterApi(Request $request, $story_slug, $chaper_slug)
+    {
+        try {
+            $story = Story::getBySlug($story_slug)->first();
+            $chaper = Chaper::getBySlug($chaper_slug)->getByStory($story['id'])->first();
+
+            return response()->json([
+                'result' => 1,
+                'data' => $chaper
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function increaseViews(Request $request)
+    {
         try {
             $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => 0, 
+                    'status' => 0,
                     'errors' => $validator->errors(),
                     'message' => 'validation'
                 ]);
@@ -85,14 +106,15 @@ class ChapersController extends Controller
             $chaper = Chaper::getByStory($data['story_id'])->getById($data['chaper_id'])->first();
             if (!$chaper) {
                 return response()->json([
-                    'status' => 0, 'message' => 'Chương không tồn tại'
+                    'status' => 0,
+                    'message' => 'Chương không tồn tại'
                 ], 400);
             }
             $story = Story::find($data['story_id']);
 
             $chaper->view += 1;
-            $chaper->update(); 
-            $story->view_count +=1;
+            $chaper->update();
+            $story->view_count += 1;
             $story->update();
             $view_day = ViewDay::getByStory($data['story_id'])->getByKey(get_key_by_day())->first();
             if ($view_day) {
@@ -131,14 +153,15 @@ class ChapersController extends Controller
             }
             DB::commit();
             return response()->json([
-                'status' => 1, 
+                'status' => 1,
                 'data' => [],
                 'message' => 'Tăng lượt view'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage()
             ], 400);
         }
     }

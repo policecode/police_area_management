@@ -1,6 +1,10 @@
 @extends('layouts.client')
 
 @section('content')
+    <script>
+        var redirectToStory = '{{ $story['link'] }}';
+        var apiUrlChapter = '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
+    </script>
     <main id="app_chapter">
         <div class="chapter-wrapper container my-5">
             <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" class="text-decoration-none">
@@ -59,8 +63,8 @@
             </div>
             <hr class="chapter-end container-fluid">
 
-            <div class="chapter-content mb-3" style="text-align: justify;" :style="{ 'fontSize': `${styles.fontSize}px` }">
-                {!! $chaper['content'] !!}
+            <div v-html="itemDetail.content" class="chapter-content mb-3" style="text-align: justify;" :style="{ 'fontSize': `${styles.fontSize}px` }">
+                {{-- {!! $chaper['content'] !!} --}}
             </div>
 
             <div class="chapter-nav text-center">
@@ -151,11 +155,23 @@
                 // this.searchItem();
                 this.addViewStory();
                 this.addHistoryReadStory();
+                this.callChapter();
             },
             computed: {
 
             },
             methods: {
+                async callChapter() {
+                    const jsonData = await new RouteApi().get(apiUrlChapter);
+                    // console.log(jsonData);
+                    
+                    if (jsonData.result) {
+                        this.itemDetail = jsonData.data;
+                    } else {
+                        this.itemDetail = {};
+                        // jAlert(jsonData.message);
+                    }
+                },
                 addViewStory() {
                     setTimeout(async () => {
                         let jsonData = await new RouteApi().post(`${this.apiUrl}/increase-views`, {
@@ -182,7 +198,7 @@
                     ++this.styles.fontSize;
                 },
                 addHistoryReadStory() {
-                    let listStoryHistory = LocalStorageHelper.getObject('fvn_story_history',[]);
+                    let listStoryHistory = LocalStorageHelper.getObject('fvn_story_history', []);
                     let story = {
                         id: this.story.id,
                         title: this.story.title,
@@ -205,8 +221,8 @@
                             }
                         }
                     }
-                    LocalStorageHelper.setObject('fvn_story_history',results);
-                    
+                    LocalStorageHelper.setObject('fvn_story_history', results);
+
                 }
             },
             watch: {

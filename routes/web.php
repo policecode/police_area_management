@@ -36,6 +36,7 @@ Route::group(['middleware' => ['visit_website', 'throttle:60,1']], function() {
     Route::get('/story/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
     
     Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
+    Route::get('/read-api/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'callChapterApi'])->name('client.api.chaper');
     Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index'])->name('client.chaper');
     
     Route::get('/test_client', function (Request $request) {
