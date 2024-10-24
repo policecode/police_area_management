@@ -26,27 +26,27 @@ $(document).ready(function () {
     })
 
     const chapterJump = $('.chapter_jump')
-    $(document).keydown(function (e) {
-        switch (e.which) {
-            case 87: // W key
-                window.scrollBy(0, -70);
-                break;
-            case 83: // S key
-                window.scrollBy(0, 70);
-                break;
-            case 65: // A key
-                const chapterPrev = document.querySelector('.chapter-prev')
-                chapterPrev && chapterPrev.click()
-                break;
-            case 68: // D key
-                const chapterNext = document.querySelector('.chapter-next')
-                chapterNext && chapterNext.click()
-                break;
-        }
+    // $(document).keydown(function (e) {
+    //     switch (e.which) {
+    //         case 87: // W key
+    //             window.scrollBy(0, -70);
+    //             break;
+    //         case 83: // S key
+    //             window.scrollBy(0, 70);
+    //             break;
+    //         case 65: // A key
+    //             const chapterPrev = document.querySelector('.chapter-prev')
+    //             chapterPrev && chapterPrev.click()
+    //             break;
+    //         case 68: // D key
+    //             const chapterNext = document.querySelector('.chapter-next')
+    //             chapterNext && chapterNext.click()
+    //             break;
+    //     }
 
-        // Handle save cookie chapters
+    //     // Handle save cookie chapters
         
-    });
+    // });
 
     document.addEventListener('scroll', function () {
         if (window.innerWidth < 992) {

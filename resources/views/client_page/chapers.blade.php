@@ -220,4 +220,5 @@
 
 @section('scripts')
     <script src="{{ asset('frontend/js/chapter.js') }}"></script>
+    <script src="{{ asset('assets/js/website_security.js') }}"></script>
 @endsection

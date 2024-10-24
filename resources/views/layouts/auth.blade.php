@@ -13,6 +13,8 @@ $option = SettingHelpers::getInstance();
     <meta name="description" content="">
     <meta name="author" content="">
 
+    {{-- Xác minh google để chèn quảng cáo --}}
+    <meta name="google-adsense-account" content="ca-pub-8382233036922182">
     <title>{{$title}}</title>
     <link rel="icon" href="{{$option->getOptionImage('fvn_shortcut_icon')?$option->getOptionImage('fvn_shortcut_icon'):asset('backend/img/icons8-beautiful-85.png')}}">
     <!-- Custom fonts for this template-->

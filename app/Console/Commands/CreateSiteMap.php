@@ -68,10 +68,6 @@ class CreateSiteMap extends Command
         $stories = Story::orderBy('updated_at', 'desc')->get();
         foreach ($stories as $item) {
             $sitemap->add(route('client.story', ['story_slug' => $item->slug]), Carbon::now(), '0.7', 'daily');
-            $chaperList = Chaper::getByStory($item->id)->orderBy('position', 'DESC')->get();
-            foreach ($chaperList as $key => $chapter) {
-                $sitemap->add(route('client.chaper', ['story_slug' => $item->slug, 'chaper_slug' => $chapter->slug]), Carbon::now(), '0.6', 'daily');
-            }
         }
 
         // generate your sitemap (format, filename)
