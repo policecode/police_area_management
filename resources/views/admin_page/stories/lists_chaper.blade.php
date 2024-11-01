@@ -19,6 +19,7 @@
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> --}}
             </div>
             <a @click="changeScreen('detail')" class="btn btn-primary">Thêm mới</a>
+            <a @click="deleteAllItem" class="btn btn-danger">Xóa tất cả các chương truyện</a>
             <div class="row mt-4">
                 <div class="col-3">
                     <select class="form-select">

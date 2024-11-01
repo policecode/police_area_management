@@ -73,8 +73,15 @@ var app = new Vue({
             this.screen = 'list';
         },
         async deleteItem(item) {
-            if (confirm(`Do you want to delete the Chaper: ${item.name}`)) {
+            if (confirm(`Do you want to delete the Chapter: ${item.name}`)) {
                 let jsonData = await new RouteApi().delete(`${this.apiUrl}/${this.story.id}/${item.id}`, {});
+                jnotice(jsonData.message);
+                this.getItems();
+            }
+        },
+        async deleteAllItem() {
+            if (confirm(`Do you want to delete All Chapter`)) {
+                let jsonData = await new RouteApi().delete(`${this.apiUrl}/${this.story.id}`, {});
                 jnotice(jsonData.message);
                 this.getItems();
             }

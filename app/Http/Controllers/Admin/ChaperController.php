@@ -56,16 +56,6 @@ class ChaperController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -183,6 +173,25 @@ class ChaperController extends Controller
         try {
             DB::beginTransaction();
             $status = $chaper->delete();
+            DB::commit();
+            return response()->json([
+                'status' => $status, 
+                'message' => 'Delete success'
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0, 'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function destroyAll($story)
+    {
+        try {
+            DB::beginTransaction();
+            $storyColection = Story::find($story);
+            $status = Chaper::getByStory($storyColection->id)->delete();
             DB::commit();
             return response()->json([
                 'status' => $status, 

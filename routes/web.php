@@ -5,6 +5,7 @@ use App\Http\Controllers\Client\AuthorController AS AuthorClientController;
 use App\Http\Controllers\Client\CategoriesController AS CategoriesClientController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
+use App\Http\Controllers\Client\SearchController;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,8 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::group(['middleware' => ['visit_website', 'throttle:60,1']], function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
     
+    Route::get('/search', [SearchController::class, 'index'])->name('client.search');
+
     Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
     Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
     Route::get('/total-chapter/{slug_total}', [CategoriesClientController::class, 'getTotalChapter'])->name('client.total-chapter');
@@ -77,11 +80,12 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         // Route::resource('stories', 'StoriesController');
 
          // Chapers
-         Route::get('/chapers/{story}', 'ChaperController@index')->name('chapers.index')->middleware('can:admin.chapers.getItems');
          Route::get('/chapers/get-items', 'ChaperController@getItems')->name('chapers.getItems')->middleware('can:admin.chapers.getItems');
+         Route::get('/chapers/{story}', 'ChaperController@index')->name('chapers.index')->middleware('can:admin.chapers.getItems');
          Route::post('/chapers/{story}', 'ChaperController@store')->name('chapers.store')->middleware('can:admin.chapers.store');
          Route::put('/chapers/{story}/{chaper}', 'ChaperController@update')->name('chapers.update')->middleware('can:admin.chapers.update');
          Route::delete('/chapers/{story}/{chaper}', 'ChaperController@destroy')->name('chapers.destroy')->middleware('can:admin.chapers.destroy');
+         Route::delete('/chapers/{story}', 'ChaperController@destroyAll')->name('chapers.destroyAll')->middleware('can:admin.chapers.destroy');
 
         // Author
         // Route::get('/author/get-items', 'AuthorController@getItems')->name('author.getItems');

@@ -109,9 +109,9 @@ $user = Auth::user();
                         </label>
                     </div>
 
-                    <div class="d-flex header__form-search">
+                    <form action="{{route('client.search')}}" class="d-flex header__form-search">
                         <input v-model="querySearch.keyword" class="form-control search-story" type="text"
-                            placeholder="Tìm kiếm" name="key_word">
+                            placeholder="Tìm kiếm" name="keyword" required>
                         <div v-if="items.length > 0" class="col-12 search-result shadow no-result">
                             <div class="card text-white bg-light">
                                 <div class="card-body p-0">
@@ -137,7 +137,7 @@ $user = Auth::user();
                         <button class="btn" type="submit">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </nav>
@@ -317,6 +317,7 @@ $user = Auth::user();
                     this.items = [];
                     // jAlert(jsonData.message);
                 }
+                this.loading = false;
             },
             buildQueryItem() {
                 this.getItemUrl = this.apiUrl + '/search/keyword?is_paginate=0';
@@ -341,7 +342,8 @@ $user = Auth::user();
                     document.querySelector('body').classList.remove('dark-theme');
                     LocalStorageHelper.set('sidebar_theme_web', '')
                 }
-            }
+            }, 
+
         },
         watch: {
             'querySearch.keyword'(newVal) {
@@ -353,8 +355,11 @@ $user = Auth::user();
                 if (newVal.length > 3) {
                     this.pointInTime = setTimeout(() => {
                         this.getItems();
-                        this.loading = false;
+                        
                     }, 1000)
+                }
+                if (newVal.length == 0) {
+                    this.loading = false;
                 }
             }
         },
