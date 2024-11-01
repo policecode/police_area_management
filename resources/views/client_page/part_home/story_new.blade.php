@@ -68,7 +68,7 @@
                                             {{ $item['position'] }}</a>
                                     </div>
 
-                                    <div class="story-item-no-image__chapters ms-2">
+                                    <div class="story-item-no-image__chapters ms-2 d-none d-lg-block">
                                         <span>{{ get_string_after_time($item['after_minutes']) }}</span>
                                     </div>
                                 </div>

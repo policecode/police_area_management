@@ -9,11 +9,14 @@
         </div>
     </div>
 
-    <div class="story-detail">
+    <div class="story-detail overflow-hidden">
         <div class="story-detail__top d-flex align-items-start">
-            <div class="row align-items-start">
+            <div class="row align-items-start w-100">
                 <div class="col-12 mb-2 d-block d-lg-none">
                     <h1 class="text-center story-name text-capitalize fs-4">{{ $story['title'] }}</h1>
+                    <div class="align-items-center d-flex justify-content-center">
+                        <div class="fb-share-button" data-href="{{route('client.story', ['story_slug' => $story['slug'] ])}}" data-layout="box_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
+                    </div>
                     <div class="rate-story mb-2">
                         <div @mouseleave="leaveStar" class="rate-story__holder">
                             <img v-for="(item, index) in renderStar" @mouseover="hoverStar(index + 1)"
@@ -71,6 +74,9 @@
                 </div>
                 <div class="col-12 col-md-12 col-lg-8 d-none d-lg-block">
                     <h1 class="text-center story-name text-capitalize fs-4">{{ $story['title'] }}</h1>
+                    <div class="align-items-center d-flex justify-content-center">
+                        <div class="fb-share-button" data-href="{{route('client.story', ['story_slug' => $story['slug'] ])}}" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
+                    </div>
                     <div class="rate-story mb-2">
                         <div @mouseleave="leaveStar" class="rate-story__holder">
                             <img v-for="(item, index) in renderStar" @mouseover="hoverStar(index + 1)"
@@ -126,8 +132,8 @@
                         <ul>
                             <li v-for="item in items_v1">
                                 <a :href="item.url" class="text-decoration-none text-dark hover-title">
-                                    @{{ item.name }} 
-                                    <i>(view: @{{item.view}})</i>
+                                    @{{ item.name }}
+                                    <i>(view: @{{ item.view }})</i>
                                 </a>
                             </li>
                         </ul>
@@ -136,8 +142,8 @@
                         <ul>
                             <li v-for="item in items_v2">
                                 <a :href="item.url" class="text-decoration-none text-dark hover-title">
-                                    @{{ item.name }} 
-                                    <i>(view: @{{item.view}})</i>
+                                    @{{ item.name }}
+                                    <i>(view: @{{ item.view }})</i>
                                 </a>
                             </li>
                         </ul>
@@ -145,9 +151,25 @@
                 </div>
             </div>
         </div>
-
         <fvn-paging-client :page="querySearch.page" :per_page="querySearch.per_page" :total="querySearch.total"
             @change-page="(page) => nextPage(page)" :show_page="5"></fvn-paging-client>
+
+        <div class="story-detail__list-chapter mt-4">
+            <div class="head-title-global d-flex justify-content-between mb-4">
+                <div class="col-6 col-md-12 col-lg-6 head-title-global__left d-flex">
+                    <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
+                        <span href="#" class="d-block text-decoration-none text-dark fs-4 title-head-name"
+                            title="Truyện hot">Bình luận</span>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="story-detail__list-chapter--list">
+                
+                <div class="fb-comments" data-href="{{route('client.story', ['story_slug' => $story['slug'] ])}}" data-width="100%" 	
+                data-colorscheme="dark" data-numposts="10" data-mobile="true"></div>
+            </div>
+        </div>
     </div>
     <div v-if="loading"
         class="position-fixed top-0 start-0 end-0 bottom-0 d-flex justify-content-center align-items-center"

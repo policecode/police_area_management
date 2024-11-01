@@ -11,9 +11,7 @@
                     @include('client_page.part_stories.table_categories', [])
                 </div>
             </div>
-
-
-
+               
         </div>
     </main>
 @endsection

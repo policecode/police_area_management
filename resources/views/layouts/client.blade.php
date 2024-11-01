@@ -41,6 +41,8 @@ $option = SettingHelpers::getInstance();
     <script>
         var FVN_LARAVEL_HOME = '{{ route('index') }}';
     </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8382233036922182"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -53,6 +55,9 @@ $option = SettingHelpers::getInstance();
     <script src="{{ asset('frontend/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/boostrap.min.js') }}"></script>
 
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v21.0&appId=8969948979690020"></script>
     @yield('scripts')
 
 </body>

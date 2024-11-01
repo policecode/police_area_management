@@ -70,7 +70,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::prefix('stories')->name('stories.')->group(function () {
             Route::get('/', 'StoriesController@index')->name('index')->middleware('can:admin.stories.getItems');
             Route::get('/get-items', 'StoriesController@getItems')->name('getItems')->middleware('can:admin.stories.getItems');
-            Route::post('/', 'StoriesController@store')->name('store')->middleware('can:admin.stpries.store');
+            Route::post('/', 'StoriesController@store')->name('store')->middleware('can:admin.stories.store');
             Route::post('/update/{story}', 'StoriesController@update')->name('update')->middleware('can:admin.stories.update');
             Route::delete('/{story}', 'StoriesController@destroy')->name('destroy')->middleware('can:admin.stories.destroy');
         });
