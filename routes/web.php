@@ -92,6 +92,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::prefix('author')->name('author.')->group(function () {
             Route::get('/', 'AuthorController@index')->name('index')->middleware('can:admin.author.getItems');
             Route::get('/get-items', 'AuthorController@getItems')->name('getItems')->middleware('can:admin.author.getItems');
+            Route::get('/{author}', 'AuthorController@show')->name('show')->middleware('can:admin.author.getItems');
             Route::post('/', 'AuthorController@store')->name('store')->middleware('can:admin.author.store');
             Route::put('/{author}', 'AuthorController@update')->name('update')->middleware('can:admin.author.update');
             Route::delete('/{author}', 'AuthorController@destroy')->name('destroy')->middleware('can:admin.author.destroy');

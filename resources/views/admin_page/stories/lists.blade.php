@@ -32,13 +32,14 @@ use App\Enums\StatusStory;
                 <div class="col-3">
                     <input v-model="querySearch.keyword" type="text" class="form-control" placeholder="Search...">
                 </div>
-                <div class="col-1">
+                <div class="col-3">
                     <button @click="searchItem" class="btn btn-success">Fillter</button>
+                    <button @click="clearFilter" class="btn btn-danger">Clear fillter</button>
                 </div>
             </div>
             <div class="card shadow mb-4 mt-2">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Quản lý người dùng</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Quản lý các bộ truyện</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -48,10 +49,29 @@ use App\Enums\StatusStory;
                                 <tr>
                                     <th></th>
                                     <th>Ảnh bìa</th>
-                                    <th>Tên truyện</th>
+                                    <th>
+                                        <a  @click="orderBy('title')" class="link-offset-1">
+                                            Tên truyện
+                                            <i v-if="isOrder('title', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('title', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                              
+                                    </th>
                                     <th>Đường dẫn</th>
-                                    <th>Số lượt xem</th>
-                                    <th>Cập nhật gần đây nhất</th>
+                                    <th>
+                                        <a  @click="orderBy('view_count')" class="link-offset-1">
+                                            Số lượt xem    
+                                            <i v-if="isOrder('view_count', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('view_count', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a  @click="orderBy('updated_at')" class="link-offset-1">
+                                            Cập nhật gần đây nhất
+                                            <i v-if="isOrder('updated_at', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('updated_at', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
@@ -75,9 +95,18 @@ use App\Enums\StatusStory;
                                     <td>@{{ item.view_count }}</td>
                                     <td>@{{ displayDate(item.updated_at) }}</td>
                                     <td>
-                                        <a @click="showItem(item)" class="btn btn-warning">Sửa</a>
-                                        <a @click="deleteItem(item)" class="btn btn-danger mt-1">Xóa</a>
-                                        <a :href="linkChapers(item.id)" class="btn btn-success mt-1">Chapers</a>
+                                        <a :href="item.url" class="btn btn-primary mb-1" title="Đi đến trang truyện">
+                                            <i class="fa-regular fa-eye"></i>  
+                                        </a>
+                                        <a :href="linkChapers(item.id)" class="btn btn-success mb-1" title="Danh sách các chương">
+                                            <i class="fa-solid fa-book"></i>    
+                                        </a>
+                                        <a @click="showItem(item)" class="btn btn-warning mb-1" title="Sửa">
+                                            <i class="fa-solid fa-wrench"></i>    
+                                        </a>
+                                        <a @click="deleteItem(item)" class="btn btn-danger mb-1" title="Xóa">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>

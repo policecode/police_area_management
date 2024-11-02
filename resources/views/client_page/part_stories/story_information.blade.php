@@ -68,7 +68,8 @@
                         <p class="mb-1">
                             <strong>Trạng thái:</strong>
                             <span
-                                class="{{ $story['status'] == 1 ? 'text-info' : 'text-success' }}">{{ $story['status_name'] }}</span>
+                                class="{{ $story['status'] == 1 ? 'text-info' : 'text-success' }}">{{ $story['status_name'] }}
+                            </span>
                         </p>
                     </div>
                 </div>
@@ -104,13 +105,35 @@
                         </div>
                     </div>
 
-                    <div class="px-3" style="text-align: justify">
+                    <div class="overflow-hidden px-3" style="text-align: justify;" :style="{height: heightDesc}">
                         {!! $story['description'] !!}
+                    </div>
+                    <div class="info-more">
+                        <div @click="showDesc=true" class="info-more--more" :class="{'active': !showDesc}">
+                            <span class="me-1 text-dark">Xem thêm</span>
+                            <i class="fa-solid fa-caret-down"></i>
+                        </div>
+
+                        <a  @click="showDesc=false" class="info-more--collapse text-decoration-none" :class="{'active': showDesc}">
+                            <span class="me-1 text-dark">Thu gọn</span>
+                            <i class="fa-solid fa-caret-up"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="col-12 d-block d-lg-none">
-                    <div class="px-3" style="text-align: justify">
+                    <div class="overflow-hidden px-3" style="text-align: justify" :style="{height: heightDesc}">
                         {!! $story['description'] !!}
+                    </div>
+                    <div class="info-more">
+                        <div @click="showDesc=true" class="info-more--more" :class="{'active': !showDesc}">
+                            <span class="me-1 text-dark">Xem thêm</span>
+                            <i class="fa-solid fa-caret-down"></i>
+                        </div>
+
+                        <a  @click="showDesc=false" class="info-more--collapse text-decoration-none" :class="{'active': showDesc}">
+                            <span class="me-1 text-dark">Thu gọn</span>
+                            <i class="fa-solid fa-caret-up"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -183,6 +206,7 @@
 <script>
     var vue_story_information_app = {
         loading: false,
+        showDesc: false,
         items: [],
         querySearch: {
             total: 0,
@@ -228,6 +252,12 @@
             },
             items_v2() {
                 return this.items.slice(25);
+            },
+            heightDesc() {
+                if (this.showDesc) {
+                    return 'auto'
+                }
+                return '286px';
             }
         },
         methods: {
