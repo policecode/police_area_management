@@ -29,14 +29,14 @@
                 <div class="col-3">
                     <input v-model="querySearch.keyword" type="text" class="form-control" placeholder="Search...">
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     <button @click="searchItem" class="btn btn-success">Fillter</button>
                     <button @click="clearFilter" class="btn btn-danger">Clear Fillter</button>
                 </div>
             </div>
             <div class="card shadow mb-4 mt-2">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Quản lý người dùng</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Quản lý thể loại</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -91,12 +91,12 @@
         <template v-if="screen=='detail'">
             <div>
                 <form @submit="save">
-                    <legend v-if="itemDetail.id" class="text-primary">Cập nhật thông tin tác giả</legend>
-                    <legend v-else class="text-primary">Thêm tác giả mới</legend>
+                    <legend v-if="itemDetail.id" class="text-primary">Cập nhật thông tin tag</legend>
+                    <legend v-else class="text-primary">Thêm taf mới</legend>
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
-                                <label for="">Tên tác giả</label>
+                                <label for="">Quản lý tag</label>
                                 <input type="text" v-model="itemDetail.name" class="form-control"
                                     :class={'is-invalid':errors.name} placeholder="Tên tác giả...">
                                 <div v-if="errors.name" class="invalid-feedback">@{{ errors.name[0] }}</div>

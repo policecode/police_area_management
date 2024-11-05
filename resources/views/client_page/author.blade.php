@@ -46,6 +46,9 @@
                         <p class="mb-0 text-secondary">{{$author['name']}}</p>
                         {!!$author['description']!!}
                     </div>
+                    <div class="bg-light p-2 rounded mb-3 card-custom">
+                        @include('client_page.part_stories.story_top_ratings', [])
+                    </div>
                 </div>
             </div>
         </div>

@@ -47,35 +47,6 @@ var app = new Vue({
     computed: {
     },
     methods: {
-        async testUpload() {
-            var data = new FormData();
-            // this.itemDetail.wp_meta.birthday = this.dateFormatCurrent(this.itemDetail.wp_meta.birthday);
-            // for (let i in this.itemDetail) {
-            //     if ((Array.isArray(this.itemDetail[i]) || (typeof this.itemDetail[i] == 'object')) &&
-            //         (i != 'avatar') && (i != 'resume_file')) {
-            //         let arrayGrade_1 = this.itemDetail[i];
-            //         for (const key in arrayGrade_1) {
-            //             if (Array.isArray(arrayGrade_1[key]) || (typeof arrayGrade_1[key] == 'object')) {
-            //                 let arrayGrade_2 = arrayGrade_1[key];
-            //                 for (const key_1 in arrayGrade_2) {
-            //                     data.append(i + '[' + key + '][' + key_1 + ']', arrayGrade_2[key_1]);
-            //                 }
-            //             } else {
-            //                 data.append(i + '[' + key + ']', arrayGrade_1[key]);
-            //             }
-            //         }
-            //     } else {
-            //         if (this.itemDetail[i]) {
-            //             data.append(i, this.itemDetail[i]);
-            //         }
-            //     }
-            // }
-            
-            data.append('thumbnail', this.files.thumbnail);
-            let jsonData = await new RouteApi().post(`${FVN_LARAVEL_HOME}/api/manager/stories/tool-upload-story`,data, 'form' );
-            console.log(jsonData);
-            
-        },
         updateQueryFromUrl() {
             if (window.location.hash) {
                 let querySearch = queryToObject(window.location.hash.substring(1));
@@ -89,10 +60,12 @@ var app = new Vue({
             this.screen = scr;
         },
         async showItem(item) {
-            console.log(item);
+            // console.log(item);
             
             // Selected Author
             let jsonData = await new RouteApi().get(`${FVN_LARAVEL_HOME}/admin/author/${item.author_id}`);
+            console.log(jsonData);
+            
             this.selectedAuthor = jsonData.data;
             // Selected Catefory
             for (let i = 0; i < item.category.length; i++) {
@@ -128,6 +101,25 @@ var app = new Vue({
         searchItem() {
             this.getItems();
             this.getPaging();
+        },
+        orderBy(name) {
+            if (this.querySearch.order_by == name) {
+                if (this.querySearch.order_type == 'DESC') {
+                    this.querySearch.order_type = 'ASC';
+                } else {
+                    this.querySearch.order_type = 'DESC';
+                }
+            } else {
+                this.querySearch.order_by = name;
+                this.querySearch.order_type = 'DESC';
+            }
+            this.searchItem();
+        },
+        isOrder(name, type) {
+            if (this.querySearch.order_by == name && this.querySearch.order_type == type) {
+                return true;
+            } 
+            return false;
         },
         async getItems() {
             this.loading = true;
