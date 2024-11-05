@@ -43,6 +43,19 @@ $option = SettingHelpers::getInstance();
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8382233036922182"
         crossorigin="anonymous"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T1TVNVMFY"></script>
+   {{-- Google analytic --}}
+   <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-5T1TVNVMFY');
+    </script>
 </head>
 
 <body>
