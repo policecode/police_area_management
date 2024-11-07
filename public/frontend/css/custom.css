@@ -31,6 +31,12 @@
     max-height: 400px;
     overflow: auto;
 }
+.breadcrumb .breadcrumb-item {
+    /* max-width: 33%; */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
 @keyframes spinCircle {
     to {
         transform: rotate(360deg);

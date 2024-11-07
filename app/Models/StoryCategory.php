@@ -56,4 +56,7 @@ class StoryCategory extends Model
         return $results;
     }
 
+    public function scopeGetByCategoryId($query, $catId) {
+        return $query->where('category_id',$catId);
+    }
 }

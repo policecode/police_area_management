@@ -28,6 +28,8 @@ Route::group(['middleware' => ['visit_website', 'throttle:60,1']], function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
     
     Route::get('/search', [SearchController::class, 'index'])->name('client.search');
+    Route::get('/super-search', [SearchController::class, 'superSearch'])->name('client.superSearch');
+    Route::get('/api/super-search', [SearchController::class, 'searchItem'])->name('client.searchItem');
 
     Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
     Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
