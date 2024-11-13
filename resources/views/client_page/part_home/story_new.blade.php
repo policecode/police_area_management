@@ -37,7 +37,7 @@
                                         <h3 class="me-1 mb-0 d-flex align-items-center">
                                             <i class="fa-solid fa-angle-right fs-6 me-1"></i>
                                             <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
-                                                class="text-decoration-none text-dark fs-6 hover-title text-one-row story-name">{{ $item['title'] }}</a>
+                                                class="text-decoration-none text-dark fs-6 hover-title text-one-row story-name">{{ ucwords($item['title']) }}</a>
                                         </h3>
                                         @if ($item['after_day'] < 30)
                                             <span class="badge text-bg-info text-light me-1">New</span>
@@ -52,7 +52,7 @@
                                     </div>
 
                                     <div class="story-item-no-image__categories ms-2 d-none d-lg-block">
-                                        <p class="mb-0">
+                                        <p class="mb-0 text-one-row">
                                             @foreach ($item['categories'] as $value)
                                                 <a href="{{ route('client.tag', ['tag_slug' => $value['slug']]) }}"
                                                     class="hover_primary text-decoration-none text-dark category-name">{{ $value['name'] }},
@@ -62,8 +62,8 @@
                                     </div>
 
                                     <div class="story-item-no-image__chapters ms-2">
-                                        <a href="{{ route('client.chaper', ['story_slug' => $item['slug'], 'chaper_slug' => $item['chaper_slug']]) }}"
-                                            title="{{ $item['chaper_name'] }}"
+                                        {{-- {{ route('client.chaper', ['story_slug' => $item['slug'], 'chaper_slug' => $item['chaper_slug']]) }} --}}
+                                        <a href="" title="{{ $item['chaper_name'] }}"
                                             class="hover-title text-decoration-none text-info">Chương
                                             {{ $item['position'] }}</a>
                                     </div>
@@ -77,6 +77,10 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="section-stories-new mb-3">
+                @include('parts.ads.adsense_v1')
             </div>
         </div>
     </div>

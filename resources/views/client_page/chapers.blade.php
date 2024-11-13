@@ -63,10 +63,16 @@
             </div>
             <hr class="chapter-end container-fluid">
 
-            <div v-html="itemDetail.content" class="chapter-content mb-3" style="text-align: justify;" :style="{ 'fontSize': `${styles.fontSize}px` }">
-                {{-- {!! $chaper['content'] !!} --}}
+            <div class="chapter-content mb-3">
+                @include('parts.ads.adsense_v1')
             </div>
-
+            <div class="chapter-content mb-3" style="text-align: justify;" :style="{ 'fontSize': `${styles.fontSize}px` }">
+                {!! $chaper['content'] !!}
+            </div>
+            <div class="chapter-content mb-3">
+                @include('parts.ads.adsense_v1')
+            </div>
+            
             <div class="chapter-nav text-center">
                 <div class="chapter-actions chapter-actions-origin d-flex align-items-center justify-content-center">
                     <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title="">
@@ -155,7 +161,7 @@
                 // this.searchItem();
                 this.addViewStory();
                 this.addHistoryReadStory();
-                this.callChapter();
+                // this.callChapter();
             },
             computed: {
 

@@ -2,14 +2,24 @@
 
 use App\Models\Category;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cookie;
 define('FVN_VERSION_LARAVEL', '1.0.0');
 
-function get_all_categories() {
-    if (session('fvn_categories')) {
-        return session('fvn_categories', []);
+function get_all_categories($type = 1) {
+    $categories = [];
+    if (session('fvn_categories') && !empty(session('fvn_categories')[$type][0])) {
+        $categories = session('fvn_categories', []);
+    } else {
+        $tmpCat = Category::orderBy('name', 'ASC')->get()->toArray();
+        foreach ($tmpCat as $key => $item) {
+            if (empty($categories[$item['type']])) {
+                $categories[$item['type']] = [];
+            }
+            $categories[$item['type']][] = $item;
+            session(['fvn_categories' => $categories]);
+        }
     }
-    session(['fvn_categories' => Category::orderBy('name', 'ASC')->get()->toArray()]);
-    return session('fvn_categories', []);
+    return empty($categories[$type]) ? []: $categories[$type];
 }
 
 function dateFormat($dateTime, $format='d/m/Y H:i:s') {

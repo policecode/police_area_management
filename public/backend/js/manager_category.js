@@ -7,7 +7,8 @@ var vue_data = {
     screen: 'list',
     itemDetail: {
         slug: "",
-        name: ""
+        name: "",
+        type: 1
     },
     files: {},
     listId: [],
@@ -19,6 +20,7 @@ var vue_data = {
         page: 1,
         per_page: 20,
         keyword: '',
+        type: '',
         order_by: 'name',
         order_type: 'ASC'
     },
@@ -27,7 +29,7 @@ var vue_data = {
         {value:1,display: 'list',text:'danh sách'},
         {value:2,display: 'of',text:'THuộc về'},
         {value:3,display: 'options',text:'Lựa chọn'},
-    ]
+    ],
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
 // Vue.component('datepicker', vuejsDatepicker);
@@ -64,7 +66,8 @@ var app = new Vue({
         closeItem() {
             this.itemDetail = {
                 slug: "",
-                name: ""
+                name: "",
+                type: 1
             };
             this.errors = {};
             this.screen = 'list';
@@ -166,9 +169,16 @@ var app = new Vue({
             
             if (jsonData.status) {
                 jnotice(jsonData.message);
-                if (this.itemDetail.id) {
-                    this.itemDetail = jsonData.data;
-                } else {
+                this.itemDetail = jsonData.data;
+                let flag = true;
+                for (i in this.items) {
+                    if (this.items[i].id == this.itemDetail.id) {
+                        flag = false;
+                        this.items[i] = this.itemDetail;
+                        break;
+                    }
+                }
+                if (flag) {
                     this.items.unshift(jsonData.data)
                 }
                 this.closeItem();
@@ -228,8 +238,10 @@ var app = new Vue({
                 if (i == 'book_date_min' || i == 'book_date_max') {
                     value = format_date(value);
                 }
-                paramSearch[i] = value
-                this.getItemUrl += '&' + i + '=' + value;
+                if (value) {
+                    paramSearch[i] = value
+                    this.getItemUrl += '&' + i + '=' + value;
+                }
             }
 
             paramSearch['order_by'] = this.querySearch.order_by
@@ -247,6 +259,7 @@ var app = new Vue({
                 page: 1,
                 per_page: 20,
                 keyword: '',
+                type: '',
                 order_by: 'id',
                 order_type: 'DESC'
             };

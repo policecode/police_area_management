@@ -14,6 +14,9 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-12 mb-3">
+                            @include('parts.ads.adsense_v1')
+                        </div>
                         @foreach ($records as $item)
                             <div class="col-12 mb-3">
                                 <div class="d-flex">

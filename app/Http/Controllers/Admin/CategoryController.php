@@ -81,16 +81,6 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -111,7 +101,6 @@ class CategoryController extends Controller
         }
         $data = $validator->validated();
         try {
-    
             $category->update($data);
             return response()->json([
                 'status' => 1, 
@@ -158,6 +147,7 @@ class CategoryController extends Controller
         $rules = [
             'name' => 'required|max:255|unique:categories,name',
             'slug' => 'required|unique:categories,slug',
+            'type' => 'required|integer',
             'description' => '',
         ];
         if ($request->id) {
@@ -186,7 +176,8 @@ class CategoryController extends Controller
             'slug' => 'Đường dẫn tĩnh',
             'email' => 'Email',
             'password' => 'Mật khâu',
-            'group_id' => 'Nhóm'
+            'group_id' => 'Nhóm',
+            'type' => 'Chủ đề'
         ];
     }
 

@@ -58,21 +58,8 @@ $user = Auth::user();
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                Thể loại
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-custom">
-                                @foreach ($all_categories as $key => $cat)
-                                    <li><a class="dropdown-item"
-                                            href="{{ route('client.tag', ['tag_slug' => $cat['slug']]) }}">{{ $cat['name'] }}</a>
-                                    </li>
-                                @endforeach
-
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Theo số chương
+                                <i class="fa-regular fa-chart-bar"></i>
+                                Danh sách
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom">
                                 @foreach ($totalChapter as $item)
@@ -83,6 +70,30 @@ $user = Auth::user();
                                 @endforeach
 
                             </ul>
+                        </li>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="fa-solid fa-bars"></i>
+                                Thể loại
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-custom overflow-hidden">
+                                @foreach ($all_categories as $key => $cat)
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('client.tag', ['tag_slug' => $cat['slug']]) }}">{{ $cat['name'] }}</a>
+                                    </li>
+                                @endforeach
+
+                            </ul>
+                        </li>
+                     
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="{{route('client.superSearch')}}" role="button" >
+                                <i class="fa-brands fa-searchengin"></i>
+                                Tìm kiếm nâng cao
+                            </a>
+               
                         </li>
                     </ul>
 
@@ -169,9 +180,10 @@ $user = Auth::user();
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-bars"></i>
                                     Thể loại
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-custom">
+                                <ul class="dropdown-menu dropdown-menu-custom overflow-hidden">
                                     @foreach ($all_categories as $key => $cat)
                                         <li>
                                             <a class="dropdown-item"
@@ -183,7 +195,8 @@ $user = Auth::user();
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    Theo số chương
+                                    <i class="fa-regular fa-chart-bar"></i>
+                                    Danh sách
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-custom">
                                     @foreach ($totalChapter as $item)
@@ -194,6 +207,12 @@ $user = Auth::user();
                                     @endforeach
 
                                 </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" href="{{route('client.superSearch')}}" role="button">
+                                    <i class="fa-brands fa-searchengin"></i>
+                                    Tìm kiếm nâng cao
+                                </a>
                             </li>
                         </ul>
 

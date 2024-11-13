@@ -1,4 +1,7 @@
-<?php 
+<?php
+use App\Enums\CategoryType;
+
+$categoryType = CategoryType::asArray();
 ?>
 @extends('layouts.backend')
 @section('content')
@@ -18,14 +21,14 @@
             </div>
             <a @click="changeScreen('detail')" class="btn btn-primary">Thêm mới</a>
             <div class="row mt-4">
-                {{-- <div class="col-3">
-                    <select class="form-select">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                </div> --}}
+                <div class="col-3">
+                    <select  v-model="querySearch.type" class="form-select">
+                        <option value="" selected>Chủ đề</option>
+                        @foreach ($categoryType as $item)
+                            <option value="{{ $item['key'] }}">{{ $item['value'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="col-3">
                     <input v-model="querySearch.keyword" type="text" class="form-control" placeholder="Search...">
                 </div>
@@ -48,7 +51,7 @@
                                     <th>Thể loại</th>
                                     <th>Đường dẫn tĩnh</th>
                                     <th>Số lượng truyện</th>
-                                    
+                                    <th>Chủ đề</th>
                                     <th>Sửa</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -59,7 +62,7 @@
                                     <th>Tên tác giả</th>
                                     <th>Đường dẫn tĩnh</th>
                                     <th>Số lượng truyện</th>
-                                    
+                                    <th>Chủ đề</th>
                                     <th>Sửa</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -70,6 +73,7 @@
                                     <td>@{{ item.name }}</td>
                                     <td>@{{ item.slug }}</td>
                                     <td>@{{ item.story_count }}</td>
+                                    <td>@{{ item.type_name }}</td>
                                     <td><a @click="showItem(item)" class="btn btn-warning">Sửa</a></td>
                                     <td><a @click="deleteItem(item)" class="btn btn-danger">Xóa</a></td>
                                 </tr>
@@ -92,7 +96,7 @@
             <div>
                 <form @submit="save">
                     <legend v-if="itemDetail.id" class="text-primary">Cập nhật thông tin tag</legend>
-                    <legend v-else class="text-primary">Thêm taf mới</legend>
+                    <legend v-else class="text-primary">Thêm tag mới</legend>
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
@@ -102,7 +106,7 @@
                                 <div v-if="errors.name" class="invalid-feedback">@{{ errors.name[0] }}</div>
                             </div>
                         </div>
-    
+
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="">Slug</label>
@@ -111,11 +115,25 @@
                                 <div v-if="errors.slug" class="invalid-feedback">@{{ errors.slug[0] }}</div>
                             </div>
                         </div>
-    
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="">Chủ đề</label>
+                                <select v-model="itemDetail.type" class="form-control"
+                                    :class={'is-invalid':errors.group_id}>
+                                    @foreach ($categoryType as $item)
+                                        <option value="{{ $item['key'] }}">{{ $item['value'] }}</option>
+                                    @endforeach
+                                </select>
+                                <div v-if="errors.name" class="invalid-feedback">@{{ errors.type }}</div>
+                            </div>
+                        </div>
+
                         <div class="col-12">
                             <div class="mb-3">
-                                <label for="">Giới thiệu về tác giả</label>
-                                <fvn-text-editor v-model="itemDetail.description" label="Giới thiệu về tác giả"></fvn-text-editor>
+                                <label for="">Thông tin chi tiết về Tag</label>
+                                <fvn-text-editor v-model="itemDetail.description"
+                                    label="Giới thiệu về tác giả"></fvn-text-editor>
                             </div>
                         </div>
 
@@ -130,7 +148,7 @@
         </template>
 
     </div>
-    
+
     <script src="{{ asset('backend/js/manager_category.js?version=' . FVN_VERSION_LARAVEL) }}"></script>
 @endsection
 

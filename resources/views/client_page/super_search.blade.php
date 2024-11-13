@@ -1,3 +1,7 @@
+<?php 
+use App\Enums\CategoryType;
+
+?>
 @extends('layouts.client')
 
 @section('content')
@@ -15,9 +19,9 @@
                         </div>
                     </div>
                     <div>
-                        <h6>Thể loại</h6>
                         <div class="row">
-                            <div v-for="item in optionCategories" class="col-4 col-md-3">
+                            <h6 class="fw-semibold">{{CategoryType::CAT['value']}}</h6>
+                            <div v-for="item in CAT" class="col-4 col-md-3">
                                 <div class="form-check">
                                     <input v-model="querySearch.cats" class="form-check-input" type="checkbox"
                                         :value="item.id" :id="item.id">
@@ -26,10 +30,74 @@
                                     </label>
                                 </div>
                             </div>
+                            <hr>
+                        </div>
+
+                        <div class="row">
+                            <h6 class="fw-semibold">{{CategoryType::WORD['value']}}</h6>
+                            <div v-for="item in WORD" class="col-4 col-md-3">
+                                <div class="form-check">
+                                    <input v-model="querySearch.cats" class="form-check-input" type="checkbox"
+                                        :value="item.id" :id="item.id">
+                                    <label class="form-check-label" :for="item.id">
+                                        @{{ item.name }}
+                                    </label>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+                        <div class="row">
+                            <h6 class="fw-semibold">{{CategoryType::CHARATER['value']}}</h6>
+                            <div v-for="item in CHARATER" class="col-4 col-md-3">
+                                <div class="form-check">
+                                    <input v-model="querySearch.cats" class="form-check-input" type="checkbox"
+                                        :value="item.id" :id="item.id">
+                                    <label class="form-check-label" :for="item.id">
+                                        @{{ item.name }}
+                                    </label>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+                        <div class="row">
+                            <h6 class="fw-semibold">{{CategoryType::SECT['value']}}</h6>
+                            <div v-for="item in SECT" class="col-4 col-md-3">
+                                <div class="form-check">
+                                    <input v-model="querySearch.cats" class="form-check-input" type="checkbox"
+                                        :value="item.id" :id="item.id">
+                                    <label class="form-check-label" :for="item.id">
+                                        @{{ item.name }}
+                                    </label>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="mt-3 row">
+                            <div class="col-12 col-sm-6">
+                                <label class="col-sm-2 col-form-label">Keyword</label>
+                                <div>
+                                    <input v-model="querySearch.keyword" type="text" class="form-control" id="inputPassword">
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <label class="col-form-label">Sắp xếp theo</label>
+                                <div>
+                                    <select v-model="querySearch.order_by" class="form-select">
+                                        <option v-for="item in optionOrder" :value="item.key">@{{item.display}}</option>
+                                      </select>
+                                </div>
+                            </div>
                         </div>
                         <button @click="searchItem" type="button" class="btn btn-success btn-sm mt-3">Tìm kiếm</button>
+
                     </div>
                     <div class="row mt-4 position-relative">
+                        <div class="col-12 mb-3">
+                            @include('parts.ads.adsense_v1')
+                        </div>
                         <div v-for="item in items" class="col-12 mb-3">
                             <div class="d-flex">
                                 <a :href="item.url" class="">
@@ -61,10 +129,14 @@
                                         <i class="fa-solid fa-list-ol"></i>
                                         @{{ item.total_chapers }} Chương
                                     </div>
-                                    {{-- <div class="card-text">
-                                        <i class="fa-regular fa-clock"></i>
-                                        <i>@{{ get_string_after_time($item['last_update']) }}</i>
-                                    </div> --}}
+                                    <div class="card-text">
+                                        <i class="fa-solid fa-layer-group"></i>
+                                        <span v-for="cat in item.categories">@{{ cat.name }}, </span>
+                                    </div>
+                                    <div class="card-text">
+                                        <i class="fa-regular fa-star"></i>
+                                        <span>@{{ item.star_average }}/10 </span>
+                                    </div>
                                 </div>
                             </div>
                             <hr>
@@ -89,7 +161,6 @@
                 </div>
                 <div class="col-12 col-md-4 col-lg-3">
                     @include('client_page.part_stories.story_top_ratings', [])
-                    @include('client_page.part_stories.table_categories', [])
                 </div>
             </div>
         </div>
@@ -106,27 +177,45 @@
                 page: 1,
                 per_page: 25,
                 cats: [],
-                order_by: 'id',
-                order_type: 'DESC'
+                order_by: 'title',
+                order_type: 'DESC',
+                keyword: ''
             },
             apiUrl: FVN_LARAVEL_HOME + '/api/super-search',
             pointInTime: null,
-            optionCategories: <?= json_encode(get_all_categories()) ?>
+            CAT: <?= json_encode(get_all_categories(CategoryType::CAT['key'])) ?>,
+            WORD: <?= json_encode(get_all_categories(CategoryType::WORD['key'])) ?>,
+            CHARATER: <?= json_encode(get_all_categories(CategoryType::CHARATER['key'])) ?>,
+            SECT: <?= json_encode(get_all_categories(CategoryType::SECT['key'])) ?>,
+
+            optionOrder: [
+                {key:'title', display: 'Tên truyện'},
+                {key:'star_average', display: 'Đánh giá'},
+                {key:'view_count', display: 'lượt xem'},
+                {key:'last_chapers', display: 'Thời cập nhật gần nhất'}
+
+            ]
         };
         var appHomeStoryHot = new Vue({
             el: '#fvn_super_search',
             data: vue_super_search_story_app,
             mounted: function() {
-                // this.updateQueryFromUrl();
-                this.searchItem();
             },
             computed: {},
             methods: {
                 updateQueryFromUrl() {
                     if (window.location.hash) {
                         let querySearch = queryToObject(window.location.hash.substring(1));
-                        console.log(window.location.hash.substring(1), querySearch);
+                        // console.log(window.location.hash.substring(1), querySearch);
+                                         
                         for (key in querySearch) {
+                            if (key == 'cats') {
+                                if (querySearch[key]) {
+                                    querySearch[key] = querySearch[key].split(',');
+                                } else {
+                                    querySearch[key] = [];
+                                }
+                            }
                             this.querySearch[key] = querySearch[key];
                         }
                     }
@@ -150,13 +239,12 @@
                         }
                         if (Array.isArray(value)) {
                             for (let index = 0; index < value.length; index++) {
-                                paramSearch[i + '[]'] = value[index];
                                 this.getItemUrl += '&' + i + '[]=' + value[index];
                             }
                         } else {
-                            paramSearch[i] = value
                             this.getItemUrl += '&' + i + '=' + value;
                         }
+                        paramSearch[i] = value
                     }
 
                     paramSearch['order_by'] = this.querySearch.order_by

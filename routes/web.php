@@ -23,8 +23,8 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// 'throttle:30,1'
-Route::group(['middleware' => ['visit_website', 'throttle:60,1']], function() {
+// 'throttle:30,1', visit_website
+Route::group(['middleware' => ['throttle:60,1']], function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
     
     Route::get('/search', [SearchController::class, 'index'])->name('client.search');

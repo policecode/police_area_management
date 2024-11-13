@@ -97,10 +97,12 @@ class SearchController extends Controller
         $request->merge([
             'keyword' => Str::slug($request->keyword, " ")
         ]);
-        $query = Story::filter($request->except(['cats']))->joinAuthor();
-        foreach ($listCategory as $key => $cat) {
-            $listStoryId = StoryCategory::select('story_id')->getByCategoryId($cat)->get()->pluck('story_id')->toArray();
-            $query->whereIn('stories.id', $listStoryId);
+        $query = Story::with('categories')->filter($request->except(['cats']))->joinAuthor();
+        if ($listCategory) {
+            foreach ($listCategory as $key => $cat) {
+                $listStoryId = StoryCategory::select('story_id')->getByCategoryId($cat)->get()->pluck('story_id')->toArray();
+                $query->whereIn('stories.id', $listStoryId);
+            }
         }
         $res = [
             'result' => 1,

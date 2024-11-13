@@ -32,6 +32,10 @@
                 
                 </div>
             </div>
+
+            <div class="col-12">
+                @include('parts.ads.adsense_v2')
+            </div>
         </div>
     </div>
 </div>

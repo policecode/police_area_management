@@ -25,13 +25,11 @@ class ChapersController extends Controller
         $option = SettingHelpers::getInstance();
         $story = Story::getBySlug($story_slug)->first();
         $chaperList = Chaper::selectNotContent()->getByStory($story['id'])->orderBy('position', 'ASC')->get();
-        // $chaper = Chaper::getBySlug($chaper_slug)->getByStory($story['id'])->first();
-        $chaper = [];
+        $chaper = Chaper::getBySlug($chaper_slug)->getByStory($story['id'])->first();
         $linkPrev = '#';
         $linkNext = '#';
         for ($i = 0; $i < count($chaperList); $i++) {
             if ($chaperList[$i]['slug'] == $chaper_slug) {
-                $chaper = $chaperList[$i];
                 if (!empty($chaperList[$i - 1])) {
                     $linkPrev = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaperList[$i - 1]['slug']]);
                 }
@@ -43,6 +41,7 @@ class ChapersController extends Controller
             # code...
         }
         $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]);
+        $chaper['content'] = $this->addAdsToContent($chaper['content']);
         $story['link'] = route('client.story', ['story_slug' => $story['slug']]);
         $breadcrumb = [
             [
@@ -68,6 +67,18 @@ class ChapersController extends Controller
             'breadcrumb' => $breadcrumb
         );
         return view('client_page.chapers', $dataView);
+    }
+
+    public function addAdsToContent($content) {
+        $arr = explode(" ", $content);
+        $newArr = [];
+        for ($i=0; $i < count($arr); $i++) { 
+            $newArr[] = $arr[$i];
+                if (($i + 1) % 500 == 0) {
+                    $newArr[] = view('parts.ads.adsense_v1');
+                }
+            }
+        return implode(" ", $newArr);
     }
 
     public function callChapterApi(Request $request, $story_slug, $chaper_slug)
