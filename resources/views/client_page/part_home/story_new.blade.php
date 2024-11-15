@@ -63,7 +63,7 @@
 
                                     <div class="story-item-no-image__chapters ms-2">
                                         {{-- {{ route('client.chaper', ['story_slug' => $item['slug'], 'chaper_slug' => $item['chaper_slug']]) }} --}}
-                                        <a href="" title="{{ $item['chaper_name'] }}"
+                                        <a href="{{ route('client.chaper', ['story_slug' => $item['slug'], 'chaper_slug' => $item['chaper_slug']]) }}" title="{{ $item['chaper_name'] }}"
                                             class="hover-title text-decoration-none text-info">Chương
                                             {{ $item['position'] }}</a>
                                     </div>
