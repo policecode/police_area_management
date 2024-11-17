@@ -53,14 +53,27 @@ class AuthorController extends Controller
             ]
         ];
 
+          // Title Header
+          $page_title = 'Danh Sách Truyện Của Tác Giả '.ucwords($author['name']).' Không Nên Bỏ Qua';
+     
+          // Desccription Header
+          $description = str_replace('<br />',' ', $author['description']);
+          $arrDesc = explode(' ', $description, 230);
+          unset($arrDesc[229]);
+          $newArrDesc = array_filter($arrDesc, function($value) {
+              return $value;
+          });
+          $description = implode(' ', $newArrDesc);
+
         $dataView = array(
-            'page_title' => ucwords($author['name']).' - '.$option->getOptionValue('fvn_web_title'),
+            'page_title' => $page_title,
             'author' => $author,
             'records' => $listStory,
             'total_records' => $count,
             'per_page' => $request->per_page,
             'page' =>$request->page,
-            'breadcrumb' => $breadcrumb
+            'breadcrumb' => $breadcrumb,
+            'description' => $description
         );
         return view('client_page.author', $dataView);
     }

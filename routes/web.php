@@ -23,31 +23,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// 'throttle:30,1', visit_website
-Route::group(['middleware' => ['throttle:60,1']], function() {
-    Route::get('/', [HomeController::class, 'index'])->name('index');
-    
-    Route::get('/search', [SearchController::class, 'index'])->name('client.search');
-    Route::get('/super-search', [SearchController::class, 'superSearch'])->name('client.superSearch');
-    Route::get('/api/super-search', [SearchController::class, 'searchItem'])->name('client.searchItem');
 
-    Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
-    Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
-    Route::get('/total-chapter/{slug_total}', [CategoriesClientController::class, 'getTotalChapter'])->name('client.total-chapter');
-    
-    Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
-    Route::get('/story/top-rating', [StoriesClientController::class, 'getTopViewStories'])->name('story.top-rating');
-    Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->name('story.rating');
-    Route::get('/story/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
-    
-    Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
-    Route::get('/read-api/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'callChapterApi'])->name('client.api.chaper');
-    Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index'])->name('client.chaper');
-    
-    Route::get('/test_client', function (Request $request) {
-        dd($request->ips());
-    });
-});
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth', 'verified']], function() {
     Route::prefix('admin')->name('admin.')->group(function () {
@@ -164,4 +140,33 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
      
         return back()->with('message', 'Verification link sent!');
     })->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
+});
+
+
+// 'throttle:30,1', visit_website
+Route::group(['middleware' => ['throttle:60,1']], function() {
+    Route::get('/', [HomeController::class, 'index'])->name('index');
+    
+    Route::get('/search', [SearchController::class, 'index'])->name('client.search');
+    Route::get('/super-search', [SearchController::class, 'superSearch'])->name('client.superSearch');
+    Route::get('/api/super-search', [SearchController::class, 'searchItem'])->name('client.searchItem');
+
+    Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
+    Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
+    Route::get('/total-chapter/{slug_total}', [CategoriesClientController::class, 'getTotalChapter'])->name('client.total-chapter');
+    
+    Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
+    Route::get('/story/top-rating', [StoriesClientController::class, 'getTopViewStories'])->name('story.top-rating');
+    Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->name('story.rating');
+    Route::get('/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
+    Route::get('/story/{story_slug}', [StoriesClientController::class, 'index']);
+    
+    Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
+    Route::get('/read-api/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'callChapterApi'])->name('client.api.chaper');
+    Route::get('/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index'])->name('client.chaper');
+    Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index']);
+    
+    Route::get('/test_client', function (Request $request) {
+        dd($request->ips());
+    });
 });

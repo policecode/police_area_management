@@ -13,7 +13,10 @@
         <div class="story-detail__top d-flex align-items-start">
             <div class="row align-items-start w-100">
                 <div class="col-12 mb-2 d-block d-lg-none">
-                    <h1 class="text-center story-name text-capitalize fs-4">{{ $story['title'] }}</h1>
+                    <h1 class="text-center story-name text-capitalize fs-4">
+                        {!!$subTitle!!}
+                        {{ $story['title'] }}
+                    </h1>
                     <div class="align-items-center d-flex justify-content-center">
                         <div class="fb-share-button" data-href="{{route('client.story', ['story_slug' => $story['slug'] ])}}" data-layout="box_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
                     </div>
@@ -74,7 +77,10 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-12 col-lg-8 d-none d-lg-block">
-                    <h1 class="text-center story-name text-capitalize fs-4">{{ $story['title'] }}</h1>
+                    <h1 class="text-center story-name text-capitalize fs-4">
+                        {!!$subTitle!!}
+                        {{ $story['title'] }}
+                    </h1>
                     <div class="align-items-center d-flex justify-content-center">
                         <div class="fb-share-button" data-href="{{route('client.story', ['story_slug' => $story['slug'] ])}}" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
                     </div>

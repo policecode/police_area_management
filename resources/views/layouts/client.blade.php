@@ -11,10 +11,12 @@ $option = SettingHelpers::getInstance();
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="{{ $option->getOptionValue('fvn_content_bottom') }}">
-    <meta name="keywords" content="truyện hay, tiên hiệp, huyền huyễn, khoa huyễn, đô thị, võng du" />
+    <meta name="description" content="{{ empty($description)?$option->getOptionValue('fvn_content_bottom'):$description }}">
+    {{-- <meta name="keywords" content="truyện hay, tiên hiệp, huyền huyễn, khoa huyễn, đô thị, võng du" /> --}}
     <meta name="robots" content="INDEX,FOLLOW" />
-    <meta name="author" content="" />
+    <meta name='revisit-after' content='1 days' />
+    <meta http-equiv="content-language" content="vi" />
+    {{-- <meta name="author" content="" /> --}}
     <link rel="canonical" href="{{ url()->current() }}">
     {{-- Xác minh google để chèn quảng cáo --}}
     <meta name="google-adsense-account" content="ca-pub-8382233036922182">

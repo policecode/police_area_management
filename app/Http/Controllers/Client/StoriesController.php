@@ -44,10 +44,33 @@ class StoriesController extends Controller
             ]
         ];
 
+        // Title Header
+        $page_title = ucwords($story['title']).' - '.ucwords($story['author_name']);
+        $isResult = strpos($story['title'], '(c)');
+        $subTitle = '';
+        if ($isResult) {
+            $page_title = 'Truyện Convert '.$page_title;
+            $subTitle = '<span class="text-success">[Convert]</span>';
+        } else {
+            $page_title = 'Truyện Dịch '.$page_title;
+            $subTitle = '<span class="text-info">[Dịch]</span>';
+        }
+
+        // Desccription Header
+        $description = str_replace('<br />',' ', $story['description']);
+        $arrDesc = explode(' ', $description, 230);
+        unset($arrDesc[229]);
+        $newArrDesc = array_filter($arrDesc, function($value) {
+            return $value;
+        });
+        $description = implode(' ', $newArrDesc);
+
         $dataView = array(
-            'page_title' => ucwords($story['title']).' - '.$option->getOptionValue('fvn_web_title'),
+            'page_title' => $page_title,
             'story' => $story,
-            'breadcrumb' => $breadcrumb
+            'breadcrumb' => $breadcrumb,
+            'subTitle' =>  $subTitle,
+            'description' => $description
         );
         return view('client_page.stories', $dataView);
 

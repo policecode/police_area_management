@@ -57,14 +57,27 @@ class CategoriesController extends Controller
                 "url" => ''
             ]
         ];
+
+        // Title Header
+        $page_title = 'Danh Sách Truyện '.ucwords($category['name']).' Hay - Thể Loại '.ucwords($category['name']).' Không Nên Bỏ Qua';
+     
+         // Desccription Header
+         $description = str_replace('<br />',' ', $category['description']);
+         $arrDesc = explode(' ', $description, 230);
+         unset($arrDesc[229]);
+         $newArrDesc = array_filter($arrDesc, function($value) {
+             return $value;
+         });
+         $description = implode(' ', $newArrDesc);
         $dataView = array(
-            'page_title' => ucwords($category['name']).' - '.$option->getOptionValue('fvn_web_title'),
+            'page_title' => $page_title,
             'category' => $category,
             'records' => $listStory,
             'total_records' => $count,
             'per_page' => $request->per_page,
             'page' =>$request->page,
-            'breadcrumb' => $breadcrumb
+            'breadcrumb' => $breadcrumb,
+            'description' => $description
         );
         return view('client_page.category', $dataView);
     }
