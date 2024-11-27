@@ -28,7 +28,7 @@ class StoryCategory extends Model
         if ($this->joinCategory ) {
             return $query;
         }
-        $query->select('story_categories.story_id', 'categories.*')
+        $query->select('story_categories.story_id', 'categories.id', 'categories.name', 'categories.slug', 'categories.type')
         ->leftJoin('categories', function($join) {
             $join->on('story_categories.category_id', '=', 'categories.id');
         });

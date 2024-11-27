@@ -2,10 +2,8 @@
 <div id="app_information_story_chapers" class="col-12 col-md-7 col-lg-8">
     <div class="head-title-global d-flex justify-content-between mb-4">
         <div class="col-12 col-md-12 col-lg-4 head-title-global__left d-flex">
-            <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
-                <span class="d-block text-decoration-none text-dark fs-4 title-head-name" title="Thông tin truyện">Thông
+                <span class="border-bottom border-secondary d-block text-decoration-none text-dark fs-4 title-head-name" title="Thông tin truyện">Thông
                     tin truyện</span>
-            </h2>
         </div>
     </div>
 
@@ -13,17 +11,17 @@
         <div class="story-detail__top d-flex align-items-start">
             <div class="row align-items-start w-100">
                 <div class="col-12 mb-2 d-block d-lg-none">
-                    <h1 class="text-center story-name text-capitalize fs-4">
+                    <h2 class="text-center story-name text-capitalize fs-4">
                         {!!$subTitle!!}
                         {{ $story['title'] }}
-                    </h1>
+                    </h2>
                     <div class="align-items-center d-flex justify-content-center">
                         <div class="fb-share-button" data-href="{{route('client.story', ['story_slug' => $story['slug'] ])}}" data-layout="box_count" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
                     </div>
                     <div class="rate-story mb-2">
                         <div @mouseleave="leaveStar" class="rate-story__holder">
                             <img v-for="(item, index) in renderStar" @mouseover="hoverStar(index + 1)"
-                                @click="voteStar(index + 1)" :src="item" class="cursor-pointer" />
+                                @click="voteStar(index + 1)" :src="item" class="cursor-pointer" alt="star count" />
                         </div>
                         <em class="rate-story__text"></em>
                         <div class="rate-story__value">
@@ -53,12 +51,12 @@
                             width="200" height="300" loading="lazy">
                     </div>
                     <div class="mt-3">
-                        <p class="mb-1">
+                        <h3 class="mb-1 fs-6">
                             <strong>Tác giả:</strong>
                             <a href="{{ route('client.author', ['author_slug' => $story['author_slug']]) }}"
                                 class="text-decoration-none text-dark hover-title hover_primary">{{ $story['author_name'] }}</a>
-                        </p>
-                        <div class="d-flex align-items-center mb-1 flex-wrap">
+                        </h3>
+                        <h4 class="d-flex align-items-center mb-1 flex-wrap fs-6">
                             <strong class="me-1">Thể loại:</strong>
                             @foreach ($story['categories'] as $item)
                                 <a href="{{ route('client.tag', ['tag_slug' => $item['slug']]) }}"
@@ -66,14 +64,14 @@
                                     style="width: max-content;">{{ $item['name'] }} ,
                                 </a>
                             @endforeach
-                        </div>
+                        </h4>
 
-                        <p class="mb-1">
+                        <h5 class="mb-1 fs-6">
                             <strong>Trạng thái:</strong>
                             <span
                                 class="{{ $story['status'] == 1 ? 'text-info' : 'text-success' }}">{{ $story['status_name'] }}
                             </span>
-                        </p>
+                        </h5>
                     </div>
                 </div>
                 <div class="col-12 col-md-12 col-lg-8 d-none d-lg-block">
@@ -87,7 +85,7 @@
                     <div class="rate-story mb-2">
                         <div @mouseleave="leaveStar" class="rate-story__holder">
                             <img v-for="(item, index) in renderStar" @mouseover="hoverStar(index + 1)"
-                                @click="voteStar(index + 1)" :src="item" class="cursor-pointer" />
+                                @click="voteStar(index + 1)" :src="item" class="cursor-pointer" alt="star count" />
                         </div>
                         <em class="rate-story__text"></em>
                         <div class="rate-story__value">
@@ -111,9 +109,9 @@
                         </div>
                     </div>
 
-                    <div class="overflow-hidden px-3" style="text-align: justify;" :style="{height: heightDesc}">
+                    <h6 class="overflow-hidden px-3" style="text-align: justify;" :style="{height: heightDesc}">
                         {!! $story['description'] !!}
-                    </div>
+                    </h6>
                     <div class="info-more">
                         <div @click="showDesc=true" class="info-more--more" :class="{'active': !showDesc}">
                             <span class="me-1 text-dark">Xem thêm</span>
@@ -127,9 +125,9 @@
                     </div>
                 </div>
                 <div class="col-12 d-block d-lg-none">
-                    <div class="overflow-hidden px-3" style="text-align: justify" :style="{height: heightDesc}">
+                    <h6 class="overflow-hidden px-3" style="text-align: justify" :style="{height: heightDesc}">
                         {!! $story['description'] !!}
-                    </div>
+                    </h6>
                     <div class="info-more">
                         <div @click="showDesc=true" class="info-more--more" :class="{'active': !showDesc}">
                             <span class="me-1 text-dark">Xem thêm</span>
@@ -148,10 +146,8 @@
         <div class="story-detail__list-chapter mt-4">
             <div class="head-title-global d-flex justify-content-between mb-4">
                 <div class="col-6 col-md-12 col-lg-6 head-title-global__left d-flex">
-                    <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
-                        <span href="#" class="d-block text-decoration-none text-dark fs-4 title-head-name"
+                        <span href="#" class="border-bottom border-secondary d-block text-decoration-none text-dark fs-4 title-head-name"
                             title="Truyện hot">Danh sách chương</span>
-                    </h2>
                 </div>
             </div>
 
@@ -186,10 +182,8 @@
         <div class="story-detail__list-chapter mt-4">
             <div class="head-title-global d-flex justify-content-between mb-4">
                 <div class="col-6 col-md-12 col-lg-6 head-title-global__left d-flex">
-                    <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
-                        <span href="#" class="d-block text-decoration-none text-dark fs-4 title-head-name"
+                        <span href="#" class="border-bottom border-secondary d-block text-decoration-none text-dark fs-4 title-head-name"
                             title="Truyện hot">Bình luận</span>
-                    </h2>
                 </div>
             </div>
 

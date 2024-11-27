@@ -37,6 +37,14 @@
     overflow: hidden;
     text-overflow: ellipsis; 
 }
+.dropdown-menu-custom .mb__item_custom {
+    overflow: hidden;
+}
+.img-thumbnail_cover {
+    padding: .25rem;
+    background-color: #fff;
+    object-fit: cover;
+}
 @keyframes spinCircle {
     to {
         transform: rotate(360deg);

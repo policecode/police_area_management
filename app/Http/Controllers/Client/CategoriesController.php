@@ -36,11 +36,13 @@ class CategoriesController extends Controller
         $storyCollection = $query->filter($request)->get();
         $listId = $storyCollection->pluck('id')->toArray();
         $totalChapers = Chaper::getTotalChapers($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers)  {
+        $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
+        $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers, $allCategoriesOfStory)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
             $item->total_chapers = empty($totalChapers[$item->id])?0:$totalChapers[$item->id];
+            $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
         })->toArray();
         // dd($listStory);
         $breadcrumb = [
@@ -60,11 +62,11 @@ class CategoriesController extends Controller
 
         // Title Header
         $page_title = 'Danh Sách Truyện '.ucwords($category['name']).' Hay - Thể Loại '.ucwords($category['name']).' Không Nên Bỏ Qua';
-     
+        
          // Desccription Header
          $description = str_replace('<br />',' ', $category['description']);
-         $arrDesc = explode(' ', $description, 230);
-         unset($arrDesc[229]);
+         $arrDesc = explode(' ', $description, 50);
+         unset($arrDesc[49]);
          $newArrDesc = array_filter($arrDesc, function($value) {
              return $value;
          });

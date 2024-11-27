@@ -129,8 +129,8 @@ $user = Auth::user();
                                     <ul v-if="items.length > 0" class="list-group list-group-flush">
                                         <li v-for="(item, index) in items" class="list-group-item hover-darkgrey">
                                             <a :href="item.url" :title="titleAuthor(item.author_name)"
-                                                class="text-dark hover-title d-block">@{{ item.title }}
-                                                (@{{ item.author_name }})</a>
+                                                class="text-dark hover-title d-block">@{{ capitalizeFirstLetter(item.title) }}
+                                                (@{{ capitalizeFirstLetter(item.author_name) }})</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -185,7 +185,7 @@ $user = Auth::user();
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-custom overflow-hidden">
                                     @foreach ($all_categories as $key => $cat)
-                                        <li>
+                                        <li class="mb__item_custom">
                                             <a class="dropdown-item"
                                                 href="{{ route('client.tag', ['tag_slug' => $cat['slug']]) }}">{{ $cat['name'] }}</a>
                                         </li>
@@ -239,9 +239,9 @@ $user = Auth::user();
                             </label>
                         </div>
 
-                        <div class="d-flex header__form-search" action="" method="GET">
+                        <form action="{{route('client.search')}}" method="GET" class="d-flex header__form-search">
                             <input v-model="querySearch.keyword" class="form-control search-story" type="text"
-                                placeholder="Tìm kiếm" name="key_word">
+                                placeholder="Tìm kiếm" name="keyword">
                             <div v-if="items.length > 0" class="col-12 search-result shadow no-result">
                                 <div class="card text-white bg-light">
                                     <div class="card-body p-0">
@@ -249,7 +249,7 @@ $user = Auth::user();
                                             <li v-for="(item, index) in items" class="list-group-item">
                                                 <a :href="item.url" :title="titleAuthor(item.author_name)"
                                                     class="text-dark hover-title d-block">
-                                                    @{{ item.title }} (@{{ item.author_name }})
+                                                    @{{ capitalizeFirstLetter(item.title) }} (@{{ capitalizeFirstLetter(item.author_name) }})
                                                 </a>
                                             </li>
                                         </ul>
@@ -270,7 +270,7 @@ $user = Auth::user();
                             <button class="btn" type="submit">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -362,7 +362,13 @@ $user = Auth::user();
                     LocalStorageHelper.set('sidebar_theme_web', '')
                 }
             }, 
-
+            capitalizeFirstLetter(string) {
+                const words = string.split(" ");
+                for (let i = 0; i < words.length; i++) {
+                    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+                }
+                return words.join(" ");
+            }
         },
         watch: {
             'querySearch.keyword'(newVal) {

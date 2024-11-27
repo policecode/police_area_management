@@ -58,6 +58,7 @@ $option = SettingHelpers::getInstance();
 
         gtag('config', 'G-5T1TVNVMFY');
     </script>
+     @yield('head')
 </head>
 
 <body>

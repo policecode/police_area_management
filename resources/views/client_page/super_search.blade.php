@@ -3,7 +3,22 @@ use App\Enums\CategoryType;
 
 ?>
 @extends('layouts.client')
-
+@section('head')
+    <script type="application/ld+json"> 
+        {
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            "headline": "{{ $page_title }}",
+            "image": [
+             ],
+            "author": [{
+                "@type": "Person",
+                "name": "Truyện Full Việt",
+                "url": "{{ route('index') }}"
+              }]
+          }
+    </script>
+@endsection
 @section('content')
     <script src="{{ asset('assets/js/vue-input.js') }}"></script>
     <main>
@@ -12,10 +27,10 @@ use App\Enums\CategoryType;
                 <div id="fvn_super_search" class="col-12 col-md-8 col-lg-9 mb-3">
                     <div class="head-title-global d-flex justify-content-between mb-2">
                         <div class="col-12 col-md-12 col-lg-12 head-title-global__left d-flex">
-                            <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
+                            <h1 class="me-2 mb-0 border-bottom border-secondary pb-1">
                                 <span class="d-block text-decoration-none text-dark fs-4 category-name"
                                     title="Tìm kiếm nâng cao">Tìm kiếm nâng cao</span>
-                            </h2>
+                            </h1>
                         </div>
                     </div>
                     <div>

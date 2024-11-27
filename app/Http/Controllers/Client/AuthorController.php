@@ -58,8 +58,8 @@ class AuthorController extends Controller
      
           // Desccription Header
           $description = str_replace('<br />',' ', $author['description']);
-          $arrDesc = explode(' ', $description, 230);
-          unset($arrDesc[229]);
+          $arrDesc = explode(' ', $description, 50);
+          unset($arrDesc[49]);
           $newArrDesc = array_filter($arrDesc, function($value) {
               return $value;
           });

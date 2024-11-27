@@ -1,5 +1,20 @@
 @extends('layouts.client')
-
+@section('head')
+    <script type="application/ld+json"> 
+        {
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            "headline": "{{ $page_title }}",
+            "image": [
+             ],
+            "author": [{
+                "@type": "Person",
+                "name": "Truyện Full Việt",
+                "url": "{{ route('index') }}"
+              }]
+          }
+    </script>
+@endsection
 @section('content')
     <main>
         <div class="container">
@@ -7,10 +22,10 @@
                 <div class="col-12 col-md-8 col-lg-9 mb-3">
                     <div class="head-title-global d-flex justify-content-between mb-2">
                         <div class="col-12 col-md-12 col-lg-12 head-title-global__left d-flex">
-                            <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
+                            <h1 class="me-2 mb-0 border-bottom border-secondary pb-1">
                                 <span class="d-block text-decoration-none text-dark fs-4 category-name"
                                     title="{{$author['name']}}">{{$author['name']}}</span>
-                            </h2>
+                            </h1>
                         </div>
                     </div>
                     <div class="list-story-in-category section-stories-hot__list">
@@ -43,7 +58,7 @@
                 </div>
                 <div class="col-12 col-md-4 col-lg-3">
                     <div class="category-description bg-light p-2 rounded mb-3 card-custom">
-                        <p class="mb-0 text-secondary">{{$author['name']}}</p>
+                        <h2 class="mb-0 text-secondary fs-6">Tác Giả {{$author['name']}}</h2>
                         {!!$author['description']!!}
                     </div>
                     <div class="bg-light p-2 rounded mb-3 card-custom">

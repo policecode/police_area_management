@@ -1,5 +1,20 @@
 @extends('layouts.client')
-
+@section('head')
+    <script type="application/ld+json"> 
+        {
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            "headline": "{{ $page_title }}",
+            "image": [
+             ],
+            "author": [{
+                "@type": "Person",
+                "name": "Truyện Full Việt",
+                "url": "{{ route('index') }}"
+              }]
+          }
+    </script>
+@endsection
 @section('content')
     <main>
         <div class="container">
@@ -7,10 +22,10 @@
                 <div class="col-12 col-md-8 col-lg-9 mb-3">
                     <div class="head-title-global d-flex justify-content-between mb-2">
                         <div class="col-12 col-md-12 col-lg-12 head-title-global__left d-flex">
-                            <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
+                            <h1 class="me-2 mb-0 border-bottom border-secondary pb-1">
                                 <span class="d-block text-decoration-none text-dark fs-4 category-name"
                                     title="{{ $option_chapter['value'] }}">{{ $option_chapter['value'] }} chương</span>
-                            </h2>
+                            </h1>
                         </div>
                     </div>
                     <div class="row">

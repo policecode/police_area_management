@@ -1,9 +1,27 @@
 @extends('layouts.client')
-
+@section('head')
+    <script type="application/ld+json"> 
+    {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": "{{ $page_title }}",
+        "image": [
+         ],
+        "datePublished":  "{{ $chaper['created_at'] }}" ,
+        "dateModified":  "{{ $chaper['updated_at'] }}" ,
+        "author": [{
+            "@type": "Person",
+            "name": "{{ $story['author_name'] }}",
+            "url": "{{ route('client.author', ['author_slug' => $story['author_slug']]) }}"
+          }]
+      }
+    </script>
+@endsection
 @section('content')
     <script>
         var redirectToStory = '{{ $story['link'] }}';
-        var apiUrlChapter = '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
+        var apiUrlChapter =
+            '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
     </script>
     <main id="app_chapter">
         <div class="chapter-wrapper container my-5">
@@ -72,7 +90,7 @@
             <div class="chapter-content mb-3">
                 @include('parts.ads.adsense_v1')
             </div>
-            
+
             <div class="chapter-nav text-center">
                 <div class="chapter-actions chapter-actions-origin d-flex align-items-center justify-content-center">
                     <a class="btn btn-success me-1 chapter-prev" href="{{ $link_prev }}" title="">
@@ -170,7 +188,7 @@
                 async callChapter() {
                     const jsonData = await new RouteApi().get(apiUrlChapter);
                     // console.log(jsonData);
-                    
+
                     if (jsonData.result) {
                         this.itemDetail = jsonData.data;
                     } else {

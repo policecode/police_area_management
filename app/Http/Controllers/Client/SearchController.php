@@ -29,14 +29,20 @@ class SearchController extends Controller
             'order_by' => 'title',
             'order_type' => 'ASC'
         );
-        $request->merge(array_merge($queryDefault, $request->query()));
+        $request->merge(array_merge($queryDefault, $request->query(), [
+            'keyword' => Str::slug($request->keyword, " ")
+        ]));
+    
         // $author = Author::getBySlug($author_slug)->first();
         if (!$request->keyword) {
             return redirect(route('index'));
         }
         $now = Carbon::now();
         $query = Story::filter($request)->joinAuthor();
-        $count = $query->getTotal();
+        if ($request->keyword) {
+            $query->searchByAuthor($request->keyword);
+        }
+        $count = $query->count();
         $storyCollection = $query->get();
         $listId = $storyCollection->pluck('id')->toArray();
         $totalChapers = Chaper::getTotalChapers($listId);
@@ -60,7 +66,6 @@ class SearchController extends Controller
                 "url" => ''
             ]
         ];
-
         $dataView = array(
             'page_title' => 'Tìm kiếm với từ khóa: '.$request->keyword.' - '.$option->getOptionValue('fvn_web_title'),
             'keyword' => $request->keyword,

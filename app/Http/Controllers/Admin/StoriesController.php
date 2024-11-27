@@ -315,6 +315,20 @@ class StoriesController extends Controller
             DB::beginTransaction();
             $isCheckStory = Story::getBySlug(Str::slug($data['title'], "-"))->first();
             if ($isCheckStory) {
+                // ================================================
+                $enumStatus = [];
+                foreach (StatusStory::getValues() as $key => $enumObj) {
+                    if ($enumObj['slug'] == Str::slug($data['status'])) {
+                        $enumStatus = $enumObj;
+                    }
+                }
+                $status = StatusStory::COMMINGOUT['key'];
+                if (count($enumStatus) > 0) {
+                    $status = $enumStatus['key'];
+                }
+                $isCheckStory->status = $status;
+                $isCheckStory->update();
+                // ==================================================
                 $lastChaper = Chaper::getByStory($isCheckStory->id)->orderBy('position', 'DESC')->first();
                 $skip_position = 1;
                 if ($lastChaper) {

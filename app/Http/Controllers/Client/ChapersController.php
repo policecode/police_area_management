@@ -23,7 +23,7 @@ class ChapersController extends Controller
     public function index(Request $request, $story_slug, $chaper_slug)
     {
         $option = SettingHelpers::getInstance();
-        $story = Story::getBySlug($story_slug)->first();
+        $story = Story::getBySlug($story_slug)->joinAuthor()->first();
         $chaperList = Chaper::selectNotContent()->getByStory($story['id'])->orderBy('position', 'ASC')->get();
         $chaper = Chaper::getBySlug($chaper_slug)->getByStory($story['id'])->first();
         $linkPrev = '#';
