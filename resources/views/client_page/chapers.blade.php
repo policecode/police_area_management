@@ -23,7 +23,7 @@
         var apiUrlChapter =
             '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
     </script>
-    <main id="app_chapter">
+    <main id="app_chapter" class="overflow-hidden">
         <div class="chapter-wrapper container my-5">
             <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" class="text-decoration-none">
                 <h2 class="text-center text-success">{{ ucwords($story['title']) }}</h2>
@@ -82,13 +82,13 @@
             <hr class="chapter-end container-fluid">
 
             <div class="chapter-content mb-3">
-                @include('parts.ads.adsense_v1')
+                @include('parts.ads.adsense_v5')
             </div>
             <div class="chapter-content mb-3" style="text-align: justify;" :style="{ 'fontSize': `${styles.fontSize}px` }">
                 {!! $chaper['content'] !!}
             </div>
             <div class="chapter-content mb-3">
-                @include('parts.ads.adsense_v1')
+                @include('parts.ads.adsense_v6')
             </div>
 
             <div class="chapter-nav text-center">

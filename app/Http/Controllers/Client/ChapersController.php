@@ -72,10 +72,14 @@ class ChapersController extends Controller
     public function addAdsToContent($content) {
         $arr = explode(" ", $content);
         $newArr = [];
+        $index = 1;
         for ($i=0; $i < count($arr); $i++) { 
             $newArr[] = $arr[$i];
                 if (($i + 1) % 500 == 0) {
-                    $newArr[] = view('parts.ads.adsense_v1');
+                    if ($index <= 6) {
+                        $newArr[] = view('parts.ads.adsense_v'.$index);
+                        $index++;
+                    }
                 }
             }
         return implode(" ", $newArr);
