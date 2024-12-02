@@ -24,6 +24,7 @@ use App\Enums\CategoryType;
     <main>
         <div class="container">
             <div class="row align-items-start">
+                @include('parts.ads.adsense_v1')
                 <div id="fvn_super_search" class="col-12 col-md-8 col-lg-9 mb-3">
                     <div class="head-title-global d-flex justify-content-between mb-2">
                         <div class="col-12 col-md-12 col-lg-12 head-title-global__left d-flex">
@@ -33,7 +34,7 @@ use App\Enums\CategoryType;
                             </h1>
                         </div>
                     </div>
-                    <div>
+                    <div v-if="showFillter">
                         <div class="row">
                             <h6 class="fw-semibold">{{CategoryType::CAT['value']}}</h6>
                             <div v-for="item in CAT" class="col-4 col-md-3">
@@ -109,10 +110,21 @@ use App\Enums\CategoryType;
                         <button @click="searchItem" type="button" class="btn btn-success btn-sm mt-3">Tìm kiếm</button>
 
                     </div>
+                    <div class="mt-2">
+                        <button v-if="!showFillter" @click="showFillter=true" class="btn btn-primary">
+                            <span class="me-1">Hiện Bộ Lọc</span>
+                            <i class="fa-solid fa-caret-down"></i>
+                        </button>
+
+                        <button v-if="showFillter" @click="showFillter=false" class="btn btn-danger">
+                            <span class="me-1">Thu Gọn</span>
+                            <i class="fa-solid fa-caret-up"></i>
+                        </button>
+                    </div>
                     <div class="row mt-4 position-relative">
-                        <div class="col-12 mb-3">
+                        {{-- <div class="col-12 mb-3">
                             @include('parts.ads.adsense_v1')
-                        </div>
+                        </div> --}}
                         <div v-for="item in items" class="col-12 mb-3">
                             <div class="d-flex">
                                 <a :href="item.url" class="">
@@ -187,6 +199,7 @@ use App\Enums\CategoryType;
         var vue_super_search_story_app = {
             loading: false,
             items: [],
+            showFillter: true,
             querySearch: {
                 total: 0,
                 page: 1,

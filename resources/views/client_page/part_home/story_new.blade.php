@@ -19,7 +19,7 @@
                     <div class="head-title-global d-flex justify-content-between mb-2">
                         <div class="col-6 col-md-4 col-lg-4 head-title-global__left d-flex align-items-center">
                             <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
-                                <a href="https://suustore.com/#"
+                                <a href="{{ route('client.new-update') }}"
                                     class="d-block text-decoration-none text-dark fs-4 story-name"
                                     title="Truyện Mới">Truyện Mới</a>
                             </h2>

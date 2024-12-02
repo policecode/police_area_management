@@ -6,6 +6,7 @@ use App\Http\Controllers\Client\CategoriesController AS CategoriesClientControll
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
 use App\Http\Controllers\Client\SearchController;
+use App\Http\Controllers\Client\TopStoryController;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -147,6 +148,11 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
 Route::group(['middleware' => ['throttle:60,1']], function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
     
+    Route::get('/truyen-moi-cap-nhat', [TopStoryController::class, 'newUpdateStory'])->name('client.new-update');
+    Route::get('/truyen-hot', [TopStoryController::class, 'hotStory'])->name('client.hot-story');
+    Route::get('/truyen-full', [TopStoryController::class, 'fullStory'])->name('client.full-story');
+    Route::get('/truyen-xem-nhieu', [TopStoryController::class, 'viewStory'])->name('client.view-story');
+
     Route::get('/search', [SearchController::class, 'index'])->name('client.search');
     Route::get('/super-search', [SearchController::class, 'superSearch'])->name('client.superSearch');
     Route::get('/api/super-search', [SearchController::class, 'searchItem'])->name('client.searchItem');

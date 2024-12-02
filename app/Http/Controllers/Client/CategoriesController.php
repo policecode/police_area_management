@@ -130,7 +130,7 @@ class CategoriesController extends Controller
                 "url" => ''
             ],
             [
-                "title" => $optionChapter['value'].' chương',
+                "title" => $optionChapter['value'],
                 "url" => ''
             ]
         ];

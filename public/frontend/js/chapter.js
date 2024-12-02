@@ -25,7 +25,12 @@ $(document).ready(function () {
         chapterContent.css('line-height', $(this).val() + '%')
     })
 
-    const chapterJump = $('.chapter_jump')
+    $('.chapter_jump').click(function(e) {
+        $('.choose__option_chapter').toggleClass('d-none');
+    });
+    $('.chapter_setting').click(function(e) {
+        $('.choose__option_setting').toggleClass('d-none');
+    });
     // $(document).keydown(function (e) {
     //     switch (e.which) {
     //         case 87: // W key

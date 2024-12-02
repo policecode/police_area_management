@@ -23,7 +23,7 @@
         var apiUrlChapter =
             '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
     </script>
-    <main id="app_chapter" class="overflow-hidden">
+    <main class="overflow-hidden">
         <div class="chapter-wrapper container my-5">
             <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" class="text-decoration-none">
                 <h2 class="text-center text-success">{{ ucwords($story['title']) }}</h2>
@@ -37,14 +37,14 @@
                         <i class="fa-solid fa-chevron-left d-sm-none"></i>
                         <span class="d-none d-sm-block">Chương trước</span>
                     </a>
-                    <button @click="barBtn.desktop = !barBtn.desktop" class="btn btn-success chapter_jump me-1">
+                    <button class="btn btn-success chapter_jump me-1">
                         <span>
                             <i class="fa-solid fa-bars"></i>
                         </span>
                     </button>
 
-                    <div class="me-1 w-50" :class="{ 'd-none': barBtn.desktop }">
-                        <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.desktop }"
+                    <div class="choose__option_chapter me-1 w-50 d-none">
+                        <select class="form-select btn btn-success"
                             onchange="location = this.value;">
                             @foreach ($chaper_list as $item)
                                 <option
@@ -57,7 +57,7 @@
                         <span class="d-none d-sm-block">Chương tiếp</span>
                         <i class="fa-solid fa-chevron-right d-sm-none"></i>
                     </a>
-                    <button @click="barBtn.setting = !barBtn.setting" class="btn btn-success chapter_jump ms-1"
+                    <button class="chapter_setting btn btn-success ms-1"
                         title="cài đặt">
                         <span>
                             <i class="fa-solid fa-gear"></i>
@@ -66,7 +66,7 @@
 
                 </div>
 
-                <div v-if="barBtn.setting" class="chapter-actions chapter-actions-origin row mt-3">
+                <div id="app_chapter" class="choose__option_setting chapter-actions chapter-actions-origin row mt-3 d-none">
                     <div class="col-lg-3 col-sm-4 col-6"></div>
                     <div class="col-lg-3 col-sm-4 col-6">
                         <div class="input-group flex-nowrap ">
@@ -81,13 +81,13 @@
             </div>
             <hr class="chapter-end container-fluid">
 
-            <div class="chapter-content mb-3">
+            <div class="mb-3">
                 @include('parts.ads.adsense_v5')
             </div>
-            <div class="chapter-content mb-3" style="text-align: justify;" :style="{ 'fontSize': `${styles.fontSize}px` }">
+            <div class="chapter-content mb-3" style="text-align: justify;">
                 {!! $chaper['content'] !!}
             </div>
-            <div class="chapter-content mb-3">
+            <div class="mb-3">
                 @include('parts.ads.adsense_v6')
             </div>
 
@@ -97,14 +97,14 @@
                         <i class="fa-solid fa-chevron-left d-sm-none"></i>
                         <span class="d-none d-sm-block">Chương trước</span>
                     </a>
-                    <button @click="barBtn.desktop = !barBtn.desktop" class="btn btn-success chapter_jump me-1">
+                    <button class="btn btn-success chapter_jump me-1">
                         <span>
                             <i class="fa-solid fa-bars"></i>
                         </span>
                     </button>
 
-                    <div class="me-1 w-50" :class="{ 'd-none': barBtn.desktop }">
-                        <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.desktop }"
+                    <div class="choose__option_chapter me-1 w-50 d-none">
+                        <select class="form-select btn btn-success"
                             onchange="location = this.value;">
                             @foreach ($chaper_list as $item)
                                 <option
@@ -126,14 +126,14 @@
                 <a class="btn btn-success me-2 chapter-prev" href="{{ $link_prev }}" title="">
                     <i class="fa-solid fa-chevron-left"></i>
                 </a>
-                <button @click="barBtn.mobile = !barBtn.mobile" class="btn btn-success chapter_jump me-2">
+                <button class="btn btn-success chapter_jump me-2">
                     <span>
                         <i class="fa-solid fa-bars"></i>
                     </span>
                 </button>
 
-                <div class="me-1 w-100" :class="{ 'd-none': barBtn.mobile }">
-                    <select class="form-select btn btn-success" :class="{ 'd-none': barBtn.mobile }"
+                <div class="choose__option_chapter me-1 w-100 d-none">
+                    <select class="form-select btn btn-success"
                         onchange="location = this.value;">
                         @foreach ($chaper_list as $item)
                             <option
@@ -176,26 +176,13 @@
             el: '#app_chapter',
             data: vue_chapter_app,
             mounted: function() {
-                // this.searchItem();
                 this.addViewStory();
                 this.addHistoryReadStory();
-                // this.callChapter();
             },
             computed: {
 
             },
             methods: {
-                async callChapter() {
-                    const jsonData = await new RouteApi().get(apiUrlChapter);
-                    // console.log(jsonData);
-
-                    if (jsonData.result) {
-                        this.itemDetail = jsonData.data;
-                    } else {
-                        this.itemDetail = {};
-                        // jAlert(jsonData.message);
-                    }
-                },
                 addViewStory() {
                     setTimeout(async () => {
                         let jsonData = await new RouteApi().post(`${this.apiUrl}/increase-views`, {
@@ -251,7 +238,8 @@
             },
             watch: {
                 'styles.fontSize'(newVal) {
-                    LocalStorageHelper.set('chaper_font_size', newVal)
+                    LocalStorageHelper.set('chaper_font_size', newVal);
+                    $('.chapter-content').css({'font-size': newVal+'px'});
                 }
             },
         });
@@ -259,6 +247,6 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('frontend/js/chapter.js') }}"></script>
-    <script src="{{ asset('assets/js/website_security.js') }}"></script>
+    <script src="{{ asset('frontend/js/chapter.js?v='.FVN_VERSION_LARAVEL) }}"></script>
+    <script src="{{ asset('assets/js/website_security.js?v='.FVN_VERSION_LARAVEL) }}"></script>
 @endsection

@@ -4,8 +4,8 @@
             <div class="head-title-global d-flex justify-content-between mb-2">
                 <div class="col-12 col-md-4 head-title-global__left d-flex">
                     <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
-                        <span class="d-block text-decoration-none text-dark fs-4 title-head-name"
-                            title="Truyện đã hoàn thành">Truyện đã hoàn thành</span>
+                        <a href="{{ route('client.full-story') }}" class="d-block text-decoration-none text-dark fs-4 title-head-name"
+                            title="Truyện đã hoàn thành">Truyện đã hoàn thành</a>
                     </h2>
                     <!-- <i class="fa-solid fa-fire-flame-curved"></i> -->
                 </div>
@@ -36,8 +36,8 @@
                 </div>
             </div>
 
-            <div class="col-12">
-                @include('parts.ads.adsense_v2')
+            <div class="col-12 mt-3">
+                @include('parts.ads.adsense_v5')
             </div>
 
         </div>
@@ -46,8 +46,8 @@
             <div class="head-title-global d-flex justify-content-between mb-2">
                 <div class="col-12 col-md-4 head-title-global__left d-flex">
                     <h2 class="me-2 mb-0 border-bottom border-secondary pb-1">
-                        <span class="d-block text-decoration-none text-dark fs-4 title-head-name"
-                            title="Truyện Convert">Truyện Convert</span>
+                        <a href="{{ route('client.tag', ['tag_slug' => 'convert']) }}" class="d-block text-decoration-none text-dark fs-4 title-head-name"
+                            title="Truyện Convert">Truyện Convert</a>
                     </h2>
                     <!-- <i class="fa-solid fa-fire-flame-curved"></i> -->
                 </div>

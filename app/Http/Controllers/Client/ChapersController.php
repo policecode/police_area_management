@@ -77,7 +77,7 @@ class ChapersController extends Controller
             $newArr[] = $arr[$i];
                 if (($i + 1) % 500 == 0) {
                     if ($index <= 6) {
-                        $newArr[] = view('parts.ads.adsense_v'.$index);
+                        $newArr[] = '<br/>'.view('parts.ads.adsense_v'.$index).'<br/>';
                         $index++;
                     }
                 }

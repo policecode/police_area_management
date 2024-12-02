@@ -61,7 +61,23 @@ $user = Auth::user();
                                 <i class="fa-regular fa-chart-bar"></i>
                                 Danh sách
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-custom">
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('client.new-update') }}">Truyện mới cập nhật</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('client.hot-story') }}">Truyện hot</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('client.full-story') }}">Truyện full</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('client.view-story') }}">Truyện được xem nhiều</a>
+                                </li>
                                 @foreach ($totalChapter as $item)
                                     <li>
                                         <a class="dropdown-item"
@@ -91,7 +107,7 @@ $user = Auth::user();
                         <li class="nav-item dropdown">
                             <a class="nav-link" href="{{route('client.superSearch')}}" role="button" >
                                 <i class="fa-brands fa-searchengin"></i>
-                                Tìm kiếm nâng cao
+                                Tìm kiếm
                             </a>
                
                         </li>
@@ -198,7 +214,23 @@ $user = Auth::user();
                                     <i class="fa-regular fa-chart-bar"></i>
                                     Danh sách
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-custom">
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('client.new-update') }}">Truyện mới cập nhật</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('client.hot-story') }}">Truyện hot</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('client.full-story') }}">Truyện full</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('client.view-story') }}">Truyện được xem nhiều</a>
+                                    </li>
                                     @foreach ($totalChapter as $item)
                                         <li>
                                             <a class="dropdown-item"
@@ -211,7 +243,7 @@ $user = Auth::user();
                             <li class="nav-item dropdown">
                                 <a class="nav-link" href="{{route('client.superSearch')}}" role="button">
                                     <i class="fa-brands fa-searchengin"></i>
-                                    Tìm kiếm nâng cao
+                                    Tìm kiếm
                                 </a>
                             </li>
                         </ul>
