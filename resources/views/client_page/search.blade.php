@@ -66,7 +66,7 @@
                                         </div>
                                         <div class="card-text">
                                             <i class="fa-solid fa-list-ol"></i>
-                                            {{$item['total_chapers']}} Chương
+                                            {{$item['total_chapter']}} Chương
                                         </div>
                                         <div class="card-text">
                                             <i class="fa-regular fa-clock"></i>

@@ -44,13 +44,10 @@ class SearchController extends Controller
         }
         $count = $query->count();
         $storyCollection = $query->get();
-        $listId = $storyCollection->pluck('id')->toArray();
-        $totalChapers = Chaper::getTotalChapers($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers)  {
+        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->total_chapers = empty($totalChapers[$item->id])?0:$totalChapers[$item->id];
         })->toArray();
         $breadcrumb = [
             [
@@ -120,14 +117,12 @@ class SearchController extends Controller
             $res['total'] = $query->count();
         }else{
             $listStories = $query->get();
-            $totalChapers = Chaper::getTotalChapers($listStories->pluck('id'));
             $now = Carbon::now();
-            $res['data'] = $listStories->each(function ($item, $key) use ($now, $totalChapers)  {
+            $res['data'] = $listStories->each(function ($item, $key) use ($now)  {
                 $item->thumbnail = route('index') . '/' . $item->thumbnail;
                 $item->url =  route('client.story', ['story_slug' => $item->slug]);
                 $item->after_day = $now->diffInDays(new Carbon($item->created_at));
                 $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-                $item->total_chapers = empty($totalChapers[$item->id])?0:$totalChapers[$item->id];
             })->toArray();
         }
         return response()->json($res);

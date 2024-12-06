@@ -92,33 +92,26 @@ class CategoriesController extends Controller
             'order_by' => 'title',
             'order_type' => 'ASC'
         );
-        $request->merge(array_merge($queryDefault, $request->query()));
         $optionChapter = TotalChapter::getTotalChapterByKey($slug_total);
+        if ($optionChapter['min']) {
+            $queryDefault['total_chapter_min'] = $optionChapter['min'];
+        }
+        if ($optionChapter['max']) {
+            $queryDefault['total_chapter_max'] = $optionChapter['max'];
+        }
+        $request->merge(array_merge($queryDefault, $request->query()));
         if (!$optionChapter) {
             return abort(404);
         }
-        $query = Chaper::select('stories.*', 'authors.name AS author_name', DB::raw('count(chapers.story_id) AS total_chapter'))
-        ->leftJoin('stories', function($join) {
-            $join->on('chapers.story_id', '=', 'stories.id');
-        })
-        ->leftJoin('authors', function($join) {
-            $join->on('stories.author_id', '=', 'authors.id');
-        })
-        ->groupBy('chapers.story_id')
-        ->orderBy($request->order_by, $request->order_type);
-        if ($optionChapter['min']) {
-            $query->having('total_chapter', '>', (int) $optionChapter['min']);
-        }
-        if ($optionChapter['max']) {
-            $query->having('total_chapter', '<=', (int) $optionChapter['max']);
-        }
-        $count = $query->count();
+
+        $query = Story::filter($request)->joinAuthor();
         $now = Carbon::now();
-        $listStory = $query->skip(($request->page - 1) * $request->per_page)->take($request->per_page)->get()->each(function ($item, $key) use ($now)  {
+        $listStory = $query->get()->each(function ($item, $key) use ($now)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $now->diffInMinutes(new Carbon($item->last_chapers));
         })->toArray();
+        // dd($listStory);
 
         $breadcrumb = [
             [
@@ -138,7 +131,7 @@ class CategoriesController extends Controller
             'page_title' => ucwords($optionChapter['value']).' chương - '.$option->getOptionValue('fvn_web_title'),
             'option_chapter' => $optionChapter,
             'records' => $listStory,
-            'total_records' => $count,
+            'total_records' => $query->getTotal(),
             'per_page' => $request->per_page,
             'page' =>$request->page,
             'breadcrumb' => $breadcrumb

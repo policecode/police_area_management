@@ -29,7 +29,7 @@
                                 </a>
                             </h3>
                             <span class="story-item-full__badge badge text-bg-success">Full -
-                                {{ $item['total_chaper'] }} chương</span>
+                                {{ $item['total_chapter'] }} chương</span>
                         </div>
                     @endforeach
 
@@ -67,7 +67,7 @@
                                     {{ $item['title'] }}
                                 </a>
                             </h3>
-                            <span class="story-item-full__badge badge text-bg-success">{{ $item['total_chaper'] }}
+                            <span class="story-item-full__badge badge text-bg-success">{{ $item['total_chapter'] }}
                                 chương</span>
                         </div>
                     @endforeach
