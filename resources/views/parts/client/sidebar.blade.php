@@ -314,16 +314,18 @@ $user = Auth::user();
             @if (!empty($breadcrumb))
                 <nav aria-label="breadcrumb">
                     <ol itemscope itemtype="https://schema.org/BreadcrumbList" class="breadcrumb" style="margin-bottom: 0;">
-                        @foreach ($breadcrumb as $item)
+                        @foreach ($breadcrumb as $key => $item)
                             @if ($item['title'] && $item['url'])
                                 <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumb-item">
                                     <a itemprop="item" href="{{ $item['url'] }}">
                                         <span itemprop="name">{{ $item['title'] }}</span>
                                     </a>
+                                    <meta itemprop="position" content="{{$key + 1}}" />
                                 </li>
                             @else
                                 <li temprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumb-item active" aria-current="page">
                                     <span itemprop="name">{{ $item['title'] }}</span>
+                                    <meta itemprop="position" content="{{$key + 1}}" />
                                 </li>
                             @endif
                         @endforeach
