@@ -7,7 +7,7 @@ $all_categories = get_all_categories();
     <div class="container">
         <div class="row">
             <div class="col-12 col-md-5">
-                <a title="Đọc truyện online" class="text-dark text-decoration-none" href="{{ route('index') }}"><strong>{{$option->getOptionValue('fvn_web_title')}}</strong></a> - {{$option->getOptionValue('fvn_content_bottom')}}
+               {!!$option->getOptionValue('fvn_content_bottom')!!}
             </div>
             <ul class="col-12 col-md-7 list-unstyled d-flex flex-wrap list-tag">
                 @foreach ($all_categories as $key => $cat)

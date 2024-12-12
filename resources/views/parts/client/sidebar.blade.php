@@ -310,7 +310,7 @@ $user = Auth::user();
     </div>
 
     <div class="bg-light header-bottom">
-        <div class="container py-1">
+        <div class="container">
             @if (!empty($breadcrumb))
                 <nav aria-label="breadcrumb">
                     <ol itemscope itemtype="https://schema.org/BreadcrumbList" class="breadcrumb" style="margin-bottom: 0;">
@@ -330,9 +330,7 @@ $user = Auth::user();
                     </ol>
                 </nav>
             @else
-                <p class="mb-0">
-                    {{ $option->getOptionValue('fvn_content_top') }}
-                </p>
+                {!! $option->getOptionValue('fvn_content_top') !!}
             @endif
         </div>
     </div>
