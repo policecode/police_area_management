@@ -61,7 +61,7 @@ class ChaperController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $story)
+    public function store(Request $request, Story $story)
     {
         try {
             $validator = Validator::make($request->all(), $this->rules($request, $story), $this->messages(), $this->attributes());
@@ -80,13 +80,15 @@ class ChaperController extends Controller
                 'user_id' => $user->id,
                 'name' => $data['name'],
                 'slug' => $data['slug'],
-                'story_id' => $story,
+                'story_id' => $story->id,
                 'content' => $data['content'],
                 'position' => $data['position']
             ]);
-            Story::find($story)->update([
+            $total_chapter = $story->total_chapter + 1;
+            $story->update([
                 'last_chapers' => Carbon::now(),
-                'chaper_id' => $chaper->id
+                'chaper_id' => $chaper->id,
+                'total_chapter' => $total_chapter
             ]);
      
             DB::commit();
@@ -112,17 +114,6 @@ class ChaperController extends Controller
     public function show($story, Chaper $chaper)
     {
         dd($story);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -168,11 +159,18 @@ class ChaperController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($story, Chaper $chaper)
+    public function destroy(Story $story, Chaper $chaper)
     {
         try {
             DB::beginTransaction();
             $status = $chaper->delete();
+            if ($status) {
+                $total_chapter = $story->total_chapter - 1;
+                $story->update([
+                    'chaper_id' => Chaper::getByStory($story->id)->orderBy('position', 'DESC')->first()->id,
+                    'total_chapter' => $total_chapter
+                ]);
+            }
             DB::commit();
             return response()->json([
                 'status' => $status, 
@@ -186,12 +184,17 @@ class ChaperController extends Controller
         }
     }
 
-    public function destroyAll($story)
+    public function destroyAll(Story $story)
     {
         try {
             DB::beginTransaction();
-            $storyColection = Story::find($story);
+            $storyColection = Story::find($story->id);
             $status = Chaper::getByStory($storyColection->id)->delete();
+            $story->update([
+                'last_chapers' => NULL,
+                'chaper_id' => NULL,
+                'total_chapter' => 0
+            ]);
             DB::commit();
             return response()->json([
                 'status' => $status, 

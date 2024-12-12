@@ -28,7 +28,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
             Route::get('/get-thumbnail', 'StoriesController@getthumbnail');
             Route::post('/tool-upload-story', 'StoriesController@toolUploadStory');
             Route::post('/tool-upload-chaper/{story}', 'StoriesController@toolUploadChaper');
-            Route::get('/auto-convert-story-description', 'StoriesController@autoConvertDescriptionToHtml');
+            // Route::get('/auto-convert-story-description', 'StoriesController@autoConvertDescriptionToHtml');
+            Route::get('/auto-convert-total-chapter', 'StoriesController@autoConvertTotalChapter');
 
         });
     });

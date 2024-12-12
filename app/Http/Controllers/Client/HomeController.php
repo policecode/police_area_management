@@ -43,23 +43,15 @@ class HomeController extends Controller
         })->toArray();
 
         // Truyện đã hoàn thành
-        // addSelect(['total_chaper' => function($query) {
-        //     $query->selectRaw('count(id) as total')
-        //         ->from('chapers')
-        //         ->whereColumn('story_id', 'stories.id');
-        // }])
+
         $full_stories_collection = Story::where('status', StatusStory::FULL['key'])->inRandomOrder()->orderBy('id', 'DESC')->skip(0)->take(16)->get();
-        $full_stories_chapter = Chaper::getTotalChapers($full_stories_collection->pluck('id')->toArray());
-        $full_stories = $full_stories_collection->each(function ($item, $key) use($full_stories_chapter) {
+        $full_stories = $full_stories_collection->each(function ($item, $key) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
-            $item->total_chaper = empty($full_stories_chapter[$item->id])?0:$full_stories_chapter[$item->id];
         })->toArray();
         // Truyện convert
         $convert_stories_collection = Story::where('title', 'LIKE', "%(c)%")->inRandomOrder()->orderBy('id', 'DESC')->skip(0)->take(16)->get();
-        $convert_stories_chapter = Chaper::getTotalChapers($convert_stories_collection->pluck('id')->toArray());
-        $convert_stories = $convert_stories_collection->each(function ($item, $key) use($convert_stories_chapter) {
+        $convert_stories = $convert_stories_collection->each(function ($item, $key) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
-            $item->total_chaper = empty($convert_stories_chapter[$item->id])?0:$convert_stories_chapter[$item->id];
         })->toArray();
         $dataView = array(
             'page_title' => $option->getOptionValue('fvn_web_title').' - Trang chủ',

@@ -28,13 +28,11 @@ class TopStoryController extends Controller
         $count = $query->getTotal();
         $storyCollection = $query->get();
         $listId = $storyCollection->pluck('id')->toArray();
-        $totalChapers = Chaper::getTotalChapers($listId);
         $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers, $allCategoriesOfStory)  {
+        $listStory = $storyCollection->each(function ($item, $key) use ($now, $allCategoriesOfStory)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->total_chapers = empty($totalChapers[$item->id])?0:$totalChapers[$item->id];
             $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
         })->toArray();
         // dd($listStory);
@@ -82,13 +80,11 @@ class TopStoryController extends Controller
         $count = $query->getTotal();
         $storyCollection = $query->get();
         $listId = $storyCollection->pluck('id')->toArray();
-        $totalChapers = Chaper::getTotalChapers($listId);
         $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers, $allCategoriesOfStory)  {
+        $listStory = $storyCollection->each(function ($item, $key) use ($now, $allCategoriesOfStory)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->total_chapers = empty($totalChapers[$item->id])?0:$totalChapers[$item->id];
             $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
         })->toArray();
         // dd($listStory);
@@ -136,13 +132,11 @@ class TopStoryController extends Controller
         $count = $query->getTotal();
         $storyCollection = $query->get();
         $listId = $storyCollection->pluck('id')->toArray();
-        $totalChapers = Chaper::getTotalChapers($listId);
         $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers, $allCategoriesOfStory)  {
+        $listStory = $storyCollection->each(function ($item, $key) use ($now, $allCategoriesOfStory)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->total_chapers = empty($totalChapers[$item->id])?0:$totalChapers[$item->id];
             $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
         })->toArray();
         // dd($listStory);
@@ -190,13 +184,11 @@ class TopStoryController extends Controller
         $count = $query->getTotal();
         $storyCollection = $query->get();
         $listId = $storyCollection->pluck('id')->toArray();
-        $totalChapers = Chaper::getTotalChapers($listId);
         $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers, $allCategoriesOfStory)  {
+        $listStory = $storyCollection->each(function ($item, $key) use ($now, $allCategoriesOfStory)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->total_chapers = empty($totalChapers[$item->id])?0:$totalChapers[$item->id];
             $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
         })->toArray();
         // dd($listStory);

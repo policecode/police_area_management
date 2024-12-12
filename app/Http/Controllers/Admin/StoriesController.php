@@ -298,6 +298,25 @@ class StoriesController extends Controller
         ]);
     }
 
+    public function autoConvertTotalChapter() {
+        $count = Story::count();
+        $per_page = 100;
+        $totalPage = ceil($count/$per_page);
+        $incrent = 0;
+        for ($page=0; $page < $totalPage; $page++) { 
+            $listStory = Story::skip($page * $per_page)->take($per_page)->get();
+            foreach ($listStory as $key => $story) {
+                $story->total_chapter = Chaper::getByStory($story->id)->count();
+                $story->update();
+                $incrent++;
+            }
+        }
+        return response()->json([
+            'message' => 'Cập nhật thành công: '.$incrent, 
+            'status' => 1,
+        ]);
+    }
+
     public function getthumbnail(Request $request) {
            // $images = Storage::disk('public')->put('example.txt', 'Anh Là Nguyễn Hoàng Đạt');
         // $images = $request->file('thumbnail')->store('stories/thumbnail');
@@ -459,9 +478,11 @@ class StoriesController extends Controller
             if (count($dataInsert) > 0) {
                 $result = Chaper::insert($dataInsert);
                 $last_record = Chaper::orderBy('id', 'DESC')->first();
+                $total_chapter = $story->total_chapter + count($dataInsert);
                 $story->update([
                     'last_chapers' => Carbon::now(),
-                    'chaper_id' => $last_record->id
+                    'chaper_id' => $last_record->id,
+                    'total_chapter' => $total_chapter
                 ]);
             }
             DB::commit();
