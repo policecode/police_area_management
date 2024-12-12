@@ -11,18 +11,17 @@ $option = SettingHelpers::getInstance();
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="{{ empty($description)?$option->getOptionValue('fvn_content_bottom'):$description }}">
-    {{-- <meta name="keywords" content="truyện hay, tiên hiệp, huyền huyễn, khoa huyễn, đô thị, võng du" /> --}}
-    <meta name="robots" content="INDEX,FOLLOW" />
+    <meta name="description"
+        content="{{ empty($description) ? $option->getOptionValue('fvn_content_top') : $description }}">
+    <meta name="keywords" content="truyenfullviet, truyenfullviet.com, truyện hay, tiên hiệp, huyền huyễn, khoa huyễn, đô thị, võng du" />
     <meta name='revisit-after' content='1 days' />
     <meta http-equiv="content-language" content="vi" />
     {{-- <meta name="author" content="" /> --}}
     <link rel="canonical" href="{{ url()->current() }}">
-    {{-- Xác minh google để chèn quảng cáo --}}
-    <meta name="google-adsense-account" content="ca-pub-8382233036922182">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $page_title }}</title>
 
+    <title>{{ $page_title }}</title>
+    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
 
@@ -47,8 +46,10 @@ $option = SettingHelpers::getInstance();
         crossorigin="anonymous"></script>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T1TVNVMFY"></script>
-   {{-- Google analytic --}}
-   <script>
+    {{-- Xác minh google để chèn quảng cáo --}}
+    <meta name="google-adsense-account" content="ca-pub-8382233036922182">
+    {{-- Google analytic --}}
+    <script>
         window.dataLayer = window.dataLayer || [];
 
         function gtag() {
@@ -58,7 +59,8 @@ $option = SettingHelpers::getInstance();
 
         gtag('config', 'G-5T1TVNVMFY');
     </script>
-     @yield('head')
+    {{-- Thêm các thành phần bổ sung --}}
+    @yield('head')
 </head>
 
 <body>

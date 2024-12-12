@@ -1,21 +1,7 @@
 @extends('layouts.client')
 @section('head')
-    <script type="application/ld+json"> 
-    {
-        "@context": "https://schema.org",
-        "@type": "NewsArticle",
-        "headline": "{{ $page_title }}",
-        "image": [
-         ],
-        "datePublished":  "{{ $chaper['created_at'] }}" ,
-        "dateModified":  "{{ $chaper['updated_at'] }}" ,
-        "author": [{
-            "@type": "Person",
-            "name": "{{ $story['author_name'] }}",
-            "url": "{{ route('client.author', ['author_slug' => $story['author_slug']]) }}"
-          }]
-      }
-    </script>
+    <meta name="robots" content="all" />
+    <meta name="googlebot" content="all">
 @endsection
 @section('content')
     <script>
@@ -44,8 +30,7 @@
                     </button>
 
                     <div class="choose__option_chapter me-1 w-50 d-none">
-                        <select class="form-select btn btn-success"
-                            onchange="location = this.value;">
+                        <select class="form-select btn btn-success" onchange="location = this.value;">
                             @foreach ($chaper_list as $item)
                                 <option
                                     value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
@@ -57,8 +42,7 @@
                         <span class="d-none d-sm-block">Chương tiếp</span>
                         <i class="fa-solid fa-chevron-right d-sm-none"></i>
                     </a>
-                    <button class="chapter_setting btn btn-success ms-1"
-                        title="cài đặt">
+                    <button class="chapter_setting btn btn-success ms-1" title="cài đặt">
                         <span>
                             <i class="fa-solid fa-gear"></i>
                         </span>
@@ -104,8 +88,7 @@
                     </button>
 
                     <div class="choose__option_chapter me-1 w-50 d-none">
-                        <select class="form-select btn btn-success"
-                            onchange="location = this.value;">
+                        <select class="form-select btn btn-success" onchange="location = this.value;">
                             @foreach ($chaper_list as $item)
                                 <option
                                     value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
@@ -133,8 +116,7 @@
                 </button>
 
                 <div class="choose__option_chapter me-1 w-100 d-none">
-                    <select class="form-select btn btn-success"
-                        onchange="location = this.value;">
+                    <select class="form-select btn btn-success" onchange="location = this.value;">
                         @foreach ($chaper_list as $item)
                             <option
                                 value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
@@ -239,7 +221,9 @@
             watch: {
                 'styles.fontSize'(newVal) {
                     LocalStorageHelper.set('chaper_font_size', newVal);
-                    $('.chapter-content').css({'font-size': newVal+'px'});
+                    $('.chapter-content').css({
+                        'font-size': newVal + 'px'
+                    });
                 }
             },
         });
@@ -247,6 +231,6 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('frontend/js/chapter.js?v='.FVN_VERSION_LARAVEL) }}"></script>
-    <script src="{{ asset('assets/js/website_security.js?v='.FVN_VERSION_LARAVEL) }}"></script>
+    <script src="{{ asset('frontend/js/chapter.js?v=' . FVN_VERSION_LARAVEL) }}"></script>
+    <script src="{{ asset('assets/js/website_security.js?v=' . FVN_VERSION_LARAVEL) }}"></script>
 @endsection

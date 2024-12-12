@@ -50,13 +50,13 @@ class CategoriesController extends Controller
                 "title" => "Trang chủ",
                 "url" => route('index', [])
             ],
-            [
-                "title" => 'Thể loại',
-                "url" => ''
-            ],
+            // [
+            //     "title" => 'Thể loại',
+            //     "url" => ''
+            // ],
             [
                 "title" => $category['name'],
-                "url" => ''
+                "url" => route('client.tag', ['tag_slug' => $tag_slug])
             ]
         ];
 

@@ -313,13 +313,18 @@ $user = Auth::user();
         <div class="container py-1">
             @if (!empty($breadcrumb))
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" style="margin-bottom: 0;">
+                    <ol itemscope itemtype="https://schema.org/BreadcrumbList" class="breadcrumb" style="margin-bottom: 0;">
                         @foreach ($breadcrumb as $item)
                             @if ($item['title'] && $item['url'])
-                                <li class="breadcrumb-item"><a href="{{ $item['url'] }}">{{ $item['title'] }}</a>
+                                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumb-item">
+                                    <a itemprop="item" href="{{ $item['url'] }}">
+                                        <span itemprop="name">{{ $item['title'] }}</span>
+                                    </a>
                                 </li>
                             @else
-                                <li class="breadcrumb-item active" aria-current="page">{{ $item['title'] }}</li>
+                                <li temprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumb-item active" aria-current="page">
+                                    <span itemprop="name">{{ $item['title'] }}</span>
+                                </li>
                             @endif
                         @endforeach
                     </ol>

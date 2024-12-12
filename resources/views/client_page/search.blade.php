@@ -1,19 +1,7 @@
 @extends('layouts.client')
 @section('head')
-    <script type="application/ld+json"> 
-        {
-            "@context": "https://schema.org",
-            "@type": "NewsArticle",
-            "headline": "{{ $page_title }}",
-            "image": [
-             ],
-            "author": [{
-                "@type": "Person",
-                "name": "Truyện Full Việt",
-                "url": "{{ route('index') }}"
-              }]
-          }
-    </script>
+    <meta name="robots" content="none" />
+    <meta name="googlebot" content="none">
 @endsection
 @section('content')
     <main>
@@ -24,7 +12,7 @@
                         <div class="col-12 col-md-12 col-lg-12 head-title-global__left d-flex">
                             <h1 class="me-2 mb-0 border-bottom border-secondary pb-1">
                                 <span class="d-block text-decoration-none text-dark fs-4 category-name"
-                                    title="{{$keyword}}">Tìm kiếm với từ khóa: {{$keyword}}</span>
+                                    title="{{ $keyword }}">Tìm kiếm với từ khóa: {{ $keyword }}</span>
                             </h1>
                         </div>
                     </div>
@@ -56,21 +44,22 @@
                                         </div>
                                     </a>
                                     <div class="content ms-2">
-                                        <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" class="fs-4 text-dark text-capitalize fw-semibold text-decoration-none">
+                                        <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
+                                            class="fs-4 text-dark text-capitalize fw-semibold text-decoration-none">
                                             <i class="fa-solid fa-book-open"></i>
                                             {{ $item['title'] }}
                                         </a>
                                         <div class="card-text">
                                             <i class="fa-solid fa-pencil"></i>
-                                            {{$item['author_name']}}
+                                            {{ $item['author_name'] }}
                                         </div>
                                         <div class="card-text">
                                             <i class="fa-solid fa-list-ol"></i>
-                                            {{$item['total_chapers']}} Chương
+                                            {{ $item['total_chapers'] }} Chương
                                         </div>
                                         <div class="card-text">
                                             <i class="fa-regular fa-clock"></i>
-                                            <i>{{get_string_after_time($item['last_update'])}}</i>
+                                            <i>{{ get_string_after_time($item['last_update']) }}</i>
                                         </div>
                                     </div>
                                 </div>

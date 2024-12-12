@@ -1,19 +1,7 @@
 @extends('layouts.client')
 @section('head')
-    <script type="application/ld+json"> 
-        {
-            "@context": "https://schema.org",
-            "@type": "NewsArticle",
-            "headline": "{{ $page_title }}",
-            "image": [
-             ],
-            "author": [{
-                "@type": "Person",
-                "name": "Truyện Full Việt",
-                "url": "{{ route('index') }}"
-              }]
-          }
-    </script>
+    <meta name="robots" content="all" />
+    <meta name="googlebot" content="all">
 @endsection
 @section('content')
     <main>

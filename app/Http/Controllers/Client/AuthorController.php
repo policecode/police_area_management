@@ -43,13 +43,13 @@ class AuthorController extends Controller
                 "title" => "Trang chủ",
                 "url" => route('index', [])
             ],
-            [
-                "title" => 'Tác giả',
-                "url" => ''
-            ],
+            // [
+            //     "title" => 'Tác giả',
+            //     "url" => ''
+            // ],
             [
                 "title" => $author['name'],
-                "url" => ''
+                "url" => route('client.author', ['author_slug' => $author_slug])
             ]
         ];
 

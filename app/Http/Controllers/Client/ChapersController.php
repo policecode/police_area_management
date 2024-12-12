@@ -41,7 +41,7 @@ class ChapersController extends Controller
             # code...
         }
         $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]);
-        $chaper['content'] = $this->addAdsToContent($chaper['content']);
+        // $chaper['content'] = $this->addAdsToContent($chaper['content']);
         $story['link'] = route('client.story', ['story_slug' => $story['slug']]);
         $breadcrumb = [
             [

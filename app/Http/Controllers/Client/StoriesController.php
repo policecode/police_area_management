@@ -45,15 +45,13 @@ class StoriesController extends Controller
         ];
 
         // Title Header
-        $page_title = ucwords($story['title']).' - '.ucwords($story['author_name']);
+        $page_title = ucwords($story['title']).' | '.ucwords($story['author_name']);
         $isResult = strpos($story['title'], '(c)');
         $subTitle = '';
         if ($isResult) {
-            $page_title = 'Truyện Convert '.$page_title;
-            $subTitle = '<span class="text-success">[Convert]</span>';
+            $subTitle = '<span class="text-success">Convert</span>';
         } else {
-            $page_title = 'Truyện Dịch '.$page_title;
-            $subTitle = '<span class="text-info">[Dịch]</span>';
+            $subTitle = '<span class="text-info">Dịch</span>';
         }
 
         // Desccription Header

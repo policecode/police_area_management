@@ -50,6 +50,11 @@ class CreateSiteMap extends Command
         // add items to the sitemap (url, date, priority, freq)
         $sitemap->add(route('index'), Carbon::now(), '1.0', 'daily');
 
+        $stories = Story::orderBy('updated_at', 'desc')->get();
+        foreach ($stories as $item) {
+            $sitemap->add(route('client.story', ['story_slug' => $item->slug]), Carbon::now(), '1.0', 'daily');
+        }
+        
         $categories = Category::orderBy('id', 'desc')->get();
         foreach ($categories as $category) {
             $sitemap->add(route('client.tag', ['tag_slug' => $category->slug]), Carbon::now(), '0.8', 'daily');
@@ -60,15 +65,12 @@ class CreateSiteMap extends Command
             $sitemap->add(route('client.author', ['author_slug' => $author->slug]), Carbon::now(), '0.8', 'daily');
         }
 
-        $totalChapters = TotalChapter::asArray();
-        foreach ($totalChapters as $item) {
-            $sitemap->add(route('client.total-chapter', ['slug_total' => $item['key']]), Carbon::now(), '0.8', 'daily');
-        }
+        // $totalChapters = TotalChapter::asArray();
+        // foreach ($totalChapters as $item) {
+        //     $sitemap->add(route('client.total-chapter', ['slug_total' => $item['key']]), Carbon::now(), '0.8', 'daily');
+        // }
 
-        $stories = Story::orderBy('updated_at', 'desc')->get();
-        foreach ($stories as $item) {
-            $sitemap->add(route('client.story', ['story_slug' => $item->slug]), Carbon::now(), '0.7', 'daily');
-        }
+   
 
         // generate your sitemap (format, filename)
         $sitemap->store('xml', 'sitemap');

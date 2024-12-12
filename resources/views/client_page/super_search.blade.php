@@ -4,20 +4,8 @@ use App\Enums\CategoryType;
 ?>
 @extends('layouts.client')
 @section('head')
-    <script type="application/ld+json"> 
-        {
-            "@context": "https://schema.org",
-            "@type": "NewsArticle",
-            "headline": "{{ $page_title }}",
-            "image": [
-             ],
-            "author": [{
-                "@type": "Person",
-                "name": "Truyện Full Việt",
-                "url": "{{ route('index') }}"
-              }]
-          }
-    </script>
+    <meta name="robots" content="none" />
+    <meta name="googlebot" content="none">
 @endsection
 @section('content')
     <script src="{{ asset('assets/js/vue-input.js') }}"></script>

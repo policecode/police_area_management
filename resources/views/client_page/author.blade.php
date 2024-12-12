@@ -1,5 +1,7 @@
 @extends('layouts.client')
 @section('head')
+    <meta name="robots" content="all" />
+    <meta name="googlebot" content="all">
     <script type="application/ld+json"> 
         {
             "@context": "https://schema.org",

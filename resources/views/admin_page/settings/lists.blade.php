@@ -6,6 +6,7 @@
     <script src="{{ asset('assets/js/vue.js') }}"></script>
     <script src="{{ asset('assets/js/routeapi.js') }}"></script>
     <script src="{{ asset('assets/js/vue-input.js') }}"></script>
+    @include('parts.template.importQuilleditor')
     <script>
         var options = {{ Illuminate\Support\Js::from($options) }};
 
@@ -56,15 +57,13 @@
                         <tr>
                             <th>Content top</th>
                             <td>
-                                <input type="text" v-model="itemDetail.fvn_content_top" class="form-control"
-                                    :class={'is-invalid':errors.title} placeholder="Nội dung giới thiệu trên header...">
+                                <fvn-text-editor v-model="itemDetail.fvn_content_top" label="Nội dung giới thiệu trên header..." class="bg-light"></fvn-text-editor>
                             </td>
                         </tr>
                         <tr>
                             <th>Content bottom</th>
                             <td>
-                                <input type="text" v-model="itemDetail.fvn_content_bottom" class="form-control"
-                                    :class={'is-invalid':errors.title} placeholder="Nội dung giới thiệu ở cuối trang web...">
+                                <fvn-text-editor v-model="itemDetail.fvn_content_bottom" label="Nội dung giới thiệu ở cuối trang web..." class="bg-light"></fvn-text-editor>
                             </td>
                         </tr>
                     </tbody>

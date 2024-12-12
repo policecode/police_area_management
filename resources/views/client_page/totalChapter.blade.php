@@ -1,19 +1,7 @@
 @extends('layouts.client')
 @section('head')
-    <script type="application/ld+json"> 
-        {
-            "@context": "https://schema.org",
-            "@type": "NewsArticle",
-            "headline": "{{ $page_title }}",
-            "image": [
-             ],
-            "author": [{
-                "@type": "Person",
-                "name": "Truyện Full Việt",
-                "url": "{{ route('index') }}"
-              }]
-          }
-    </script>
+    <meta name="robots" content="none" />
+    <meta name="googlebot" content="none">
 @endsection
 @section('content')
     <main>
@@ -56,21 +44,22 @@
                                         </div>
                                     </a>
                                     <div class="content ms-2">
-                                        <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" class="fs-4 text-dark text-capitalize fw-semibold text-decoration-none">
+                                        <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
+                                            class="fs-4 text-dark text-capitalize fw-semibold text-decoration-none">
                                             <i class="fa-solid fa-book-open"></i>
                                             {{ $item['title'] }}
                                         </a>
                                         <div class="card-text">
                                             <i class="fa-solid fa-pencil"></i>
-                                            {{$item['author_name']}}
+                                            {{ $item['author_name'] }}
                                         </div>
                                         <div class="card-text">
                                             <i class="fa-solid fa-list-ol"></i>
-                                            {{$item['total_chapter']}} Chương
+                                            {{ $item['total_chapter'] }} Chương
                                         </div>
                                         <div class="card-text">
                                             <i class="fa-regular fa-clock"></i>
-                                            <i>{{get_string_after_time($item['last_update'])}}</i>
+                                            <i>{{ get_string_after_time($item['last_update']) }}</i>
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +67,7 @@
                             </div>
                         @endforeach
                     </div>
-          
+
                     @include('parts.template.paging_client')
                 </div>
                 <div class="col-12 col-md-4 col-lg-3 d-none d-sm-block">
