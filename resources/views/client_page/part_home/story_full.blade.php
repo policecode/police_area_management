@@ -37,7 +37,7 @@
             </div>
 
             <div class="col-12 mt-3">
-                @include('parts.ads.adsense_v5')
+                @include('parts.ads.adsense_v4')
             </div>
 
         </div>

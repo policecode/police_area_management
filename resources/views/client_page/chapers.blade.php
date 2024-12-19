@@ -1,7 +1,7 @@
 @extends('layouts.client')
 @section('head')
-    <meta name="robots" content="all" />
-    <meta name="googlebot" content="all">
+    <meta name="robots" content="none" />
+    <meta name="googlebot" content="none">
 @endsection
 @section('content')
     <script>
