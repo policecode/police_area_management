@@ -778,6 +778,18 @@ body::-webkit-scrollbar-thumb {
   right: 15px;
 }
 
+.bottom-0 {
+  bottom: 0px;
+}
+
+.bottom-1 {
+  bottom: 0.25rem;
+}
+
+.bottom-1\/2 {
+  bottom: 50%;
+}
+
 .top-0 {
   top: 0px;
 }
@@ -1020,11 +1032,11 @@ body::-webkit-scrollbar-thumb {
 }
 
 .block {
-  display: block;
+  display: block !important;
 }
 
 .inline-block {
-  display: inline-block;
+  display: inline-block !important;
 }
 
 .inline {
@@ -1056,7 +1068,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .h-10 {
@@ -2914,7 +2926,7 @@ body::-webkit-scrollbar-thumb {
   }
 
   .sm\:hidden {
-    display: none;
+    display: none !important;
   }
 
   .sm\:w-\[22\%\] {
@@ -3066,7 +3078,7 @@ body::-webkit-scrollbar-thumb {
   }
 
   .lg\:block {
-    display: block;
+    display: block !important;
   }
 
   .lg\:w-\[200px\] {
@@ -3168,7 +3180,7 @@ body::-webkit-scrollbar-thumb {
   }
 
   .xl\:block {
-    display: block;
+    display: block !important;
   }
 
   .xl\:table {
@@ -3176,7 +3188,7 @@ body::-webkit-scrollbar-thumb {
   }
 
   .xl\:hidden {
-    display: none;
+    display: none !important;
   }
 
   .xl\:w-\[200px\] {

@@ -3,9 +3,9 @@
 <script>
     var groups = {{ Illuminate\Support\Js::from($groups) }};
 </script>
-    <script src="{{ asset('assets/js/vue.js') }}"></script>
-    <script src="{{ asset('assets/js/routeapi.js') }}"></script>
-    <script src="{{ asset('assets/js/vue-input.js') }}"></script>
+    <script src="{{ asset('assets_global/js/vue.js') }}"></script>
+    <script src="{{ asset('assets_global/js/routeapi.js') }}"></script>
+    <script src="{{ asset('assets_global/js/vue-input.js') }}"></script>
     <div id="app">
         <template v-if="screen=='list'">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">

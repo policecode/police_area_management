@@ -6,12 +6,12 @@ use App\Enums\GroupsEnum;
     <script>
         var groups = {{ Illuminate\Support\Js::from(GroupsEnum::getInstances()) }};
     </script>
-    <script src="{{ asset('assets/js/vue.js') }}"></script>
-    <script src="{{ asset('assets/js/routeapi.js') }}"></script>
-    <script src="{{ asset('assets/js/vue-input.js') }}"></script>
+    <script src="{{ asset('assets_global/js/vue.js') }}"></script>
+    <script src="{{ asset('assets_global/js/routeapi.js') }}"></script>
+    <script src="{{ asset('assets_global/js/vue-input.js') }}"></script>
     @include('parts.template.importQuilleditor')
-    <script src="{{ asset('assets/js/vue-multiselect.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('assets/css/vue-multiselect.min.css') }}">
+    <script src="{{ asset('assets_global/js/vue-multiselect.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets_global/css/vue-multiselect.min.css') }}">
 
     <div id="app">
         <template v-if="screen=='list'">

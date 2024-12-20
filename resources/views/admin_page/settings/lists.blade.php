@@ -3,9 +3,9 @@
 ?>
 @extends('layouts.backend')
 @section('content')
-    <script src="{{ asset('assets/js/vue.js') }}"></script>
-    <script src="{{ asset('assets/js/routeapi.js') }}"></script>
-    <script src="{{ asset('assets/js/vue-input.js') }}"></script>
+    <script src="{{ asset('assets_global/js/vue.js') }}"></script>
+    <script src="{{ asset('assets_global/js/routeapi.js') }}"></script>
+    <script src="{{ asset('assets_global/js/vue-input.js') }}"></script>
     @include('parts.template.importQuilleditor')
     <script>
         var options = {{ Illuminate\Support\Js::from($options) }};

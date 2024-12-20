@@ -1,6 +1,6 @@
 <?php
 use App\Http\Helpers\SettingHelpers;
-// use App\Enums\TotalChapter;
+use App\Enums\TotalChapter;
 use Illuminate\Support\Facades\Auth;
 
 $option = SettingHelpers::getInstance();
@@ -267,32 +267,6 @@ $user = Auth::user();
                     dẫn</a>
                 {{-- <a href="dang-nhap.html" title="Đăng truyện" class="link text-[#128c7e] mr-4 last:mr-0">Đăng
                     truyện</a> --}}
-            </div>
-        </div>
-    </div>
-    <div class="header-nav bg-[#343a40]">
-        <div class="container flex items-center justify-between">
-            <div class="flex items-center menu menu-left">
-                <span class="head-cate inline-block px-2 py-[0.625rem] text-white text-[0.875rem]"
-                    modal-rs-target="modal_cate">
-                    <i class="mr-2 fa-solid fa-bars"></i> Thể loại
-                </span>
-                <ul>
-                    <li><a href="{{route('client.full-story')}}" title="">Hoàn thành</a></li>
-                    <li><a href="{{route('client.new-update')}}" title="">Truyện mới</a></li>
-                    <li><a href="{{route('client.hot-story')}}" title="">Truyện hay</a></li>
-                    <li><a href="{{route('client.view-story')}}" title="">Xem nhiều</a></li>
-
-                    {{-- <li><a href="https://forum.banlong.us/" title="">Giao diện cũ</a></li>
-                    <li><a href="https://www.facebook.com/banlonghoi/" title="Facebook fanpage"
-                            target="_blank">Facebook</a></li> --}}
-                </ul>
-            </div>
-            <div class="menu menu-right hidden xl:block">
-                <ul>
-                    <li><a href="{{route('client.huongdan')}}" title="Hướng dẫn">Hướng dẫn</a></li>
-                    {{-- <li><a href="dang-nhap.html" title="Đăng truyện">Đăng truyện</a></li> --}}
-                </ul>
             </div>
         </div>
     </div>

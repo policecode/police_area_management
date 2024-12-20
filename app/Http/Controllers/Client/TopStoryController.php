@@ -219,4 +219,23 @@ class TopStoryController extends Controller
         );
         return view('client_page.top_story', $dataView);
     }
+
+    public function huongdan(Request $request)
+    {
+        $breadcrumb = [
+            [
+                "title" => "Trang chủ",
+                "url" => route('index', [])
+            ],
+            [
+                "title" => 'Truyện Full',
+                "url" => route('client.huongdan')
+            ]
+        ];
+        $dataView = array(
+            'page_title' => "Hướng Dẫn",
+            'breadcrumb' => $breadcrumb,
+        );
+        return view('client_page.huong_dan', $dataView);
+    }
 }

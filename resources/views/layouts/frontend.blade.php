@@ -52,9 +52,10 @@ $option = SettingHelpers::getInstance();
     <link href="{{ asset('assets/css/main0841.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('assets/frontend/css/appb0ac.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
 
-    {{-- <script src="{{ asset('assets_global/js/jQuery3.6.0.min.js') }}"></script> --}}
+    <script src="{{ asset('assets_global/js/jQuery3.6.0.min.js') }}"></script>
     <script src="{{ asset('assets_global/js/vue.js') }}"></script>
     <script src="{{ asset('assets_global/js/routeapi.js?v='.FVN_VERSION_LARAVEL) }}"></script>
+
     <script>
         var typeNotify = "";
         var messageNotify = "";
