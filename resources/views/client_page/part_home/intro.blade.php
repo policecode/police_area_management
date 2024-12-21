@@ -85,8 +85,7 @@
                                     <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="{{$item['title']}}"
                                         class="link block c-img pt-[50%]">
                                         <picture>
-                                            <img loading="auto" src="{{$item['thumbnail']}}"
-                                                class="img-fluid" style="object-fit: contain;">
+                                            <img loading="auto" src="{{$item['thumbnail']}}" class="img-fluid" style="object-fit: contain;">
                                         </picture>
                                         <h3 class="flex items-center justify-center py-2 hover:text-[#252525] absolute left-0 right-0 bottom-0 z-[100] bg-[#fff]">
                                             <span class="title inline-block">{{ucwords($item['title'])}}</span>
@@ -100,15 +99,14 @@
                 <div class="swiper-container slide-cate__thumbs">
                     <div class="swiper-wrapper">
                         @foreach ($hot_stories as $key => $item)
-                                @if ($key > 5)
-                                    @break
-                                @else
-                                    <div class="swiper-slide h-auto">
-                                        <div
-                                            class="item text-center cursor-pointer text-white lg:text-[0.875rem] bg-[rgba(0,0,0,.8)] p-2 h-full">{{'0'.($key + 1)}}</div>
-                                    </div>
-                                @endif
-                            @endforeach
+                            @if ($key > 5)
+                                @break
+                            @else
+                                <div class="swiper-slide h-auto">
+                                    <div class="item text-center cursor-pointer text-white lg:text-[0.875rem] bg-[rgba(0,0,0,.8)] p-2 h-full">{{'0'.($key + 1)}}</div>
+                                </div>
+                            @endif
+                        @endforeach
                         
                     </div>
                 </div>

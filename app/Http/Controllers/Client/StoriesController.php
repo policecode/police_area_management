@@ -185,13 +185,14 @@ class StoriesController extends Controller
                 $res['total'] = $query->getTotal();
             }else{
                 $colection = $query->joinStory()->get();
-                $story_arr= $colection->pluck('id');
-                $listStoryCat = StoryCategory::getListCategoryByStory( $story_arr);
-                $res['data']  = $colection->each(function ($item, $key) use($listStoryCat) {
-                    $item->url = route('client.story', [
-                        'story_slug' => $item->slug,
-                    ]);
-                    $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+                // $story_arr= $colection->pluck('id');
+                // $listStoryCat = StoryCategory::getListCategoryByStory( $story_arr);
+                $res['data']  = $colection->each(function ($item, $key) {
+                    $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                    $item->url = route('client.story', ['story_slug' => $item->slug]);
+                    $item->author_url = route('client.author', ['author_slug' => $item['author_slug']]);
+                    // $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+                    
                 });
             }
             return response()->json($res);

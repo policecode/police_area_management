@@ -24,29 +24,55 @@ class HomeController extends Controller
         $option = SettingHelpers::getInstance();
         $now = Carbon::now();
         // Truyện hot
-        $hot_stories = Story::where('star_average', '>', 7)->orderBy('star_average', 'DESC')->skip(0)->take(15)->get()->each(function ($item, $key) use ($now) {
+        $hot_stories = Story::joinAuthor()->where('star_average', '>', 7)->orderBy('star_average', 'DESC')->skip(0)->take(14)->get()->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $dt = new Carbon($item->created_at); //Tạo 1 datetime
             $item->after_day = $now->diffInDays($dt);;
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
+        })->toArray();
+        // Truyện Mới
+        $new_stories = Story::joinAuthor()->orderBy('created_at', 'DESC')->skip(0)->take(15)->get();
+        $new_stories = $new_stories->each(function ($item, $key) use ($now) {
+            $item->thumbnail = route('index') . '/' . $item->thumbnail;
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
         // Chương truyện mới
-        $new_stories = Story::joinChapers()->orderBy('last_chapers', 'DESC')->skip(0)->take(15)->get();
-
-        $story_arr= $new_stories->pluck('id');
-        $listStoryCat = StoryCategory::getListCategoryByStory( $story_arr);
-
-        $new_stories = $new_stories->each(function ($item, $key) use ($now, $listStoryCat) {
+        $new_chapters = Story::joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(15)->get();
+        // $story_arr= $new_chapter->pluck('id');
+        // $listStoryCat = StoryCategory::getListCategoryByStory( $story_arr);
+        $new_chapters = $new_chapters->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->after_minutes = $now->diffInMinutes(new Carbon($item->last_chapers));
-            $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+            // $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
-
         // Truyện đã hoàn thành
 
-        $full_stories_collection = Story::where('status', StatusStory::FULL['key'])->inRandomOrder()->orderBy('id', 'DESC')->skip(0)->take(16)->get();
+        $full_stories_collection = Story::joinAuthor()->where('status', StatusStory::FULL['key'])->inRandomOrder()->orderBy('id', 'DESC')->skip(0)->take(14)->get();
         $full_stories = $full_stories_collection->each(function ($item, $key) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
         // Truyện convert
         $convert_stories_collection = Story::where('title', 'LIKE', "%(c)%")->inRandomOrder()->orderBy('id', 'DESC')->skip(0)->take(16)->get();
@@ -57,6 +83,7 @@ class HomeController extends Controller
             'page_title' => $option->getOptionValue('fvn_web_title').' - Trang chủ',
             'hot_stories' => $hot_stories,
             'new_stories' => $new_stories,
+            'new_chapters' => $new_chapters,
             'full_stories' => $full_stories,
             'convert_stories' => $convert_stories
         );

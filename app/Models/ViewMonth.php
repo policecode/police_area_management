@@ -34,9 +34,12 @@ class ViewMonth extends Model
         if ($this->joinStory ) {
             return $query;
         }
-        $query->select('stories.*', 'view_months.view', 'view_months.key')
+        $query->select('stories.*', 'view_months.view', 'view_months.key', 'authors.name AS author_name', 'authors.slug AS author_slug')
         ->leftJoin('stories', function($join) {
             $join->on('view_months.story_id', '=', 'stories.id');
+        })
+        ->leftJoin('authors', function($join) {
+            $join->on('stories.author_id', '=', 'authors.id');
         });
         $this->joinStory = true;
         return $query;

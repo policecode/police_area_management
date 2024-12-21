@@ -25,7 +25,7 @@ class Story extends Model
     private $joinAuthor = false;
     private $joinCategories = false;
     private $joinLastChapers = false;
-
+    private $joinAuthorAndChapter = false;
     public function categories() {
         return $this->belongsToMany(Category::class, 'story_categories', 'story_id', 'category_id');
     }
@@ -47,6 +47,21 @@ class Story extends Model
     }
     public function scopeGetByAuthor($query, $author_id) {
         $query->where('stories.author_id', $author_id);
+        return $query;
+    }
+
+    public function scopeJoinAuthorAndChapter($query) {
+        if ($this->joinAuthorAndChapter ) {
+            return $query;
+        }
+        $query->select('stories.*', 'authors.name AS author_name', 'authors.slug AS author_slug', 'chapers.name AS chaper_name', 'chapers.slug AS chaper_slug', 'chapers.position')
+        ->leftJoin('authors', function($join) {
+            $join->on('stories.author_id', '=', 'authors.id');
+        })
+        ->leftJoin('chapers', function($join) {
+            $join->on('stories.chaper_id', '=', 'chapers.id');
+        });
+        $this->joinAuthorAndChapter = true;
         return $query;
     }
 
