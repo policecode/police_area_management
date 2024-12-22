@@ -11,7 +11,7 @@ $categories = get_all_categories();
         <ul class="flex flex-wrap">
             @foreach ($categories as $item)
                 <li class="basis-1/2 md:basis-1/4 lg:basis-1/6">
-                    <a href="{{ route('client.tag', ['tag_slug' => $item['slug']]) }}l" title="{{ $item['name'] }}c" class="block p-2">{{ $item['name'] }}</a>
+                    <a href="{{ route('client.tag', ['tag_slug' => $item['slug']]) }}" title="{{ $item['name'] }}c" class="block p-2">{{ $item['name'] }}</a>
                 </li>
             @endforeach
 

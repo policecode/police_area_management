@@ -66,10 +66,14 @@ function getQuery($name='', $default = '') {
 function get_string_after_time($after_minutes) {
     if ($after_minutes < 60) {
         return $after_minutes.' phút trước';
-    } else if ($after_minutes < 1440) {
+    } else if ($after_minutes < 60*24) {
         return floor($after_minutes/60).' giờ trước';
-    } else {
+    } else if ($after_minutes < 60*24*30){
         return floor($after_minutes/(60*24)).' ngày trước';
+    } else if ($after_minutes < 60*24*30*365){
+        return floor($after_minutes/(60*24*30)).' tháng trước';
+    } else {
+        return floor($after_minutes/(60*24*30*365)).' năm trước';
     }
 }
 

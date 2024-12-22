@@ -147,12 +147,16 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
 // 'throttle:30,1', visit_website
 Route::group(['middleware' => ['throttle:60,1']], function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
+    Route::get('pages/huong-dan', [HomeController::class, 'huongdan'])->name('client.huong-dan');
+    Route::get('pages/dieu-khoan-dich-vu', [HomeController::class, 'dieukhoandichvu'])->name('client.dieu-khoan-dich-vu');
+    Route::get('pages/ban-quyen', [HomeController::class, 'banquyen'])->name('client.ban-quyen');
+    Route::get('pages/chinh-sach-bao-mat', [HomeController::class, 'chinhsachbaomat'])->name('client.chinh-sach-bao-mat');
+    Route::get('pages/lien-he', [HomeController::class, 'lienhe'])->name('client.lien-he');
     
     Route::get('/truyen-moi-cap-nhat', [TopStoryController::class, 'newUpdateStory'])->name('client.new-update');
     Route::get('/truyen-hot', [TopStoryController::class, 'hotStory'])->name('client.hot-story');
     Route::get('/truyen-full', [TopStoryController::class, 'fullStory'])->name('client.full-story');
     Route::get('/truyen-xem-nhieu', [TopStoryController::class, 'viewStory'])->name('client.view-story');
-    Route::get('/huong-dan', [TopStoryController::class, 'huongdan'])->name('client.huongdan');
 
     Route::get('/search', [SearchController::class, 'index'])->name('client.search');
     Route::get('/super-search', [SearchController::class, 'superSearch'])->name('client.superSearch');

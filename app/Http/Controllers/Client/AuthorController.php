@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Author;
 use App\Models\Story;
+use App\Models\StoryCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,7 @@ class AuthorController extends Controller
         $option = SettingHelpers::getInstance();
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 25,
+            'per_page' => 100,
             'order_by' => 'title',
             'order_type' => 'ASC'
         );
@@ -33,9 +34,19 @@ class AuthorController extends Controller
         $now = Carbon::now();
         $query = Story::getByAuthor($author['id']);
         $count = $query->count();
-        $listStory = $query->filter($request)->get()->each(function ($item, $key) use ($now)  {
+        $storyCollection = $query->filter($request)->get();
+        $listId = $storyCollection->pluck('id')->toArray();
+        $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
+        $listStory = $storyCollection->each(function ($item, $key) use ($now, $allCategoriesOfStory)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
+             $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+             $isResult = strpos($item->title, '(c)');
+             if ($isResult) {
+                 $item->is_convert = true;
+             } else {
+                 $item->is_convert = false;
+             }
         })->toArray();
         // dd($listStory);
         $breadcrumb = [

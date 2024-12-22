@@ -1,6 +1,6 @@
 <?php
 use App\Http\Helpers\SettingHelpers;
-use App\Enums\TotalChapter;
+// use App\Enums\TotalChapter;
 use Illuminate\Support\Facades\Auth;
 
 $option = SettingHelpers::getInstance();
@@ -8,7 +8,6 @@ $all_categories = get_all_categories();
 // $totalChapter = TotalChapter::asArray();
 $user = Auth::user();
 ?>
-<h1 class="hidden">Truyện Full Việt</h1>
 <header id="client_sidebar_app" class="header">
     <div class="header-top bg-[#f8f9fa] py-2">
         <div class="container flex items-center justify-between">
@@ -96,7 +95,7 @@ $user = Auth::user();
                                 alt="Tủ truyện">
                         </a>
                     </li>
-                    <li class="mr-5 last:mr-0 btn-login">
+                    {{-- <li class="mr-5 last:mr-0 btn-login">
                         <div class="block xl:hidden">
                             <div class="user sm:relative flex show-info-user">
                                 <span
@@ -111,8 +110,7 @@ $user = Auth::user();
                                             alt="Truyện Full Việt" class="img-fluid">
                                     </picture>
                                 </span>
-                                <div
-                                    class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
+                                <div class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
                                     <div class="box p-2 rounded-lg border border-solid border-[#128c7e] bg-white">
                                         <div class="box-info flex">
                                             <div class="info-user flex-1 text-center">
@@ -144,7 +142,7 @@ $user = Auth::user();
                                 <span>Đăng ký</span>
                             </a>
                         </div>
-                    </li>
+                    </li> --}}
                     <li class="mr-5 last:mr-0 menu-mobile block xl:hidden relative">
                         <span class="show-menu-mobile flex cursor-pointer">
                             <svg viewBox='0 0 30 30' class="w-[30px]" xmlns='http://www.w3.org/2000/svg'>
@@ -165,12 +163,12 @@ $user = Auth::user();
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
                                 </form>
-                                <a href="{{route('client.huongdan')}}" title="Hướng dẫn" class="link text-[#128c7e]">Hướng
+                                <a href="{{route('client.huong-dan')}}" title="Hướng dẫn" class="link text-[#128c7e]">Hướng
                                     dẫn</a>
                             </div>
                             <hr class="w-full h-[1px] bg-[#128c7e] my-2">
                             <ul>
-                                <li>
+                                {{-- <li>
                                     <a href="dang-nhap.html" class="inline-block" title="Đăng nhập">
                                         <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
                                         <span>Đăng nhập</span>
@@ -181,10 +179,12 @@ $user = Auth::user();
                                         <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
                                         <span>Đăng ký</span>
                                     </a>
+                                </li> --}}
+                                <li>
+                                    <a href="javascript:void(0)" modal-rs-target="modal_cate" title="Thể loại">Thể loại</a>
                                 </li>
-                                <li><a href="javascript:void(0)" modal-rs-target="modal_cate" title="Thể loại">Thể
-                                        loại</a></li>
-                                <li><a href="{{route('client.full-story')}}" title="Hoàn thành">Hoàn thành</a>
+                                <li>
+                                    <a href="{{route('client.full-story')}}" title="Hoàn thành">Hoàn thành</a>
                                 </li>
                             </ul>
                             <hr class="w-full h-[1px] bg-[#128c7e] mb-2">
@@ -263,7 +263,7 @@ $user = Auth::user();
                 </div>
             </form>
             <div class="flex items-center">
-                <a href="{{route('client.huongdan')}}" title="Hướng dẫn" class="link text-[#128c7e] mr-4 last:mr-0">Hướng
+                <a href="{{route('client.huong-dan')}}" title="Hướng dẫn" class="link text-[#128c7e] mr-4 last:mr-0">Hướng
                     dẫn</a>
                 {{-- <a href="dang-nhap.html" title="Đăng truyện" class="link text-[#128c7e] mr-4 last:mr-0">Đăng
                     truyện</a> --}}
@@ -277,7 +277,6 @@ $user = Auth::user();
         loading: false,
         items: [],
         msgSearch: '',
-        // isThemeLight: LocalStorageHelper.get('sidebar_theme_web', false),
         querySearch: {
             total: 0,
             page: 1,
@@ -293,7 +292,6 @@ $user = Auth::user();
         el: '#client_sidebar_app',
         data: vue_client_sidebar_app,
         mounted: function() {
-            // this.changeThemes();
         },
         computed: {},
         methods: {
@@ -358,3 +356,5 @@ $user = Auth::user();
         },
     });
 </script>
+
+@include('parts.client.list_categories')

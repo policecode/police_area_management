@@ -21,7 +21,7 @@ class CategoriesController extends Controller
         $option = SettingHelpers::getInstance();
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 25,
+            'per_page' => 16,
             'order_by' => 'title',
             'order_type' => 'ASC'
         );
@@ -34,15 +34,19 @@ class CategoriesController extends Controller
         $query = Story::getByCategory($category['id'])->joinAuthor();
         $count = $query->count();
         $storyCollection = $query->filter($request)->get();
-        $listId = $storyCollection->pluck('id')->toArray();
-        $totalChapers = Chaper::getTotalChapers($listId);
-        $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $totalChapers, $allCategoriesOfStory)  {
+        // $listId = $storyCollection->pluck('id')->toArray();
+        // $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
+        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->total_chapers = empty($totalChapers[$item->id])?0:$totalChapers[$item->id];
-            $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            // $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
         // dd($listStory);
         $breadcrumb = [
@@ -110,6 +114,12 @@ class CategoriesController extends Controller
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $now->diffInMinutes(new Carbon($item->last_chapers));
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
         // dd($listStory);
 

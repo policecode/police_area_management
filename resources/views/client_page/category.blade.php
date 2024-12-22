@@ -1,141 +1,146 @@
-@extends('layouts.client')
+@extends('layouts.frontend_v2')
 @section('head')
     <meta name="robots" content="all" />
     <meta name="googlebot" content="all">
 @endsection
 @section('content')
+    <section class="nav-page py-3">
+
+        <div class="container sm:flex items-center justify-between">
+
+            <h1 class="title font-bold xl:text-[1.5rem] text-[1.25rem] sm:mr-2 mb-2 sm:mb-0 text-center sm:text-left">
+                {{ $breadcrumb[1]['title'] }}</h1>
+
+            <ul
+                class="tab-categories-title bg-[#128c7e] text-[13px] flex justify-between items-center rounded overflow-hidden text-white">
+                <li><a href="javasciprt:void(0)" title="Thể loại" class="block p-2 rounded" modal-rs-target="modal_cate">Thể
+                        loại</a></li>
+                <li><a href="{{ route('client.full-story') }}l" title="Hoàn thành" class="block p-2 rounded">Hoàn thành</a>
+                </li>
+                <li><a href="{{ route('client.new-update') }}" title="Mới" class="block p-2 rounded">Truyện mới</a></li>
+                <li><a href="{{ route('client.hot-story') }}" title="Truyện hay" class="block p-2 rounded">Truyện Hay</a>
+                </li>
+                <li><a href="{{ route('client.view-story') }}" title="Xem nhiều" class="block p-2 rounded">Xem nhiều</a>
+                </li>
+            </ul>
+        </div>
+
+    </section>
     <?php
-        $currentUrl = getUrl(['order_by', 'order_type', 'page']);
-        $orderTitleLink = $currentUrl.'&order_by=title';
-        $orderLastUpdateLink = $currentUrl.'&order_by=last_chapers';
-        if (getQuery('order_by') == 'title' && getQuery('order_type') == 'ASC') {
-            $orderTitleLink .= '&order_type=DESC';
-        } else {
-            $orderTitleLink .= '&order_type=ASC';
-        }
-
-        if (getQuery('order_by') == 'last_chapers' && getQuery('order_type') == 'ASC') {
-            $orderLastUpdateLink .= '&order_type=DESC';
-        } else {
-            $orderLastUpdateLink .= '&order_type=ASC';
-        }
+    $currentUrl = getUrl(['order_by', 'order_type', 'page']);
+    $orderTitleLink = $currentUrl . '&order_by=title';
+    $orderLastUpdateLink = $currentUrl . '&order_by=last_chapers';
+    if (getQuery('order_by') == 'title' && getQuery('order_type') == 'ASC') {
+        $orderTitleLink .= '&order_type=DESC';
+    } else {
+        $orderTitleLink .= '&order_type=ASC';
+    }
+    
+    if (getQuery('order_by') == 'last_chapers' && getQuery('order_type') == 'ASC') {
+        $orderLastUpdateLink .= '&order_type=DESC';
+    } else {
+        $orderLastUpdateLink .= '&order_type=ASC';
+    }
     ?>
-    <main>
+    <section class="section-cate py-3 min-h-[79vh]">
         <div class="container">
-            <div class="row align-items-start">
-                <div class="col-12 col-md-8 col-lg-9 mb-3">
-                    <div class="head-title-global d-flex justify-content-between mb-2">
-                        <div class="col-12 col-md-12 col-lg-12 head-title-global__left d-flex justify-content-between">
-                            <h1 class="me-2 mb-0 border-bottom border-secondary pb-1">
-                                <span class="d-block text-decoration-none text-dark fs-4 category-name"
-                                    title="{{ $category['name'] }}">{{ $category['name'] }}</span>
-                            </h1>
-                            <div class="me-2 mb-0 pb-1 d-flex">
-                                <span class="fs-5 me-3">Sắp xếp: </span>
-                                <a href="{{$orderTitleLink}}"
-                                    class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover d-flex align-items-center me-3 fs-5"
-                                    title="Sắp xếp theo tên truyện">
-                                    <i class="fa-solid fa-book-open me-1"></i>
-                                    @if (getQuery('order_by') == 'title')
-                                        @if (getQuery('order_type') == 'ASC')
-                                            <i class="fa-solid fa-arrow-up-a-z"></i>
-                                        @else
-                                            <i class="fa-solid fa-arrow-down-z-a"></i>
-                                        @endif
-                                    @endif
-                                </a>
+            <div class="flex flex-wrap -mx-2">
+                <span class="readmore pb-2 pl-3 text-[#128c7e] text-[1rem]">Sắp xếp: </span>
+                <a href="{{$orderTitleLink}}"
+                    class="btn-search pb-2 pl-3 text-[#128c7e] text-[1rem]"
+                    title="Sắp xếp theo tên truyện">
+                    <i class="fa-solid fa-book-open me-1"></i>
+                    @if (getQuery('order_by') == 'title')
+                        @if (getQuery('order_type') == 'ASC')
+                            <i class="fa-solid fa-arrow-up-a-z"></i>
+                        @else
+                            <i class="fa-solid fa-arrow-down-z-a"></i>
+                        @endif
+                    @endif
+                </a>
 
-                                <a href="{{$orderLastUpdateLink}}"
-                                    class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover d-flex align-items-center me-3 fs-5"
-                                    title="Sắp xếp theo thời gian cập nhật">
-                                    <i class="fa-regular fa-clock me-1"></i>
-                                    @if (getQuery('order_by') == 'last_chapers')
-                                        @if (getQuery('order_type') == 'ASC')
-                                            <i class="fa-solid fa-arrow-up-9-1"></i>
-                                        @else
-                                        <i class="fa-solid fa-arrow-down-1-9"></i>
-                                        @endif
-                                    @endif
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            @include('parts.ads.adsense_v1')
-                        </div>
+                <a href="{{$orderLastUpdateLink}}"
+                    class="btn-search h-full pb-2 pl-3 text-[#128c7e] text-[1rem]"
+                    title="Sắp xếp theo thời gian cập nhật">
+                    <i class="fa-regular fa-clock me-1"></i>
+                    @if (getQuery('order_by') == 'last_chapers')
+                        @if (getQuery('order_type') == 'ASC')
+                            <i class="fa-solid fa-arrow-up-9-1"></i>
+                        @else
+                        <i class="fa-solid fa-arrow-down-1-9"></i>
+                        @endif
+                    @endif
+                </a>
+            </div>
+            <div class="flex flex-wrap -mx-2">
+                <div class="px-2 basis-full xl:basis-3/4">
+                    <div class="flex flex-wrap -mx-1">
                         @foreach ($records as $item)
-                            <div class="col-12 col-md-6 mb-3">
-                                <div class="d-flex">
-                                    <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" class="">
-                                        <div class="position-relative">
-                                            <img src="{{ $item['thumbnail'] }}" alt="{{ $item['title'] }}"
-                                                class="img-thumbnail_cover border border-primary rounded" width="150"
-                                                height="230" loading="lazy">
-                                            <div class="position-absolute top-0 start-0 m-1">
-                                                @if ($item['status'] == 1)
-                                                    <span class="story-item__badge badge text-bg-success">Full</span>
-                                                @endif
-                                                @if ($item['star_average'] > 7)
-                                                    <span
-                                                        class="story-item__badge story-item__badge-hot badge text-bg-danger">Hot</span>
-                                                @endif
-                                                @if ($item['after_day'] < 30)
-                                                    <span
-                                                        class="story-item__badge story-item__badge-new badge text-bg-info text-light">New</span>
-                                                @endif
-                                            </div>
-                                        </div>
+                            <div class="px-1 basis-1/2 mb-2">
+                                <div
+                                    class="novel-item h-full p-4 bg-white flex flex-wrap transition-all duration-300 hover:shadow-[2px_2px_9px_rgba(0,0,0,.44)] border-t-[1px] border-dashed border-[#bababa]">
+                                    <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
+                                        title="truyen/phu-luc-ta-ve-deu-bi-cam-dung"
+                                        class="img shrink-0 w-[90px] h-[130px] img-h-full rounded-lg overflow-hidden mr-2 relative">
+                                        <picture>
+                                            <source media="(min-width:0px)" srcset="{{ $item['thumbnail'] }}">
+                                            <img loading="lazy" src="{{ $item['thumbnail'] }}" alt="{{ $item['title'] }}"
+                                                class="img-fluid">
+                                        </picture>
+                                        @if ($item['status'] == 1)
+                                            <span class="novel-stripe">
+                                                <span class="story-status">FULL</span>
+                                            </span>
+                                        @endif
                                     </a>
-                                    <div class="content ms-2">
-                                        <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
-                                            class="fs-4 text-dark text-capitalize fw-semibold text-decoration-none">
-                                            <i class="fa-solid fa-book-open"></i>
-                                            {{ $item['title'] }}
-                                        </a>
-                                        <div class="card-text">
-                                            <i class="fa-solid fa-pencil"></i>
-                                            {{ $item['author_name'] }}
+                                    <div class="flex-1 content">
+                                        <h3>
+                                            <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
+                                                title="{{ $item['title'] }}"
+                                                class="title font-bold xl:text-[1.125rem] text-[0.875rem] line-clamp-1 mb-2">{{ ucwords($item['title']) }}</a>
+                                        </h3>
+                                        <div class="flex items-center justify-between">
+                                            <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}"
+                                                title="{{ $item['author_name'] }}"
+                                                class="author text-[#6c757d] lg:text-[0.875rem] mr-2 mb-1 line-clamp-1">{{ ucwords($item['author_name']) }}</a>
+                                            @if ($item['is_convert'])
+                                                <span title="Convert"
+                                                    class="inline-block shrink-0 py-[2px] px-[11px] border border-solid text-[11px] rounded text-[#128c7e] border-[#128c7e]">Convert</span>
+                                            @else
+                                                <span title="Dịch"
+                                                    class="inline-block shrink-0 py-[2px] px-[11px] border border-solid text-[11px] rounded"
+                                                    style="color: #0000ff;border-color:#0000ff">Dịch</span>
+                                            @endif
+
                                         </div>
-                                        <div class="card-text">
-                                            <i class="fa-solid fa-list-ol"></i>
-                                            {{ $item['total_chapers'] }} Chương
+                                        <div class="story-info lg:text-[0.875rem]">
+                                            <span
+                                                class="text-[#28a745] mr-1 whitespace-nowrap">{{ $item['total_chapter'] }}
+                                                Chương</span>
+                                            <span class="text-[#007bff] mr-1 whitespace-nowrap">{{ $item['view_count'] }}
+                                                Đọc</span>
+                                            <span class="text-[#dc3545] mr-1 whitespace-nowrap">{{get_string_after_time($item['last_update'])}}</span>
                                         </div>
-                                        <div class="card-text">
-                                            <i class="fa-regular fa-clock"></i>
-                                            <i>{{ get_string_after_time($item['last_update']) }}</i>
-                                        </div>
-                                        <div class="card-text">
-                                            <i class="fa-solid fa-layer-group"></i>
-                                            @foreach ($item['categories'] as $key => $cat)
-                                                @if ($key + 1 == count($item['categories']))
-                                                    <span>{{ $cat['name'] }}</span>
-                                                @else
-                                                    <span>{{ $cat['name'] }} ,</span>
-                                                @endif
-                                            @endforeach
+                                        <div class="s-content text-[0.75rem] text-[#3a3a3a] mt-2 pl-3 line-clamp-4">
+                                            {!! $item['description'] !!}
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
                             </div>
                         @endforeach
-                    </div>
 
-                    @include('parts.template.paging_client')
-                </div>
-                <div class="col-12 col-md-4 col-lg-3 d-none d-sm-block">
-                    <div class="category-description bg-light p-2 rounded mb-3 card-custom">
-                        <h2 class="mb-0 text-secondary fs-6">Thể Loại Truyện {{ $category['name'] }}</h2>
-                        {!! $category['description'] !!}
                     </div>
-                    <div class="bg-light p-2 rounded mb-3 card-custom">
-                        @include('client_page.part_stories.story_top_ratings', [])
-                    </div>
+                    @include('parts.template.paging_client_v1')
                 </div>
+                @include('client_page.part_tags.new_stories_v1', [
+                    'is_chapter' => false,
+                    'is_story' => true,
+                ])
             </div>
+
         </div>
-    </main>
+
+    </section>
 @endsection
 
 @section('scripts')

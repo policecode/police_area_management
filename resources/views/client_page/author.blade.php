@@ -1,4 +1,4 @@
-@extends('layouts.client')
+@extends('layouts.frontend_v2')
 @section('head')
     <meta name="robots" content="all" />
     <meta name="googlebot" content="all">
@@ -18,58 +18,72 @@
     </script>
 @endsection
 @section('content')
-    <main>
-        <div class="container">
-            <div class="row align-items-start">
-                <div class="col-12 col-md-8 col-lg-9 mb-3">
-                    <div class="head-title-global d-flex justify-content-between mb-2">
-                        <div class="col-12 col-md-12 col-lg-12 head-title-global__left d-flex">
-                            <h1 class="me-2 mb-0 border-bottom border-secondary pb-1">
-                                <span class="d-block text-decoration-none text-dark fs-4 category-name"
-                                    title="{{$author['name']}}">{{$author['name']}}</span>
-                            </h1>
-                        </div>
-                    </div>
-                    <div class="list-story-in-category section-stories-hot__list">
-                        @foreach ($records as $item)
-                            <div class="story-item">
-                                <a href="{{ route('client.story', ['story_slug' =>  $item['slug']]) }}" class="d-block text-decoration-none">
-                                    <div class="story-item__image">
-                                        <img src="{{$item['thumbnail']}}" alt="{{$item['title']}}" class="img-fluid" width="150"
-                                            height="230" loading="lazy">
-                                    </div>
-                                    <h3 class="story-item__name text-one-row story-name">{{$item['title']}}</h3>
+    <section class="nav-page py-3">
+        <div class="container sm:flex items-center justify-between">
+            <h1 class="title font-bold xl:text-[1.5rem] text-[1.25rem] sm:mr-2 mb-2 sm:mb-0 text-center sm:text-left">
+                {{ $author['name'] }}</h1>
+            <ul
+                class="tab-categories-title bg-[#128c7e] text-[13px] flex justify-between items-center rounded overflow-hidden text-white">
+                <li><a href="javasciprt:void(0)" title="Thể loại" class="block p-2 rounded" modal-rs-target="modal_cate">Thể
+                        loại</a></li>
+                <li><a href="{{ route('client.full-story') }}l" title="Hoàn thành" class="block p-2 rounded">Hoàn thành</a>
+                </li>
+                <li><a href="{{ route('client.new-update') }}" title="Mới" class="block p-2 rounded">Truyện mới</a></li>
+                <li><a href="{{ route('client.hot-story') }}" title="Truyện hay" class="block p-2 rounded">Truyện Hay</a>
+                </li>
+                <li><a href="{{ route('client.view-story') }}" title="Xem nhiều" class="block p-2 rounded">Xem nhiều</a>
+                </li>
+            </ul>
+        </div>
 
-                                    <div class="list-badge">
-                                        @if ($item['status'] == 1)
-                                            <span class="story-item__badge badge text-bg-success">Full</span>
-                                        @endif
-                                        @if ($item['star_average'] > 7)
-                                            <span class="story-item__badge story-item__badge-hot badge text-bg-danger">Hot</span>
-                                        @endif
-                                        @if ($item['after_day'] < 30)
-                                            <span class="story-item__badge story-item__badge-new badge text-bg-info text-light">New</span>
-                                        @endif
-                                    </div>
+    </section>
+
+    <section class="same-author py-3 min-h-[79vh]">
+        <div class="container">
+            <div class="flex flex-wrap -mx-2">
+                @foreach ($records as $item)
+                    <div class="basis-1/2 md:basis-1/3 lg:basis-1/4 px-2">
+                        <div
+                            class="same-author__item text-center lg:p-4 p-2 h-full transition-all duration-300 hover:shadow-[2px_2px_9px_rgba(0,0,0,.1)]">
+                            <div class="box-image max-w-[170px] mx-auto mb-3">
+                                <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
+                                    title="{{ $item['title'] }}" class="img c-img pt-[138%] overflow-hidden">
+                                    <picture>
+                                        <source media="(min-width:0px)" srcset="{{ $item['thumbnail'] }}">
+                                        <img loading="lazy" src="{{ $item['thumbnail'] }}"alt="{{ $item['title'] }}"
+                                            class="img-fluid">
+                                    </picture>
                                 </a>
                             </div>
-                        @endforeach
+                            <h3>
+                                <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
+                                    title="{{ $item['title'] }}"
+                                    class="title  mb-2 line-clamp-1 text-[#1061b3]">{{ ucwords($item['title']) }}</a>
+                            </h3>
+                            <a href="{{ route('client.author', ['author_slug' => $author['slug']]) }}"
+                                title="{{ $author['name'] }}"
+                                class="author text-[#26a8cb]">{{ ucwords($author['name']) }}</a>
+                            <div class="categories line-clamp-1 text-center">
+                                @foreach ($item['categories'] as $key => $cat)
+                                    @if ($key + 1 == count($item['categories']))
+                                        <a href="{{ route('client.tag', ['tag_slug' => $cat['slug']]) }}"
+                                            title="{{ $cat['name'] }}"
+                                            class="text-[#18a263] lg:text-[0.875rem] italic">{{ $cat['name'] }}</a>
+                                    @else
+                                        <a href="{{ route('client.tag', ['tag_slug' => $cat['slug']]) }}"
+                                            title="{{ $cat['name'] }}"
+                                            class="text-[#18a263] lg:text-[0.875rem] italic">{{ $cat['name'] }}, </a>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
 
-                    </div>
-                    @include('parts.template.paging_client')
-                </div>
-                <div class="col-12 col-md-4 col-lg-3">
-                    <div class="category-description bg-light p-2 rounded mb-3 card-custom">
-                        <h2 class="mb-0 text-secondary fs-6">Tác Giả {{$author['name']}}</h2>
-                        {!!$author['description']!!}
-                    </div>
-                    <div class="bg-light p-2 rounded mb-3 card-custom">
-                        @include('client_page.part_stories.story_top_ratings', [])
-                    </div>
-                </div>
             </div>
+
         </div>
-    </main>
+    </section>
 @endsection
 
 @section('scripts')

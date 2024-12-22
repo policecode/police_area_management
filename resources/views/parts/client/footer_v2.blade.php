@@ -121,7 +121,13 @@ $all_categories = get_all_categories();
     defer></script>
 <script src="{{ asset('assets/frontend/js/baseb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer>
 </script>
-{{-- <script src="{{ asset('assets/frontend/js/scriptb2fd.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" type="text/javascript" defer></script> --}}
+<script src="{{ asset('assets/frontend/js/scriptb2fd.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" type="text/javascript" defer></script>
 <script src="{{ asset('assets/js/modalb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="module" type="text/javascript" defer>
 </script>
 <script src="{{ asset('assets/js/scriptb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
+<script src="{{ asset('assets/js/swiper-bundle.minb2fd.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
+<script src="{{ asset('assets/js/slider42bb.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
+<script src="{{ asset('assets/js/tabsb2fd.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
+<script src="{{ asset('assets/frontend/js/confirm.minb2fd.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
+<script src="{{ asset('assets/frontend/js/infinite-loadb2fd.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
+{{-- <script src="{{ asset('assets/frontend/js/story4287.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script> --}}

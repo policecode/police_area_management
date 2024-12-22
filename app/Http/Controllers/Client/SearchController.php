@@ -38,7 +38,7 @@ class SearchController extends Controller
             return redirect(route('index'));
         }
         $now = Carbon::now();
-        $query = Story::filter($request)->joinAuthor();
+        $query = Story::filter($request)->joinAuthorAndChapter();
         if ($request->keyword) {
             $query->searchByAuthor($request->keyword);
         }
@@ -48,6 +48,12 @@ class SearchController extends Controller
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
         $breadcrumb = [
             [

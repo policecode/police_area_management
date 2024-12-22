@@ -17,7 +17,7 @@ class TopStoryController extends Controller
     {
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 25,
+            'per_page' => 12,
             'order_by' => 'last_chapers',
             'order_type' => 'DESC'
         );
@@ -27,13 +27,19 @@ class TopStoryController extends Controller
         $query = Story::filter($request)->joinAuthor();
         $count = $query->getTotal();
         $storyCollection = $query->get();
-        $listId = $storyCollection->pluck('id')->toArray();
-        $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $allCategoriesOfStory)  {
+        // $listId = $storyCollection->pluck('id')->toArray();
+        // $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
+        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            // $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
         // dd($listStory);
         $breadcrumb = [
@@ -68,7 +74,7 @@ class TopStoryController extends Controller
     {
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 25,
+            'per_page' => 12,
             'order_by' => 'last_chapers',
             'order_type' => 'DESC',
             'star_average_min' => 7
@@ -79,13 +85,19 @@ class TopStoryController extends Controller
         $query = Story::filter($request)->joinAuthor();
         $count = $query->getTotal();
         $storyCollection = $query->get();
-        $listId = $storyCollection->pluck('id')->toArray();
-        $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $allCategoriesOfStory)  {
+        // $listId = $storyCollection->pluck('id')->toArray();
+        // $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
+        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            // $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
         // dd($listStory);
         $breadcrumb = [
@@ -94,7 +106,7 @@ class TopStoryController extends Controller
                 "url" => route('index', [])
             ],
             [
-                "title" => 'Truyện Hot',
+                "title" => 'Truyện Hay',
                 "url" => route('client.hot-story')
             ]
         ];
@@ -120,7 +132,7 @@ class TopStoryController extends Controller
     {
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 25,
+            'per_page' => 12,
             'order_by' => 'last_chapers',
             'order_type' => 'DESC',
             'status' => StatusStory::FULL['key']
@@ -131,13 +143,19 @@ class TopStoryController extends Controller
         $query = Story::filter($request)->joinAuthor();
         $count = $query->getTotal();
         $storyCollection = $query->get();
-        $listId = $storyCollection->pluck('id')->toArray();
-        $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $allCategoriesOfStory)  {
+        // $listId = $storyCollection->pluck('id')->toArray();
+        // $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
+        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            // $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
         // dd($listStory);
         $breadcrumb = [
@@ -146,7 +164,7 @@ class TopStoryController extends Controller
                 "url" => route('index', [])
             ],
             [
-                "title" => 'Truyện Full',
+                "title" => 'Hoàn Thành',
                 "url" => route('client.full-story')
             ]
         ];
@@ -172,7 +190,7 @@ class TopStoryController extends Controller
     {
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 25,
+            'per_page' => 12,
             'order_by' => 'view_count',
             'order_type' => 'DESC',
             'view_count_min' => 100
@@ -183,13 +201,19 @@ class TopStoryController extends Controller
         $query = Story::filter($request)->joinAuthor();
         $count = $query->getTotal();
         $storyCollection = $query->get();
-        $listId = $storyCollection->pluck('id')->toArray();
-        $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now, $allCategoriesOfStory)  {
+        // $listId = $storyCollection->pluck('id')->toArray();
+        // $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
+        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
             $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            // $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
         })->toArray();
         // dd($listStory);
         $breadcrumb = [
@@ -198,16 +222,16 @@ class TopStoryController extends Controller
                 "url" => route('index', [])
             ],
             [
-                "title" => 'Truyện Full',
+                "title" => 'Xem nhiều',
                 "url" => route('client.full-story')
             ]
         ];
 
         // Title Header
-        $page_title = 'Danh Sách Truyện Full';
+        $page_title = 'Danh Sách Truyện Được Xem Nhiều';
         
          // Desccription Header
-         $description = 'Danh sách các bộ truyện đã ra hết';
+         $description = 'Danh sách các bộ truyện được xem nhiều nhất của Truyện Full Việt';
         $dataView = array(
             'page_title' => $page_title,
             'records' => $listStory,
@@ -220,22 +244,4 @@ class TopStoryController extends Controller
         return view('client_page.top_story', $dataView);
     }
 
-    public function huongdan(Request $request)
-    {
-        $breadcrumb = [
-            [
-                "title" => "Trang chủ",
-                "url" => route('index', [])
-            ],
-            [
-                "title" => 'Truyện Full',
-                "url" => route('client.huongdan')
-            ]
-        ];
-        $dataView = array(
-            'page_title' => "Hướng Dẫn",
-            'breadcrumb' => $breadcrumb,
-        );
-        return view('client_page.huong_dan', $dataView);
-    }
 }

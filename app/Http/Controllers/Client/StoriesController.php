@@ -26,11 +26,16 @@ class StoriesController extends Controller
      */
     public function index(Request $request, $story_slug)
     {
-        $option = SettingHelpers::getInstance();
+        // $option = SettingHelpers::getInstance();
         $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
-        $story->thumbnail = route('index') . '/' . $story->thumbnail;
+        $story['thumbnail'] = route('index') . '/' . $story->thumbnail;
+        $isResult = strpos($story['title'], '(c)');
+        if ($isResult) {
+            $story->is_convert = true;
+        } else {
+            $story->is_convert = false;
+        }
         $story = $story->toArray();
-        // dd($story);
         $breadcrumb = [
             [
                 "title" => "Trang chủ",
@@ -43,17 +48,15 @@ class StoriesController extends Controller
                 ])
             ]
         ];
+        $now = Carbon::now();
+        $chapters = Chaper::getByStory($story['id'])->orderBy('position', 'DESC')->skip(0)->take(5)->get()->each(function ($item, $key) use ($now) {
+            $item->thumbnail = route('index') . '/' . $item->thumbnail;
+            $dt = new Carbon($item->created_at); //Tạo 1 datetime
+            $item->after_minutes = $now->diffInMinutes($dt);;
+        })->toArray();;
 
         // Title Header
         $page_title = ucwords($story['title']).' | '.ucwords($story['author_name']);
-        $isResult = strpos($story['title'], '(c)');
-        $subTitle = '';
-        if ($isResult) {
-            $subTitle = '<span class="text-success">Convert</span>';
-        } else {
-            $subTitle = '<span class="text-info">Dịch</span>';
-        }
-
         // Desccription Header
         $description = str_replace('<br />',' ', $story['description']);
         $arrDesc = explode(' ', $description, 50);
@@ -67,8 +70,8 @@ class StoriesController extends Controller
             'page_title' => $page_title,
             'story' => $story,
             'breadcrumb' => $breadcrumb,
-            'subTitle' =>  $subTitle,
-            'description' => $description
+            'description' => $description,
+            'chapters' => $chapters
         );
         return view('client_page.stories', $dataView);
 

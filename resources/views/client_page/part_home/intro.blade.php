@@ -1,7 +1,11 @@
+<?php
+use App\Http\Helpers\SettingHelpers;
+$option = SettingHelpers::getInstance();
+?>
 <section class="pt-3 pb-1 section-intro__index">
     <div class="container">
         <div class="flex flex-wrap -mx-1">
-            <div class="hidden px-1 lg:block basis-1/4">
+            {{-- <div class="hidden px-1 lg:block basis-1/4">
                 <div class="box h-full pt-4 px-4 pb-0 shadow-[1px_1px_9px_rgba(0,0,0,.44)]">
                     <div class="flex flex-wrap -mx-2 tab-shortcut">
                         <div
@@ -22,7 +26,7 @@
                                 <picture>
                                     <source media="(min-width:0px)"
                                         srcset="{{ asset('assets/uploads/demo/thumbs/350x0/top-linhphieu-end.png')}}">
-                                    <img loading="auto" src="asset('assets/uploads/demo/thumbs/350x0/top-linhphieu-end.png')"
+                                    <img loading="auto" src="{{asset('assets/uploads/demo/thumbs/350x0/top-linhphieu-end.png')}}"
                                         alt="Top Linh Phiếu" class="img-fluid">
                                 </picture>
                             </a>
@@ -73,7 +77,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <div class="px-1 basis-full w-full lg-w-50 lg:basis-2/4">
                 <div class="swiper-container slide-cate__main">
                     <div class="swiper-wrapper">
@@ -111,20 +115,19 @@
                     </div>
                 </div>
             </div>
-            <div class="px-1 basis-full lg:basis-1/4">
+            <div class="px-1 basis-full lg:basis-2/4">
                 <div
                     class="card-info h-full flex flex-col borer border-solid border-[#ebebeb] shadow-[0_1px_3px_rgba(0,0,0,.2)] rounded-[4px] bg-white overflow-hidden">
-                    <p
-                        class="head text-center py-2 px-5 text-[#128c7e] font-bold border-b-[1px] border-solid border-[rgba(0,0,0,.125)]">
-                        Thông tin - Tiện ích</p>
+                    <p class="head text-center py-2 px-5 text-[#128c7e] font-bold border-b-[1px] border-solid border-[rgba(0,0,0,.125)]">Giới thiệu</p>
                     <div class="content bg-[#f8f9fa] p-4 flex-1">
                         <div class="mb-4 s-content content-card-info">
-                            <ul>
+                            {!!$option->getOptionValue('fvn_content_bottom')!!}
+                            {{-- <ul>
                                 <li>
                                     <a href="{{route('client.huongdan')}}" title="Thông báo - Hướng dẫn">Thông báo -
                                         Hướng dẫn</a>
                                 </li>
-                            </ul>
+                            </ul> --}}
                         </div>
                         <div class="flex flex-row mb-4 -mx-1">
                         </div>

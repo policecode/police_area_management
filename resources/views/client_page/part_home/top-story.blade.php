@@ -78,8 +78,8 @@
             <div class="px-2 basis-full xl:basis-3/4 mb-5">
                 <div class="flex items-center justify-between mb-2 head-all bg-white pr-3">
                     <h2 class="title py-3 px-5 font-bold 2xl:text-[1.5rem] text-[1.25rem]">Truyện Hot</h2>
-                    <a href="{{ route('client.full-story') }}" title="Tất cả"
-                        class="readmore text-[#128c7e] text-[0.875rem] ">Tất cả
+                    <a href="{{ route('client.hot-story') }}" title="Tất cả"
+                        class="readmore text-[#128c7e] text-[0.875rem]">Tất cả
                         <i class="ml-2 fa-solid fa-right-long"></i>
                     </a>
                 </div>
@@ -116,7 +116,7 @@
                                             {{ $item['author_name'] }}
                                         </a>
                                         @if ($item['is_convert'])
-                                            <span title="Convert" class="inline-block shrink-0 py-[2px] px-[11px] border border-solid text-[11px] rounded text-[#128c7e]">Convert</span>
+                                            <span title="Convert" class="inline-block shrink-0 py-[2px] px-[11px] border border-solid text-[11px] rounded text-[#128c7e] border-[#128c7e]">Convert</span>
                                         @else
                                             <span title="Dịch" class="inline-block shrink-0 py-[2px] px-[11px] border border-solid text-[11px] rounded" style="color: #0000ff;border-color:#0000ff">Dịch</span>
                                         @endif

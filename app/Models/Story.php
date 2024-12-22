@@ -62,6 +62,8 @@ class Story extends Model
             $join->on('stories.chaper_id', '=', 'chapers.id');
         });
         $this->joinAuthorAndChapter = true;
+        $this->joinLastChapers = true;
+        $this->joinAuthor = true;
         return $query;
     }
 

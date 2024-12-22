@@ -18,15 +18,13 @@
     </script>
 @endsection
 @section('content')
- 
-    @include('parts.client.list_categories')
     @include('client_page.part_home.intro')
     {{-- @include('client_page.part_home.pro-cate') --}}
     @include('client_page.part_home.top-story')
     @include('client_page.part_home.ranking')
     @include('client_page.part_home.authorvn')
     @include('client_page.part_home.just-finished')
-    @include('client_page.part_home.new-story')
+    {{-- @include('client_page.part_home.new-story') --}}
 @endsection
 
 @section('scripts')
