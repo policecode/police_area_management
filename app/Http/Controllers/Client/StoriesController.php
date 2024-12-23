@@ -36,6 +36,32 @@ class StoriesController extends Controller
             $story->is_convert = false;
         }
         $story = $story->toArray();
+
+        $now = Carbon::now();
+        $chapters = Chaper::getByStory($story['id'])->orderBy('position', 'DESC')->skip(0)->take(5)->get()->each(function ($item, $key) use ($now) {
+            $item->thumbnail = route('index') . '/' . $item->thumbnail;
+            $dt = new Carbon($item->created_at); //Tạo 1 datetime
+            $item->after_minutes = $now->diffInMinutes($dt);;
+        })->toArray();
+
+        $storyByAuthor = Story::joinAuthor()->getByAuthor($story['author_id'])->noById($story['id'])->get()->each(function ($item, $key) use ($now) {
+            $item->thumbnail = route('index') . '/' . $item->thumbnail;
+            $isResult = strpos($item['title'], '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
+        })->toArray();
+        $relatedStories = StoryCategory::joinStory()->getByCategoryId($story['categories'][0]['id'])->inRandomOrder()->take(10)->get()->each(function ($item, $key) use ($now) {
+            $item->thumbnail = route('index') . '/' . $item->thumbnail;
+            $isResult = strpos($item['title'], '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
+        })->toArray();
         $breadcrumb = [
             [
                 "title" => "Trang chủ",
@@ -48,12 +74,7 @@ class StoriesController extends Controller
                 ])
             ]
         ];
-        $now = Carbon::now();
-        $chapters = Chaper::getByStory($story['id'])->orderBy('position', 'DESC')->skip(0)->take(5)->get()->each(function ($item, $key) use ($now) {
-            $item->thumbnail = route('index') . '/' . $item->thumbnail;
-            $dt = new Carbon($item->created_at); //Tạo 1 datetime
-            $item->after_minutes = $now->diffInMinutes($dt);;
-        })->toArray();;
+     
 
         // Title Header
         $page_title = ucwords($story['title']).' | '.ucwords($story['author_name']);
@@ -71,7 +92,9 @@ class StoriesController extends Controller
             'story' => $story,
             'breadcrumb' => $breadcrumb,
             'description' => $description,
-            'chapters' => $chapters
+            'chapters' => $chapters,
+            'story_by_author' => $storyByAuthor,
+            'related_stories' => $relatedStories
         );
         return view('client_page.stories', $dataView);
 

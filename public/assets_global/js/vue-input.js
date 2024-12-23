@@ -1,5 +1,15 @@
-Vue.component('fvn-select', {
-    props: ['options', 'blankLabel', 'value', 'keyValue', 'keyLabel', 'error', 'multiple', 'radio', 'name'],
+Vue.component("fvn-select", {
+    props: [
+        "options",
+        "blankLabel",
+        "value",
+        "keyValue",
+        "keyLabel",
+        "error",
+        "multiple",
+        "radio",
+        "name",
+    ],
     data: function () {
         let valueCom = this.value;
 
@@ -7,12 +17,12 @@ Vue.component('fvn-select', {
             if (this.multiple) {
                 valueCom = [];
             } else {
-                valueCom = '';
+                valueCom = "";
             }
         }
         return {
-            valueCom: valueCom
-        }
+            valueCom: valueCom,
+        };
     },
     mounted: function () {
         // console.log(this.value);
@@ -20,23 +30,23 @@ Vue.component('fvn-select', {
     computed: {
         comKeyValue() {
             if (!this.keyValue) {
-                return 'value';
+                return "value";
             }
             return this.keyValue;
         },
         comKeyLabel() {
             if (!this.keyLabel) {
-                return 'display';
+                return "display";
             }
             return this.keyLabel;
-        }
+        },
     },
     methods: {
         __(text) {
-            return __(text)
+            return __(text);
         },
         handleChange(e) {
-            this.$emit('input', this.valueCom)
+            this.$emit("input", this.valueCom);
         },
     },
     template: `<div class="fvn-input">
@@ -54,42 +64,47 @@ Vue.component('fvn-select', {
     <div v-if="error" class="text-danger input-error">
             <p v-for="err in error">{{err}}</p>
     </div>
-    </div>`
+    </div>`,
 });
 
-Vue.component('fvn-input', {
-    props: ['value', 'type', 'error', 'name', 'download', 'multiple', 'remote', 'dir'],
+Vue.component("fvn-input", {
+    props: [
+        "value",
+        "type",
+        "error",
+        "name",
+        "download",
+        "multiple",
+        "remote",
+        "dir",
+    ],
     data: function () {
         let valueCom = this.value;
         if (!valueCom) {
             if (this.multiple) {
                 valueCom = [];
             } else {
-                valueCom = '';
+                valueCom = "";
             }
         }
         return {
             valueCom: valueCom,
             uploadFile: this.multiple ? [] : false,
             deleteConfirm: false,
-            loading: false
-        }
+            loading: false,
+        };
     },
-    mounted: function () {
-
-    },
-    computed: {
-    },
+    mounted: function () {},
+    computed: {},
     methods: {
         handleChange(e) {
-            this.$emit('input', this.valueCom)
+            this.$emit("input", this.valueCom);
         },
         async newFile(e) {
             let files = e.target.files || e.dataTransfer.files;
 
-            if (!files.length)
-                return;
-            let file = '';
+            if (!files.length) return;
+            let file = "";
             if (this.multiple) {
                 for (file of files) {
                     if (this.remote) {
@@ -113,19 +128,23 @@ Vue.component('fvn-input', {
                 }
             }
             if (this.remote) {
-                return this.$emit('input', this.valueCom);
+                return this.$emit("input", this.valueCom);
             }
-            this.$emit('input', this.uploadFile);
+            this.$emit("input", this.uploadFile);
         },
         async uploadFileRemote(file) {
             this.loading = true;
             var data = new FormData();
-            data.append('file', file);
+            data.append("file", file);
             if (this.dir) {
-                data.append['dir', this.dir];
+                data.append[("dir", this.dir)];
             }
 
-            let jsonData = await new RouteApi().post(FVN_PLUGIN_URL + 'ajax.php?task=core.file.upload', data, 'form');
+            let jsonData = await new RouteApi().post(
+                FVN_PLUGIN_URL + "ajax.php?task=core.file.upload",
+                data,
+                "form"
+            );
             this.loading = false;
             if (jsonData.status) {
                 return jsonData.data;
@@ -135,21 +154,24 @@ Vue.component('fvn-input', {
         },
         async handleDelete(index) {
             if (this.remote) {
-                if (confirm(__('Do you want to delete this file?'))) {
+                if (confirm(__("Do you want to delete this file?"))) {
                     let deleteFile = this.valueCom;
                     if (this.multiple) {
                         deleteFile = this.valueCom[index];
                     }
-                    let jsonData = await new RouteApi().post(FVN_PLUGIN_URL + 'ajax.php?task=core.file.delete', { file: deleteFile });
+                    let jsonData = await new RouteApi().post(
+                        FVN_PLUGIN_URL + "ajax.php?task=core.file.delete",
+                        { file: deleteFile }
+                    );
 
                     if (jsonData.status) {
                         if (this.multiple) {
                             this.valueCom.splice(index, 1);
                         } else {
-                            this.valueCom = '';
+                            this.valueCom = "";
                         }
 
-                        return this.$emit('input', this.valueCom);
+                        return this.$emit("input", this.valueCom);
                     } else {
                         jAlert(jsonData.message);
                     }
@@ -158,13 +180,12 @@ Vue.component('fvn-input', {
                 if (this.multiple) {
                     this.valueCom.splice(index, 1);
                 } else {
-                    this.valueCom = '';
+                    this.valueCom = "";
                 }
 
-                return this.$emit('input', this.valueCom);
+                return this.$emit("input", this.valueCom);
             }
-
-        }
+        },
     },
     template: `<div class="fvn-input">
     <div v-if="loading" class="loading"></div>
@@ -189,77 +210,88 @@ Vue.component('fvn-input', {
     <div v-if="error" class="text-danger input-error">
         <p v-for="err in error">{{err}}</p>
     </div>
-    </div>`
+    </div>`,
 });
 
-Vue.component('fvn-input-layout', {
-    props: ['label'],
+Vue.component("fvn-input-layout", {
+    props: ["label"],
     data: function () {
-        return {
-        }
+        return {};
     },
-    mounted: function () {
-    },
-    computed: {
-    },
-    methods: {
-    },
+    mounted: function () {},
+    computed: {},
+    methods: {},
     template: `<div class="fvn-input-layout row row-small">
         <div class="label col medium-3 strong">{{label}}</div>
         <div class="input col medium-9"><slot></slot></div>
-    </div>`
+    </div>`,
 });
 
-Vue.component('fvn-input-group', {
-    props: ['value', 'type', 'error', 'label', 'download', 'multiple', 'remote', 'dir'],
+Vue.component("fvn-input-group", {
+    props: [
+        "value",
+        "type",
+        "error",
+        "label",
+        "download",
+        "multiple",
+        "remote",
+        "dir",
+    ],
     data: function () {
         return {
-            valueCom: this.value
-        }
+            valueCom: this.value,
+        };
     },
-    mounted: function () {
-    },
-    computed: {
-    },
-    methods: {
-    },
+    mounted: function () {},
+    computed: {},
+    methods: {},
     watch: {
         valueCom() {
-            this.$emit('input', this.valueCom)
-        }
+            this.$emit("input", this.valueCom);
+        },
     },
     template: `<fvn-input-layout :label="label">
     <fvn-input v-model="valueCom" :remote="remote" :dir="dir" :error="error" :type="type" :download="download" :multiple="multiple" @delete="(item) => $emit('delete',item)"></fvn-input>
-    </fvn-input-layout>`
+    </fvn-input-layout>`,
 });
 
-Vue.component('fvn-select-group', {
-    props: ['value', 'error', 'label', 'options', 'blankLabel', 'keyValue', 'keyLabel', 'multiple', 'type', 'radio', 'name'],
+Vue.component("fvn-select-group", {
+    props: [
+        "value",
+        "error",
+        "label",
+        "options",
+        "blankLabel",
+        "keyValue",
+        "keyLabel",
+        "multiple",
+        "type",
+        "radio",
+        "name",
+    ],
     data: function () {
         return {
-            valueCom: this.value
-        }
+            valueCom: this.value,
+        };
     },
-    mounted: function () {
-    },
-    computed: {
-    },
+    mounted: function () {},
+    computed: {},
     methods: {
         handleChange(e) {
-            this.$emit('input', this.valueCom)
-        }
+            this.$emit("input", this.valueCom);
+        },
     },
     template: `<fvn-input-layout :label="label">
     <fvn-enum v-if="type=='note'" :selected="value" :options="options"></fvn-enum>
     <fvn-select v-if="type!='note'" v-model="valueCom" @change.native="handleChange" :error="error" :options="options" :blank-label="blankLabel" :key-value="keyValue" :key-label="keyLabel" :multiple="multiple" :radio="radio" :name="name"></fvn-select>
-    </fvn-input-layout>`
+    </fvn-input-layout>`,
 });
 
-Vue.component('fvn-enum', {
-    props: ['options', 'selected'],
+Vue.component("fvn-enum", {
+    props: ["options", "selected"],
     data: function () {
-        return {
-        }
+        return {};
     },
     computed: {
         display() {
@@ -270,81 +302,84 @@ Vue.component('fvn-enum', {
             }
         },
     },
-    template: `<span>{{display}}</span>`
+    template: `<span>{{display}}</span>`,
 });
 
-Vue.component('fvn-date', {
-    props: ['date', 'format'],
+Vue.component("fvn-date", {
+    props: ["date", "format"],
     data: function () {
-        return {
-        }
+        return {};
     },
     computed: {
         display() {
-            if (!this.date) { return ''; }
+            if (!this.date) {
+                return "";
+            }
             let format = this.format;
             if (!format) {
-                format = 'Y-m-d';
+                format = "Y-m-d";
             }
-            return format_date(this.date, format, true)
+            return format_date(this.date, format, true);
         },
     },
-    template: `<span>{{display}}</span>`
+    template: `<span>{{display}}</span>`,
 });
 
-Vue.component('fvn-money', {
-    props: ['amount', 'currency'],
+Vue.component("fvn-money", {
+    props: ["amount", "currency"],
     data: function () {
-        return {
-        }
+        return {};
     },
     computed: {
         display() {
-            if (!this.amount) { return ''; }
+            if (!this.amount) {
+                return "";
+            }
             let currency = this.currency;
             if (!currency) {
-                currency = '$';
+                currency = "$";
             }
             return currency + this.amount;
         },
     },
-    template: `<span>{{display}}</span>`
+    template: `<span>{{display}}</span>`,
 });
 
-Vue.component('fvn-avatar', {
-    props: ['src'],
+Vue.component("fvn-avatar", {
+    props: ["src"],
     data: function () {
-        return {
-        }
+        return {};
     },
     computed: {
         display() {
-            if (!this.src) { return '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8ZM8 10C5.33 10 0 11.34 0 14V16H16V14C16 11.34 10.67 10 8 10Z" fill="#1B1D1F"></path></svg>'; }
+            if (!this.src) {
+                return '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8ZM8 10C5.33 10 0 11.34 0 14V16H16V14C16 11.34 10.67 10 8 10Z" fill="#1B1D1F"></path></svg>';
+            }
             return siteUrl + this.src;
         },
     },
     template: `<span class="fvn-avatar">
     <img v-if="src" :src="display"/>
     <span v-else v-html="display" class="none-avatar w-100"></span>
-    </span>`
+    </span>`,
 });
 
-Vue.component('fvn-document', {
-    props: ['src', 'download'],
+Vue.component("fvn-document", {
+    props: ["src", "download"],
     data: function () {
         return {
-            pluginUrl: FVN_PLUGIN_URL
-        }
+            pluginUrl: FVN_PLUGIN_URL,
+        };
     },
     computed: {
         isFile() {
-            if (typeof this.src == 'object') {
+            if (typeof this.src == "object") {
                 return true;
             }
             return false;
         },
         isImage() {
-            if (typeof this.src == 'object') {
+            if (typeof this.src == "object") {
                 return false;
             }
             if (this.src) {
@@ -354,10 +389,13 @@ Vue.component('fvn-document', {
         },
         url() {
             if (this.src && !this.isFile) {
-                if (this.src.includes('http://') || this.src.includes('https://')) {
+                if (
+                    this.src.includes("http://") ||
+                    this.src.includes("https://")
+                ) {
                     return this.src;
                 }
-                return siteUrl + '/' + this.src;
+                return siteUrl + "/" + this.src;
             }
             return false;
         },
@@ -369,7 +407,10 @@ Vue.component('fvn-document', {
                 if (this.isImage) {
                     return this.url;
                 } else {
-                    return "https://docs.google.com/viewerng/viewer?embedded=true&url=" + this.url;
+                    return (
+                        "https://docs.google.com/viewerng/viewer?embedded=true&url=" +
+                        this.url
+                    );
                 }
             }
             return "";
@@ -383,14 +424,13 @@ Vue.component('fvn-document', {
         <a :href="display" title="open in new tab"><img :src="pluginUrl+'assets/images/eye.svg'" class="icon-size-s" /></a>
         <a v-if="download" target="_blank" :href="url" title="download"><img :src="pluginUrl+'assets/images/download.svg'" class="icon-size-s"/></a>
     </div>
-    </span>`
+    </span>`,
 });
 
-Vue.component('fvn-popup', {
-    props: ['title', 'type', 'fullScreen'],
+Vue.component("fvn-popup", {
+    props: ["title", "type", "fullScreen"],
     data: function () {
-        return {
-        }
+        return {};
     },
     template: `<div class="fvn-overlay" :class="{'full-screen':fullScreen}">
     <div class="fvn-popup position-relative">
@@ -404,24 +444,26 @@ Vue.component('fvn-popup', {
           <slot name="footer"></slot>
         </div>
     </div>
-  </div>`
+  </div>`,
 });
 
-Vue.component('fvn-paging', {
-    props: ['page', 'total', 'per_page', 'show_page'],
+Vue.component("fvn-paging", {
+    props: ["page", "total", "per_page", "show_page"],
     data: function () {
         return {
             comPerPage: this.per_page,
-            limitLabel: __('Rows per page'),
-            showPage: this.show_page ? this.show_page : 2
-        }
+            limitLabel: __("Rows per page"),
+            showPage: this.show_page ? this.show_page : 2,
+        };
     },
     computed: {
         currentPage() {
-            return this.per_page * this.page < this.total ? this.per_page * this.page : this.total
+            return this.per_page * this.page < this.total
+                ? this.per_page * this.page
+                : this.total;
         },
         totalPage() {
-            return Math.ceil(this.total / this.per_page)
+            return Math.ceil(this.total / this.per_page);
         },
         isPrevBtn() {
             return this.page > 1;
@@ -447,11 +489,9 @@ Vue.component('fvn-paging', {
                 listPage.push(i);
             }
             return listPage;
-        }
-
+        },
     },
-    method: {
-    },
+    method: {},
     template: `<div v-show="totalPage>1" class="dataTables_paginate paging_simple_numbers">
         <div class="d-flex align-items-center">
             <div class="mr-4">
@@ -488,24 +528,29 @@ Vue.component('fvn-paging', {
                 <a v-else class="page-link">>></a>
             </li>
         </ul>
-    </div>`
+    </div>`,
 });
 
-Vue.component('fvn-paging-client', {
-    props: ['page', 'total', 'per_page', 'show_page'],
+Vue.component("fvn-paging-client", {
+    props: ["page", "total", "per_page", "show_page"],
     data: function () {
         return {
             comPerPage: this.per_page,
-            limitLabel: __('Rows per page'),
-            showPage: this.show_page ? this.show_page : 2
-        }
+            limitLabel: __("Rows per page"),
+            showPage: this.show_page ? this.show_page : 2,
+            after: 0,
+            before: 0,
+            tmpPage: 1,
+        };
     },
     computed: {
         currentPage() {
-            return this.per_page * this.page < this.total ? this.per_page * this.page : this.total
+            return this.per_page * this.page < this.total
+                ? this.per_page * this.page
+                : this.total;
         },
         totalPage() {
-            return Math.ceil(this.total / this.per_page)
+            return Math.ceil(this.total / this.per_page);
         },
         isPrevBtn() {
             return this.page > 1;
@@ -514,89 +559,100 @@ Vue.component('fvn-paging-client', {
             return this.per_page * this.page < this.total;
         },
         listPage() {
-            let beforePage = 0;
-            let afterPage = 0;
             if (this.page - this.showPage >= 1) {
-                beforePage = this.page - this.showPage;
+                this.before = this.page - this.showPage;
             } else {
-                beforePage = 1;
+                this.before = 1;
             }
             if (this.page + this.showPage <= this.totalPage) {
-                afterPage = this.page + this.showPage;
+                this.after = this.page + this.showPage;
             } else {
-                afterPage = this.totalPage;
+                this.after = this.totalPage;
             }
             let listPage = [];
-            for (let i = beforePage; i <= afterPage; i++) {
+            for (let i = this.before; i <= this.after; i++) {
                 listPage.push(i);
             }
             return listPage;
-        }
-
+        },
+        isLastPage() {
+            if (this.after + 2 >= this.totalPage) {
+                return false;
+            }
+            return true;
+        },
+        isPrevPage() {
+            if (this.before - 2 <= 1) {
+                return false;
+            }
+            return true;
+        },
     },
-    method: {
-    },
-    template: `<div v-show="totalPage>1" class="pagination justify-content-center" >
-        <ul>
-            <li class="pagination__arrow pagination__item" :class="{'disabled': !isPrevBtn}">
-                <a v-if="isPrevBtn" @click="$emit('change-page', 1)" class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center cursor-pointer"><<</a>
-                <a v-else class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center"><<</a>
-            </li>
-  
-            <li v-for="item in listPage" class="pagination__item " :class="{'page-current':item==page}">
-                <a v-if="item==page" class="page-link">{{item}}</a>
-                <a v-else @click="$emit('change-page', item)" class="page-link cursor-pointer">{{item}}</a>
-            </li>
- 
-            <li class="pagination__arrow pagination__item" :class="{'disabled': !isNextBtn}">
-                <a v-if="isNextBtn" @click="$emit('change-page', totalPage)" class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center cursor-pointer">>></a>
-                <a v-else class="text-decoration-none w-100 h-100 d-flex justify-content-center align-items-center">>></a>
-            </li>
-        </ul>
-    </div>`
+    method: {},
+    template: `  <div v-show="totalPage > 1" class="pagination">
+                    <a v-if="isPrevBtn" @click="$emit('change-page', page - 1)" class="next-page !px-4" title="Sau">Sau</a>
+                    <template v-if="isPrevPage">
+                        <a @click="$emit('change-page', 1)" href="#">1</a>
+                        <a @click="$emit('change-page', 2)" href="#">2</a>
+                        <a style="pointer-events: none"> ... </a>
+                    </template>
+                    <template v-for="item in listPage">
+                        <strong v-if="item==page">{{item}}</strong>
+                        <a v-else @click="$emit('change-page', item)" href="#">{{item}}</a>
+                    </template>
+                    <template v-if="isLastPage">
+                        <a style="pointer-events: none"> ... </a>
+                        <a @click="$emit('change-page', totalPage - 1)" href="#">{{totalPage - 1}}</a>
+                        <a @click="$emit('change-page', totalPage)" href="#">{{totalPage}}</a>
+                    </template>
+                    <a v-if="isNextBtn" @click="$emit('change-page', page + 1)" class="next-page !px-4" title="Sau">Sau</a>
+                    <div class="jump-box" :data-current-page="page" :data-last-page="totalPage">
+                        <input v-model="tmpPage" type="text" placeholder="Số trang">
+                        <button @click="$emit('change-page', tmpPage)" type="button">Go</button>
+                    </div>
+                </div>`,
 });
 
-Vue.component('fvn-ordering', {
-    props: ['label', 'orderBy', 'orderType', 'active'],
+Vue.component("fvn-ordering", {
+    props: ["label", "orderBy", "orderType", "active"],
     data: function () {
-        return {
-        }
+        return {};
     },
     computed: {
         displayOrdering() {
             if (this.active == this.orderBy) {
-                if (this.orderType == 'ASC') {
+                if (this.orderType == "ASC") {
                     return `<span class="ml-1">&#8593;</span>`;
                 } else {
                     return `<span class="ml-1">&#8595;</span>`;
                 }
             }
-            return '';
-        }
+            return "";
+        },
     },
     template: `<a href="javascript:void(0)" class="d-flex fvn-ordering" @click="$emit('update-ordering',orderBy)" >{{label}}
     <span v-html="displayOrdering"></span>
-    </a>`
+    </a>`,
 });
-Vue.component('fvn-repeat', {
-    props: ['fields', 'value', 'multiple', 'error', 'remote', 'dir'],
+Vue.component("fvn-repeat", {
+    props: ["fields", "value", "multiple", "error", "remote", "dir"],
     data: function () {
         let valueCom = this.value;
         if (this.multiple) {
-            if (!valueCom || typeof valueCom == 'string') {
+            if (!valueCom || typeof valueCom == "string") {
                 valueCom = [];
             }
             if (valueCom.length == 0) {
                 valueCom.push({});
             }
         } else {
-            if (!valueCom || typeof valueCom == 'string') {
+            if (!valueCom || typeof valueCom == "string") {
                 valueCom = {};
             }
         }
         return {
-            valueCom: valueCom
-        }
+            valueCom: valueCom,
+        };
     },
     methods: {
         addItem() {
@@ -607,13 +663,13 @@ Vue.component('fvn-repeat', {
             this.valueCom = [...this.valueCom];
         },
         handleChange() {
-            this.$emit('input', this.valueCom);
-        }
+            this.$emit("input", this.valueCom);
+        },
     },
     watch: {
         valueCom() {
             this.handleChange();
-        }
+        },
     },
     template: `<div class="fvn-input repeat">
     <div v-if="multiple">
@@ -634,25 +690,24 @@ Vue.component('fvn-repeat', {
             <p v-for="err in error">{{err}}</p>
     </div>
     
-  </div>`
+  </div>`,
 });
 
-Vue.component('fvn-repeat-group', {
-    props: ['fields', 'value', 'multiple', 'error', 'label', 'remote', 'dir'],
+Vue.component("fvn-repeat-group", {
+    props: ["fields", "value", "multiple", "error", "label", "remote", "dir"],
     data: function () {
         return {
-            valueCom: this.value
-        }
+            valueCom: this.value,
+        };
     },
-    computed: {
-    },
+    computed: {},
     template: `<fvn-input-layout :label="label">
     <fvn-repeat v-model="valueCom" @change.native="$emit('input',valueCom)" :fields="fields" :multiple="multiple" :error="error" :remote="remote" :dir="dir" ></fvn-repeat>
-    </fvn-input-layout>`
+    </fvn-input-layout>`,
 });
 
-Vue.component('fvn-html', {
-    props: ['value'],
+Vue.component("fvn-html", {
+    props: ["value"],
     data: function () {
         return {};
     },
@@ -660,11 +715,11 @@ Vue.component('fvn-html', {
         valueCom() {
             let valueCom = this.value;
             if (!valueCom) {
-                valueCom = '';
+                valueCom = "";
             }
-            valueCom = valueCom.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            valueCom = valueCom.replace(/(?:\r\n|\r|\n)/g, "<br>");
             return valueCom;
-        }
+        },
     },
-    template: `<div v-html="valueCom"></div>`
+    template: `<div v-html="valueCom"></div>`,
 });

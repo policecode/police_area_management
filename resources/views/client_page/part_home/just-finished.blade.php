@@ -15,7 +15,7 @@
                                     <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
                                         title="{{ $item['title'] }}" class="book-link relative">
                                         <picture>
-                                            <source media="(min-width:0px)" srcset="{{ $item['thumbanil'] }}">
+                                            <source media="(min-width:0px)" srcset="{{ $item['thumbnail'] }}">
                                             <img loading="lazy" src="{{ $item['thumbnail'] }}" alt="{{ $item['title'] }}" class="img-fluid">
                                         </picture> 
                                         @if ($item['status'] == 1)

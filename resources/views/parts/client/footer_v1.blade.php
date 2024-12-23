@@ -119,8 +119,8 @@ $all_categories = get_all_categories();
 </script>
 <script src="{{ asset('assets/tech5s_js/libraries/BackToTopb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript"
     defer></script>
-<script src="{{ asset('assets/frontend/js/baseb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer>
-</script>
+{{-- <script src="{{ asset('assets/frontend/js/baseb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer>
+</script> --}}
 {{-- <script src="{{ asset('assets/frontend/js/scriptb2fd.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" type="text/javascript" defer></script> --}}
 <script src="{{ asset('assets/js/modalb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="module" type="text/javascript" defer>
 </script>

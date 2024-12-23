@@ -40,9 +40,12 @@ class StoryCategory extends Model
         if ($this->joinStory ) {
             return $query;
         }
-        $query->select('stories.*', 'categories.*')
+        $query->select('stories.*', 'story_categories.category_id', 'story_categories.story_id', 'authors.name AS author_name', 'authors.slug AS author_slug')
         ->leftJoin('stories', function($join) {
             $join->on('story_categories.story_id', '=', 'stories.id');
+        })
+        ->leftJoin('authors', function($join) {
+            $join->on('stories.author_id', '=', 'authors.id');
         });
         $this->joinStory = true;
         return $query;
@@ -57,6 +60,6 @@ class StoryCategory extends Model
     }
 
     public function scopeGetByCategoryId($query, $catId) {
-        return $query->where('category_id',$catId);
+        return $query->where('story_categories.category_id',$catId);
     }
 }

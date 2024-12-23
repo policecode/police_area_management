@@ -79,7 +79,7 @@ class HomeController extends Controller
             }
         })->toArray();
         // Truyện convert
-        $convert_stories_collection = Story::where('title', 'LIKE', "%(c)%")->inRandomOrder()->orderBy('id', 'DESC')->skip(0)->take(9)->get();
+        $convert_stories_collection = Story::joinAuthor()->where('title', 'LIKE', "%(c)%")->inRandomOrder()->orderBy('id', 'DESC')->skip(0)->take(9)->get();
         $convert_stories = $convert_stories_collection->each(function ($item, $key) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $isResult = strpos($item->title, '(c)');

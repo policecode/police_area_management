@@ -41,6 +41,10 @@ class Story extends Model
         }
         return '';
     }
+    public function scopeNoById($query, $id) {
+        $query->where('stories.id', '!=', $id);
+        return $query;
+    }
     public function scopeGetBySlug($query, $slug) {
         $query->where('stories.slug', $slug);
         return $query;
