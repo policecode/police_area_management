@@ -2968,6 +2968,10 @@ body::-webkit-scrollbar-thumb {
   .sm\:text-left {
     text-align: left;
   }
+
+  .sm\:block {
+    display: block !important;
+  }
 }
 
 @media (min-width: 768px) {
@@ -3073,6 +3077,10 @@ body::-webkit-scrollbar-thumb {
 
   .md\:text-\[16px\] {
     font-size: 16px;
+  }
+
+  .md\:block {
+    display: block !important;
   }
 }
 

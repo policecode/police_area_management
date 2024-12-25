@@ -26,7 +26,7 @@
                 class="tab-categories-title bg-[#128c7e] text-[13px] flex justify-between items-center rounded overflow-hidden text-white">
                 <li><a href="javasciprt:void(0)" title="Thể loại" class="block p-2 rounded" modal-rs-target="modal_cate">Thể
                         loại</a></li>
-                <li><a href="{{ route('client.full-story') }}l" title="Hoàn thành" class="block p-2 rounded">Hoàn thành</a>
+                <li><a href="{{ route('client.full-story') }}" title="Hoàn thành" class="block p-2 rounded">Hoàn thành</a>
                 </li>
                 <li><a href="{{ route('client.new-update') }}" title="Mới" class="block p-2 rounded">Truyện mới</a></li>
                 <li><a href="{{ route('client.hot-story') }}" title="Truyện hay" class="block p-2 rounded">Truyện Hay</a>

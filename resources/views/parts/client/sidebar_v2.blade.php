@@ -163,7 +163,8 @@ $user = Auth::user();
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
                                 </form>
-                                <a href="{{route('client.huong-dan')}}" title="Hướng dẫn" class="link text-[#128c7e]">Hướng
+                                <a href="{{ route('client.huong-dan') }}" title="Hướng dẫn"
+                                    class="link text-[#128c7e]">Hướng
                                     dẫn</a>
                             </div>
                             <hr class="w-full h-[1px] bg-[#128c7e] my-2">
@@ -181,10 +182,11 @@ $user = Auth::user();
                                     </a>
                                 </li> --}}
                                 <li>
-                                    <a href="javascript:void(0)" modal-rs-target="modal_cate" title="Thể loại">Thể loại</a>
+                                    <a href="javascript:void(0)" modal-rs-target="modal_cate" title="Thể loại">Thể
+                                        loại</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('client.full-story')}}" title="Hoàn thành">Hoàn thành</a>
+                                    <a href="{{ route('client.full-story') }}" title="Hoàn thành">Hoàn thành</a>
                                 </li>
                             </ul>
                             <hr class="w-full h-[1px] bg-[#128c7e] mb-2">
@@ -263,7 +265,8 @@ $user = Auth::user();
                 </div>
             </form>
             <div class="flex items-center">
-                <a href="{{route('client.huong-dan')}}" title="Hướng dẫn" class="link text-[#128c7e] mr-4 last:mr-0">Hướng
+                <a href="{{ route('client.huong-dan') }}" title="Hướng dẫn"
+                    class="link text-[#128c7e] mr-4 last:mr-0">Hướng
                     dẫn</a>
                 {{-- <a href="dang-nhap.html" title="Đăng truyện" class="link text-[#128c7e] mr-4 last:mr-0">Đăng
                     truyện</a> --}}
@@ -271,7 +274,29 @@ $user = Auth::user();
         </div>
     </div>
 </header>
+<div class="container chapter-content-container chapter-page-apply">
+    @if (!empty($breadcrumb))
+        <ul itemscope itemtype="https://schema.org/BreadcrumbList" class="breadcrumb" style="margin-bottom: 0;">
+            @foreach ($breadcrumb as $key => $item)
+                @if ($item['title'] && $item['url'])
+                    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                        <a itemprop="item" href="{{ $item['url'] }}" title="{{ $item['title'] }}">
+                            <span itemprop="name">{{ $item['title'] }}</span>
+                        </a>
+                        <meta itemprop="position" content="{{ $key + 1 }}" />
+                    </li>
+                @else
+                    <li temprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"
+                        aria-current="page">
+                        <span itemprop="name" {{ $item['title'] }}>{{ $item['title'] }}</span>
+                        <meta itemprop="position" content="{{ $key + 1 }}" />
+                    </li>
+                @endif
+            @endforeach
+        </ul>
+    @endif
 
+</div>
 <script>
     var vue_client_sidebar_app = {
         loading: false,
@@ -291,8 +316,7 @@ $user = Auth::user();
     var appClientSideBar = new Vue({
         el: '#client_sidebar_app',
         data: vue_client_sidebar_app,
-        mounted: function() {
-        },
+        mounted: function() {},
         computed: {},
         methods: {
             async getItems() {

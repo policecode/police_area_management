@@ -82,7 +82,7 @@
                                 Đề cử Linh Phiếu
                             </p> --}}
                             <div class="list-button-action flex items-center flex-wrap">
-                                <a href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $first_chapter['slug']]) }}" title="Đọc từ đầu"
+                                <a href="{{ $first_chapter?route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $first_chapter['slug']]):'' }}" title="Đọc từ đầu"
                                     class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2">
                                     <i class="fa-solid fa-book-open-reader mr-2"></i>Đọc từ đầu
                                 </a>

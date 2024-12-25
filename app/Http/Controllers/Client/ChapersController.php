@@ -23,9 +23,16 @@ class ChapersController extends Controller
     public function index(Request $request, $story_slug, $chaper_slug)
     {
         $option = SettingHelpers::getInstance();
-        $story = Story::getBySlug($story_slug)->joinAuthor()->first();
+        $story = Story::getBySlug($story_slug)->joinAuthor()->first()->toArray();
+        $story['link'] = route('client.story', ['story_slug' => $story['slug']]);
+        $isResult = strpos($story['title'], '(c)');
+        if ($isResult) {
+            $story['is_convert'] = true;
+        } else {
+            $story['is_convert'] = false;
+        }
         $chaperList = Chaper::selectNotContent()->getByStory($story['id'])->orderBy('position', 'ASC')->get();
-        $chaper = Chaper::getBySlug($chaper_slug)->getByStory($story['id'])->first();
+        $chaper = Chaper::getBySlug($chaper_slug)->getByStory($story['id'])->first()->toArray();
         $linkPrev = '#';
         $linkNext = '#';
         for ($i = 0; $i < count($chaperList); $i++) {
@@ -41,8 +48,10 @@ class ChapersController extends Controller
             # code...
         }
         $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]);
+        $arrContent = explode(" ", $chaper['content']);
+        $chaper['content_length'] = count($arrContent);
         // $chaper['content'] = $this->addAdsToContent($chaper['content']);
-        $story['link'] = route('client.story', ['story_slug' => $story['slug']]);
+        
         $breadcrumb = [
             [
                 "title" => "Trang chủ",
@@ -57,6 +66,7 @@ class ChapersController extends Controller
                 "url" => $chaper['link']
             ]
         ];
+        // dd($chaper['content_length']);
         $dataView = array(
             'page_title' => ucwords($story['title']) . ' - ' . ucwords($chaper['name']) . ' | ' . $option->getOptionValue('fvn_web_title'),
             'story' => $story,

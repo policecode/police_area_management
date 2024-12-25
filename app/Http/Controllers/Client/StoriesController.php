@@ -43,8 +43,8 @@ class StoriesController extends Controller
             $dt = new Carbon($item->created_at); //Tạo 1 datetime
             $item->after_minutes = $now->diffInMinutes($dt);
         })->toArray();
-        $first_chapter = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'ASC')->first()->toArray();
-
+        $first_chapter = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'ASC')->first();
+        $first_chapter = $first_chapter?$first_chapter->toArray():NULL;
         $storyByAuthor = Story::joinAuthor()->getByAuthor($story['author_id'])->noById($story['id'])->get()->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $isResult = strpos($item['title'], '(c)');
