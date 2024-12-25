@@ -2262,6 +2262,10 @@ body::-webkit-scrollbar-thumb {
   font-size: 1.125rem !important;
 }
 
+.\!text-\[1\.5rem\] {
+  font-size: 1.5rem !important;
+}
+
 .\!text-\[16px\] {
   font-size: 16px !important;
 }

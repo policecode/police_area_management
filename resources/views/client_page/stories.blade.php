@@ -82,7 +82,7 @@
                                 Đề cử Linh Phiếu
                             </p> --}}
                             <div class="list-button-action flex items-center flex-wrap">
-                                <a href="cuu-dinh-ki/chuong-1.html" title="Đọc từ đầu"
+                                <a href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $first_chapter['slug']]) }}" title="Đọc từ đầu"
                                     class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2">
                                     <i class="fa-solid fa-book-open-reader mr-2"></i>Đọc từ đầu
                                 </a>
@@ -135,7 +135,7 @@
                                         @for ($i = 1; $i <= 10; $i++)
                                             @if ($i <= $story['star_average'])
                                                 <i class="fa-solid fa-star"></i>
-                                            @elseif ($i % $story['star_average'] > 0 && $i % $story['star_average'] < 1)
+                                            @elseif ($story['star_average'] > 0 && $i % $story['star_average'] > 0 && $i % $story['star_average'] < 1)
                                                 <i class="fa-regular fa-star-half-stroke"></i>
                                             @else
                                                 <i class="fa-regular fa-star"></i>
@@ -370,53 +370,28 @@
             modal-rs="modal-rating">
             <div class="popup-form md:max-w-[500px] bg-white relative mx-auto max-h-screen w-full max-w-[90%] overflow-y-auto rounded-md md:h-auto"
                 modal-rs-content="">
-                <span
-                    class="close-modal bg-[#128c7e] rounded p-1 flex w-6 h-6 items-center justify-center cursor-pointer absolute top-4 right-4 z-[1]"
-                    modal-rs-close>
-                    <img src="{{ asset('assets/images/close-modal.png') }}" alt="">
+                <span class="close-modal bg-[#128c7e] rounded p-1 flex w-6 h-6 items-center justify-center cursor-pointer absolute top-4 right-4 z-[1]" modal-rs-close>
+                    <img src="{{ asset('assets/images/close-modal.png') }}" alt="close">
                 </span>
                 <p class="font-medium text-[#000] text-[1.3rem] p-4 border-b-[1px] border-solid border-[#ebebeb]">Bạn đọc
                     đánh giá!</p>
-                <form action="https://banlong.us/rating" method="post" class="form p-4 formValidation"
-                    accept-charset="utf8" absolute data-success="NOTIFICATION.toastrMessageReload">
-                    <input type="hidden" name="_token" value="f6n6nXmbaeGSTOsTpgAo7wkhO38kABB3FFG2GsG7"> <input
-                        type="hidden" name="type" value="story">
-                    <input type="hidden" name="item" value="352">
+                <form action="" method="post" class="form p-4 formValidation" accept-charset="utf8">
+                 
                     <p class="text font-bold text-[#128c7e] mb-4">Bạn đánh giá nội dung truyện này thế nào ?</p>
                     <p class="lg:text-[0.875rem] font-bold mb-3">
-                        Đánh giá <span class="text-[#dc3545]">(*)</span> :
+                        Đánh giá <span class="text-[#dc3545]">(*)</span> : <span class="font-medium">@{{msgStar}}</span>
                     </p>
-                    <div class="box-select-rating mb-4">
-                        <input type="radio" id="rating10" name="rating" value="10" />
-                        <label for="rating10"></label>
-
-                        <input type="radio" id="rating9" name="rating" value="9" />
-                        <label class="half" for="rating9"></label>
-
-                        <input type="radio" id="rating8" name="rating" value="8" />
-                        <label for="rating8"></label>
-
-                        <input type="radio" id="rating7" name="rating" value="7" />
-                        <label class="half" for="rating7"></label>
-
-                        <input type="radio" id="rating6" name="rating" value="6" />
-                        <label for="rating6"></label>
-
-                        <input type="radio" id="rating5" name="rating" value="5" />
-                        <label class="half" for="rating5"></label>
-
-                        <input type="radio" id="rating4" name="rating" value="4" />
-                        <label for="rating4"></label>
-
-                        <input type="radio" id="rating3" name="rating" value="3" />
-                        <label class="half" for="rating3"></label>
-
-                        <input type="radio" id="rating2" name="rating" value="2" />
-                        <label for="rating2"></label>
-
-                        <input type="radio" id="rating1" name="rating" value="1" />
-                        <label class="half" for="rating1"></label>
+                    <div @mouseleave="leaveStar" class="box-select-rating mb-4">
+                        <div class="rating-item w-full">
+                            <p class="rating w-full text-center mb-1">
+                                <span class="rating-box !text-[1.5rem] !mx-auto">
+                                    <i v-for="(item, index) in renderStar" @mouseover="hoverStar(index + 1)" @click="chooseStar(index + 1)" :class="item" class="cursor-pointer mr-1"></i>
+                                </span>
+                                
+                            </p>
+                        </div>
                     </div>
+                 
                     {{-- <p class="lg:text-[0.875rem] font-bold mb-2">
                         Bình luận <span class="text-[#dc3545]">(*)</span> :
                     </p>
@@ -425,8 +400,8 @@
                         rules="required||minLength:30" name="content"></textarea>
                     <p class="text-note text-[#607d8b] mb-4">Nội dung đánh giá ít nhất 30 ký tự!</p> --}}
                     <div class="flex items-center justify-between">
-                        <button type="submit" class="btn btn-green !rounded">Đánh giá</button>
-                        <p class="count-rating text-[#128c7e] lg:text-[0.875rem]">Đánh giá: 0 lượt</p>
+                        <button type="button" @click="voteStar()" class="btn btn-green !rounded">Đánh giá</button>
+                        <p class="count-rating text-[#128c7e] lg:text-[0.875rem]">Đánh giá: {{$story['star_count']}} lượt</p>
                     </div>
                 </form>
             </div>
@@ -448,11 +423,12 @@
                 order_type: 'ASC'
             },
             itemDetail: {{ Illuminate\Support\Js::from($story) }},
-            stars: 7.6,
+            stars: 0,
+            tmpStars: 0,
             images: {
-                starOn: "{{ asset('/assets/images/star-on.png') }}",
-                starHalf: "{{ asset('/assets/images/star-half.png') }}",
-                starOff: "{{ asset('/assets/images/star-off.png') }}"
+                starOn: "fa-solid fa-star",
+                starHalf: "fa-regular fa-star-half-stroke",
+                starOff: "fa-regular fa-star"
             },
             apiUrl: FVN_LARAVEL_HOME + '/story',
             pointInTime: null,
@@ -464,20 +440,51 @@
                 this.searchItem();
             },
             computed: {
-                // renderStar() {
-                //     let render = [];
-                //     for (let i = 1; i <= 10; i++) {
-                //         if (i <= this.stars) {
-                //             render.push(this.images.starOn);
-                //         } else if ((i % this.stars > 0) && (i % this.stars < 1)) {
-                //             render.push(this.images.starHalf);
-                //         } else {
-                //             render.push(this.images.starOff);
-                //         }
-                //     }
-                //     return render;
-                // },
-
+                renderStar() {
+                    let render = [];
+                    for (let i = 1; i <= 10; i++) {
+                        if (i <= this.tmpStars) {
+                            render.push(this.images.starOn);
+                        } else if ((i % this.stars > 0) && (i % this.stars < 1)) {
+                            render.push(this.images.starHalf);
+                        } else {
+                            render.push(this.images.starOff);
+                        }
+                    }
+                    return render;
+                },
+                msgStar() {
+                    if (this.tmpStars == 1) {
+                        return 'Không có gì để nói...';
+                    }
+                    if (this.tmpStars == 2) {
+                        return 'WTF';
+                    }
+                    if (this.tmpStars == 3) {
+                        return 'Cái gì thế này ?!';
+                    }
+                    if (this.tmpStars == 4) {
+                        return 'Haizz';
+                    }
+                    if (this.tmpStars == 5) {
+                        return 'Tạm';
+                    }
+                    if (this.tmpStars == 6) {
+                        return 'Cũng được';
+                    }
+                    if (this.tmpStars == 7) {
+                        return 'Khá đấy';
+                    }
+                    if (this.tmpStars == 8) {
+                        return 'Được';
+                    }
+                    if (this.tmpStars == 9) {
+                        return 'Hay';
+                    }
+                    if (this.tmpStars == 10) {
+                        return 'Tuyệt đỉnh!!';
+                    }
+                }
             },
             methods: {
                 searchItem() {
@@ -529,23 +536,27 @@
                     this.getItems();
                 },
                 hoverStar(star) {
-                    this.stars = star;
+                    this.tmpStars = star;
                 },
                 leaveStar() {
-                    this.stars = this.itemDetail.star_average;
+                    if (this.tmpStars != this.stars) {
+                        this.tmpStars = this.stars;
+                    }
                 },
-                async voteStar(star) {
-                    this.loading = true;
+                chooseStar(star) {
+                    this.stars = star;
+                },
+                async voteStar() {
                     let jsonData = await new RouteApi().post(`${this.apiUrl}/star-rating`, {
                         story_id: this.itemDetail.id,
-                        point_star: star
+                        point_star: this.stars
                     });
-                    this.loading = false;
                     if (jsonData.status) {
-                        jnotice(jsonData.message);
+                        alert(jsonData.message);
                     } else {
-                        jAlert(jsonData.message);
+                        alert(jsonData.message);
                     }
+                    document.querySelector('div[modal-rs="modal-rating"]').classList.add("invisible", "pointer-events-none", "opacity-0");
                 },
                 getStringAfterTime(after_minutes) {
                     if (after_minutes < 60) {
@@ -580,9 +591,9 @@
     </script>
     <script src="{{ asset('assets/js/slider42bb.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
     <script src="{{ asset('assets/js/tabsb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
-    <script src="{{ asset('assets/frontend/js/confirm.minb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript"
-        defer></script>
-    <script src="{{ asset('assets/frontend/js/infinite-loadb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript"
-        defer></script>
+    {{-- <script src="{{ asset('assets/frontend/js/confirm.minb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript"
+        defer></script> --}}
+    {{-- <script src="{{ asset('assets/frontend/js/infinite-loadb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript"
+        defer></script> --}}
     {{-- <script src="{{ asset('assets/frontend/js/story4287.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script> --}}
 @endsection

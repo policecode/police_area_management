@@ -38,11 +38,12 @@ class StoriesController extends Controller
         $story = $story->toArray();
 
         $now = Carbon::now();
-        $chapters = Chaper::getByStory($story['id'])->orderBy('position', 'DESC')->skip(0)->take(5)->get()->each(function ($item, $key) use ($now) {
+        $chapters = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'DESC')->skip(0)->take(6)->get()->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $dt = new Carbon($item->created_at); //Tạo 1 datetime
-            $item->after_minutes = $now->diffInMinutes($dt);;
+            $item->after_minutes = $now->diffInMinutes($dt);
         })->toArray();
+        $first_chapter = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'ASC')->first()->toArray();
 
         $storyByAuthor = Story::joinAuthor()->getByAuthor($story['author_id'])->noById($story['id'])->get()->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
@@ -94,7 +95,8 @@ class StoriesController extends Controller
             'description' => $description,
             'chapters' => $chapters,
             'story_by_author' => $storyByAuthor,
-            'related_stories' => $relatedStories
+            'related_stories' => $relatedStories,
+            'first_chapter' => $first_chapter
         );
         return view('client_page.stories', $dataView);
 
