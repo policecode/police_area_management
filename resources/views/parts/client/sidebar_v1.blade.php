@@ -283,6 +283,7 @@ $user = Auth::user();
                     <li><a href="{{route('client.new-update')}}" title="">Truyện mới</a></li>
                     <li><a href="{{route('client.hot-story')}}" title="">Truyện hay</a></li>
                     <li><a href="{{route('client.view-story')}}" title="">Xem nhiều</a></li>
+                    <li><a href="{{route('client.superSearch')}}" title="">Filter</a></li>
 
                     {{-- <li><a href="https://forum.banlong.us/" title="">Giao diện cũ</a></li>
                     <li><a href="https://www.facebook.com/banlonghoi/" title="Facebook fanpage"

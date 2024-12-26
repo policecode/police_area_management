@@ -80,7 +80,6 @@
                                 <div
                                     class="novel-item h-full p-4 bg-white flex flex-wrap transition-all duration-300 hover:shadow-[2px_2px_9px_rgba(0,0,0,.44)] border-t-[1px] border-dashed border-[#bababa]">
                                     <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
-                                        title="truyen/phu-luc-ta-ve-deu-bi-cam-dung"
                                         class="img shrink-0 w-[90px] h-[130px] img-h-full rounded-lg overflow-hidden mr-2 relative">
                                         <picture>
                                             <source media="(min-width:0px)" srcset="{{ $item['thumbnail'] }}">

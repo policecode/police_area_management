@@ -34,7 +34,7 @@ class ViewWeek extends Model
         if ($this->joinStory ) {
             return $query;
         }
-        $query->select('stories.*', 'view_weeks.view', 'view_weeks.key', 'view_days.key', 'authors.name AS author_name', 'authors.slug AS author_slug')
+        $query->select('stories.*', 'view_weeks.view', 'view_weeks.key', 'authors.name AS author_name', 'authors.slug AS author_slug')
         ->leftJoin('stories', function($join) {
             $join->on('view_weeks.story_id', '=', 'stories.id');
         })

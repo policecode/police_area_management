@@ -105,7 +105,7 @@ class SearchController extends Controller
         $request->merge([
             'keyword' => Str::slug($request->keyword, " ")
         ]);
-        $query = Story::with('categories')->filter($request->except(['cats']))->joinAuthor();
+        $query = Story::filter($request->except(['cats']))->joinAuthor();
         if ($listCategory) {
             foreach ($listCategory as $key => $cat) {
                 $listStoryId = StoryCategory::select('story_id')->getByCategoryId($cat)->get()->pluck('story_id')->toArray();
@@ -123,12 +123,22 @@ class SearchController extends Controller
             $res['total'] = $query->count();
         }else{
             $listStories = $query->get();
+            $story_arr = $listStories->pluck('id');
+            $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
             $now = Carbon::now();
-            $res['data'] = $listStories->each(function ($item, $key) use ($now)  {
+            $res['data'] = $listStories->each(function ($item, $key) use ($now, $listStoryCat)  {
                 $item->thumbnail = route('index') . '/' . $item->thumbnail;
                 $item->url =  route('client.story', ['story_slug' => $item->slug]);
+                $item->author_url =  route('client.author', ['author_slug' => $item->author_slug]);
                 $item->after_day = $now->diffInDays(new Carbon($item->created_at));
                 $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
+                $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+                $isResult = strpos($item->title, '(c)');
+                if ($isResult) {
+                    $item->is_convert = true;
+                } else {
+                    $item->is_convert = false;
+                }
             })->toArray();
         }
         return response()->json($res);

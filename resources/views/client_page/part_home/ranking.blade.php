@@ -55,7 +55,7 @@
                                 class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">1</span>
                             <div class="content flex-1 mr-2">
                                 <h3>
-                                    <a :href="week_items[0].url" :title="week_items[0].title" class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{day_items[0].title}}</a>
+                                    <a :href="week_items[0].url" :title="week_items[0].title" class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{week_items[0].title}}</a>
                                 </h3>
                                 <p class="text-[0.75rem] text-[#007bff]">@{{week_items[0].view}} Lượt xem</p>
                                 <a :href="week_items[0].author_url" :title="week_items[0].author_name"
