@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Enums\StatusStory;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
+use App\Models\Category;
 use App\Models\Chaper;
 use App\Models\Story;
 use App\Models\StoryCategory;
@@ -63,9 +64,10 @@ class HomeController extends Controller
                 $item->is_convert = false;
             }
         })->toArray();
-        // Truyện đã hoàn thành
 
-        $full_stories_collection = Story::joinAuthorAndChapter()->where('status', StatusStory::FULL['key'])->inRandomOrder()->orderBy('id', 'DESC')->skip(0)->take(6)->get();
+        // Thể loại truyện vả mặt
+        $category = Category::getBySlug('va-mat')->first();
+        $full_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('id', 'DESC')->skip(0)->take(6)->get();
         $story_arr = $full_stories_collection->pluck('id');
         $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
         $full_stories = $full_stories_collection->each(function ($item, $key) use ($listStoryCat) {
@@ -79,7 +81,7 @@ class HomeController extends Controller
             }
         })->toArray();
         // Truyện convert
-        $convert_stories_collection = Story::joinAuthor()->where('title', 'LIKE', "%(c)%")->inRandomOrder()->orderBy('id', 'DESC')->skip(0)->take(9)->get();
+        $convert_stories_collection = Story::joinAuthor()->where('title', 'LIKE', "%(c)%")->orderBy('id', 'DESC')->skip(0)->take(9)->get();
         $convert_stories = $convert_stories_collection->each(function ($item, $key) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $isResult = strpos($item->title, '(c)');

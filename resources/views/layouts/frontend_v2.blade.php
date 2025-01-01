@@ -82,6 +82,7 @@ $option = SettingHelpers::getInstance();
     </script>
     {{-- Thêm các thành phần bổ sung --}}
     @yield('head')
+    @include('parts.ads.adsense_popunder')
 </head>
 
 <body class="wrapper mx-auto 2xl:text-[16px] text-[14px] text-[#252525] leading-snug font-['Roboto',sans-serif] overflow-x-hidden"  style="background-image: url({{ asset('assets/uploads/demo/background-min.jpg') }});">

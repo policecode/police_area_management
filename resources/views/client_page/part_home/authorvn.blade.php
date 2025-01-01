@@ -1,8 +1,8 @@
 <section class="py-1">
     <div class="container">
         <div class="flex items-center justify-between mb-2 head-all bg-white pr-3">
-            <h2 class="title py-3 px-5 font-bold 2xl:text-[1.5rem] text-[1.25rem]">Đã Hoàn Thành</h2>
-            <a href="{{ route('client.full-story') }}" title="Tất cả" class="readmore text-[#128c7e] text-[0.875rem]">Tất cả
+            <h2 class="title py-3 px-5 font-bold 2xl:text-[1.5rem] text-[1.25rem]">Vả Mặt</h2>
+            <a href="{{ route('client.tag', ['tag_slug' => 'va-mat']) }}" title="Tất cả" class="readmore text-[#128c7e] text-[0.875rem]">Tất cả
                 <i class="ml-2 fa-solid fa-right-long"></i></a>
         </div>
         <div
