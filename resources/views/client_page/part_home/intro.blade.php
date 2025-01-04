@@ -82,9 +82,6 @@ $option = SettingHelpers::getInstance();
                 <div class="swiper-container slide-cate__main">
                     <div class="swiper-wrapper">
                         @foreach ($hot_stories as $key => $item)
-                            @if ($key > 5)
-                                @break
-                            @else
                                 <div class="swiper-slide">
                                     <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="{{$item['title']}}"
                                         class="link block c-img pt-[50%]">
@@ -96,20 +93,15 @@ $option = SettingHelpers::getInstance();
                                         </h3>
                                     </a>
                                 </div>
-                            @endif
                         @endforeach
                     </div>
                 </div>
                 <div class="swiper-container slide-cate__thumbs">
                     <div class="swiper-wrapper">
                         @foreach ($hot_stories as $key => $item)
-                            @if ($key > 5)
-                                @break
-                            @else
                                 <div class="swiper-slide h-auto">
                                     <div class="item text-center cursor-pointer text-white lg:text-[0.875rem] bg-[rgba(0,0,0,.8)] p-2 h-full">{{'0'.($key + 1)}}</div>
                                 </div>
-                            @endif
                         @endforeach
                         
                     </div>

@@ -67,19 +67,62 @@ class HomeController extends Controller
 
         // Thể loại truyện vả mặt
         $category = Category::getBySlug('va-mat')->first();
-        $full_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('id', 'DESC')->skip(0)->take(6)->get();
-        $story_arr = $full_stories_collection->pluck('id');
-        $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
-        $full_stories = $full_stories_collection->each(function ($item, $key) use ($listStoryCat) {
-            $item->thumbnail = route('index') . '/' . $item->thumbnail;
-            $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
-            $isResult = strpos($item->title, '(c)');
-            if ($isResult) {
-                $item->is_convert = true;
-            } else {
-                $item->is_convert = false;
-            }
-        })->toArray();
+        if ($category) {
+            $full_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('id', 'DESC')->skip(0)->take(6)->get();
+            $story_arr = $full_stories_collection->pluck('id');
+            $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
+            $full_stories = $full_stories_collection->each(function ($item, $key) use ($listStoryCat) {
+                $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+                $isResult = strpos($item->title, '(c)');
+                if ($isResult) {
+                    $item->is_convert = true;
+                } else {
+                    $item->is_convert = false;
+                }
+            })->toArray();
+        } else {
+            $full_stories = [];
+        }
+        // Thể loại truyện Tiên hiệp
+        $category = Category::getBySlug('tien-hiep')->first();
+        if ($category) {
+            $tienhiep_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(12)->get();
+            $story_arr = $tienhiep_stories_collection->pluck('id');
+            $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
+            $tienhiep_stories = $tienhiep_stories_collection->each(function ($item, $key) use ($listStoryCat) {
+                $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+                $isResult = strpos($item->title, '(c)');
+                if ($isResult) {
+                    $item->is_convert = true;
+                } else {
+                    $item->is_convert = false;
+                }
+            })->toArray();
+        } else {
+            $tienhiep_stories = [];
+        }
+
+        // Thể loại truyện Nữ Cường
+        $category = Category::getBySlug('nu-cuong')->first();
+        if ($category) {
+            $nucuong_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(12)->get();
+            $story_arr = $nucuong_stories_collection->pluck('id');
+            $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
+            $nucuong_stories = $nucuong_stories_collection->each(function ($item, $key) use ($listStoryCat) {
+                $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+                $isResult = strpos($item->title, '(c)');
+                if ($isResult) {
+                    $item->is_convert = true;
+                } else {
+                    $item->is_convert = false;
+                }
+            })->toArray();
+        } else {
+            $nucuong_stories = [];
+        }
         // Truyện convert
         $convert_stories_collection = Story::joinAuthor()->where('title', 'LIKE', "%(c)%")->orderBy('id', 'DESC')->skip(0)->take(9)->get();
         $convert_stories = $convert_stories_collection->each(function ($item, $key) {
@@ -92,12 +135,14 @@ class HomeController extends Controller
             }
         })->toArray();
         $dataView = array(
-            'page_title' => $option->getOptionValue('fvn_web_title') . ' - Trang chủ',
+            'page_title' => $option->getOptionValue('fvn_web_title'),
             'hot_stories' => $hot_stories,
             'new_stories' => $new_stories,
             'new_chapters' => $new_chapters,
             'full_stories' => $full_stories,
-            'convert_stories' => $convert_stories
+            'convert_stories' => $convert_stories,
+            'tienhiep_stories' => $tienhiep_stories,
+            'nucuong_stories' => $nucuong_stories
         );
 
         return view('client_page.home', $dataView);

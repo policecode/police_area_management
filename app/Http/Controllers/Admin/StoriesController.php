@@ -479,10 +479,23 @@ class StoriesController extends Controller
                 $result = Chaper::insert($dataInsert);
                 $last_record = Chaper::orderBy('id', 'DESC')->first();
                 $total_chapter = $story->total_chapter + count($dataInsert);
+
+                $enumStatus = [];
+                foreach (StatusStory::getValues() as $key => $enumObj) {
+                    if ($enumObj['slug'] == Str::slug($request->status)) {
+                        $enumStatus = $enumObj;
+                    }
+                }
+                $status = StatusStory::COMMINGOUT['key'];
+            
+                if (count($enumStatus) > 0) {
+                    $status = $enumStatus['key'];
+                }
                 $story->update([
                     'last_chapers' => Carbon::now(),
                     'chaper_id' => $last_record->id,
-                    'total_chapter' => $total_chapter
+                    'total_chapter' => $total_chapter,
+                    'status' => $status
                 ]);
             }
             DB::commit();

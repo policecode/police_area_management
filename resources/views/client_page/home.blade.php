@@ -19,7 +19,7 @@
 @endsection
 @section('content')
     @include('client_page.part_home.intro')
-    {{-- @include('client_page.part_home.pro-cate') --}}
+    @include('client_page.part_home.pro-cate')
     @include('client_page.part_home.top-story')
     @include('client_page.part_home.ranking')
     @include('client_page.part_home.authorvn')

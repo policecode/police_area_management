@@ -77,14 +77,14 @@
             </div>
             <div class="px-2 basis-full xl:basis-3/4 mb-5">
                 <div class="flex items-center justify-between mb-2 head-all bg-white pr-3">
-                    <h2 class="title py-3 px-5 font-bold 2xl:text-[1.5rem] text-[1.25rem]">Truyện Hot</h2>
-                    <a href="{{ route('client.hot-story') }}" title="Tất cả"
+                    <h2 class="title py-3 px-5 font-bold 2xl:text-[1.5rem] text-[1.25rem]">Thể Loại Nữ Cường</h2>
+                    <a href="{{ route('client.tag', ['tag_slug' => 'nu-cuong']) }}" title="Tất cả"
                         class="readmore text-[#128c7e] text-[0.875rem]">Tất cả
                         <i class="ml-2 fa-solid fa-right-long"></i>
                     </a>
                 </div>
                 <div class="flex flex-wrap -mx-1">
-                    @foreach ($hot_stories as $item)
+                    @foreach ($nucuong_stories as $item)
                         <div class="px-1 basis-1/2 mb-2">
                             <div
                                 class="novel-item h-full p-4 bg-white flex flex-wrap transition-all duration-300 hover:shadow-[2px_2px_9px_rgba(0,0,0,.44)] border-t-[1px] border-dashed border-[#bababa]">

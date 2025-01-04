@@ -12,15 +12,17 @@
                     <div
                         class="author-vn h-full flex p-3 bg-white rounded transition-all duration-300 hover:shadow-[2px_2px_9px_rgba(0,0,0,.44)]">
                         <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
-                            title="{{ $item['title'] }}s"
+                            title="{{ $item['title'] }}"
                             class="img block shrink-0 w-[90px] h-[130px] img-h-full mr-2 rounded-lg overflow-hidden relative">
                             <picture>
                                 <img loading="lazy" src="{{ $item['thumbnail'] }}" alt="{{ $item['title'] }}"
                                     class="img-fluid">
                             </picture>
-                            <span class="novel-stripe">
-                                <span class="story-status">FULL</span>
-                            </span>
+                            @if ($item['status'] == 1)
+                                <span class="novel-stripe">
+                                    <span class="story-status">FULL</span>
+                                </span>
+                            @endif
                         </a>
                         <div class="content">
                             <h3>

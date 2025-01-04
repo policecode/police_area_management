@@ -11,8 +11,8 @@
             "image": [
                 "{{ $story['thumbnail'] }}" 
              ],
-            "datePublished":  "{{ $story['created_at'] }}" ,
-            "dateModified":  "{{ $story['updated_at'] }}" ,
+            "datePublished":  "{{ dateFormat($story['created_at'], 'd/m/Y') }}" ,
+            "dateModified":  "{{ dateFormat($story['updated_at'], 'd/m/Y') }}" ,
             "author": [{
                 "@type": "Person",
                 "name": "{{ $story['author_name'] }}",
