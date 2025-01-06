@@ -495,12 +495,11 @@ class StoriesController extends Controller
                 if (count($enumStatus) > 0) {
                     $status = $enumStatus['key'];
                 }
-                $story->update([
-                    'last_chapers' => Carbon::now(),
-                    'chaper_id' => $last_record->id,
-                    'total_chapter' => $total_chapter,
-                    'status' => $status
-                ]);
+                $story->last_chapers = Carbon::now();
+                $story->chaper_id = $last_record->id;
+                $story->total_chapter = $total_chapter;
+                $story->status = $status;
+                $story->update();
             }
             DB::commit();
             return response()->json([
