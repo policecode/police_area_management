@@ -478,7 +478,11 @@ class StoriesController extends Controller
             if (count($dataInsert) > 0) {
                 $result = Chaper::insert($dataInsert);
                 $last_record = Chaper::orderBy('id', 'DESC')->first();
-                $total_chapter = $story->total_chapter + count($dataInsert);
+                if ($story->total_chapter) {
+                    $total_chapter = $story->total_chapter + count($dataInsert);
+                } else {
+                    $total_chapter = count($dataInsert);
+                }
 
                 $enumStatus = [];
                 foreach (StatusStory::getValues() as $key => $enumObj) {
