@@ -115,9 +115,8 @@
                                 <h3>
                                     <a :href="day_items[0].url" :title="day_items[0].title" class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{day_items[0].title}}</a>
                                 </h3>
-                                <p class="text-[0.75rem] text-[#007bff]">@{{day_items[0].view}} Lượt xem</p>
-                                <p v-if="percentage.day == 'view'" class="text-[0.75rem] text-[#007bff]">@{{month_items[0].view}} Lượt xem</p>
-                                <p v-if="percentage.day == 'percentage'" class="text-[0.75rem] text-[#007bff]">@{{month_items[0].percentage}}%</p>
+                                <p v-if="percentage.day == 'view'" class="text-[0.75rem] text-[#007bff]">@{{day_items[0].view}} Lượt xem</p>
+                                <p v-if="percentage.day == 'percentage'" class="text-[0.75rem] text-[#007bff]">@{{day_items[0].percentage}}%</p>
                                 <a :href="day_items[0].author_url" :title="day_items[0].author_name"
                                     class="block text-[0.75rem] text-[#6c757d] w-fit">@{{day_items[0].author_name}}</a>
                             </div>
