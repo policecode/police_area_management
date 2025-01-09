@@ -298,6 +298,38 @@ class StoriesController extends Controller
         ]);
     }
 
+    public function autoConvertPercentageView() {
+        DB::beginTransaction();
+        $all_views_days = ViewDay::joinStory()->get();
+        foreach ($all_views_days as $key => $item) {
+            $item->percentage = round(($item->view/$item->total_chapter) * 100, 1);
+            $item->update();
+        }
+        $all_views_weeks = ViewWeek::joinStory()->get();
+        foreach ($all_views_weeks as $key => $item) {
+            $item->percentage = round(($item->view/$item->total_chapter) * 100, 1);
+            $item->update();
+        }
+        $all_views_months = ViewMonth::joinStory()->get();
+        foreach ($all_views_months as $key => $item) {
+            $item->percentage = round(($item->view/$item->total_chapter) * 100, 1);
+            $item->update();
+        }
+        $stories = Story::get();
+        foreach ($stories as $key => $item) {
+            if ($item->view_count > 0) {
+                $item->total_percentage = round(($item->view_count/$item->total_chapter) * 100, 1);
+                $item->update();
+            }
+        }
+        DB::commit();
+ 
+        return response()->json([
+            'status' => 1,
+            'message' => 'Convert Percentage success',
+        ]);
+    }
+
     public function autoConvertTotalChapter() {
         $count = Story::count();
         $per_page = 100;

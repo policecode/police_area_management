@@ -17,7 +17,7 @@ class ViewDay extends Model
      * @var array
      */
     protected $fillable = [
-        'story_id', 'view', 'key'
+        'story_id', 'view', 'key', 'percentage'
     ];
     public $timestamps = false;
     private $joinStory = false;
@@ -35,7 +35,7 @@ class ViewDay extends Model
         if ($this->joinStory ) {
             return $query;
         }
-        $query->select('stories.*', 'view_days.view', 'view_days.key', 'authors.name AS author_name', 'authors.slug AS author_slug')
+        $query->select('stories.*', 'view_days.view', 'view_days.key', 'view_days.percentage', 'authors.name AS author_name', 'authors.slug AS author_slug')
         ->leftJoin('stories', function($join) {
             $join->on('view_days.story_id', '=', 'stories.id');
         })

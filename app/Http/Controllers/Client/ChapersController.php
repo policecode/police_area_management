@@ -140,40 +140,47 @@ class ChapersController extends Controller
             $chaper->view += 1;
             $chaper->update();
             $story->view_count += 1;
+            $story->total_percentage = round(($story->view_count/$story->total_chapter) * 100, 2);
             $story->update();
             $view_day = ViewDay::getByStory($data['story_id'])->getByKey(get_key_by_day())->first();
             if ($view_day) {
                 $view_day->view += 1;
+                $view_day->percentage = round(($view_day->view/$story->total_chapter) * 100, 2);
                 $view_day->update();
             } else {
                 ViewDay::create([
                     'story_id' => $data['story_id'],
                     'view' => 1,
-                    'key' => get_key_by_day()
+                    'key' => get_key_by_day(),
+                    'percentage' => round((1/$story->total_chapter) * 100, 2)
                 ]);
             }
 
             $view_week = ViewWeek::getByStory($data['story_id'])->getByKey(get_key_by_day('week'))->first();
             if ($view_week) {
                 $view_week->view += 1;
+                $view_week->percentage = round(($view_week->view/$story->total_chapter) * 100, 2);
                 $view_week->update();
             } else {
                 ViewWeek::create([
                     'story_id' => $data['story_id'],
                     'view' => 1,
-                    'key' => get_key_by_day('week')
+                    'key' => get_key_by_day('week'),
+                    'percentage' => round((1/$story->total_chapter) * 100, 2)
                 ]);
             }
 
             $view_month = ViewMonth::getByStory($data['story_id'])->getByKey(get_key_by_day('month'))->first();
             if ($view_month) {
                 $view_month->view += 1;
+                $view_month->percentage = round(($view_month->view/$story->total_chapter) * 100, 2);
                 $view_month->update();
             } else {
                 ViewMonth::create([
                     'story_id' => $data['story_id'],
                     'view' => 1,
-                    'key' => get_key_by_day('month')
+                    'key' => get_key_by_day('month'),
+                    'percentage' => round((1/$story->total_chapter) * 100, 2)
                 ]);
             }
             DB::commit();

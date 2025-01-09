@@ -821,7 +821,9 @@ body::-webkit-scrollbar-thumb {
 .top-\[100\%\] {
   top: 100%;
 }
-
+.top-\[-100\%\] {
+  top: -100%;
+}
 .top-\[15px\] {
   top: 15px;
 }
@@ -1487,7 +1489,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .justify-end {
-  justify-content: flex-end;
+  justify-content: flex-end !important;
 }
 
 .justify-center {
@@ -1634,6 +1636,10 @@ body::-webkit-scrollbar-thumb {
 
 .border-r-\[1px\] {
   border-right-width: 1px;
+}
+
+.border-l-\[1px\] {
+  border-left-width: 1px;
 }
 
 .border-t-\[1px\] {

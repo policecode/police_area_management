@@ -30,7 +30,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
             Route::post('/tool-upload-chaper/{story}', 'StoriesController@toolUploadChaper');
             // Route::get('/auto-convert-story-description', 'StoriesController@autoConvertDescriptionToHtml');
             Route::get('/auto-convert-total-chapter', 'StoriesController@autoConvertTotalChapter');
-
+            Route::get('/auto-convert-percentage-view', 'StoriesController@autoConvertPercentageView');
         });
     });
 });

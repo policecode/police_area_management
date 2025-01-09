@@ -17,7 +17,7 @@ class ViewWeek extends Model
      * @var array
      */
     protected $fillable = [
-        'story_id', 'view', 'key'
+        'story_id', 'view', 'key', 'percentage'
     ];
     public $timestamps = false;
     private $joinStory = false;
@@ -34,7 +34,7 @@ class ViewWeek extends Model
         if ($this->joinStory ) {
             return $query;
         }
-        $query->select('stories.*', 'view_weeks.view', 'view_weeks.key', 'authors.name AS author_name', 'authors.slug AS author_slug')
+        $query->select('stories.*', 'view_weeks.view', 'view_weeks.key', 'view_weeks.percentage', 'authors.name AS author_name', 'authors.slug AS author_slug')
         ->leftJoin('stories', function($join) {
             $join->on('view_weeks.story_id', '=', 'stories.id');
         })
