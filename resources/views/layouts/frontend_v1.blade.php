@@ -44,7 +44,7 @@ $option = SettingHelpers::getInstance();
         as="font" type="font/woff2" crossorigin="anonymous">
 
     <link href="{{ asset('assets/css/fontawesome-free-6.2.0-web/css/all.minb2fd.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('assets/frontend/css/toastify.minbb07.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
+    {{-- <link href="{{ asset('assets/frontend/css/toastify.minbb07.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" /> --}}
 
     <link href="{{ asset('assets/css/swiper-bundle.minb2fd.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
 

@@ -111,8 +111,8 @@ $all_categories = get_all_categories();
 <script src="{{ asset('assets/frontend/js/toastify.minbb07.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer>
 </script>
 <script src="{{ asset('assets/frontend/js/xhrb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
-<script src="{{ asset('assets/frontend/js/validatorb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer>
-</script>
+{{-- <script src="{{ asset('assets/frontend/js/validatorb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer>
+</script> --}}
 <script src="{{ asset('assets/tech5s_js/tech5s_base.minb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript"
     defer></script>
 <script src="{{ asset('assets/tech5s_js/libraries/Techb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer>

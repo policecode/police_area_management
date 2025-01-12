@@ -1,96 +1,4 @@
 var XHR = (function () {
-    function _send(options) {
-        return new Promise(function (resolve, reject) {
-            const xhr = new XMLHttpRequest();
-            var button;
-            if (options.isForm || options.button) {
-                if (options.isForm) {
-                    button = options.form.querySelector(
-                        'button[type="submit"]'
-                    );
-                } else {
-                    button = options.button;
-                }
-                buttonStyle(button);
-            }
-
-            if (options.isForm) {
-                xhr.open(
-                    options.form.getAttribute("method"),
-                    options.form.getAttribute("action"),
-                    true
-                );
-            } else {
-                if (options.method === "GET") {
-                    if (options.data && typeof options.data === "object") {
-                        var params = Object.entries(options.data)
-                            .map(([key, value]) => `${key}=${value}`)
-                            .join("&");
-                        options.url = options.url + "?" + params;
-                    }
-                }
-                xhr.open(options.method ?? "GET", options.url, true);
-            }
-            configHeader(xhr);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    var status = xhr.status;
-                    buttonDone(options);
-                    if (status === 0 || (status >= 200 && status < 400)) {
-                        var dataResponse = isJson(xhr.responseText)
-                            ? JSON.parse(xhr.responseText)
-                            : xhr.responseText;
-
-                        if (options.callback) {
-                            resolve(
-                                callFunction(options.callback, [
-                                    dataResponse,
-                                    options.button,
-                                    options.isForm,
-                                ])
-                            );
-                        } else {
-                            resolve(dataResponse);
-                        }
-                    } else {
-                        reject({
-                            status: this.status,
-                            statusText: xhr.statusText,
-                        });
-                    }
-                }
-            };
-
-            xhr.onerror = function () {
-                buttonDone(options);
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText,
-                });
-            };
-            if (options.formData) {
-                xhr.send(options.formData);
-            } else if (options.isForm || options.method === "POST") {
-                new FormData();
-                var dataValues = {};
-                if (options.form) {
-                    var enableInputs = options.form.querySelectorAll(
-                        "[name]:not([disabled])"
-                    );
-                    dataValues = getDataValues(enableInputs);
-                } else if (options.data) {
-                    dataValues = options.data;
-                }
-                const formData = buildFormData(
-                    dataValues,
-                    options?.token || []
-                );
-                xhr.send(formData);
-            } else {
-                xhr.send();
-            }
-        });
-    }
 
     function getDataValues(enableInputs) {
         var dataValues = Array.from(enableInputs).reduce(function (
@@ -224,16 +132,6 @@ var XHR = (function () {
         }
 
         return false;
-    }
-
-    function configHeader(xhr) {
-        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-        const csrfTokenLaravel = document.querySelector(
-            'meta[name="csrf-token"]'
-        );
-        if (csrfTokenLaravel) {
-            xhr.setRequestHeader("X-CSRF-TOKEN", csrfTokenLaravel.content);
-        }
     }
 
     function callFunction(func, options = []) {

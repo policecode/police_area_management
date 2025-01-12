@@ -44,16 +44,13 @@ $option = SettingHelpers::getInstance();
         as="font" type="font/woff2" crossorigin="anonymous">
 
     <link href="{{ asset('assets/css/fontawesome-free-6.2.0-web/css/all.minb2fd.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('assets/frontend/css/toastify.minbb07.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
+    {{-- <link href="{{ asset('assets/frontend/css/toastify.minbb07.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" /> --}}
 
     <link href="{{ asset('assets/css/swiper-bundle.minb2fd.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
 
     <link href="{{ asset('assets/css/output0841.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('assets/css/main0841.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('assets/frontend/css/appb0ac.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
-    {{-- <link rel="stylesheet" href="{{ asset('assets/frontend/css/confirm.minb2fd.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css">
-    <link rel="stylesheet" href="{{ asset('assets/tech5scomment/theme/css/emojionearea.minaf78.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" />
-    <link rel="stylesheet" href="{{ asset('assets/tech5scomment/theme/css/commentaf78.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" /> --}}
 
     <script src="{{ asset('assets_global/js/jQuery3.6.0.min.js') }}"></script>
     <script src="{{ asset('assets_global/js/vue.js') }}"></script>
