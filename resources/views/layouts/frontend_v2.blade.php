@@ -63,10 +63,12 @@ $option = SettingHelpers::getInstance();
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8382233036922182"
         crossorigin="anonymous"></script>
 
+        {{-- Xác minh google để chèn quảng cáo --}}
+        <meta name="google-adsense-account" content="ca-pub-8382233036922182">
+        {{-- Google analytic --}}
+    
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T1TVNVMFY"></script>
-    {{-- Xác minh google để chèn quảng cáo --}}
-    <meta name="google-adsense-account" content="ca-pub-8382233036922182">
-    {{-- Google analytic --}}
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -77,6 +79,8 @@ $option = SettingHelpers::getInstance();
 
         gtag('config', 'G-5T1TVNVMFY');
     </script>
+    {{-- https://www.pinterest.com/settings/claim --}}
+    <meta name="p:domain_verify" content="26a13293359fa2cba36263accbd91ab4"/>
     {{-- Thêm các thành phần bổ sung --}}
     @yield('head')
     @include('parts.ads.adsense_popunder')

@@ -105,9 +105,8 @@
                                     <i class="fa-solid fa-hand-holding-heart mb-2"></i>
                                     <span class="text">Ủng hộ</span>
                                 </a> --}}
-                                <a href="javascript:void(0)" title="Ủng hộ"
-                                    class="btn-item sm:min-w-[130px] flex-1 sm:flex-none text-[#128c7e] hover:text-[#128c7e] flex flex-col justify-center items-center text-[0.875rem] rounded py-1 px-2 hover:shadow-[0_0.5em_0.5em_-0.3em_rgba(14,109,98,1)]"
-                                    modal-rs-target="modal-rating">
+                                <a @click="showStar = true" href="javascript:void(0)" title="Ủng hộ"
+                                    class="btn-item sm:min-w-[130px] flex-1 sm:flex-none text-[#128c7e] hover:text-[#128c7e] flex flex-col justify-center items-center text-[0.875rem] rounded py-1 px-2 hover:shadow-[0_0.5em_0.5em_-0.3em_rgba(14,109,98,1)]">
                                     <i class="fa-solid fa-star mb-2"></i>
                                     <span class="text">Đánh giá</span>
                                 </a>
@@ -188,8 +187,7 @@
                     </div>
                     <ul class="tab-story__detail py-2 flex bg-[#f8f9fa] shadow-[2px_2px_6px_rgba(0,0,0,.13)]">
                         <li>
-                            <button class="tablinks py-1 px-4 border-r-[1px] border-solid border-[#4e4d4d] active"
-                                data-electronic="tab-info-1" data-target="tab-info">Giới thiệu</button>
+                            <button @click="show_box = 'introduce'" class="tablinks py-1 px-4 border-r-[1px] border-solid border-[#4e4d4d]" :class="{'active' : show_box == 'introduce'}">Giới thiệu</button>
                         </li>
                         {{-- <li>
                             <button class="tablinks py-1 px-4 border-r-[1px] border-solid border-[#4e4d4d]"
@@ -197,17 +195,15 @@
                                 giá</button>
                         </li> --}}
                         <li>
-                            <button id="but-show-list-chapter"
-                                class="tablinks py-1 px-4 border-r-[1px] border-solid border-[#4e4d4d]"
-                                data-electronic="tab-info-3" data-target="tab-info">Danh sách chương</button>
+                            <button @click="show_box = 'chapters'" id="but-show-list-chapter"
+                                class="tablinks py-1 px-4 border-r-[1px] border-solid border-[#4e4d4d]" :class="{'active' : show_box == 'chapters'}">Danh sách chương</button>
                         </li>
                         <li>
-                            <button class="py-1 px-4 border-r-[1px] border-solid border-[#4e4d4d] scroll-to-target"
-                                data-target=".box-comment-wapper">Bình luận</button>
+                            <button @click="show_box = 'comments'" class="tablinks py-1 px-4 border-r-[1px] border-solid border-[#4e4d4d]" :class="{'active' : show_box == 'comments'}">Bình luận</button>
                         </li>
                     </ul>
                     <div class="wrapper_tabcontent bg-white shadow-[2px_2px_6px_rgba(0,0,0,.13)] mb-6">
-                        <div class="tabcontent p-4 active" data-target="tab-info" id="tab-info-1">
+                        <div class="tabcontent p-4" :class="{'active' : show_box == 'introduce'}">
                             <div class="s-content">
                                 {!! $story['description'] !!}
                             </div>
@@ -226,7 +222,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tabcontent p-4" data-target="tab-info" id="tab-info-3">
+                        <div class="tabcontent p-4" :class="{'active' : show_box == 'chapters'}">
                             <div class="chapters-table__operations flex items-center justify-between flex-wrap mb-1">
                                 <label class="flex items-center shrink-0">
                                     <input type="checkbox" v-model="showDesc"/>
@@ -366,15 +362,12 @@
                 </div>
             </div>
         </div>
-        <div class="fixed top-0 right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-[#00000099] duration-500 md:inset-0 invisible pointer-events-none opacity-0"
-            modal-rs="modal-rating">
-            <div class="popup-form md:max-w-[500px] bg-white relative mx-auto max-h-screen w-full max-w-[90%] overflow-y-auto rounded-md md:h-auto"
-                modal-rs-content="">
-                <span class="close-modal bg-[#128c7e] rounded p-1 flex w-6 h-6 items-center justify-center cursor-pointer absolute top-4 right-4 z-[1]" modal-rs-close>
+        <div @click="closeFormStar" class="close_form_star fixed top-0 right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-[#00000099] duration-500 md:inset-0" :class="{'invisible pointer-events-none opacity-0' : !showStar}">
+            <div class="popup-form md:max-w-[500px] bg-white relative mx-auto max-h-screen w-full max-w-[90%] overflow-y-auto rounded-md md:h-auto">
+                <span @click="showStar = false" class="close-modal bg-[#128c7e] rounded p-1 flex w-6 h-6 items-center justify-center cursor-pointer absolute top-4 right-4 z-[1]">
                     <img src="{{ asset('assets/images/close-modal.png') }}" alt="close">
                 </span>
-                <p class="font-medium text-[#000] text-[1.3rem] p-4 border-b-[1px] border-solid border-[#ebebeb]">Bạn đọc
-                    đánh giá!</p>
+                <p class="font-medium text-[#000] text-[1.3rem] p-4 border-b-[1px] border-solid border-[#ebebeb]">Bạn đọc đánh giá!</p>
                 <form action="" method="post" class="form p-4 formValidation" accept-charset="utf8">
                  
                     <p class="text font-bold text-[#128c7e] mb-4">Bạn đánh giá nội dung truyện này thế nào ?</p>
@@ -413,6 +406,8 @@
         var vue_story_information_app = {
             loading: false,
             showDesc: false,
+            showStar: false,
+            show_box: 'introduce',
             items: [],
             querySearch: {
                 total: 0,
@@ -490,6 +485,12 @@
                 searchItem() {
                     this.getItems();
                     this.getPaging();
+                },
+                closeFormStar(e) {
+                    if (e.target.classList.contains('close_form_star')) {
+                        this.showStar = false;
+                    }
+                    
                 },
                 async getItems() {
                     this.loading = true;
@@ -587,13 +588,9 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('assets/js/swiper-bundle.minb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer>
-    </script>
+    <script src="{{ asset('assets/tech5s_js/tech5s_base.minb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
+    <script src="{{ asset('assets/tech5s_js/libraries/Techb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
+
+    <script src="{{ asset('assets/js/swiper-bundle.minb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
     <script src="{{ asset('assets/js/slider42bb.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
-    <script src="{{ asset('assets/js/tabsb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
-    {{-- <script src="{{ asset('assets/frontend/js/confirm.minb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript"
-        defer></script> --}}
-    {{-- <script src="{{ asset('assets/frontend/js/infinite-loadb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript"
-        defer></script> --}}
-    {{-- <script src="{{ asset('assets/frontend/js/story4287.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script> --}}
 @endsection

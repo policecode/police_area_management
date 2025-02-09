@@ -69,8 +69,8 @@
                                 <h3>
                                     <a :href="week_items[0].url" :title="week_items[0].title" class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{week_items[0].title}}</a>
                                 </h3>
-                                <p v-if="percentage.week == 'view'" class="text-[0.75rem] text-[#007bff]">@{{month_items[0].view}} Lượt xem</p>
-                                <p v-if="percentage.week == 'percentage'" class="text-[0.75rem] text-[#007bff]">@{{month_items[0].percentage}}%</p>
+                                <p v-if="percentage.week == 'view'" class="text-[0.75rem] text-[#007bff]">@{{week_items[0].view}} Lượt xem</p>
+                                <p v-if="percentage.week == 'percentage'" class="text-[0.75rem] text-[#007bff]">@{{week_items[0].percentage}}%</p>
                                 <a :href="week_items[0].author_url" :title="week_items[0].author_name"
                                     class="block text-[0.75rem] text-[#6c757d] w-fit">@{{week_items[0].author_name}}</a>
                             </div>

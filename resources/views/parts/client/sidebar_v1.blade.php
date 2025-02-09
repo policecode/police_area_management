@@ -91,7 +91,7 @@ $user = Auth::user();
                 </form>
                 <ul class="flex items-center user-option">
                     <li class="mr-5 last:mr-0">
-                        <a href="javascript:void(0)" title="Tủ truyện" class="mystory" show-story>
+                        <a @click="showCabinet" href="javascript:void(0)" title="Tủ truyện" class="mystory" show-story>
                             <img src="{{ asset('assets/images/bookmark2.png') }}" class="object-contain w-7"
                                 alt="Tủ truyện">
                         </a>
@@ -145,14 +145,13 @@ $user = Auth::user();
                         </div>
                     </li> --}}
                     <li class="mr-5 last:mr-0 menu-mobile block xl:hidden relative">
-                        <span class="show-menu-mobile flex cursor-pointer">
+                        <span @click="show_navbar = !show_navbar" class="show-menu-mobile flex cursor-pointer">
                             <svg viewBox='0 0 30 30' class="w-[30px]" xmlns='http://www.w3.org/2000/svg'>
                                 <path stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round'
                                     stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22' />
                             </svg>
                         </span>
-                        <div
-                            class="box-menu-on-mobile absolute top-[100%] right-0 z-10 bg-white border border-solid border-[#128c7e] w-[280px] rounded-2xl p-2 hidden">
+                        <div class="box-menu-on-mobile absolute top-[100%] right-0 z-10 bg-white border border-solid border-[#128c7e] w-[280px] rounded-2xl p-2" :class="{'hidden' : !show_navbar}">
                             <div class="flex items-center">
                                 <form action="{{ route('client.search') }}" method="get"
                                     class="relative overflow-hidden form-search-header rounded-3xl mr-4 flex-1 md:flex-none"
@@ -182,7 +181,7 @@ $user = Auth::user();
                                     </a>
                                 </li> --}}
                                 <li>
-                                    <a href="javascript:void(0)" modal-rs-target="modal_cate" title="Thể loại">Thể loại</a>
+                                    <a @click="show_categories = true" href="javascript:void(0)" title="Thể loại">Thể loại</a>
                                 </li>
                                 <li>
                                     <a href="{{route('client.full-story')}}" title="Hoàn thành">Hoàn thành</a>
@@ -274,8 +273,7 @@ $user = Auth::user();
     <div class="header-nav bg-[#343a40]">
         <div class="container flex items-center justify-between">
             <div class="flex items-center menu menu-left">
-                <span class="head-cate inline-block px-2 py-[0.625rem] text-white text-[0.875rem]"
-                    modal-rs-target="modal_cate">
+                <span @click="show_categories = true" class="head-cate inline-block px-2 py-[0.625rem] text-white text-[0.875rem] cursor-pointer">
                     <i class="mr-2 fa-solid fa-bars"></i> Thể loại
                 </span>
                 <ul>
@@ -298,11 +296,29 @@ $user = Auth::user();
             </div>
         </div>
     </div>
+
+    <div class="fixed top-0 modal-story-genre right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-white duration-500 md:inset-0" :class="{'invisible pointer-events-none opacity-0' : !show_categories}" modal-rs="modal_cate">
+        <span @click="show_categories = false" class="btn-close-genre close-modal items-center justify-center cursor-pointer absolute top-2 right-2 z-[1]">
+            <i class="fa-solid fa-xmark"></i>
+        </span>
+        <div class="w-full h-full overflow-auto">
+            <ul class="flex flex-wrap">
+                @foreach ($all_categories as $item)
+                    <li class="basis-1/2 md:basis-1/4 lg:basis-1/6">
+                        <a href="{{ route('client.tag', ['tag_slug' => $item['slug']]) }}" title="{{ $item['name'] }}c" class="block p-2">{{ $item['name'] }}</a>
+                    </li>
+                @endforeach
+
+            </ul>
+        </div>
+    </div>
 </header>
 
 <script>
     var vue_client_sidebar_app = {
         loading: false,
+        show_categories: false,
+        show_navbar: false,
         items: [],
         msgSearch: '',
         // isThemeLight: LocalStorageHelper.get('sidebar_theme_web', false),
@@ -325,6 +341,9 @@ $user = Auth::user();
         },
         computed: {},
         methods: {
+            showCabinet() {
+                story_cabinet_app.active = true;
+            },
             async getItems() {
                 this.items = [];
 
@@ -387,4 +406,5 @@ $user = Auth::user();
     });
 </script>
 
-@include('parts.client.list_categories')
+{{-- @include('parts.client.list_categories') --}}
+@include('parts.client.cabinet')

@@ -28,6 +28,8 @@
 @endsection
 
 @section('scripts')
+<script src="{{ asset('assets/tech5s_js/tech5s_base.minb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
+<script src="{{ asset('assets/tech5s_js/libraries/Techb2fd.js?v=' . FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
 {{-- Slider --}}
 <script src="{{ asset('assets/js/swiper-bundle.minb2fd.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>
 <script src="{{ asset('assets/js/slider42bb.js?v='.FVN_VERSION_LARAVEL) }}" type="text/javascript" defer></script>

@@ -28,7 +28,11 @@ $option = SettingHelpers::getInstance();
                     <div class="swiper-wrapper">
                         @foreach ($hot_stories as $key => $item)
                                 <div class="swiper-slide h-auto">
-                                    <div class="item text-center cursor-pointer text-white lg:text-[0.875rem] bg-[rgba(0,0,0,.8)] p-2 h-full">{{'0'.($key + 1)}}</div>
+                                    @if ($key > 8)
+                                        <div class="item text-center cursor-pointer text-white lg:text-[0.875rem] bg-[rgba(0,0,0,.8)] p-2 h-full">{{($key + 1)}}</div>
+                                    @else
+                                        <div class="item text-center cursor-pointer text-white lg:text-[0.875rem] bg-[rgba(0,0,0,.8)] p-2 h-full">{{'0'.($key + 1)}}</div>
+                                    @endif
                                 </div>
                         @endforeach
                         
