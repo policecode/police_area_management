@@ -24,6 +24,7 @@ var vue_data = {
         page: 1,
         per_page: 20,
         keyword: '',
+        category_id: "",
         order_by: 'id',
         order_type: 'DESC'
     },
@@ -151,6 +152,7 @@ var app = new Vue({
         async getCategories() {
             let jsonData = await new RouteApi().get(`${FVN_LARAVEL_HOME}/admin/category/get-items?per_page=0`);
             this.categories = jsonData.data;
+            
         },
         async getAuthors(newKey) {
             if (this.pointInTime) {
@@ -305,11 +307,13 @@ var app = new Vue({
             let paramSearch = {};
             for (const i in this.querySearch) {
                 let value = this.querySearch[i];
-                if (i == 'book_date_min' || i == 'book_date_max') {
-                    value = format_date(value);
+                if (value) {
+                    if (i == 'book_date_min' || i == 'book_date_max') {
+                        value = format_date(value);
+                    }
+                    paramSearch[i] = value
+                    this.getItemUrl += '&' + i + '=' + value;
                 }
-                paramSearch[i] = value
-                this.getItemUrl += '&' + i + '=' + value;
             }
 
             paramSearch['order_by'] = this.querySearch.order_by
@@ -327,6 +331,7 @@ var app = new Vue({
                 page: 1,
                 per_page: 20,
                 keyword: '',
+                category_id: "",
                 order_by: 'id',
                 order_type: 'DESC'
             };

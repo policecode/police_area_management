@@ -22,11 +22,9 @@ use App\Enums\StatusStory;
             <a @click="changeScreen('detail')" class="btn btn-primary">Thêm mới</a>
             <div class="row mt-4">
                 <div class="col-3">
-                    <select class="form-select">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                    <select v-model="querySearch.category_id" class="form-select">
+                        <option value="">Thể loại</option>
+                        <option v-for="(item, index) in categories" :value="item.id">@{{item.name}}</option>
                       </select>
                 </div>
                 <div class="col-3">
@@ -71,6 +69,7 @@ use App\Enums\StatusStory;
                               
                                     </th>
                                     <th>Đường dẫn</th>
+                                    <th>Thể loại</th>
                                     <th>
                                         <a  @click="orderBy('view_count')" class="link-offset-1">
                                             Số lượt xem    
@@ -94,6 +93,7 @@ use App\Enums\StatusStory;
                                     <th width="10%">Ảnh bìa</th>
                                     <th>Tên truyện</th>
                                     <th>Đường dẫn</th>
+                                    <th>Thể loại</th>
                                     <th>Số lượt xem</th>
                                     <th>Cập nhật gần đây nhất</th>
                                     <th>Hành động</th>
@@ -107,6 +107,9 @@ use App\Enums\StatusStory;
                                     <td><img :src="item.thumbnail" class="img-thumbnail w-100" /></td>
                                     <td>@{{ item.title }}</td>
                                     <td>@{{ item.slug }}</td>
+                                    <td>
+                                        <button v-for="(cat, t) in item.category_obj" class="btn btn-info btn-sm mr-2 mb-2">@{{cat.name}}</button>
+                                    </td>
                                     <td>@{{ item.view_count }}</td>
                                     <td>@{{ displayDate(item.updated_at) }}</td>
                                     <td>

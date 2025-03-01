@@ -36,8 +36,17 @@ class StoriesController extends Controller
     }
     public function getItems(Request $request) {
         // Thêm dữ liệu vào trong query
-      // $request->merge(array_merge($queryDefault, $request->query()));
-
+        if ($request->category_id) {
+            $list_story_id = StoryCategory::GetByCategoryId($request->category_id)->get()->pluck('story_id')->toArray();
+            if (count($list_story_id) <= 1) {
+                $list_id_str = implode(',', $list_story_id).",";
+            } else {
+                $list_id_str = implode(',', $list_story_id);
+            }
+            $request->merge(array_merge($request->query(),[
+                'id' => $list_id_str
+            ]));
+        }
       try {
         //code...
         $query = Story::filter($request);
@@ -53,17 +62,20 @@ class StoriesController extends Controller
         }else{
             $results = $query->get();
             $story_arr= $results->pluck('id');
-            $listStoryCat = StoryCategory::whereIn('story_id', $story_arr)->get()->groupBy('story_id');
+            $listStoryCat = StoryCategory::JoinCategory()->whereIn('story_id', $story_arr)->get()->groupBy('story_id');
             $listCat = [];
+            $listCatName = [];
             foreach ($listStoryCat as $key => $items) {
                 for ($i=0; $i < $items->count(); $i++) { 
                     $listCat[$key][] = $items[$i]->category_id;
+                    $listCatName[$key][] = $items[$i];
                 }
             }
-            $results->each(function ($item, $key) use($listCat){
+            $results->each(function ($item, $key) use($listCat, $listCatName){
                 $item->thumbnail = route('index') . '/' . $item->thumbnail;
                 $item->url = route('client.story', ['story_slug' => $item->slug]);
                 $item->category = $listCat[$item->id];
+                $item->category_obj = $listCatName[$item->id];
             });
             $res['data'] = $results;
         }

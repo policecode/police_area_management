@@ -107,7 +107,7 @@ class HomeController extends Controller
         // Thể loại truyện Nữ Cường
         $category = Category::getBySlug('nu-cuong')->first();
         if ($category) {
-            $nucuong_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(12)->get();
+            $nucuong_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(14)->get();
             $story_arr = $nucuong_stories_collection->pluck('id');
             $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
             $nucuong_stories = $nucuong_stories_collection->each(function ($item, $key) use ($listStoryCat) {
