@@ -37,6 +37,17 @@ use App\Enums\StatusStory;
                     <button @click="clearFilter" class="btn btn-danger">Clear fillter</button>
                 </div>
             </div>
+            <div class="row mt-4">
+                <div class="col-3">
+                    <select v-model="actionList" class="form-select">
+                        <option value="">Thực hiện hành động</option>
+                        <option value="delete">Xóa</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <button @click="handleActionList" class="btn btn-success">Action</button>
+                </div>
+            </div>
             <div class="card shadow mb-4 mt-2">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Quản lý các bộ truyện</h6>
@@ -47,7 +58,9 @@ use App\Enums\StatusStory;
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    <th>
+                                        <input type="checkbox" v-model="checkAll" value="1" />    
+                                    </th>
                                     <th>Ảnh bìa</th>
                                     <th>
                                         <a  @click="orderBy('title')" class="link-offset-1">
@@ -78,7 +91,7 @@ use App\Enums\StatusStory;
                             <tfoot>
                                 <tr>
                                     <th></th>
-                                    <th>Ảnh bìa</th>
+                                    <th width="10%">Ảnh bìa</th>
                                     <th>Tên truyện</th>
                                     <th>Đường dẫn</th>
                                     <th>Số lượt xem</th>
@@ -88,8 +101,10 @@ use App\Enums\StatusStory;
                             </tfoot>
                             <tbody>
                                 <tr v-for="(item, index) in items">
-                                    <td>@{{ index + 1 }}</td>
-                                    <td><img :src="item.thumbnail" class="img-thumbnail w-75" /></td>
+                                    <td>
+                                        <input type="checkbox" v-model="listId" :value="item.id" />       
+                                    </td>
+                                    <td><img :src="item.thumbnail" class="img-thumbnail w-100" /></td>
                                     <td>@{{ item.title }}</td>
                                     <td>@{{ item.slug }}</td>
                                     <td>@{{ item.view_count }}</td>

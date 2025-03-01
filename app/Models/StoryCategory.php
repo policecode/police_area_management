@@ -62,4 +62,13 @@ class StoryCategory extends Model
     public function scopeGetByCategoryId($query, $catId) {
         return $query->where('story_categories.category_id',$catId);
     }
+
+    public function scopeGetByStoryId($query, $story_id) {
+        if (is_array($story_id)) {
+            $query->whereIn('story_categories.story_id', $story_id);
+        } else {
+            $query->where('story_categories.story_id', $story_id);
+        }
+        return $query;
+    }
 }

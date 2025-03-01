@@ -26,11 +26,19 @@ class Chaper extends Model
         return $query;
     }
     public function scopeGetByStory($query, $story_id) {
-        $query->where('story_id', $story_id);
+        if (is_array($story_id)) {
+            $query->whereIn('story_id', $story_id);
+        } else {
+            $query->where('story_id', $story_id);
+        }
         return $query;
     }
     public function scopeGetById($query, $id) {
-        $query->where('id', $id);
+        if (is_array($id)) {
+            $query->whereIn('id', $id);
+        } else {
+            $query->where('id', $id);
+        }
         return $query;
     }
     public function scopeGetBySlug($query, $slug) {

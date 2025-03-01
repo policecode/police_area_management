@@ -10,10 +10,12 @@ var vue_data = {
         status: "",
         category: []
     },
+    actionList: "",
     selectedCat: [],
     selectedAuthor: null,
     files: {},
     listId: [],
+    checkAll: false,
     errors: {},
     queryToDate: '',
     queryFromDate: '',
@@ -194,13 +196,25 @@ var app = new Vue({
                 }
                 
             }
-            // if (name == 'resume') {
-            //     if (!(files[0].size < 5 * 1024 * 1024)) {
-            //         e.target.value = '';
-            //         return jAlert('File size less than 5MB');
-            //     }
-            //     appCandidateList.itemDetail.resume_file = files[0];
-            // }
+        },
+        async handleActionList() {
+            if (!this.actionList) { 
+                return jAlert("Chọn hành động trước khi thực hiện");
+            }
+            this.loading = true;
+            let jsonData = await new RouteApi().post(`${this.apiUrl}/handle-list-stories`, {
+                list_id: this.listId,
+                action: this.actionList
+            });
+            this.loading = false;
+            if (jsonData.status) {
+                this.checkAll = false;
+                this.listId = [];
+                jnotice(jsonData.message);
+                this.searchItem();
+            } else {
+                jAlert(jsonData.message);
+            }
         },
         async save(e) {
             e.preventDefault()
@@ -339,6 +353,13 @@ var app = new Vue({
         },
         selectedAuthor(newVal) {
             this.itemDetail.author_id = newVal.id;
+        },
+        checkAll(newVal) {
+            if (newVal) {
+                this.listId = this.items.map((item) => item.id);
+            } else {
+                this.listId = [];
+            }
         }
     },
 });

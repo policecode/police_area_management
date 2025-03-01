@@ -22,7 +22,11 @@ class ViewMonth extends Model
     public $timestamps = false;
     private $joinStory = false;
     public function scopeGetByStory($query, $story_id) {
-        $query->where('story_id', $story_id);
+        if (is_array($story_id)) {
+            $query->whereIn('story_id', $story_id);
+        } else {
+            $query->where('story_id', $story_id);
+        }
         return $query;
     }
     public function scopeGetByKey($query, $key) {

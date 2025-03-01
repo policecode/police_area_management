@@ -87,7 +87,7 @@ class HomeController extends Controller
         // Thể loại truyện Tiên hiệp
         $category = Category::getBySlug('tien-hiep')->first();
         if ($category) {
-            $tienhiep_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(12)->get();
+            $tienhiep_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(14)->get();
             $story_arr = $tienhiep_stories_collection->pluck('id');
             $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
             $tienhiep_stories = $tienhiep_stories_collection->each(function ($item, $key) use ($listStoryCat) {

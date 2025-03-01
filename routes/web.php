@@ -55,6 +55,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
             Route::post('/', 'StoriesController@store')->name('store')->middleware('can:admin.stories.store');
             Route::post('/update/{story}', 'StoriesController@update')->name('update')->middleware('can:admin.stories.update');
             Route::delete('/{story}', 'StoriesController@destroy')->name('destroy')->middleware('can:admin.stories.destroy');
+            Route::post('/handle-list-stories', 'StoriesController@handleListStories')->name('handleListStories')->middleware('can:admin.stories.handleListStories');
         });
         // Route::resource('stories', 'StoriesController');
 

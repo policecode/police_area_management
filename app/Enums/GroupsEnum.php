@@ -114,6 +114,10 @@ final class GroupsEnum extends Enum
             'role' => 'admin.stories.destroy',
             'name' => 'Xóa'
         ],
+        [
+            'role' => 'admin.stories.handleListStories',
+            'name' => 'Xử lý theo danh sách'
+        ]
     ]];
     const CHAPTER =   ['value' => 'Quản lý các chương truyện', 'permission' => [
         [

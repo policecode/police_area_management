@@ -53,7 +53,14 @@ class Story extends Model
         $query->where('stories.author_id', $author_id);
         return $query;
     }
-
+    public function scopeGetById($query, $id) {
+        if (is_array($id)) {
+            $query->whereIn('stories.id', $id);
+        } else {
+            $query->where('stories.id', $id);
+        }
+        return $query;
+    }
     public function scopeJoinAuthorAndChapter($query) {
         if ($this->joinAuthorAndChapter ) {
             return $query;

@@ -237,6 +237,48 @@ class StoriesController extends Controller
         }
     }
 
+    public function handleListStories(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'list_id' => 'array',
+            'action' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 0, 
+                'errors' => $validator->errors(),
+                'message' => 'validation'
+            ]);
+        }
+        $data = $validator->validated();
+        try {
+            DB::beginTransaction();
+            $list_story = Story::GetById($data['list_id'])->get();
+            $result = '';
+            if ($data['action'] == 'delete') {
+                foreach ($list_story as $key => $item) {
+                    Storage::delete($item->thumbnail);
+                }
+                Chaper::GetByStory($data['list_id'])->delete();
+                StoryCategory::GetByStoryId($data['list_id'])->delete();
+                ViewDay::GetByStory($data['list_id'])->delete();
+                ViewWeek::GetByStory($data['list_id'])->delete();
+                ViewMonth::GetByStory($data['list_id'])->delete();
+                Story::GetById($data['list_id'])->delete();
+            }
+            DB::commit();
+            return response()->json([
+                'status' => 1, 
+                'data' => $result,
+                'message' => 'Handle Stories success'
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0, 'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
     private function rules($request)
     {
         $rules = [
