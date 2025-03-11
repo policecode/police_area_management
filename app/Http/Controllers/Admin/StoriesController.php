@@ -352,6 +352,47 @@ class StoriesController extends Controller
         ]);
     }
 
+    public function autoDestroyStoryByCategory(Request $request, $category_slug) {
+        $category = Category::GetBySlug($category_slug)->first();
+        if (!$category) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Category not found',
+            ]);
+        }
+        DB::beginTransaction();
+        try {
+            $listStory = StoryCategory::JoinStory()->GetByCategoryId($category->id)->where('stories.view_count','=', 0)->orderBy('stories.last_chapers', 'DESC')->skip(0)->take(50)->get();
+            // dd($listStory->toArray());
+            $count = 0;
+            $last_data_destroy = '';
+            foreach ($listStory as $key => $story) {
+                $last_data_destroy = $story;
+                Storage::delete($story->thumbnail);
+                Chaper::getByStory($story->id)->delete();
+                StoryCategory::where('story_id', $story->id)->delete();
+                ViewDay::where('story_id', $story->id)->delete();
+                ViewWeek::where('story_id', $story->id)->delete();
+                ViewMonth::where('story_id', $story->id)->delete();
+                $story->delete();
+                $count++;
+            }
+            DB::commit();
+            return response()->json([
+                'status' => 1,
+                'message' => 'Delete success: '.$count,
+                'last_data' => $last_data_destroy
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+    }
+
     public function autoConvertPercentageView() {
         DB::beginTransaction();
         $all_views_days = ViewDay::joinStory()->get();
