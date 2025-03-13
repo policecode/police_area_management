@@ -86,7 +86,6 @@ $option = SettingHelpers::getInstance();
     <meta name="p:domain_verify" content="26a13293359fa2cba36263accbd91ab4"/>
     {{-- Thêm các thành phần bổ sung --}}
     @yield('head')
-    @include('parts.ads.adsense_popunder')
 </head>
 
 <body class="wrapper mx-auto 2xl:text-[16px] text-[14px] text-[#252525] leading-snug font-['Roboto',sans-serif] overflow-x-hidden">
@@ -101,8 +100,8 @@ $option = SettingHelpers::getInstance();
     <script async defer crossorigin="anonymous"
         src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v21.0&appId=8969948979690020"></script>
     @include('parts.ads.adsense_social')
-    {{-- @include('parts.ads.ads_modal') --}}
-    @include('parts.ads.adsense_popunder')
+    @include('parts.ads.ads_modal')
+    {{-- @include('parts.ads.adsense_popunder') --}}
     @yield('scripts')
 </body>
 
