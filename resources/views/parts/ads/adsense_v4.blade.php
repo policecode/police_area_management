@@ -1,11 +1,1 @@
-{{-- Adsterra --}}
-<script type="text/javascript">
-	atOptions = {
-		'key' : 'e38dad159dcf83dc444999c6c66e4c86',
-		'format' : 'iframe',
-		'height' : 300,
-		'width' : 160,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/e38dad159dcf83dc444999c6c66e4c86/invoke.js"></script>
+<iframe src="https://breakingscattered.com/gygvwrz5uv?key=7efbdfc0dc7e16edcd56a8e52f26fd6c" autoplay=”true” target=”_blank”  width="100%" frameborder="0"></iframe>

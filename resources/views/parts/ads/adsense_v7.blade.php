@@ -1,2 +1,1 @@
-{{-- Adsterra --}}
-<script type='text/javascript' src='//pl25163510.profitablecpmrate.com/5c/d2/23/5cd2239bbaecdbd0bfc371618859c562.js'></script>
+<iframe src="https://breakingscattered.com/wm03082atx?key=b6b4b786816c76c5c26d4f502021d67b" autoplay=”true” target=”_blank”  width="100%" frameborder="0"></iframe>

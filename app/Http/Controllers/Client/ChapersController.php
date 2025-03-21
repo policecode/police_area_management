@@ -50,7 +50,7 @@ class ChapersController extends Controller
         $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]);
         $arrContent = explode(" ", $chaper['content']);
         $chaper['content_length'] = count($arrContent);
-        // $chaper['content'] = $this->addAdsToContent($chaper['content']);
+        $chaper['content'] = $this->addAdsToContent($chaper['content']);
         
         $breadcrumb = [
             [
@@ -82,11 +82,11 @@ class ChapersController extends Controller
     public function addAdsToContent($content) {
         $arr = explode(" ", $content);
         $newArr = [];
-        $index = 1;
+        $index = 3;
         for ($i=0; $i < count($arr); $i++) { 
             $newArr[] = $arr[$i];
                 if (($i + 1) % 500 == 0) {
-                    if ($index <= 6) {
+                    if ($index <= 7) {
                         $newArr[] = '<br/>'.view('parts.ads.adsense_v'.$index).'<br/>';
                         $index++;
                     }

@@ -36,7 +36,7 @@
                         <i class="fa-solid fa-angle-right ml-2"></i>
                     </a>
                 </div>
-      
+                
                 <div class="justify-center" :class="{'flex':show.chapter_top}" hidden>
                     <select class="xl:py-2 xl:px-4 bg-[#128c7e] mx-1 py-2 text-white" onchange="location = this.value;">
                         @foreach ($chaper_list as $item)
@@ -46,6 +46,8 @@
                         @endforeach
                     </select>
                 </div>
+                @include('parts.ads.adsense_v1')
+                
                 <div id="chapter-content"
                     style="background:#ffffff;color:#292e33;font-size:18px;line-height:24px;font-family:Roboto;">
                     <h1 class="chapter-title font-bold mb-2">{{ $chaper['name'] }}</h1>
@@ -107,6 +109,8 @@
                     </a>
                 </div>
             </div>
+            @include('parts.ads.adsense_v2')
+
             <div class="container mt-6">
                 <div id="comment-chapter-box"
                     class="box-comment-wapper p-3 rounded bg-[#fff] mb-6 shadow-[2px_2px_6px_rgba(0,0,0,.13)]">
