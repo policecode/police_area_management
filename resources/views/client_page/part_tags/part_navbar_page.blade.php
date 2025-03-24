@@ -7,6 +7,7 @@
             <li><a href="{{route('client.new-update')}}" title="Mới" class="block p-2 rounded">Truyện mới</a></li>
             <li><a href="{{route('client.hot-story')}}" title="Truyện hay" class="block p-2 rounded">Truyện Hay</a></li>
             <li><a href="{{route('client.view-story')}}" title="Xem nhiều" class="block p-2 rounded">Xem nhiều</a></li>
+            <li><a href="{{route('client.superSearch')}}" title="Tìm kiếm nâng cao" class="block p-2 rounded">Filter</a></li>
         </ul>
     </div>
 </section>

@@ -130,11 +130,11 @@ use App\Enums\CategoryType;
 
         <div class="module-content bg-[#fefefe] border border-solid border-[#d8d8d8] rounded">
             <div class="flex items-center justify-between head-all p-3 pb-0">
-                <h2 class="title font-bold 2xl:text-[1.5rem] text-[1.25rem] text-[#6c5ce7]">Kết Quả Tìm Kiếm
+                <h2 class="title font-bold 2xl:text-[1.5rem] text-[1.25rem] text-[#6c5ce7]">Kết Quả Tìm Kiếm: @{{items.length}}
                 </h2>
             </div>
             <div class="flex flex-wrap -mx-1 p-2">
-                <div v-for="item in items" class="px-1 basis-1/2 mb-2">
+                <div v-for="item in items" class="px-1 basis-full mb-2">
                     <div
                         class="novel-item h-full p-4 bg-white flex flex-wrap transition-all duration-300 hover:shadow-[2px_2px_9px_rgba(0,0,0,.44)] border-t-[1px] border-dashed border-[#bababa]">
                         <a :href="item.url"
@@ -182,6 +182,11 @@ use App\Enums\CategoryType;
                     <fvn-paging-client :page="querySearch.page" :per_page="querySearch.per_page" :total="querySearch.total" @change-page="(page) => nextPage(page)" :show_page="5"></fvn-paging-client>
                 </div>
             </div>
+        </div>
+        <div v-if="loading"
+            class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center"
+            style="z-index: 9999; background-color: rgb(0 0 0 / 50%);">
+            <img src="{{asset('assets/images/loading-load-icon-transparent.png')}}" class="loader" width="80px" height="80px" alt="loading" srcset="">
         </div>
     </div>
 

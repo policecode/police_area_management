@@ -101,47 +101,59 @@ class SearchController extends Controller
     }
 
     public function searchItem(Request $request) {
-        $listCategory = $request->cats;
-        $request->merge([
-            'keyword' => Str::slug($request->keyword, " ")
-        ]);
-        $query = Story::filter($request->except(['cats']))->joinAuthor();
-        if ($listCategory) {
-            foreach ($listCategory as $key => $cat) {
-                $listStoryId = StoryCategory::select('story_id')->getByCategoryId($cat)->get()->pluck('story_id')->toArray();
-                $query->whereIn('stories.id', $listStoryId);
+        try {
+            //code...
+            $listCategory = $request->cats;
+            if (!$request->keyword) {
+                return response()->json([
+                    'result' => 0, 'data'=> [], 'message' => 'Yêu cầu cung cấp từ khóa'
+                ], 400);
             }
-        }
-        $res = [
-            'result' => 1,
-            'data' => [],
-            'page' => $request->page,
-            'per_page' => $request->per_page,
-            'total' => 0
-        ];
-        if($request->is_paginate){
-            $res['total'] = $query->count();
-        }else{
-            $listStories = $query->get();
-            $story_arr = $listStories->pluck('id');
-            $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
-            $now = Carbon::now();
-            $res['data'] = $listStories->each(function ($item, $key) use ($now, $listStoryCat)  {
-                $item->thumbnail = route('index') . '/' . $item->thumbnail;
-                $item->url =  route('client.story', ['story_slug' => $item->slug]);
-                $item->author_url =  route('client.author', ['author_slug' => $item->author_slug]);
-                $item->after_day = $now->diffInDays(new Carbon($item->created_at));
-                $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-                $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
-                $isResult = strpos($item->title, '(c)');
-                if ($isResult) {
-                    $item->is_convert = true;
-                } else {
-                    $item->is_convert = false;
+            $request->merge([
+                'keyword' => Str::slug($request->keyword, " ")
+            ]);
+            $query = Story::filter($request->except(['cats']))->joinAuthor();
+            if ($listCategory) {
+                foreach ($listCategory as $key => $cat) {
+                    $listStoryId = StoryCategory::select('story_id')->getByCategoryId($cat)->get()->pluck('story_id')->toArray();
+                    $query->whereIn('stories.id', $listStoryId);
                 }
-            })->toArray();
+            }
+            $res = [
+                'result' => 1,
+                'data' => [],
+                'page' => $request->page,
+                'per_page' => $request->per_page,
+                'total' => 0
+            ];
+            if($request->is_paginate){
+                $res['total'] = $query->count();
+            }else{
+                $listStories = $query->get();
+                $story_arr = $listStories->pluck('id');
+                $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
+                $now = Carbon::now();
+                $res['data'] = $listStories->each(function ($item, $key) use ($now, $listStoryCat)  {
+                    $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                    $item->url =  route('client.story', ['story_slug' => $item->slug]);
+                    $item->author_url =  route('client.author', ['author_slug' => $item->author_slug]);
+                    $item->after_day = $now->diffInDays(new Carbon($item->created_at));
+                    $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
+                    $item->categories = empty($listStoryCat[$item->id]) ? [] : $listStoryCat[$item->id];
+                    $isResult = strpos($item->title, '(c)');
+                    if ($isResult) {
+                        $item->is_convert = true;
+                    } else {
+                        $item->is_convert = false;
+                    }
+                })->toArray();
+            }
+            return response()->json($res);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0, 'data'=> [], 'message' => $e->getMessage()
+            ], 400);
         }
-        return response()->json($res);
     }
 
    

@@ -1,41 +1,7 @@
 <section class="py-1 top-story">
     <div class="container">
         <div class="flex flex-wrap -mx-2">
-            <div class="px-2 basis-full xl:basis-1/4 order-last xl:order-first">
-                <div class="sidebar-story mb-5">
-                    <div
-                        class="box-story__sidebar bg-[#f8f9fa] shadow-[0_0_1px_rgba(0,0,0,.13)] mb-6 last:mb-0 rounded-md overflow-hidden border border-solid border-[rgba(0,0,0,.125)]">
-                        <div
-                            class="head flex items-center justify-between p-3 border-b-[1px] border-solid border-[rgba(0,0,0,.125)]">
-                            <p class="text-[0.938rem] font-bold mr-2">Truyện mới nhất</p>
-                            <a href="{{ route('client.new-update') }}" title="Danh sách đầy đủ"
-                                class="view-more text-[1.3] text-[#128c7e]">
-                                <i class="fa-solid fa-right-long"></i>
-                            </a>
-                        </div>
-                        <ul class="list-story__item">
-                            @foreach ($new_stories as $item)
-                                <li class="text-[0.875rem] py-[6px] px-4 border-b-[1px] border-solid border-[#f4f4f4]">
-                                    <div class="flex items-center justify-between">
-                                        <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
-                                            class="w-[75%] line-clamp-1 text-[0.875rem]" title="{{ $item['title'] }}">
-                                            @if ($item['is_convert'])
-                                                <span class="prefix text-[#128c7e]">[Convert]</span>
-                                            @else
-                                                <span class="prefix" style="color: #0000ff">[Dịch]</span>
-                                            @endif
-                                            {{ ucwords($item['title']) }}
-                                        </a>
-                                        <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}"
-                                            title="{{ $item['author_name'] }}"
-                                            class="author text-[0.625rem] w-[21%] line-clamp-1 text-[#999999]">{{ $item['author_name'] }}</a>
-                                    </div>
-                                </li>
-                            @endforeach
-
-                        </ul>
-                    </div>
-                </div>
+            <div class="px-2 basis-full xl:basis-1/4 xl:order-first">
                 <div class="sidebar-story mb-5">
                     <div
                         class="box-story__sidebar bg-[#f8f9fa] shadow-[0_0_1px_rgba(0,0,0,.13)] mb-6 last:mb-0 rounded-md overflow-hidden border border-solid border-[rgba(0,0,0,.125)]">
@@ -74,6 +40,41 @@
                         </ul>
                     </div>
                 </div>
+                <div class="sidebar-story mb-5">
+                    <div
+                        class="box-story__sidebar bg-[#f8f9fa] shadow-[0_0_1px_rgba(0,0,0,.13)] mb-6 last:mb-0 rounded-md overflow-hidden border border-solid border-[rgba(0,0,0,.125)]">
+                        <div
+                            class="head flex items-center justify-between p-3 border-b-[1px] border-solid border-[rgba(0,0,0,.125)]">
+                            <p class="text-[0.938rem] font-bold mr-2">Truyện mới nhất</p>
+                            <a href="{{ route('client.new-update') }}" title="Danh sách đầy đủ"
+                                class="view-more text-[1.3] text-[#128c7e]">
+                                <i class="fa-solid fa-right-long"></i>
+                            </a>
+                        </div>
+                        <ul class="list-story__item">
+                            @foreach ($new_stories as $item)
+                                <li class="text-[0.875rem] py-[6px] px-4 border-b-[1px] border-solid border-[#f4f4f4]">
+                                    <div class="flex items-center justify-between">
+                                        <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
+                                            class="w-[75%] line-clamp-1 text-[0.875rem]" title="{{ $item['title'] }}">
+                                            @if ($item['is_convert'])
+                                                <span class="prefix text-[#128c7e]">[Convert]</span>
+                                            @else
+                                                <span class="prefix" style="color: #0000ff">[Dịch]</span>
+                                            @endif
+                                            {{ ucwords($item['title']) }}
+                                        </a>
+                                        <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}"
+                                            title="{{ $item['author_name'] }}"
+                                            class="author text-[0.625rem] w-[21%] line-clamp-1 text-[#999999]">{{ $item['author_name'] }}</a>
+                                    </div>
+                                </li>
+                            @endforeach
+
+                        </ul>
+                    </div>
+                </div>
+                
             </div>
             <div class="px-2 basis-full xl:basis-3/4 mb-5">
                 <div class="flex items-center justify-between mb-2 head-all bg-white pr-3">
