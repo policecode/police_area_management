@@ -24,7 +24,6 @@ class ChaperController extends Controller
             'page_title' => 'Quản lý chương truyện',
             'story' => $story
         );
-       
         return view('admin_page.stories.lists_chaper', $dataView);
     }
 

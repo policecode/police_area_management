@@ -18,6 +18,7 @@
                 {{-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> --}}
             </div>
+            <a v-if="backUrl" :href="backUrl" class="btn btn-danger">Quay lại</a>
             <a @click="changeScreen('detail')" class="btn btn-primary">Thêm mới</a>
             <a @click="deleteAllItem" class="btn btn-danger">Xóa tất cả các chương truyện</a>
             <div class="row mt-4">
@@ -38,7 +39,13 @@
             </div>
             <div class="card shadow mb-4 mt-2">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Truyện: @{{story.title}} </h6>
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Truyện: @{{story.title}} -
+                        Số chương: @{{story.total_chapter}} -
+                        Số lượt xem: @{{story.view_count}}
+
+
+                    </h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -49,9 +56,27 @@
                                     <th></th>
                                     <th>Chương</th>
                                     <th>Đường dẫn tĩnh</th>
-                                    <th>Vị trí</th>
-                                    <th>Số lượt xem</th>
-                                    <th>Cập nhật gần đây nhất</th>
+                                    <th>
+                                        <a  @click="orderBy('position')" class="link-offset-1">
+                                            Vị trí
+                                            <i v-if="isOrder('position', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('position', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a  @click="orderBy('view')" class="link-offset-1">
+                                            Số lượt xem
+                                            <i v-if="isOrder('view', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('view', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a  @click="orderBy('updated_at')" class="link-offset-1">
+                                            Cập nhật gần đây nhất
+                                            <i v-if="isOrder('updated_at', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('updated_at', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>

@@ -70,11 +70,19 @@ use App\Enums\StatusStory;
                                     </th>
                                     <th>Đường dẫn</th>
                                     <th>Thể loại</th>
+                                    <th>Tổng số chương</th>
                                     <th>
                                         <a  @click="orderBy('view_count')" class="link-offset-1">
                                             Số lượt xem    
                                             <i v-if="isOrder('view_count', 'ASC')" class="fa-solid fa-sort-up"></i>
                                             <i v-if="isOrder('view_count', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a  @click="orderBy('last_chapers')" class="link-offset-1">
+                                            Chương cập nhật mới nhất
+                                            <i v-if="isOrder('last_chapers', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('last_chapers', 'DESC')" class="fa-solid fa-sort-down"></i>
                                         </a>
                                     </th>
                                     <th>
@@ -94,7 +102,9 @@ use App\Enums\StatusStory;
                                     <th>Tên truyện</th>
                                     <th>Đường dẫn</th>
                                     <th>Thể loại</th>
+                                    <th>Tổng số chương</th>
                                     <th>Số lượt xem</th>
+                                    <th>Chương cập nhật mới nhất</th>
                                     <th>Cập nhật gần đây nhất</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -110,7 +120,9 @@ use App\Enums\StatusStory;
                                     <td>
                                         <button v-for="(cat, t) in item.category_obj" class="btn btn-info btn-sm mr-2 mb-2">@{{cat.name}}</button>
                                     </td>
+                                    <td>@{{ item.total_chapter }}</td>
                                     <td>@{{ item.view_count }}</td>
+                                    <td>@{{ displayDate(item.last_chapers) }}</td>
                                     <td>@{{ displayDate(item.updated_at) }}</td>
                                     <td>
                                         <a :href="item.url" class="btn btn-primary mb-1" title="Đi đến trang truyện">

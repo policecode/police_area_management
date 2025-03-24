@@ -10,6 +10,7 @@ use App\Models\ViewDay;
 use App\Models\ViewMonth;
 use App\Models\ViewWeek;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,6 +24,13 @@ class ChapersController extends Controller
     public function index(Request $request, $story_slug, $chaper_slug)
     {
         $option = SettingHelpers::getInstance();
+        $user = Auth::user();
+        $is_admin = false;
+        if ($user) {
+            if ($user->group->slug == 'admin') {
+                $is_admin = true;
+            }
+        }
         $story = Story::getBySlug($story_slug)->joinAuthor()->first()->toArray();
         $story['link'] = route('client.story', ['story_slug' => $story['slug']]);
         $isResult = strpos($story['title'], '(c)');
@@ -50,7 +58,9 @@ class ChapersController extends Controller
         $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]);
         $arrContent = explode(" ", $chaper['content']);
         $chaper['content_length'] = count($arrContent);
-        $chaper['content'] = $this->addAdsToContent($chaper['content']);
+        if (!$is_admin) {
+            $chaper['content'] = $this->addAdsToContent($chaper['content']);
+        }
         
         $breadcrumb = [
             [
@@ -74,7 +84,8 @@ class ChapersController extends Controller
             'chaper_list' => $chaperList,
             'link_prev' => $linkPrev,
             'link_next' => $linkNext,
-            'breadcrumb' => $breadcrumb
+            'breadcrumb' => $breadcrumb,
+            'is_admin' => $is_admin
         );
         return view('client_page.chapers', $dataView);
     }

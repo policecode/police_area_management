@@ -17,7 +17,11 @@
         var apiUrlChapter =
             '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
     </script>
-    <div id="app_chapter">
+    <div id="app_chapter"
+        :style="{
+               backgroundColor: styles.backgroundColor,
+               color: styles.color,
+        }" >
         <section class="py-4 read-stories">
             <div class="container chapter-content-container chapter-page-apply" style="">
                 <div class="box-control py-3 flex justify-center">
@@ -46,10 +50,11 @@
                         @endforeach
                     </select>
                 </div>
-                @include('parts.ads.adsense_v1')
-                
-                <div id="chapter-content"
-                    style="background:#ffffff;color:#292e33;font-size:18px;line-height:24px;font-family:Roboto;">
+                @if (!$is_admin)
+                    @include('parts.ads.adsense_v1')
+                @endif
+                <div id="chapter-content_s"
+                    style="font-size:18px;line-height:24px;font-family:Roboto;">
                     <h1 class="chapter-title font-bold mb-2">{{ $chaper['name'] }}</h1>
                     <p class="info-detail mb-1">
                         <i class="fa-solid fa-book mr-1"></i> {{ ucwords($story['title']) }}
@@ -62,7 +67,12 @@
                         <span class="mr-2 last:mr-0"><i class="fa-solid fa-clock mr-1"></i>
                             {{ dateFormat($chaper['created_at']) }}</span>
                     </p>
-                    <div class="s-content text-justify mt-4  published-content">
+                    <div :style="{
+                        fontSize: styles.fontSize + 'px',
+                        lineHeight: styles.lineHeight + 'px',
+                        fontFamily: styles.fontFamily
+                    }" 
+                    class="s-content text-justify mt-4  published-content">
                         {!! $chaper['content'] !!}
                     </div>
                 </div>
@@ -109,7 +119,9 @@
                     </a>
                 </div>
             </div>
-            @include('parts.ads.adsense_v2')
+            @if (!$is_admin)
+                @include('parts.ads.adsense_v2')
+            @endif
 
             <div class="container mt-6">
                 <div id="comment-chapter-box"
@@ -150,17 +162,17 @@
                     <p class="title-setting text-[1rem] lg:text-[1.25rem]">Cài đặt giao diện</p>
                     <div class="p-3">
                         <div class="flex justify-between items-center mb-8">
-                            <p class="title-item text-[0.9375rem]">Cỡ chữ (<span class="preview-value"></span>px):</p>
-                            <input type="range" id="fontsize" min="12" max="30" value="18">
+                            <p class="title-item text-[0.9375rem]">Cỡ chữ (<span class="preview-value">@{{styles.fontSize}}</span>px):</p>
+                            <input v-model="styles.fontSize" type="range" id="fontsize" min="12" max="30" />
                         </div>
                         <div class="flex justify-between items-center mb-8">
-                            <p class="title-item text-[0.9375rem]">Cách dòng (<span class="preview-value"></span>px):</p>
-                            <input type="range" id="lineheight" min="20" max="50" value="24">
+                            <p class="title-item text-[0.9375rem]">Cách dòng (<span class="preview-value">@{{styles.lineHeight}}</span>px):</p>
+                            <input v-model="styles.lineHeight" type="range" id="lineheight" min="20" max="50" />
                         </div>
                         <div class="flex justify-between items-center mb-8">
                             <p class="title-item text-[0.9375rem]">Font chữ :</p>
-                            <select id="fontfamily">
-                                <option value="Roboto" selected>Roboto</option>
+                            <select v-model="styles.fontFamily" id="fontfamily">
+                                <option value="Roboto">Roboto</option>
                                 <option value="Athiti">Athiti</option>
                                 <option value="Tahoma">Tahoma</option>
                                 <option value="Helvetica">Helvetica</option>
@@ -174,25 +186,25 @@
                         <div class="flex justify-between items-center mb-6">
                             <p class="title-item text-[0.9375rem]">Kiểu nền</p>
                             <div class="flex gap-3 w-full">
-                                <div class="item-def-theme bg-[#f0f0f0]" data-color="#292e33" data-bg="#f0f0f0"></div>
-                                <div class="item-def-theme bg-[#eae4d3]" data-color="#5b4636" data-bg="#eae4d3"></div>
-                                <div class="item-def-theme bg-[#252c33]" data-color="#b6babf" data-bg="#252c33"></div>
+                                <div @click="setStyles('#292e33', '#f0f0f0')" class="item-def-theme bg-[#f0f0f0]"></div>
+                                <div @click="setStyles('#5b4636', '#eae4d3')" class="item-def-theme bg-[#eae4d3]"></div>
+                                <div @click="setStyles('#b6babf', '#252c33')" class="item-def-theme bg-[#252c33]"></div>
                             </div>
                         </div>
                         <div class="flex justify-between items-center mb-2">
                             <p class="title-item text-[0.9375rem]">Màu chữ :</p>
-                            <input type="color" id="color" value="#292e33">
+                            <input v-model="styles.color" type="color" id="color" />
                         </div>
                         <div class="flex justify-between items-center">
                             <p class="title-item text-[0.9375rem]">Màu nền :</p>
-                            <input type="color" id="bg" value="#ffffff">
+                            <input v-model="styles.backgroundColor" type="color" id="bg" />
                         </div>
-                        <label class="flex gap-2 items-center mt-6">
+                        {{-- <label class="flex gap-2 items-center mt-6">
                             <p class="text-[0.9375rem]">Áp dụng màu nền cho toàn trang: </p>
                             <input type="checkbox" id="site_bg_apply" class="w-auto">
-                        </label>
+                        </label> --}}
                         <div class="mt-6 text-right">
-                            <a href="javascript:void(0)"
+                            <a @click="resetStyles" href="javascript:void(0)"
                                 class="inline-block text-[1rem] !text-white !rounded bg-[#128c7e] py-2 px-4 hover:bg-[#0e6d62] mr-3"
                                 title="Trở về mặc định">
                                 <i class="fa-solid fa-repeat mr-2"></i>Reset
@@ -216,7 +228,7 @@
                         title="Chi tiết truyện">
                         <i class="fa-solid fa-book"></i>
                     </a>
-                    <a href="javascript:void(0)" class="item-action" title="Trở về mặc định">
+                    <a @click="resetStyles" href="javascript:void(0)" class="item-action" title="Trở về mặc định">
                         <i class="fa-solid fa-repeat"></i>
                     </a>
                     <a href="javascript:void(0)" class="item-action" modal-rs-target="modal-report" title="Trở về mặc định">
@@ -238,7 +250,11 @@
                 setting: false
             },
             styles: {
-                fontSize: LocalStorageHelper.get('chaper_font_size', 20)
+                fontSize: LocalStorageHelper.get('chaper_font_size', 20),
+                lineHeight: LocalStorageHelper.get('chaper_line_height', 24),
+                fontFamily: LocalStorageHelper.get('chaper_font_family', 'Roboto'),
+                backgroundColor: LocalStorageHelper.get('chaper_background_color', '#ffffff'),
+                color: LocalStorageHelper.get('chaper_color', '#292e33'),
             },
             items: [],
             querySearch: {
@@ -281,17 +297,18 @@
                 showToggle(name) {
                     this.show[name] = !this.show[name];
                 },
-                reduceSize() {
-                    if (this.styles.fontSize <= 15) {
-                        return;
-                    }
-                    --this.styles.fontSize;
+                resetStyles() {
+                    this.styles = {
+                            fontSize: 20,
+                            lineHeight: 24,
+                            fontFamily: 'Roboto',
+                            backgroundColor: '#ffffff',
+                            color: '#292e33'
+                        };
                 },
-                increaseSize() {
-                    if (this.styles.fontSize >= 35) {
-                        return;
-                    }
-                    ++this.styles.fontSize;
+                setStyles(color, background) {
+                    this.styles.color = color;
+                    this.styles.backgroundColor = background;
                 },
                 addHistoryReadStory() {
                     let listStoryHistory = LocalStorageHelper.getObject('fvn_story_history', []);
@@ -324,17 +341,28 @@
                 }
             },
             watch: {
-                // 'styles.fontSize'(newVal) {
-                //     LocalStorageHelper.set('chaper_font_size', newVal);
-                //     $('.chapter-content').css({
-                //         'font-size': newVal + 'px'
-                //     });
-                // }
+                'styles.fontSize'(newVal) {
+                    LocalStorageHelper.set('chaper_font_size', newVal);
+                },
+                'styles.lineHeight'(newVal) {
+                    LocalStorageHelper.set('chaper_line_height', newVal);
+                },
+                'styles.fontFamily'(newVal) {
+                    LocalStorageHelper.set('chaper_font_family', newVal);
+                },
+                'styles.backgroundColor'(newVal) {
+                    LocalStorageHelper.set('chaper_background_color', newVal);
+                },
+                'styles.color'(newVal) {
+                    LocalStorageHelper.set('chaper_color', newVal);
+                }
             },
         });
     </script>
 @endsection
 
 @section('scripts')
-    {{-- <script src="{{ asset('assets_global/js/website_security.js?v=' . FVN_VERSION_LARAVEL) }}"></script> --}}
+    @if (!$is_admin)
+        <script src="{{ asset('assets_global/js/website_security.js?v=' . FVN_VERSION_LARAVEL) }}"></script>
+    @endif
 @endsection

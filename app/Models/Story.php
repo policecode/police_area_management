@@ -19,7 +19,7 @@ class Story extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'title', 'title_eng', 'slug', 'thumbnail', 'description', 'star_count', 'star_average', 'view_count', 'author_id', 'status', 'created_at', 'updated_at', 'last_chapers', 'chaper_id'
+        'user_id', 'title', 'title_eng', 'slug', 'thumbnail', 'description', 'star_count', 'star_average', 'view_count', 'author_id', 'status', 'created_at', 'updated_at', 'last_chapers', 'chaper_id', 'total_chapter'
     ];
 
     private $joinAuthor = false;

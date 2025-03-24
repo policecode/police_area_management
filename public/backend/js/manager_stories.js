@@ -127,6 +127,8 @@ var app = new Vue({
         async getItems() {
             this.loading = true;
             this.buildQueryItem();
+            // Lưu trạng thái url cuối cùng trước khi chuyển trang
+            LocalStorageHelper.set('fvn_current_url_story', window.location.href);
             const jsonData = await new RouteApi().get(this.getItemUrl)
             this.loading = false;
             if (jsonData.result) {

@@ -1,6 +1,7 @@
 var vue_data = {
     loaded: false,
     loading: false,
+    backUrl: LocalStorageHelper.get('fvn_current_url_story', ''),
     currentAction: '',
     getItemUrl: '',
     items: [],
@@ -71,6 +72,25 @@ var app = new Vue({
             };
             this.errors = {};
             this.screen = 'list';
+        },
+        orderBy(name) {
+            if (this.querySearch.order_by == name) {
+                if (this.querySearch.order_type == 'DESC') {
+                    this.querySearch.order_type = 'ASC';
+                } else {
+                    this.querySearch.order_type = 'DESC';
+                }
+            } else {
+                this.querySearch.order_by = name;
+                this.querySearch.order_type = 'DESC';
+            }
+            this.searchItem();
+        },
+        isOrder(name, type) {
+            if (this.querySearch.order_by == name && this.querySearch.order_type == type) {
+                return true;
+            } 
+            return false;
         },
         async deleteItem(item) {
             if (confirm(`Do you want to delete the Chapter: ${item.name}`)) {
