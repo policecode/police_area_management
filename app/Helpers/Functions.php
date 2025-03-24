@@ -3,7 +3,7 @@
 use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
-define('FVN_VERSION_LARAVEL', '1.0.3');
+define('FVN_VERSION_LARAVEL', '1.0.4');
 
 function get_all_categories($type = 1) {
     $categories = [];
