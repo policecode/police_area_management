@@ -362,8 +362,7 @@ class StoriesController extends Controller
         }
         DB::beginTransaction();
         try {
-            $listStory = StoryCategory::JoinStory()->GetByCategoryId($category->id)->where('stories.view_count','=', 0)->orderBy('stories.last_chapers', 'DESC')->skip(0)->take(50)->get();
-            // dd($listStory->toArray());
+            $listStory = StoryCategory::JoinStory()->GetByCategoryId($category->id)->where('stories.view_count','=', 0)->orderBy('stories.last_chapers', 'ASC')->skip(0)->take(50)->get();
             $count = 0;
             $last_data_destroy = '';
             foreach ($listStory as $key => $story) {
