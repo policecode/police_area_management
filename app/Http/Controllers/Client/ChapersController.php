@@ -58,9 +58,9 @@ class ChapersController extends Controller
         $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]);
         $arrContent = explode(" ", $chaper['content']);
         $chaper['content_length'] = count($arrContent);
-        if (!$is_admin) {
-            $chaper['content'] = $this->addAdsToContent($chaper['content']);
-        }
+        // if (!$is_admin) {
+        //     $chaper['content'] = $this->addAdsToContent($chaper['content']);
+        // }
         
         $breadcrumb = [
             [

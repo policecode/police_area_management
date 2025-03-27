@@ -50,9 +50,7 @@
                         @endforeach
                     </select>
                 </div>
-                @if (!$is_admin)
-                    @include('parts.ads.adsense_v1')
-                @endif
+
                 <div id="chapter-content_s"
                     style="font-size:18px;line-height:24px;font-family:Roboto;">
                     <h1 class="chapter-title font-bold mb-2">{{ $chaper['name'] }}</h1>
@@ -72,7 +70,7 @@
                         lineHeight: styles.lineHeight + 'px',
                         fontFamily: styles.fontFamily
                     }" 
-                    class="s-content text-justify mt-4  published-content">
+                    class="s-content text-justify mt-4 published-content px-1">
                         {!! $chaper['content'] !!}
                     </div>
                 </div>
@@ -119,9 +117,6 @@
                     </a>
                 </div>
             </div>
-            @if (!$is_admin)
-                @include('parts.ads.adsense_v2')
-            @endif
 
             <div class="container mt-6">
                 <div id="comment-chapter-box"
@@ -238,6 +233,9 @@
             </div>
         </div>
     </div>
+    @if (!$is_admin)
+        @include('parts.ads.ads_modal_redirect')
+    @endif
 
     <a id="scroll-to-top-btn" class="bottom-right"><i class="fas fa-angle-double-up"></i></a>
     <script>
