@@ -362,6 +362,7 @@ class StoriesController extends Controller
         }
         DB::beginTransaction();
         try {
+            $result = Story::where('total_chapter',  0)->delete();
             $listStory = StoryCategory::JoinStory()->GetByCategoryId($category->id)->where('stories.view_count','=', 0)->orderBy('stories.last_chapers', 'ASC')->skip(0)->take(50)->get();
             $count = 0;
             $last_data_destroy = '';
@@ -373,13 +374,13 @@ class StoriesController extends Controller
                 ViewDay::where('story_id', $story->id)->delete();
                 ViewWeek::where('story_id', $story->id)->delete();
                 ViewMonth::where('story_id', $story->id)->delete();
-                $story->delete();
+                Story::where('id',  $story->id)->delete();
                 $count++;
             }
             DB::commit();
             return response()->json([
                 'status' => 1,
-                'message' => 'Delete success: '.$count,
+                'message' => 'Delete success: '.$count.' and '.$result.' stories have 0 chapter',
                 'last_data' => $last_data_destroy
             ]);
         } catch (\Throwable $e) {
