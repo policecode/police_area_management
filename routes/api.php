@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ToolController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TouristController;
@@ -21,7 +22,10 @@ use App\Http\Controllers\Client\ChapersController AS ChapersClientController;
 //     return $request->user();
 // });
 Route::post('test/import', [TouristController::class, 'import']);
-
+Route::prefix('tool')->group(function () {
+    Route::get('/excel', [ToolController::class, 'readExcel']);
+    
+});
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], function() {
     Route::prefix('manager')->group(function () {
         Route::prefix('stories')->group(function () {
@@ -32,6 +36,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
             Route::get('/auto-convert-total-chapter', 'StoriesController@autoConvertTotalChapter');
             Route::get('/auto-convert-percentage-view', 'StoriesController@autoConvertPercentageView');
         });
+
+        
     });
 });
 Route::get('search/keyword', [HomeController::class, 'searchKeyword']);

@@ -30,6 +30,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', 'DashboardController@index')->name('dashboard')->middleware('can:admin.users.getItems');
 
+       
+
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', 'UserController@index')->name('index')->middleware('can:admin.users.getItems');
             Route::get('/get-items', 'UserController@getItems')->name('getItems')->middleware('can:admin.users.getItems');
