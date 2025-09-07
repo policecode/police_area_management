@@ -70,7 +70,11 @@
                         lineHeight: styles.lineHeight + 'px',
                         fontFamily: styles.fontFamily
                     }" 
-                    class="s-content text-justify mt-4 published-content px-1">
+                    ref="htmlContentHolder"
+                    class="s-content text-justify mt-4 published-content px-1"
+                    >
+                    {{-- v-html="chaper.content" --}}
+                    {{-- <canvas ref="myCanvas" style="width: 100%; height: 100%;"></canvas> --}}
                         {!! $chaper['content'] !!}
                     </div>
                 </div>
@@ -234,7 +238,7 @@
         </div>
     </div>
     @if (!$is_admin)
-        @include('parts.ads.ads_modal_redirect')
+        {{-- @include('parts.ads.ads_modal_redirect') --}}
     @endif
 
     <a id="scroll-to-top-btn" class="bottom-right"><i class="fas fa-angle-double-up"></i></a>
@@ -279,6 +283,11 @@
 
             },
             methods: {
+                addContentToCanvas() {
+                    // const element = this.$refs.htmlContentHolder;
+                  
+                    
+                },
                 addViewStory() {
                     setTimeout(async () => {
                         let jsonData = await new RouteApi().post(`${this.apiUrl}/increase-views`, {
@@ -340,18 +349,22 @@
             },
             watch: {
                 'styles.fontSize'(newVal) {
+                    this.addContentToCanvas();
                     LocalStorageHelper.set('chaper_font_size', newVal);
                 },
                 'styles.lineHeight'(newVal) {
+                    this.addContentToCanvas();
                     LocalStorageHelper.set('chaper_line_height', newVal);
                 },
                 'styles.fontFamily'(newVal) {
+                    this.addContentToCanvas();
                     LocalStorageHelper.set('chaper_font_family', newVal);
                 },
                 'styles.backgroundColor'(newVal) {
                     LocalStorageHelper.set('chaper_background_color', newVal);
                 },
                 'styles.color'(newVal) {
+                    this.addContentToCanvas();
                     LocalStorageHelper.set('chaper_color', newVal);
                 }
             },

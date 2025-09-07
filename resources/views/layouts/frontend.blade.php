@@ -64,15 +64,15 @@ $option = SettingHelpers::getInstance();
     </script>
     {{-- <link href="manifest.webmanifest" rel="manifest" /> --}}
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8382233036922182"
-        crossorigin="anonymous"></script>
+    {{-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8382233036922182"
+        crossorigin="anonymous"></script> --}}
 
     {{-- Xác minh google để chèn quảng cáo --}}
-    <meta name="google-adsense-account" content="ca-pub-8382233036922182">
+    {{-- <meta name="google-adsense-account" content="ca-pub-8382233036922182"> --}}
     {{-- Google analytic --}}
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T1TVNVMFY"></script>
-    <script>
+    {{-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T1TVNVMFY"></script> --}}
+    {{-- <script>
         window.dataLayer = window.dataLayer || [];
 
         function gtag() {
@@ -81,9 +81,9 @@ $option = SettingHelpers::getInstance();
         gtag('js', new Date());
 
         gtag('config', 'G-5T1TVNVMFY');
-    </script>
+    </script> --}}
     {{-- https://www.pinterest.com/settings/claim --}}
-    <meta name="p:domain_verify" content="26a13293359fa2cba36263accbd91ab4"/>
+    {{-- <meta name="p:domain_verify" content="26a13293359fa2cba36263accbd91ab4"/> --}}
     {{-- Thêm các thành phần bổ sung --}}
     @yield('head')
 </head>
