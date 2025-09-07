@@ -68,17 +68,14 @@ $option = SettingHelpers::getInstance();
         {{-- Google analytic --}}
     
     <!-- Google tag (gtag.js) -->
-    {{-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T1TVNVMFY"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
+     <script async src="https://www.googletagmanager.com/gtag/js?id={{env('TAG_ANALYTICS')}}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'G-5T1TVNVMFY');
-    </script> --}}
+            gtag('config', '{{env('TAG_ANALYTICS')}}');
+        </script>
     {{-- https://www.pinterest.com/settings/claim --}}
     {{-- <meta name="p:domain_verify" content="26a13293359fa2cba36263accbd91ab4"/> --}}
     {{-- Thêm các thành phần bổ sung --}}
