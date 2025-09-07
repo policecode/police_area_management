@@ -23,7 +23,7 @@
     @include('client_page.part_home.top-story')
     @include('client_page.part_home.ranking')
     @include('client_page.part_home.authorvn')
-    @include('client_page.part_home.just-finished')
+    {{-- @include('client_page.part_home.just-finished') --}}
     {{-- @include('client_page.part_home.new-story') --}}
 @endsection
 

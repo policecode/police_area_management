@@ -24,7 +24,7 @@
                                             </span>
                                         @endif
                                     </a>
-                                    <div class="book__side"><span class="book__side__label">truyenfullviet.com</span></div>
+                                    <div class="book__side"><span class="book__side__label">hahoangdaide.online</span></div>
                                 </div>
                             </div>
                             <div class="flex-1 content">

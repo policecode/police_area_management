@@ -78,8 +78,8 @@
             </div>
             <div class="px-2 basis-full xl:basis-3/4 mb-5">
                 <div class="flex items-center justify-between mb-2 head-all bg-white pr-3">
-                    <h2 class="title py-3 px-5 font-bold 2xl:text-[1.5rem] text-[1.25rem]">Thể Loại Nữ Cường</h2>
-                    <a href="{{ route('client.tag', ['tag_slug' => 'nu-cuong']) }}" title="Tất cả"
+                    <h2 class="title py-3 px-5 font-bold 2xl:text-[1.5rem] text-[1.25rem]">Hệ thống</h2>
+                    <a href="{{ route('client.tag', ['tag_slug' => 'he-thong']) }}" title="Tất cả"
                         class="readmore text-[#128c7e] text-[0.875rem]">Tất cả
                         <i class="ml-2 fa-solid fa-right-long"></i>
                     </a>

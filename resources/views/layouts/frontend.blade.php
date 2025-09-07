@@ -16,7 +16,7 @@ $option = SettingHelpers::getInstance();
     <meta name="description"
         content="{{ empty($description) ? $option->getOptionValue('fvn_content_top') : $description }}">
     <meta name="keywords"
-        content="truyenfullviet, truyenfullviet.com, truyện hay, tiên hiệp, huyền huyễn, khoa huyễn, đô thị, võng du" />
+        content="hahoangdaide, hahoangdaide.online, truyện hay, tiên hiệp, huyền huyễn, khoa huyễn, đô thị, võng du" />
     {{-- <meta property="og:site_name" content="Bàn Long">
     <meta property="og:url" content="index.html">
     <meta property="og:type" content="article">

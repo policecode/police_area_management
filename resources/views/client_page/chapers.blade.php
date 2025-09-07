@@ -70,12 +70,11 @@
                         lineHeight: styles.lineHeight + 'px',
                         fontFamily: styles.fontFamily
                     }" 
-                    ref="htmlContentHolder"
+                    v-html="chaper.content"
                     class="s-content text-justify mt-4 published-content px-1"
                     >
-                    {{-- v-html="chaper.content" --}}
                     {{-- <canvas ref="myCanvas" style="width: 100%; height: 100%;"></canvas> --}}
-                        {!! $chaper['content'] !!}
+                        {{-- {!! $chaper['content'] !!} --}}
                     </div>
                 </div>
             </div>
