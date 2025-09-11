@@ -359,11 +359,11 @@ class ChaperController extends Controller
                 } elseif ($element instanceof \PhpOffice\PhpWord\Element\Text) {
                     $arrStr[] = $element->getText().'<br/>';
                 } elseif ($element instanceof \PhpOffice\PhpWord\Element\Title) {
-                    $textElement = $element->getText().'<br/>';
+                    $textElement = $element->getText();
                     if ($textElement instanceof \PhpOffice\PhpWord\Element\Text) {
-                        $arrStr[] = $textElement->getText().'<br/>';
+                        $arrStr[] = $textElement->getText();
                     } else {
-                        $arrStr[] = $textElement.'<br/>';
+                        $arrStr[] = $textElement;
                     }
                 }
             }
