@@ -188,7 +188,7 @@ var app = new Vue({
             this.loading = false;
 
              if (jsonData.status) {
-                console.log(jsonData.message);
+                jAlert(jsonData.message);
             } else {
                 jAlert(jsonData.message);
             }

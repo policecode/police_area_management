@@ -355,15 +355,15 @@ class ChaperController extends Controller
                             $str = $str . $textElement->getText() . " ";
                         }
                     }
-                    $arrStr[] = $str;
+                    $arrStr[] = $str.'<br/>';
                 } elseif ($element instanceof \PhpOffice\PhpWord\Element\Text) {
-                    $arrStr[] = $element->getText();
+                    $arrStr[] = $element->getText().'<br/>';
                 } elseif ($element instanceof \PhpOffice\PhpWord\Element\Title) {
-                    $textElement = $element->getText();
+                    $textElement = $element->getText().'<br/>';
                     if ($textElement instanceof \PhpOffice\PhpWord\Element\Text) {
-                        $arrStr[] = $textElement->getText();
+                        $arrStr[] = $textElement->getText().'<br/>';
                     } else {
-                        $arrStr[] = $textElement;
+                        $arrStr[] = $textElement.'<br/>';
                     }
                 }
             }
