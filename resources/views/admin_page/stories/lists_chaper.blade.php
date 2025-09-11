@@ -21,6 +21,8 @@
             <a v-if="backUrl" :href="backUrl" class="btn btn-danger">Quay lại</a>
             <a @click="changeScreen('detail')" class="btn btn-primary">Thêm mới</a>
             <a @click="deleteAllItem" class="btn btn-danger">Xóa tất cả các chương truyện</a>
+            <a @click="changeScreen('import')" class="btn btn-success">Import Chương</a>
+
             <div class="row mt-4">
                 <div class="col-3">
                     <select class="form-select">
@@ -163,6 +165,28 @@
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Lưu lại</button>
                             <button @click="closeItem" class="btn btn-danger">Hủy</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </template>
+
+        <template v-if="screen=='import'">
+            <div>
+                <form @submit="handleUploadChapter">
+                    <legend class="text-primary">Import chương mới</legend>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <input type="file" class="form-control" @change="uploadFile($event, 'fvn_file_word')" accept=".doc, .docx" multiple />
+                            </div>
+                        </div>
+    
+    
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                            <button @click="screen = 'list'" class="btn btn-danger">Quay lại</button>
                         </div>
                     </div>
                 </form>

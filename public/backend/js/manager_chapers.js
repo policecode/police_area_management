@@ -171,13 +171,27 @@ var app = new Vue({
                 }
                 
             }
-            // if (name == 'resume') {
-            //     if (!(files[0].size < 5 * 1024 * 1024)) {
-            //         e.target.value = '';
-            //         return jAlert('File size less than 5MB');
-            //     }
-            //     appCandidateList.itemDetail.resume_file = files[0];
-            // }
+             if (name == 'fvn_file_word') {
+                 this.files.fvn_list_word = files;
+            }
+        },
+        async handleUploadChapter(e) {
+            e.preventDefault()
+            var data = new FormData();
+             for (let key in this.files.fvn_list_word) {
+                
+                data.append('fvn_list_word['+key+']', this.files.fvn_list_word[key]);
+            }
+            
+            this.loading = true;
+            jsonData = await new RouteApi().post(`${this.apiUrl}/upload/${this.story.id}`,data, 'form' );
+            this.loading = false;
+
+             if (jsonData.status) {
+                console.log(jsonData.message);
+            } else {
+                jAlert(jsonData.message);
+            }
         },
         async save(e) {
             e.preventDefault()

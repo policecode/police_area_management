@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\IOFactory;
+use Illuminate\Support\Str;
 
 class ChaperController extends Controller
 {
@@ -27,31 +30,34 @@ class ChaperController extends Controller
         return view('admin_page.stories.lists_chaper', $dataView);
     }
 
-    public function getItems(Request $request) {
+    public function getItems(Request $request)
+    {
         // Thêm dữ liệu vào trong query
-      // $request->merge(array_merge($queryDefault, $request->query()));
+        // $request->merge(array_merge($queryDefault, $request->query()));
 
-      try {
-        //code...
-        $query = Chaper::filter($request);
-        $res = [
-            'result' => 1,
-            'data' => [],
-            'page' => $query->getPageNumber(),
-            'per_page' => $query->getPerPage(),
-            'total' => 0
-        ];
-        if($request->is_paginate){
-            $res['total'] = $query->getTotal();
-        }else{
-            $res['data']  = $query->get();
+        try {
+            //code...
+            $query = Chaper::filter($request);
+            $res = [
+                'result' => 1,
+                'data' => [],
+                'page' => $query->getPageNumber(),
+                'per_page' => $query->getPerPage(),
+                'total' => 0
+            ];
+            if ($request->is_paginate) {
+                $res['total'] = $query->getTotal();
+            } else {
+                $res['data']  = $query->get();
+            }
+            return response()->json($res);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
+            ], 400);
         }
-        return response()->json($res);
-      } catch (\Throwable $e) {
-        return response()->json([
-            'result' => 0, 'data'=> [], 'message' => $e->getMessage()
-        ], 400);
-      }
     }
 
     /**
@@ -66,12 +72,12 @@ class ChaperController extends Controller
             $validator = Validator::make($request->all(), $this->rules($request, $story), $this->messages(), $this->attributes());
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => 0, 
+                    'status' => 0,
                     'errors' => $validator->errors(),
                     'message' => 'validation'
                 ]);
             }
-   
+
             DB::beginTransaction();
             $data = $validator->validated();
             $user = Auth::user();
@@ -89,17 +95,18 @@ class ChaperController extends Controller
                 'chaper_id' => $chaper->id,
                 'total_chapter' => $total_chapter
             ]);
-     
+
             DB::commit();
             return response()->json([
-                'status' => 1, 
+                'status' => 1,
                 'data' => $chaper,
                 'message' => 'Create success'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -128,26 +135,27 @@ class ChaperController extends Controller
             $validator = Validator::make($request->all(), $this->rules($request, $story), $this->messages(), $this->attributes());
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => 0, 
+                    'status' => 0,
                     'errors' => $validator->errors(),
                     'message' => 'validation'
                 ]);
             }
-   
+
             DB::beginTransaction();
             $data = $validator->validated();
             $chaper->update($data);
-      
+
             DB::commit();
             return response()->json([
-                'status' => 1, 
+                'status' => 1,
                 'data' => $chaper,
                 'message' => 'Update success'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -172,13 +180,14 @@ class ChaperController extends Controller
             }
             DB::commit();
             return response()->json([
-                'status' => $status, 
+                'status' => $status,
                 'message' => 'Delete success'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -196,13 +205,14 @@ class ChaperController extends Controller
             ]);
             DB::commit();
             return response()->json([
-                'status' => $status, 
+                'status' => $status,
                 'message' => 'Delete success'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -215,14 +225,14 @@ class ChaperController extends Controller
             'content' => '',
         ];
         if ($request->id) {
-            $rules['position'] = ['required', 'integer', function($attr, $value, $fail) use($request, $story_id) {
-                $chaper = Chaper::getByStory($story_id)->getByPosition($value)->where('id', '!=',$request->id)->first();
+            $rules['position'] = ['required', 'integer', function ($attr, $value, $fail) use ($request, $story_id) {
+                $chaper = Chaper::getByStory($story_id)->getByPosition($value)->where('id', '!=', $request->id)->first();
                 if ($chaper) {
                     $fail('Vị trí này đã được sử dụng');
                 }
             }];
         } else {
-            $rules['position'] = ['required', 'integer', function($attr, $value, $fail) use($story_id) {
+            $rules['position'] = ['required', 'integer', function ($attr, $value, $fail) use ($story_id) {
                 $chaper = Chaper::getByStory($story_id)->getByPosition($value)->first();
                 if ($chaper) {
                     $fail('Vị trí này đã được sử dụng');
@@ -252,6 +262,118 @@ class ChaperController extends Controller
             'author_id' => 'Tác giả',
             'position' => 'Vị trí chương truyện',
             'content' => 'Nội dung chương truyện'
+        ];
+    }
+
+    public function uploadChapterByWord(Request $request, Story $story)
+    {
+        $user = Auth::user();
+        DB::beginTransaction();
+        try {
+            if ($request->hasFile('fvn_list_word')) {
+                $files = $request->file('fvn_list_word');
+                $data = [];
+                $dataInsert = [];
+                $listPosition = [];
+                foreach ($files as $key => $file) {
+                    $position = (int) explode('.', $file->getClientOriginalName())[0];
+                    $listPosition[] = $position;
+                    $tmpPath = $file->getPathname();
+                    $resultArr = $this->readFileWord($tmpPath);
+                    $data[] = array_merge([
+                        'position' => $position,
+                        'user_id' => $user->id,
+                        'story_id' => $story->id,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ], $resultArr);
+                }
+
+                $resultChapers = Chaper::getByStory($story->id)->whereIn('position', $listPosition)->get();
+                foreach ($data as $key => $chapter) {
+                    $flag = true;
+                    if (count($resultChapers) > 0) {
+                        foreach ($resultChapers as $k => $obj) {
+                            if ($obj->position == $chapter['position']) {
+                                $flag = false;
+                            }
+                        }
+                    }
+                    # code...
+                    if ($flag) {
+                        $dataInsert[] = $chapter;
+                    }
+                }
+                if (count($dataInsert) > 0) {
+                    $result = Chaper::insert($dataInsert);
+                    $last_record = Chaper::orderBy('id', 'DESC')->first();
+                    if ($story->total_chapter) {
+                        $total_chapter = $story->total_chapter + count($dataInsert);
+                    } else {
+                        $total_chapter = count($dataInsert);
+                    }
+                    $story->last_chapers = Carbon::now();
+                    $story->chaper_id = $last_record->id;
+                    $story->total_chapter = $total_chapter;
+                    $story->update();
+                }
+                DB::commit();
+                return response()->json([
+                    'status' => 1,
+                    'data' => [],
+                    'message' => 'Add '.count($dataInsert).' Chapter'
+                ]);
+            }
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    private function readFileWord($pathFile)
+    {
+        $arrStr = [];
+        // Đọc file .docx
+        $phpWord = IOFactory::load($pathFile);
+        // Lấy tất cả các section trong tài liệu
+        $sections = $phpWord->getSections();
+
+        // Duyệt qua từng section để lấy nội dung
+        foreach ($sections as $section) {
+            $elements = $section->getElements();
+            foreach ($elements as $element) {
+                // Kiểm tra xem phần tử có phải là text run không
+                if ($element instanceof \PhpOffice\PhpWord\Element\TextRun) {
+                    // Lấy các phần tử con của text run
+                    $textElements = $element->getElements();
+                    $str = '';
+                    foreach ($textElements as $textElement) {
+                        if ($textElement instanceof \PhpOffice\PhpWord\Element\Text) {
+                            $str = $str . $textElement->getText() . " ";
+                        }
+                    }
+                    $arrStr[] = $str;
+                } elseif ($element instanceof \PhpOffice\PhpWord\Element\Text) {
+                    $arrStr[] = $element->getText();
+                } elseif ($element instanceof \PhpOffice\PhpWord\Element\Title) {
+                    $textElement = $element->getText();
+                    if ($textElement instanceof \PhpOffice\PhpWord\Element\Text) {
+                        $arrStr[] = $textElement->getText();
+                    } else {
+                        $arrStr[] = $textElement;
+                    }
+                }
+            }
+        }
+        $title = $arrStr[0];
+        unset($arrStr[0]);
+        return [
+            'name' => $title,
+            'slug' => Str::slug($title, "-"),
+            'content' => implode('<br/>', $arrStr)
         ];
     }
 }

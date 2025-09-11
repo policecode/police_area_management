@@ -570,8 +570,8 @@ class StoriesController extends Controller
         }
     }
     public function toolUploadChaper(Request $request, Story $story) {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $list_chapers = $request->list_chaper;
             $listPosition = [];
             foreach ($list_chapers as $key => $chaper_obj) {
