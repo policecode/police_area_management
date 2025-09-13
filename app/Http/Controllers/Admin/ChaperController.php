@@ -280,6 +280,12 @@ class ChaperController extends Controller
                     $listPosition[] = $position;
                     $tmpPath = $file->getPathname();
                     $resultArr = $this->readFileWord($tmpPath);
+                    // return response()->json([
+                    //     'status' => 1,
+                    //     'data' => [],
+                    //     'message' => 'success',
+                    //     'data' => $resultArr
+                    // ]);
                     $data[] = array_merge([
                         'position' => $position,
                         'user_id' => $user->id,
@@ -362,6 +368,15 @@ class ChaperController extends Controller
                     $textElement = $element->getText();
                     if ($textElement instanceof \PhpOffice\PhpWord\Element\Text) {
                         $arrStr[] = $textElement->getText();
+                    } elseif($textElement instanceof \PhpOffice\PhpWord\Element\TextRun) {
+                        $textChildElements = $textElement->getElements();
+                        $str = '';
+                        foreach ($textChildElements as $textChildElement) {
+                            if ($textChildElement instanceof \PhpOffice\PhpWord\Element\Text) {
+                                $str = $str . $textChildElement->getText() . " ";
+                            }
+                        }
+                        $arrStr[] = $str;
                     } else {
                         $arrStr[] = $textElement;
                     }
