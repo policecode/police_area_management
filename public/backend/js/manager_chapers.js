@@ -25,6 +25,11 @@ var vue_data = {
     },
     apiUrl: FVN_LARAVEL_HOME + '/admin/chapers',
     story: story,
+    position: {
+        screen: false,
+        start:0,
+        end: 0
+    },
     pointInTime: null
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
@@ -60,7 +65,11 @@ var app = new Vue({
             }
         },
         changeScreen(scr) {
-            this.screen = scr;
+            if (scr == 'destroy') {
+                this.position.screen = !this.position.screen
+            } else {
+                this.screen = scr;
+            }
         },
         async showItem(item) {
             this.itemDetail = item;
@@ -100,8 +109,8 @@ var app = new Vue({
             }
         },
         async deleteAllItem() {
-            if (confirm(`Do you want to delete All Chapter`)) {
-                let jsonData = await new RouteApi().delete(`${this.apiUrl}/${this.story.id}`, {});
+            if (confirm(`Bạn muốn xóa các chương từ vị trí ${this.position.start} đến ${this.position.end}`)) {
+                let jsonData = await new RouteApi().delete(`${this.apiUrl}/${this.story.id}`,this.position                );
                 jnotice(jsonData.message);
                 this.getItems();
             }

@@ -20,9 +20,30 @@
             </div>
             <a v-if="backUrl" :href="backUrl" class="btn btn-danger">Quay lại</a>
             <a @click="changeScreen('detail')" class="btn btn-primary">Thêm mới</a>
-            <a @click="deleteAllItem" class="btn btn-danger">Xóa tất cả các chương truyện</a>
+            <a @click="changeScreen('destroy')" class="btn btn-danger">
+                <span v-if="position.screen">Đóng chức năng</span>
+                <span v-else>Xóa theo vị trí</span>
+            </a>
             <a @click="changeScreen('import')" class="btn btn-success">Import Chương</a>
-
+            
+           <template v-if="position.screen">
+            <div>
+                <legend class="text-danger">Xóa theo vị trí</legend>
+                <div class="row">
+                    <div class="col-3">
+                        <label for="">Từ (để 0 là vị trí thứ 1)</label>
+                        <input v-model="position.start" type="number" class="form-control" min="0" />
+                    </div>
+                    <div class="col-3">
+                        <label for="">Đến (dể 0 là vị trí cuối cùng)</label>
+                        <input v-model="position.end" type="number" class="form-control" min="0" />
+                    </div>
+                    <div class="col-6 d-flex align-items-end">
+                        <button type="submit" @click="deleteAllItem" class="btn btn-danger">Xóa</button>
+                    </div>
+                </div>
+            </div>
+        </template>
             <div class="row mt-4">
                 <div class="col-3">
                     <select class="form-select">
@@ -182,17 +203,15 @@
                                 <input type="file" class="form-control" @change="uploadFile($event, 'fvn_file_word')" accept=".doc, .docx" multiple />
                             </div>
                         </div>
-    
-    
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Upload</button>
                             <button @click="screen = 'list'" class="btn btn-danger">Quay lại</button>
                         </div>
                     </div>
                 </form>
-
             </div>
         </template>
+
 
     </div>
     

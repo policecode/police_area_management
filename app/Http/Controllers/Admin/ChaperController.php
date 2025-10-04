@@ -192,12 +192,20 @@ class ChaperController extends Controller
         }
     }
 
-    public function destroyAll(Story $story)
+    public function destroyAll(Request $request, Story $story)
     {
         try {
+            $condition = $request->all();
             DB::beginTransaction();
-            $storyColection = Story::find($story->id);
-            $status = Chaper::getByStory($storyColection->id)->delete();
+            // $storyColection = Story::find($story->id);
+            $deleteQuery = Chaper::getByStory($story->id);
+            if ($condition['start'] > 0) {
+                $deleteQuery->where('position', '>=', $condition['start']);
+            } 
+            if ($condition['end'] > 0) {
+                $deleteQuery->where('position', '<=', $condition['end']);
+            } 
+            $status= $deleteQuery->delete();
             $story->update([
                 'last_chapers' => NULL,
                 'chaper_id' => NULL,
@@ -384,7 +392,8 @@ class ChaperController extends Controller
             }
         }
         $title = $arrStr[0];
-        unset($arrStr[0]);
+        $title = str_replace('<br/>', '', $title);
+        $title = str_replace('&quot;', '', $title);
         return [
             'name' => $title,
             'slug' => Str::slug($title, "-"),
