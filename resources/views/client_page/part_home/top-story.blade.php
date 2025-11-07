@@ -28,7 +28,7 @@
                                             {{ ucwords($item['title']) }}
 
                                         </a>
-                                        <a href="{{ route('client.chaper', ['story_slug' => $item['slug'], 'chaper_slug' => $item['chaper_slug']]) }}"
+                                        <a href="{{ route('client.chaper', ['story_slug' => $item['slug'], 'chaper_position' => $item['position']]) }}"
                                             class=" line-clamp-1 text-[0.75rem] text-[#999] mt-[2px]"
                                             title="{{ $item['chaper_name'] }}">{{ $item['chaper_name'] }}</a>
                                     </div>

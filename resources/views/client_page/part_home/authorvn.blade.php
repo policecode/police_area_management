@@ -40,8 +40,8 @@
                                         class="tag-item bllock py-1 px-4 text-[0.75rem] text-center mr-2 mb-2 text-ellipsis rounded-xl border border-solid border-[#008000] hover:bg-[#008000] hover:text-white">{{ $cat['name'] }}</a>
                                 @endforeach
                             </div>
-                            @if ($item['chaper_slug'])
-                                <a href="{{ route('client.chaper', ['story_slug' => $item['slug'], 'chaper_slug' => $item['chaper_slug']]) }}" title="{{$item['chaper_name']}}" class="chapter-name text-[#128c7e] text-[0.875rem]">{{$item['chaper_name']}}</a>
+                            @if ($item['position'])
+                                <a href="{{ route('client.chaper', ['story_slug' => $item['slug'], 'chaper_position' => $item['position']]) }}" title="{{$item['chaper_name']}}" class="chapter-name text-[#128c7e] text-[0.875rem]">{{$item['chaper_name']}}</a>
                             @endif
                         </div>
                     </div>

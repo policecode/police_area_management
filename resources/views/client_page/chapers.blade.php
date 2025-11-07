@@ -45,7 +45,7 @@
                     <select class="xl:py-2 xl:px-4 bg-[#128c7e] mx-1 py-2 text-white" onchange="location = this.value;">
                         @foreach ($chaper_list as $item)
                             <option
-                                value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
+                                value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $item['position']]) }}"
                                 {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>{{ $item['name'] }}</option>
                         @endforeach
                     </select>
@@ -107,7 +107,7 @@
                     <select class="xl:py-2 xl:px-4 bg-[#128c7e] mx-1 py-2 text-white" onchange="location = this.value;">
                         @foreach ($chaper_list as $item)
                             <option
-                                value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
+                                value="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $item['position']]) }}"
                                 {{ $item['id'] == $chaper['id'] ? 'selected' : '' }}>{{ $item['name'] }}</option>
                         @endforeach
                     </select>

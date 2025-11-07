@@ -45,6 +45,7 @@ class Chaper extends Model
         $query->where('slug', $slug);
         return $query;
     }
+
     public function scopeJoinStory($query) {
         if ($this->joinStory ) {
             return $query;

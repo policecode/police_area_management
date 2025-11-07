@@ -120,7 +120,7 @@ class StoriesController extends Controller
                 $res['data']  = $query->get()->each(function ($item, $key) use($now){
                     $item->url = route('client.chaper', [
                         'story_slug' => $item->story_slug,
-                        'chaper_slug' => $item->slug,
+                        'chaper_position' => $item->position,
                     ]);
                     $item->after_minutes = $now->diffInMinutes(new Carbon($item->created_at));
                 });

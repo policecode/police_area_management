@@ -134,6 +134,7 @@ class HomeController extends Controller
                 $item->is_convert = false;
             }
         })->toArray();
+
         $dataView = array(
             'page_title' => $option->getOptionValue('fvn_web_title'),
             'hot_stories' => $hot_stories,
@@ -181,7 +182,7 @@ class HomeController extends Controller
                 $item->thumbnail = route('index') . '/' . $item->thumbnail;
                 $item->url = route('client.story', ['story_slug' => $item->slug]);
                 $item->author_url = route('client.author', ['author_slug' => $item->author_slug]);
-                $item->chapterr_url = route('client.chaper', ['story_slug' => $item['slug'], 'chaper_slug' => $item['chaper_slug']]);
+                $item->chapter_url = route('client.chaper', ['story_slug' => $item['slug'], 'chaper_position' => $item['position']]);
                 $dt = new Carbon($item->created_at); //Tạo 1 datetime
                 $item->after_day = $now->diffInDays($dt);
                 $isResult = strpos($item->title, '(c)');

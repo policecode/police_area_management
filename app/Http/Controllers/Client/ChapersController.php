@@ -21,7 +21,7 @@ class ChapersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $story_slug, $chaper_slug)
+    public function index(Request $request, $story_slug, $chaper_position)
     {
         $option = SettingHelpers::getInstance();
         $user = Auth::user();
@@ -40,22 +40,22 @@ class ChapersController extends Controller
             $story['is_convert'] = false;
         }
         $chaperList = Chaper::selectNotContent()->getByStory($story['id'])->orderBy('position', 'ASC')->get();
-        $chaper = Chaper::getBySlug($chaper_slug)->getByStory($story['id'])->first()->toArray();
+        $chaper = Chaper::getByPosition($chaper_position)->getByStory($story['id'])->first()->toArray();
         $linkPrev = '#';
         $linkNext = '#';
         for ($i = 0; $i < count($chaperList); $i++) {
-            if ($chaperList[$i]['slug'] == $chaper_slug) {
+            if ($chaperList[$i]['position'] == $chaper_position) {
                 if (!empty($chaperList[$i - 1])) {
-                    $linkPrev = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaperList[$i - 1]['slug']]);
+                    $linkPrev = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $chaperList[$i - 1]['position']]);
                 }
                 if (!empty($chaperList[$i + 1])) {
-                    $linkNext = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaperList[$i + 1]['slug']]);
+                    $linkNext = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $chaperList[$i + 1]['position']]);
                 }
                 break;
             }
             # code...
         }
-        $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]);
+        $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $chaper['position']]);
         $arrContent = explode(" ", $chaper['content']);
         $chaper['content_length'] = count($arrContent);
         // dd($chaper['content']);
@@ -103,11 +103,11 @@ class ChapersController extends Controller
         return implode(" ", $newArr);
     }
 
-    public function callChapterApi(Request $request, $story_slug, $chaper_slug)
+    public function callChapterApi(Request $request, $story_slug, $chaper_position)
     {
         try {
             $story = Story::getBySlug($story_slug)->first();
-            $chaper = Chaper::getBySlug($chaper_slug)->getByStory($story['id'])->first();
+            $chaper = Chaper::getByPosition($chaper_position)->getByStory($story['id'])->first();
 
             return response()->json([
                 'result' => 1,

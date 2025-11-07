@@ -179,7 +179,7 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
     
     Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
     Route::get('/read-api/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'callChapterApi'])->name('client.api.chaper');
-    Route::get('/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index'])->name('client.chaper');
+    Route::get('/{story_slug}/chuong-{chaper_position}', [ChapersClientController::class, 'index'])->name('client.chaper');
     // Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index']);
     
     Route::get('/test_client', function (Request $request) {

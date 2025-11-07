@@ -82,7 +82,7 @@
                                 Đề cử Linh Phiếu
                             </p> --}}
                             <div class="list-button-action flex items-center flex-wrap">
-                                <a href="{{ $first_chapter?route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $first_chapter['slug']]):'' }}" title="Đọc từ đầu"
+                                <a href="{{ $first_chapter?route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $first_chapter['position']]):'' }}" title="Đọc từ đầu"
                                     class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2">
                                     <i class="fa-solid fa-book-open-reader mr-2"></i>Đọc từ đầu
                                 </a>
@@ -174,7 +174,7 @@
                         <ul class="list-chapter__item">
                             @foreach ($chapters as $item)
                                 <li>
-                                    <a href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
+                                    <a href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $item['position']]) }}"
                                         class="flex items-center justify-between py-2 px-3 hover:text-[#252525] hover:bg-[rgba(0,0,0,.09)] border-t-[1px] border-solid border-[#dee2e6]"
                                         title="{{ $item['name'] }}">
                                         <span class="title line-clamp-1 mr-3 flex-1">{{ ucwords($item['name']) }}</span>
