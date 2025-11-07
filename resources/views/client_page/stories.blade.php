@@ -288,7 +288,7 @@
                             @foreach ($related_stories as $item)
                                 <div class="swiper-slide">
                                     <div class="card-story max-w-[300px]">
-                                        <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" title="{{$item['title']}}"
+                                        <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="{{$item['title']}}"
                                             class="img c-img pt-[138%] rounded-md overflow-hidden shadow-[0_7px_10px_1px_rgba(34,34,34,.1)] relative">
                                             <picture>
                                                 <source media="(min-width:0px)" srcset="{{$item['thumbnail']}}">
@@ -301,7 +301,7 @@
                                             @endif
                                         </a>
                                         <h3>
-                                            <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" title="Thế Giới Hoàn Mỹ"
+                                            <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="Thế Giới Hoàn Mỹ"
                                                 class="title line-clamp-1 my-1 2xl:text-[1.125rem] text-[0.875rem] font-bold">
                                                 {{ucwords($item['title'])}}
                                             </a>
@@ -557,7 +557,8 @@
                     } else {
                         alert(jsonData.message);
                     }
-                    document.querySelector('div[modal-rs="modal-rating"]').classList.add("invisible", "pointer-events-none", "opacity-0");
+                    // document.querySelector('div[modal-rs="modal-rating"]').classList.add("invisible", "pointer-events-none", "opacity-0");
+                    this.showStar = false;
                 },
                 getStringAfterTime(after_minutes) {
                     if (after_minutes < 60) {
