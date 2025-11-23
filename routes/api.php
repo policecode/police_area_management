@@ -35,6 +35,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
             Route::get('/auto-destroy-story-by-category/{category_slug}', 'StoriesController@autoDestroyStoryByCategory');
             Route::get('/auto-convert-total-chapter', 'StoriesController@autoConvertTotalChapter');
             Route::get('/auto-convert-percentage-view', 'StoriesController@autoConvertPercentageView');
+            Route::delete('/auto_delete_{story}', 'StoriesController@destroy');
         });
 
         
