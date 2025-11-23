@@ -82,7 +82,7 @@
                                 Đề cử Linh Phiếu
                             </p> --}}
                             <div class="list-button-action flex items-center flex-wrap">
-                                <a href="{{ $first_chapter?route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $first_chapter['slug']]):'' }}" title="Đọc từ đầu"
+                                <a href="{{ $first_chapter?route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $first_chapter['position']]):'' }}" title="Đọc từ đầu"
                                     class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2">
                                     <i class="fa-solid fa-book-open-reader mr-2"></i>Đọc từ đầu
                                 </a>
@@ -174,7 +174,7 @@
                         <ul class="list-chapter__item">
                             @foreach ($chapters as $item)
                                 <li>
-                                    <a href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $item['slug']]) }}"
+                                    <a href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $item['position']]) }}"
                                         class="flex items-center justify-between py-2 px-3 hover:text-[#252525] hover:bg-[rgba(0,0,0,.09)] border-t-[1px] border-solid border-[#dee2e6]"
                                         title="{{ $item['name'] }}">
                                         <span class="title line-clamp-1 mr-3 flex-1">{{ ucwords($item['name']) }}</span>
@@ -288,7 +288,7 @@
                             @foreach ($related_stories as $item)
                                 <div class="swiper-slide">
                                     <div class="card-story max-w-[300px]">
-                                        <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" title="{{$item['title']}}"
+                                        <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="{{$item['title']}}"
                                             class="img c-img pt-[138%] rounded-md overflow-hidden shadow-[0_7px_10px_1px_rgba(34,34,34,.1)] relative">
                                             <picture>
                                                 <source media="(min-width:0px)" srcset="{{$item['thumbnail']}}">
@@ -301,7 +301,7 @@
                                             @endif
                                         </a>
                                         <h3>
-                                            <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" title="Thế Giới Hoàn Mỹ"
+                                            <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="Thế Giới Hoàn Mỹ"
                                                 class="title line-clamp-1 my-1 2xl:text-[1.125rem] text-[0.875rem] font-bold">
                                                 {{ucwords($item['title'])}}
                                             </a>
@@ -557,7 +557,8 @@
                     } else {
                         alert(jsonData.message);
                     }
-                    document.querySelector('div[modal-rs="modal-rating"]').classList.add("invisible", "pointer-events-none", "opacity-0");
+                    // document.querySelector('div[modal-rs="modal-rating"]').classList.add("invisible", "pointer-events-none", "opacity-0");
+                    this.showStar = false;
                 },
                 getStringAfterTime(after_minutes) {
                     if (after_minutes < 60) {
