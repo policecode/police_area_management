@@ -7,8 +7,9 @@ $option = SettingHelpers::getInstance();
 $all_categories = get_all_categories();
 // $totalChapter = TotalChapter::asArray();
 $user = Auth::user();
+
 ?>
-<h1 class="hidden">Truyện Full Việt</h1>
+<h1 class="hidden">Hắc Hoàng Đại Đế</h1>
 <header id="client_sidebar_app" class="header">
     <div class="header-top bg-[#f8f9fa] py-2">
         <div class="container flex items-center justify-between">
@@ -21,7 +22,7 @@ $user = Auth::user();
                     <img loading="auto"
                         src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
                         data-src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
-                        alt="Truyện Full Việt" class="img-fluid">
+                        alt="Hắc Hoàng Đại Đế" class="img-fluid">
                 </picture>
             </a>
             <div class="header-form xl:flex-1 max-w-[70%] flex items-center justify-between">
@@ -108,7 +109,7 @@ $user = Auth::user();
                                         <img loading="auto"
                                             src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
                                             data-src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
-                                            alt="Truyện Full Việt" class="img-fluid">
+                                            alt="Hắc Hoàng Đại Đế" class="img-fluid">
                                     </picture>
                                 </span>
                                 <div class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
@@ -144,6 +145,87 @@ $user = Auth::user();
                             </a>
                         </div>
                     </li> --}}
+                    {{-- <li class="mr-5 xl:mr-0 last:mr-0">
+                        <div class="user sm:relative show-info-user">
+                            <span class="inline-block overflow-hidden rounded-full avatar w-9 h-9 img_full img-h-full">
+                                <picture>
+                                    <source media="(min-width:0px)"
+                                        data-srcset="https://cdn.blhvip.vn/uploads/users/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
+                                        srcset="https://cdn.blhvip.vn/uploads/users/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png">
+                                    <img loading="lazy"
+                                        src="https://cdn.blhvip.vn/uploads/users/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
+                                        data-src="https://cdn.blhvip.vn/uploads/users/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
+                                        alt="acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
+                                        class="img-fluid">
+                                </picture>
+                            </span>
+                            <div class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
+                                <div class="box p-4 rounded-lg border border-solid border-[#128c7e] bg-white">
+                                    <div id="info-header-result" data-action="https://blhvip.vn/load-user-header-info"
+                                        class="inited">
+                                        <div class="box-info flex">
+                                            <span
+                                                class="avatar mr-4 img_full img-h-full overflow-hidden rounded-full w-24 h-24">
+                                                <picture>
+                                                    <source media="(min-width:0px)"
+                                                        data-srcset="https://cdn.blhvip.vn/uploads/users/thumbs/150x0/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
+                                                        srcset="https://cdn.blhvip.vn/uploads/users/thumbs/150x0/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png">
+                                                    <img loading="lazy"
+                                                        src="https://cdn.blhvip.vn/uploads/users/thumbs/150x0/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
+                                                        data-src="https://cdn.blhvip.vn/uploads/users/thumbs/150x0/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
+                                                        alt="Hoàng Đạt Nguyễn" class="img-fluid">
+                                                </picture>
+                                            </span>
+                                            <div class="info-user flex-1">
+                                                <p
+                                                    class="name mb-2 font-bold text-[#444] line-clamp-1 xl:text-[1.75rem] text-[1.25rem]">
+                                                    Hoàng Đạt Nguyễn</p>
+                                                <p class="text-[0.75rem]"></p>
+                                                <div class="flex">
+                                                    <span class="icon w-9 shrink-0 mr-2">
+                                                        <img src="uploads/demo/linhthach-end.png" alt="Linh Thạch">
+                                                    </span>
+                                                    <div class="block">
+                                                        <span class="text-[0.75rem] block mt-1">Linh Thạch: 0</span>
+                                                        <span class="text-[0.75rem] block mt-1">Linh Thạch KM: 0</span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex mt-1">
+                                                    <span class="icon w-9 shrink-0 mr-2">
+                                                        <img src="uploads/demo/5start-100x67.png" alt="Linh Phiếu">
+                                                    </span>
+                                                    <span class="text-[0.75rem]">Linh Phiếu: 0</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex -mx-1 flex-wrap mt-2">
+                                        <div class="basis-1/2 px-1 mb-2">
+                                            <a href="https://blhvip.vn/trang-ca-nhan/13922" title="Trang cá nhân"
+                                                class="btn btn-border-green w-full">Trang cá nhân</a>
+                                        </div>
+                                        <div class="basis-1/2 px-1 mb-2">
+                                            <a href="https://blhvip.vn/chon-phuong-thuc-thanh-toan"
+                                                title="Thêm Linh Thạch" class="btn btn-border-green w-full">Thêm Linh
+                                                Thạch</a>
+                                        </div>
+                                        <div class="basis-1/2 px-1 mb-2">
+                                            <a href="https://blhvip.vn/thong-tin-ca-nhan" title="Chi tiết tài khoản"
+                                                class="btn btn-border-green w-full">Chi tiết tài khoản</a>
+                                        </div>
+                                        <div class="basis-1/2 px-1 mb-2">
+                                            <a href="https://blhvip.vn/nhap-giftcode" title="Nhập giftcode"
+                                                class="btn btn-border-green w-full">Nhập giftcode</a>
+                                        </div>
+                                        <div class="basis-1/2 px-1 mb-2">
+                                            <a href="https://blhvip.vn/dang-xuat" title="Đăng xuất"
+                                                class="btn btn-border-green w-full">Đăng xuất</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li> --}}
                     <li class="mr-5 last:mr-0 menu-mobile block xl:hidden relative">
                         <span @click="show_navbar = !show_navbar" class="show-menu-mobile flex cursor-pointer">
                             <svg viewBox='0 0 30 30' class="w-[30px]" xmlns='http://www.w3.org/2000/svg'>
@@ -151,7 +233,8 @@ $user = Auth::user();
                                     stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22' />
                             </svg>
                         </span>
-                        <div class="box-menu-on-mobile absolute top-[100%] right-0 z-10 bg-white border border-solid border-[#128c7e] w-[280px] rounded-2xl p-2" :class="{'hidden' : !show_navbar}">
+                        <div class="box-menu-on-mobile absolute top-[100%] right-0 z-10 bg-white border border-solid border-[#128c7e] w-[280px] rounded-2xl p-2"
+                            :class="{ 'hidden': !show_navbar }">
                             <div class="flex items-center">
                                 <form action="{{ route('client.search') }}" method="get"
                                     class="relative overflow-hidden form-search-header rounded-3xl mr-4 flex-1 md:flex-none"
@@ -163,7 +246,8 @@ $user = Auth::user();
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
                                 </form>
-                                <a href="{{route('client.huong-dan')}}" title="Hướng dẫn" class="link text-[#128c7e]">Hướng
+                                <a href="{{ route('client.huong-dan') }}" title="Hướng dẫn"
+                                    class="link text-[#128c7e]">Hướng
                                     dẫn</a>
                             </div>
                             <hr class="w-full h-[1px] bg-[#128c7e] my-2">
@@ -181,10 +265,11 @@ $user = Auth::user();
                                     </a>
                                 </li> --}}
                                 <li>
-                                    <a @click="show_categories = true" href="javascript:void(0)" title="Thể loại">Thể loại</a>
+                                    <a @click="show_categories = true" href="javascript:void(0)" title="Thể loại">Thể
+                                        loại</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('client.full-story')}}" title="Hoàn thành">Hoàn thành</a>
+                                    <a href="{{ route('client.full-story') }}" title="Hoàn thành">Hoàn thành</a>
                                 </li>
                             </ul>
                             <hr class="w-full h-[1px] bg-[#128c7e] mb-2">
@@ -263,7 +348,8 @@ $user = Auth::user();
                 </div>
             </form>
             <div class="flex items-center">
-                <a href="{{route('client.huong-dan')}}" title="Hướng dẫn" class="link text-[#128c7e] mr-4 last:mr-0">Hướng
+                <a href="{{ route('client.huong-dan') }}" title="Hướng dẫn"
+                    class="link text-[#128c7e] mr-4 last:mr-0">Hướng
                     dẫn</a>
                 {{-- <a href="dang-nhap.html" title="Đăng truyện" class="link text-[#128c7e] mr-4 last:mr-0">Đăng
                     truyện</a> --}}
@@ -273,15 +359,16 @@ $user = Auth::user();
     <div class="header-nav bg-[#343a40]">
         <div class="container flex items-center justify-between">
             <div class="flex items-center menu menu-left">
-                <span @click="show_categories = true" class="head-cate inline-block px-2 py-[0.625rem] text-white text-[0.875rem] cursor-pointer">
+                <span @click="show_categories = true"
+                    class="head-cate inline-block px-2 py-[0.625rem] text-white text-[0.875rem] cursor-pointer">
                     <i class="mr-2 fa-solid fa-bars"></i> Thể loại
                 </span>
                 <ul>
-                    <li><a href="{{route('client.full-story')}}" title="">Hoàn thành</a></li>
-                    <li><a href="{{route('client.new-update')}}" title="">Truyện mới</a></li>
-                    <li><a href="{{route('client.hot-story')}}" title="">Truyện hay</a></li>
-                    <li><a href="{{route('client.view-story')}}" title="">Xem nhiều</a></li>
-                    <li><a href="{{route('client.superSearch')}}" title="">Filter</a></li>
+                    <li><a href="{{ route('client.full-story') }}" title="">Hoàn thành</a></li>
+                    <li><a href="{{ route('client.new-update') }}" title="">Truyện mới</a></li>
+                    <li><a href="{{ route('client.hot-story') }}" title="">Truyện hay</a></li>
+                    <li><a href="{{ route('client.view-story') }}" title="">Xem nhiều</a></li>
+                    <li><a href="{{ route('client.superSearch') }}" title="">Filter</a></li>
 
                     {{-- <li><a href="https://forum.banlong.us/" title="">Giao diện cũ</a></li>
                     <li><a href="https://www.facebook.com/banlonghoi/" title="Facebook fanpage"
@@ -290,22 +377,25 @@ $user = Auth::user();
             </div>
             <div class="menu menu-right hidden xl:block">
                 <ul>
-                    <li><a href="{{route('client.huong-dan')}}" title="Hướng dẫn">Hướng dẫn</a></li>
+                    <li><a href="{{ route('client.huong-dan') }}" title="Hướng dẫn">Hướng dẫn</a></li>
                     {{-- <li><a href="dang-nhap.html" title="Đăng truyện">Đăng truyện</a></li> --}}
                 </ul>
             </div>
         </div>
     </div>
 
-    <div class="fixed top-0 modal-story-genre right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-white duration-500 md:inset-0" :class="{'invisible pointer-events-none opacity-0' : !show_categories}" modal-rs="modal_cate">
-        <span @click="show_categories = false" class="btn-close-genre close-modal items-center justify-center cursor-pointer absolute top-2 right-2 z-[1]">
+    <div class="fixed top-0 modal-story-genre right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-white duration-500 md:inset-0"
+        :class="{ 'invisible pointer-events-none opacity-0': !show_categories }" modal-rs="modal_cate">
+        <span @click="show_categories = false"
+            class="btn-close-genre close-modal items-center justify-center cursor-pointer absolute top-2 right-2 z-[1]">
             <i class="fa-solid fa-xmark"></i>
         </span>
         <div class="w-full h-full overflow-auto">
             <ul class="flex flex-wrap">
                 @foreach ($all_categories as $item)
                     <li class="basis-1/2 md:basis-1/4 lg:basis-1/6">
-                        <a href="{{ route('client.tag', ['tag_slug' => $item['slug']]) }}" title="{{ $item['name'] }}c" class="block p-2">{{ $item['name'] }}</a>
+                        <a href="{{ route('client.tag', ['tag_slug' => $item['slug']]) }}"
+                            title="{{ $item['name'] }}c" class="block p-2">{{ $item['name'] }}</a>
                     </li>
                 @endforeach
 

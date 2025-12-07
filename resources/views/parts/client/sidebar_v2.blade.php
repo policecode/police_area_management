@@ -20,7 +20,7 @@ $user = Auth::user();
                     <img loading="auto"
                         src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
                         data-src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
-                        alt="Truyện Full Việt" class="img-fluid">
+                        alt="Hắc Hoàng Đại Đế" class="img-fluid">
                 </picture>
             </a>
             <div class="header-form xl:flex-1 max-w-[70%] flex items-center justify-between">
@@ -107,7 +107,7 @@ $user = Auth::user();
                                         <img loading="auto"
                                             src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
                                             data-src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
-                                            alt="Truyện Full Việt" class="img-fluid">
+                                            alt="Hắc Hoàng Đại Đế" class="img-fluid">
                                     </picture>
                                 </span>
                                 <div class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
