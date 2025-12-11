@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Laravel\Socialite\Facades\Socialite;
 // use App\Http\Controllers\Admin\UserController;
 /*
 |--------------------------------------------------------------------------
@@ -119,6 +120,17 @@ Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], funct
 
 // Auth
 Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], function() {
+    // Login bằng mạng xã hội
+    Route::get('/auth/google', function () {
+        return Socialite::driver('google')->redirect();
+    });
+    
+    Route::get('/auth/google/callback', function () {
+        $user = Socialite::driver('google')->user();
+        dd($user);
+        // $user->token
+    });
+
     Route::get('/login', 'LoginController@showFormLogin')->name('auth.form_login');
     Route::post('/login', 'LoginController@login')->name('auth.login');
     Route::get('/logout', 'LoginController@logout')->name('auth.logout');
