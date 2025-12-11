@@ -129,7 +129,7 @@ class LoginController extends Controller
                 'email' => $user['email'],
                 'password' => Hash::make(Str::random(12)), // Mật khẩu ngẫu nhiên
                 'email_verified_at' => Carbon::now(),
-                'avatar' => $user['avatar'],
+                'avatar' => $user->avatar,
                 'socialite' => 'google',
                 'socialite_id' => $user['id'],
                 'group_id' => GroupRole::READER['id'],
