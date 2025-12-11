@@ -4,11 +4,16 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\GroupRole;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 class LoginController extends Controller
 {
     /*
@@ -104,5 +109,33 @@ class LoginController extends Controller
         throw ValidationException::withMessages([
             $this->username() => ['Tên đăng nhập hoặc mật khẩu không chính xác'],
         ]);
+    }
+
+    public function redirectSocialiteGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function loginSocialiteGoogle()
+    {
+        $user = Socialite::driver('google')->user();
+        $isUser = User::getByEmail($user['email'])->first();
+        if ($isUser > 0) {
+            Auth::login($isUser, true);
+        } else {
+            // Chưa có tài khoản, tiến hành tạo mới và đăng nhập
+            $newUser = User::create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'password' => Hash::make(Str::random(12)), // Mật khẩu ngẫu nhiên
+                'email_verified_at' => Carbon::now(),
+                'avatar' => $user['avatar'],
+                'socialite' => 'google',
+                'socialite_id' => $user['id'],
+                'group_id' => GroupRole::READER['id'],
+            ]);
+            Auth::login($newUser, true);
+        }
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 }
