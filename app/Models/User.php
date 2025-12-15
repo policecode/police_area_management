@@ -19,7 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'group_id', 'email_verified_at', 'avatar', 'socialite', 'socialite_id', 'exp', 'level', 'money', 'total_story', 'total_chapter'
+        'name', 'email', 'password', 'group_id', 'email_verified_at', 'remember_token', 'avatar', 'socialite', 'socialite_id', 'exp', 'level', 'money', 'total_story', 'total_chapter'
     ];
 
     /**
@@ -51,6 +51,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function scopeGetByEmail($query, $email) {
         $query->where('users.email', $email);
+        return $query;
+    }
+
+    public function scopeGetByRememberToken($query, $remember_token) {
+        $query->where('users.remember_token', $remember_token);
         return $query;
     }
 }

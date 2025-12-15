@@ -64,7 +64,7 @@ class RegisterController extends Controller
 
         return $request->wantsJson()
                     ? new JsonResponse([], 201)
-                    : redirect($this->redirectPath())->with('msg', 'Đăng ký tài khoản thành công, mời bạn  đăng nhập vào email '.$request->email.' để kích hoạt tài khoản');
+                    : redirect($this->redirectPath())->with('msg', 'Đăng ký tài khoản thành công, mời bạn  đăng nhập vào hộp thư email '.$request->email.' để kích hoạt tài khoản');
     }
 
     protected function validator(array $data)

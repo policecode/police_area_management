@@ -7,6 +7,8 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
 use App\Http\Controllers\Client\SearchController;
 use App\Http\Controllers\Client\TopStoryController;
+use App\Http\Controllers\Member\LoginController AS MemberLoginController;
+use App\Http\Controllers\Member\RegisterController AS MemberRegisterController;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -121,8 +123,14 @@ Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], funct
 // Auth
 Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], function() {
     // Login bằng mạng xã hội
-    Route::get('/auth/google', 'LoginController@redirectSocialiteGoogle')->name('auth.socialite.google');
-    Route::get('/auth/google/callback', 'LoginController@loginSocialiteGoogle')->name('auth.socialite.google.callback');
+    Route::get('/auth/google', [MemberLoginController::class, 'redirectSocialiteGoogle'])->name('auth.socialite.google');
+    Route::get('/auth/google/callback', [MemberLoginController::class, 'loginSocialiteGoogle'])->name('auth.socialite.google.callback');
+
+    // Login cho member
+    Route::get('/member/login', [MemberLoginController::class, 'showFormLogin'])->name('member.form_login');
+    Route::get('/member/register', [MemberRegisterController::class, 'showFormRegister'])->name('member.form_register');
+    Route::post('/member/register', [MemberRegisterController::class, 'register'])->name('member.store');
+    // Route::get('/member/testmail', [MemberRegisterController::class, 'testmail']);
 
     // Login và Register thông thường
     Route::get('/login', 'LoginController@showFormLogin')->name('auth.form_login');
@@ -133,12 +141,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
     Route::post('/register', 'RegisterController@register')->name('auth.store');
 
     // Liên kết sẽ được gửi vào email của người đăng ký
-    Route::get('/email/verify/{id}/{hash}', function (Request $request, $id) {
-        $user = User::find($id);
-        $user->email_verified_at = Carbon::now();
-        $user->update();
-        return redirect('/login')->with('msg', 'Kích hoạt tài khoản '.$user->email.' thành công');
-    })->middleware(['signed'])->name('verification.verify');
+    Route::get('/email/verify/{remember_token}', [MemberRegisterController::class, 'emailVerify'])->middleware(['signed'])->name('verification.verify');
     // Link thông báo vertify khi người dùng đăng ký tài khoản, chưa xác thực email
     Route::get('/email/verify', function () {
         $dataView = array(
