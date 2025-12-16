@@ -58,4 +58,9 @@ class User extends Authenticatable implements MustVerifyEmail
         $query->where('users.remember_token', $remember_token);
         return $query;
     }
+
+    public function scopeGetByEmailVerifiedAt($query, $email_verified_at) {
+        $query->where('users.email_verified_at', $email_verified_at);
+        return $query;
+    }
 }

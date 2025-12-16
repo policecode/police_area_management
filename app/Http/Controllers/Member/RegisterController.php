@@ -29,6 +29,12 @@ class RegisterController extends Controller
     {
         $this->middleware('guest');
     }
+
+    
+    public function testmail() {
+        return view('mails.activation');
+    }
+    
     public function showFormRegister()
     {
         $dataView = array(

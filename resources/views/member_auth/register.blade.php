@@ -2,8 +2,6 @@
 use App\Http\Helpers\SettingHelpers;
 
 $option = SettingHelpers::getInstance();
-
-
 ?>
 @extends('layouts.auth_member')
 @section('head')
@@ -14,14 +12,10 @@ $option = SettingHelpers::getInstance();
     <section class="section-regis py-12 bg-[#f2f3f5] flex items-center ">
         <div class="container">
             <div class="module-content max-w-[450px] mx-auto bg-white lg:p-7 p-4">
-                 <picture>
-                    <source media="(min-width:0px)"
-                        data-srcset="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
-                        srcset="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}">
+                 <picture class="flex justify-center">
                     <img loading="auto"
-                        src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
-                        data-src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
-                        alt="Hắc Hoàng Đại Đế" class="img-fluid">
+                        src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}" style="max-height: 150px;"
+                        alt="Hắc Hoàng Đại Đế" class="img-fluid" />
                 </picture>
                 <div class="text-center">
                     <p class="title font-bold text-center xl:text-[1.875rem] text-[1.25rem] text-[#373941] mb-5">{{ $page_title }}</p>
@@ -65,9 +59,7 @@ $option = SettingHelpers::getInstance();
                 </form>
                 <p class="mt-5 text-center">Hoặc đăng nhập qua</p>
                 <div class="text-center">
-                    
-                    <a href="{{ route('auth.socialite.google') }}" class="smooth icon-login-social google" title="Đăng nhập qua Google"><i
-                            class="fa-brands fa-google"></i></a>
+                    <a href="{{ route('auth.socialite.google') }}" class="smooth icon-login-social google" title="Đăng nhập qua Google"><i class="fa-brands fa-google"></i></a>
                 </div>
             </div>
         </div>

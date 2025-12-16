@@ -128,9 +128,15 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
 
     // Login cho member
     Route::get('/member/login', [MemberLoginController::class, 'showFormLogin'])->name('member.form_login');
+    Route::post('/member/login', [MemberLoginController::class, 'login'])->name('member.login');
     Route::get('/member/register', [MemberRegisterController::class, 'showFormRegister'])->name('member.form_register');
     Route::post('/member/register', [MemberRegisterController::class, 'register'])->name('member.store');
     // Route::get('/member/testmail', [MemberRegisterController::class, 'testmail']);
+    // Chức năng quyên mật khẩu
+    // Route::get('/member/forgot-password', [MemberLoginController::class, 'showFormForgotPassword'])->name('member.form_forgot_password');
+    // Route::post('/member/forgot-password', [MemberLoginController::class, 'sendResetLinkEmail'])->name('member.send_reset_link_email');
+    // Route::get('/member/reset-password/{token}', [MemberLoginController::class, 'showFormResetPassword'])->name('member.form_reset_password');
+    // Route::post('/member/reset-password', [MemberLoginController::class, 'resetPassword'])->name('member.reset_password');
 
     // Login và Register thông thường
     Route::get('/login', 'LoginController@showFormLogin')->name('auth.form_login');
@@ -141,14 +147,15 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
     Route::post('/register', 'RegisterController@register')->name('auth.store');
 
     // Liên kết sẽ được gửi vào email của người đăng ký
-    Route::get('/email/verify/{remember_token}', [MemberRegisterController::class, 'emailVerify'])->middleware(['signed'])->name('verification.verify');
+    Route::get('/email/verify/{remember_token}', [MemberRegisterController::class, 'emailVerify'])->name('verification.verify');
+    
     // Link thông báo vertify khi người dùng đăng ký tài khoản, chưa xác thực email
-    Route::get('/email/verify', function () {
+    Route::get('/member/email/verify', function () {
         $dataView = array(
-            'title' => 'Vertify Email'
+            'page_title' => 'Vertify Email'
         );
-        return view('auth.verify', $dataView);
-    })->middleware('auth')->name('verification.notice');
+        return view('member_auth.verify', $dataView);
+    })->name('verification.notice');
     // Xử lý hành động gửi lại email
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();

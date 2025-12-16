@@ -59,7 +59,6 @@ class LoginController extends Controller
     {
         // Xử lý sau khi logout
         return redirect(RouteServiceProvider::HOME);
-
     }
 
     public function login(Request $request)
