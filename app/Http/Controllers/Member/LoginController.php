@@ -51,9 +51,9 @@ public function login(Request $request)
             $user = Auth::user();
             if (!$user->email_verified_at) {
                 Auth::guard('web')->logout();
-                return back()->with(['msgError' => 'Tài khoản '.$user->email.' chưa được xác thực, vui lòng kiểm tra email để xác thực tài khoản']);
+                return redirect(route('verification.notice', ['email' => $user->email]))->with(['msgError' => 'Tài khoản '.$user->email.' chưa được xác thực, vui lòng kiểm tra email để xác thực tài khoản']);
             }
-            return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended(RouteServiceProvider::MEMBERPROFILE);
         }
         return back()->withInput()->withErrors(['password' => 'Mật khẩu không chính xác']);
     }

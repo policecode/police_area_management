@@ -26,7 +26,8 @@ $option = SettingHelpers::getInstance();
                         <div class="flex items-center justify-between mb-2 head-all text-white p-4" style="background-color: #d25959">{{session('msgError')}}</div>
                     @endif
                 </div>
-                <form action="{{ route('member.login') }}" method="POST" class="form formValidation" accept-charset="utf8">
+                <p class="title text-center text-[#373941] mb-5">Nhập tài khoản của bạn (địa chỉ email) để lấy đường link đặt lại mật khẩu</p>
+                <form action="{{ route('member.send_reset_link_email') }}" method="POST" class="form formValidation" accept-charset="utf8">
                     @csrf
                     @method('POST')
                     <input type="text" value="{{old('email')}}" name="email" placeholder="Nhập email"
@@ -35,24 +36,11 @@ $option = SettingHelpers::getInstance();
                     @error('email')
                         <p class="ml-2 mb-4" style="color: rgb(255, 110, 124);"><strong>{{ $message }}</strong></p>
                     @enderror
-
-                    <input type="password"  value="{{old('password')}}" name="password" placeholder="Nhập mật khẩu"
-                        class="form-control w-full bg-none border-b-[1px] border-solid border-[#e5e9ea] text-[0.875rem] outline-none mb-2"
-                        @error('password') style="border: 1px solid rgb(255, 110, 124);" @enderror>
-                    @error('password')
-                        <p class="ml-2 mb-4" style="color: rgb(255, 110, 124);"><strong>{{ $message }}</strong></p>
-                    @enderror
               
-                    <button type="submit" class="btn btn-green w-full !rounded-md lg:text-[1.125rem] mb-4">Đăng nhập</button>
-                    <a href="{{route('member.form_forgot_password')}}" title="Quên mật khẩu" class="link text-[#222] block w-fit mx-auto mb-4"
-                        modal-rs-target="foget_pass" style="cursor: pointer;">Quên mật khẩu</a>
-                    <a href="{{ route('member.form_register') }}" title="Đăng ký"
-                        class="btn btn-border-green !flex w-fit mx-auto !rounded-md min-w-[200px]">Đăng ký</a>
+                    <button type="submit" class="btn btn-green w-full !rounded-md lg:text-[1.125rem] mb-4">Gửi Email</button>
+                    <a href="{{ route('member.form_login') }}" title="Đăng ký"
+                        class="btn btn-border-green !flex w-fit mx-auto !rounded-md min-w-[200px]">Quay lại trang đăng nhập</a>
                 </form>
-                <p class="mt-5 text-center">Hoặc đăng nhập qua</p>
-                <div class="text-center">
-                   <a href="{{ route('auth.socialite.google') }}" class="smooth icon-login-social google" title="Đăng nhập qua Google"><i class="fa-brands fa-google"></i></a>
-                </div>
             </div>
         </div>
     </section>

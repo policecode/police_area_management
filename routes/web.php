@@ -7,14 +7,14 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
 use App\Http\Controllers\Client\SearchController;
 use App\Http\Controllers\Client\TopStoryController;
+use App\Http\Controllers\Member\CommentController AS MemberCommentController;
 use App\Http\Controllers\Member\LoginController AS MemberLoginController;
 use App\Http\Controllers\Member\RegisterController AS MemberRegisterController;
-use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Member\ResetPasswordController AS MemberResetPasswordController;
+use App\Http\Controllers\Member\ProfileController AS MemberProfileController;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // use App\Http\Controllers\Admin\UserController;
 /*
@@ -120,9 +120,9 @@ Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], funct
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
 
-// Auth
-Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], function() {
-    // Login bằng mạng xã hội
+// Member Auth
+Route::group(['middleware' => ['throttle:60,1']], function() {
+       // Login bằng mạng xã hội
     Route::get('/auth/google', [MemberLoginController::class, 'redirectSocialiteGoogle'])->name('auth.socialite.google');
     Route::get('/auth/google/callback', [MemberLoginController::class, 'loginSocialiteGoogle'])->name('auth.socialite.google.callback');
 
@@ -133,10 +133,39 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
     Route::post('/member/register', [MemberRegisterController::class, 'register'])->name('member.store');
     // Route::get('/member/testmail', [MemberRegisterController::class, 'testmail']);
     // Chức năng quyên mật khẩu
-    // Route::get('/member/forgot-password', [MemberLoginController::class, 'showFormForgotPassword'])->name('member.form_forgot_password');
-    // Route::post('/member/forgot-password', [MemberLoginController::class, 'sendResetLinkEmail'])->name('member.send_reset_link_email');
-    // Route::get('/member/reset-password/{token}', [MemberLoginController::class, 'showFormResetPassword'])->name('member.form_reset_password');
-    // Route::post('/member/reset-password', [MemberLoginController::class, 'resetPassword'])->name('member.reset_password');
+    Route::get('/member/forgot-password', [MemberResetPasswordController::class, 'showFormForgotPassword'])->name('member.form_forgot_password');
+    Route::post('/member/forgot-password', [MemberResetPasswordController::class, 'sendResetLinkEmail'])->name('member.send_reset_link_email');
+    Route::get('/member/reset-password/{token}', [MemberResetPasswordController::class, 'showFormResetPassword'])->name('member.form_reset_password');
+    Route::post('/member/reset-password', [MemberResetPasswordController::class, 'resetPassword'])->name('member.reset_password');
+
+     // Liên kết sẽ được gửi vào email của người đăng ký
+    Route::get('/email/verify/{remember_token}', [MemberRegisterController::class, 'emailVerify'])->name('verification.verify');
+    
+    // Link thông báo vertify khi người dùng đăng ký tài khoản, chưa xác thực email
+    Route::get('/member/email/verify/{email}', [MemberRegisterController::class, 'repeatVetifyForm'])->name('verification.notice');
+    Route::post('/member/email/verify/{email}', [MemberRegisterController::class, 'repeatVetify'])->name('verification.repeat');
+
+    // Profile
+    Route::get('/member/profile/{user_id}', [MemberProfileController::class, 'getProfile'])->name('member.profile');
+    Route::get('/member/profile-detail', [MemberProfileController::class, 'getProfileDetail'])->name('member.profile_detail');
+    Route::get('/member/payment', [MemberProfileController::class, 'payment'])->name('member.payment');
+    Route::get('/member/alert', [MemberProfileController::class, 'alert'])->name('member.alert');
+    Route::get('/member/my-story', [MemberProfileController::class, 'mystory'])->name('member.mystory');
+    Route::get('/member/gilf-code', [MemberProfileController::class, 'gilfcode'])->name('member.gilfcode');
+
+});
+
+// Member Action
+Route::group(['middleware' => ['throttle:60,1']], function() {
+    // Comment
+    Route::get('/api/member/list-comment', [MemberCommentController::class, 'getListComments'])->name('member.action.list-comment');
+    Route::post('/api/member/post-comment', [MemberCommentController::class, 'postComment'])->name('member.action.comment');
+    Route::post('/api/member/like-comment', [MemberCommentController::class, 'likeComment'])->name('member.action.like-comment');
+    
+
+});
+// Auth
+Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], function() {
 
     // Login và Register thông thường
     Route::get('/login', 'LoginController@showFormLogin')->name('auth.form_login');
@@ -146,16 +175,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
     Route::get('/register', 'RegisterController@showRegistrationForm')->name('auth.register_form');
     Route::post('/register', 'RegisterController@register')->name('auth.store');
 
-    // Liên kết sẽ được gửi vào email của người đăng ký
-    Route::get('/email/verify/{remember_token}', [MemberRegisterController::class, 'emailVerify'])->name('verification.verify');
-    
-    // Link thông báo vertify khi người dùng đăng ký tài khoản, chưa xác thực email
-    Route::get('/member/email/verify', function () {
-        $dataView = array(
-            'page_title' => 'Vertify Email'
-        );
-        return view('member_auth.verify', $dataView);
-    })->name('verification.notice');
     // Xử lý hành động gửi lại email
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
@@ -189,7 +208,7 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
     
     Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
     Route::get('/story/top-rating', [StoriesClientController::class, 'getTopViewStories'])->name('story.top-rating');
-    Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->name('story.rating');
+    Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->middleware(['auth', 'verified'])->name('story.rating');
     Route::get('/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
     // Route::get('/story/{story_slug}', [StoriesClientController::class, 'index']);
     

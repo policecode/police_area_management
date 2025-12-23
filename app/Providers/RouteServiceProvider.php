@@ -23,6 +23,7 @@ class RouteServiceProvider extends ServiceProvider
     public const REGISTER = '/register';
     public const MEMBERLOGIN = '/member/login';
     public const MEMBERREGISTER = '/member/register';
+    public const MEMBERPROFILE = '/member/profile-detail';
 
     /**
      * Define your route model bindings, pattern filters, etc.

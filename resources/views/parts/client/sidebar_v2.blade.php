@@ -95,63 +95,153 @@ $user = Auth::user();
                                 alt="Tủ truyện">
                         </a>
                     </li>
-                    {{-- <li class="mr-5 last:mr-0 btn-login">
-                        <div class="block xl:hidden">
-                            <div class="user sm:relative flex show-info-user">
-                                <span
-                                    class="inline-block overflow-hidden rounded-full avatar w-7 h-7 img_full img-h-full cursor-pointer">
+                    
+                    {{-- Trạng thái đăng nhập Start --}}
+                    @if ($user)
+                        <li class="mr-5 xl:mr-0 last:mr-0">
+                            <div class="user sm:relative show-info-user">
+                                <span @click="show_profile = !show_profile"
+                                    class="inline-block overflow-hidden rounded-full avatar w-9 h-9 img_full img-h-full">
                                     <picture>
-                                        <source media="(min-width:0px)"
-                                            data-srcset="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
-                                            srcset="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}">
-                                        <img loading="auto"
-                                            src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
-                                            data-src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
-                                            alt="Hắc Hoàng Đại Đế" class="img-fluid">
+                                        <img loading="lazy" :src="user.avatar_url" :alt="user.name"
+                                            class="img-fluid">
                                     </picture>
                                 </span>
-                                <div class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
-                                    <div class="box p-2 rounded-lg border border-solid border-[#128c7e] bg-white">
-                                        <div class="box-info flex">
-                                            <div class="info-user flex-1 text-center">
-                                                <a href="dang-nhap.html"
-                                                    class="inline-block px-4 py-2 rounded border border-solid border-[#128c7e] mr-5"
-                                                    title="Đăng nhập">
-                                                    <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
-                                                    <span>Đăng nhập</span>
-                                                </a>
-                                                <a href="dang-ky.html"
-                                                    class="inline-block px-4 py-2 rounded border border-solid border-[#128c7e]"
-                                                    title="Đăng ký">
-                                                    <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
-                                                    <span>Đăng ký</span>
-                                                </a>
+                                <div v-if="show_profile" @click="show_profile = false"
+                                    class="fixed top-0 right-0 bottom-0 left-0"></div>
+                                <div v-if="show_profile"
+                                    class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full active">
+                                    <div class="box p-4 rounded-lg border border-solid border-[#128c7e] bg-white">
+                                        <div id="info-header-result" class="inited">
+                                            <div class="box-info flex">
+                                                <span
+                                                    class="avatar mr-4 img_full img-h-full overflow-hidden rounded-full w-24 h-24">
+                                                    <picture>
+                                                        <img loading="lazy" :src="user.avatar_url"
+                                                            :alt="user.name" class="img-fluid">
+                                                    </picture>
+                                                </span>
+                                                <div class="info-user flex-1">
+                                                    <p
+                                                        class="name mb-2 font-bold text-[#444] line-clamp-1 xl:text-[1.75rem] text-[1.25rem]">
+                                                        @{{ user.name }}</p>
+                                                    <p class="text-[0.75rem]"></p>
+                                                    <div class="flex">
+                                                        <span class="icon w-9 shrink-0 mr-2">
+                                                            <img src="{{ asset('assets/images/linhthach-end.png') }}"
+                                                                alt="Linh Thạch">
+                                                        </span>
+                                                        <div class="block">
+                                                            <span class="text-[0.75rem] block mt-1">Linh Thạch: 0</span>
+                                                            <span class="text-[0.75rem] block mt-1">Linh Thạch KM:
+                                                                0</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex mt-1">
+                                                        <span class="icon w-9 shrink-0 mr-2">
+                                                            <img src="{{ asset('assets/images/5start-100x67.png') }}"
+                                                                alt="Linh Phiếu">
+                                                        </span>
+                                                        <span class="text-[0.75rem]">Linh Phiếu: 0</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex -mx-1 flex-wrap mt-2">
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{ route('member.profile', ['user_id' => $user->id]) }}"
+                                                    title="Trang cá nhân" class="btn btn-border-green w-full">Trang cá
+                                                    nhân</a>
+                                            </div>
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{ route('member.payment') }}" title="Thêm Linh Thạch"
+                                                    class="btn btn-border-green w-full">Thêm Linh
+                                                    Thạch</a>
+                                            </div>
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{ route('member.profile_detail') }}"
+                                                    title="Chi tiết tài khoản" class="btn btn-border-green w-full">Chi
+                                                    tiết tài khoản</a>
+                                            </div>
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{ route('member.gilfcode') }}" title="Nhập giftcode"
+                                                    class="btn btn-border-green w-full">Nhập giftcode</a>
+                                            </div>
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{ route('auth.logout') }}" title="Đăng xuất"
+                                                    class="btn btn-border-green w-full">Đăng xuất</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="hidden xl:block">
-                            <a href="dang-nhap.html" class="inline-block mr-5" title="Đăng nhập">
-                                <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
-                                <span>Đăng nhập</span>
-                            </a>
-                            <a href="dang-ky.html" class="inline-block" title="Đăng ký">
-                                <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
-                                <span>Đăng ký</span>
-                            </a>
-                        </div>
-                    </li> --}}
+                        </li>
+                    @else
+                        <li class="mr-5 last:mr-0 btn-login">
+                            <div class="block xl:hidden">
+                                <div class="user sm:relative flex show-info-user">
+                                    <span
+                                        class="inline-block overflow-hidden rounded-full avatar w-7 h-7 img_full img-h-full cursor-pointer">
+                                        <picture>
+                                            <source media="(min-width:0px)"
+                                                data-srcset="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
+                                                srcset="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}">
+                                            <img loading="auto"
+                                                src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
+                                                data-src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
+                                                alt="Hắc Hoàng Đại Đế" class="img-fluid">
+                                        </picture>
+                                    </span>
+                                    <div
+                                        class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
+                                        <div class="box p-2 rounded-lg border border-solid border-[#128c7e] bg-white">
+                                            <div class="box-info flex">
+                                                <div class="info-user flex-1 text-center">
+                                                    <a href="{{ route('member.form_login') }}"
+                                                        class="inline-block px-4 py-2 rounded border border-solid border-[#128c7e] mr-5"
+                                                        title="Đăng nhập">
+                                                        <i
+                                                            class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
+                                                        <span>Đăng nhập</span>
+                                                    </a>
+                                                    <a href="{{ route('member.form_register') }}"
+                                                        class="inline-block px-4 py-2 rounded border border-solid border-[#128c7e]"
+                                                        title="Đăng ký">
+                                                        <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
+                                                        <span>Đăng ký</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hidden xl:block">
+                                <a href="{{ route('member.form_login') }}" class="inline-block mr-5"
+                                    title="Đăng nhập">
+                                    <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
+                                    <span>Đăng nhập</span>
+                                </a>
+                                <a href="{{ route('member.form_register') }}" class="inline-block" title="Đăng ký">
+                                    <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
+                                    <span>Đăng ký</span>
+                                </a>
+                            </div>
+                        </li>
+                    @endif
+                    {{-- Trạng thái đăng nhập End --}}
+
                     <li class="mr-5 last:mr-0 menu-mobile block xl:hidden relative">
+                        <div v-if="show_navbar" @click="show_navbar = false"
+                            class="fixed top-0 right-0 bottom-0 left-0"></div>
                         <span @click="show_navbar = !show_navbar" class="show-menu-mobile flex cursor-pointer">
                             <svg viewBox='0 0 30 30' class="w-[30px]" xmlns='http://www.w3.org/2000/svg'>
                                 <path stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round'
                                     stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22' />
                             </svg>
                         </span>
-                        <div
-                            class="box-menu-on-mobile absolute top-[100%] right-0 z-10 bg-white border border-solid border-[#128c7e] w-[280px] rounded-2xl p-2" :class="{'hidden' : !show_navbar}">
+                        <div class="box-menu-on-mobile absolute top-[100%] right-0 z-10 bg-white border border-solid border-[#128c7e] w-[280px] rounded-2xl p-2"
+                            :class="{ 'hidden': !show_navbar }">
                             <div class="flex items-center">
                                 <form action="{{ route('client.search') }}" method="get"
                                     class="relative overflow-hidden form-search-header rounded-3xl mr-4 flex-1 md:flex-none"
@@ -163,24 +253,28 @@ $user = Auth::user();
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
                                 </form>
-                                <a href="{{ route('client.huong-dan') }}" title="Hướng dẫn" class="link text-[#128c7e]">Hướng dẫn</a>
+                                <a href="{{ route('client.huong-dan') }}" title="Hướng dẫn"
+                                    class="link text-[#128c7e]">Hướng dẫn</a>
                             </div>
                             <hr class="w-full h-[1px] bg-[#128c7e] my-2">
                             <ul>
-                                {{-- <li>
-                                    <a href="dang-nhap.html" class="inline-block" title="Đăng nhập">
+                                <li>
+                                    <a href="{{ route('member.form_login') }}" class="inline-block"
+                                        title="Đăng nhập">
                                         <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
                                         <span>Đăng nhập</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="dang-ky.html" class="inline-block" title="Đăng ký">
+                                    <a href="{{ route('member.form_register') }}" class="inline-block"
+                                        title="Đăng ký">
                                         <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
                                         <span>Đăng ký</span>
                                     </a>
-                                </li> --}}
+                                </li>
                                 <li>
-                                    <a @click="show_categories = true" href="javascript:void(0)"  title="Thể loại">Thể loại</a>
+                                    <a @click="show_categories = true" href="javascript:void(0)" title="Thể loại">Thể
+                                        loại</a>
                                 </li>
                                 <li>
                                     <a href="{{ route('client.full-story') }}" title="Hoàn thành">Hoàn thành</a>
@@ -271,15 +365,18 @@ $user = Auth::user();
         </div>
     </div>
 
-    <div class="fixed top-0 modal-story-genre right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-white duration-500 md:inset-0" :class="{'invisible pointer-events-none opacity-0' : !show_categories}">
-        <span @click="show_categories = false" class="btn-close-genre close-modal items-center justify-center cursor-pointer absolute top-2 right-2 z-[1]">
+    <div class="fixed top-0 modal-story-genre right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-white duration-500 md:inset-0"
+        :class="{ 'invisible pointer-events-none opacity-0': !show_categories }">
+        <span @click="show_categories = false"
+            class="btn-close-genre close-modal items-center justify-center cursor-pointer absolute top-2 right-2 z-[1]">
             <i class="fa-solid fa-xmark"></i>
         </span>
         <div class="w-full h-full overflow-auto">
             <ul class="flex flex-wrap">
                 @foreach ($all_categories as $item)
                     <li class="basis-1/2 md:basis-1/4 lg:basis-1/6">
-                        <a href="{{ route('client.tag', ['tag_slug' => $item['slug']]) }}" title="{{ $item['name'] }}c" class="block p-2">{{ $item['name'] }}</a>
+                        <a href="{{ route('client.tag', ['tag_slug' => $item['slug']]) }}"
+                            title="{{ $item['name'] }}c" class="block p-2">{{ $item['name'] }}</a>
                     </li>
                 @endforeach
 
@@ -315,8 +412,10 @@ $user = Auth::user();
         loading: false,
         show_categories: false,
         show_navbar: false,
+        show_profile: false,
         items: [],
         msgSearch: '',
+        user: {{ Illuminate\Support\Js::from($user) }},
         querySearch: {
             total: 0,
             page: 1,
@@ -374,7 +473,7 @@ $user = Auth::user();
                 }
                 string = words.join(" ");
                 return string;
-            }
+            },
         },
         watch: {
             'querySearch.keyword'(newVal) {
@@ -400,4 +499,3 @@ $user = Auth::user();
 </script>
 
 @include('parts.client.cabinet')
-

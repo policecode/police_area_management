@@ -147,29 +147,22 @@ class StoriesController extends Controller
             DB::beginTransaction();
             $data = $validator->validated();
             $user = Auth::user();
-            $flag = false;
-            if ($user) {
-                $flag = StarRating::getByUser($user->id)->getByStory($data['story_id'])->getByKeydate(get_key_by_day())->first();
-            } else {
-                $flag = StarRating::getByIpAdress($request->ip())->getByStory($data['story_id'])->getByKeydate(get_key_by_day())->first();
-            }
+            $flag = StarRating::getByUser($user->id)->getByStory($data['story_id'])->first();
+         
             if ($flag) {
                 return response()->json([
                     'status' => 0, 
-                    'message' => 'Bạn đã bình chọn cho bộ tuyện này trong ngày hôm nay, ngày mai bạn hãy quay lại đây',
+                    'message' => 'Bạn đã bình chọn cho bộ tuyện này, bạn có thể tìm hiểu những bộ truyện khác',
                 ]);
             }
-
-            $dataStar = array(
+  
+            $voteStar = StarRating::create([
+                'user_id' => $user->id,
                 'story_id' => $data['story_id'],
                 'point_star' => $data['point_star'],
                 'ip_address' => $request->ip(),
-                'key_date' => get_key_by_day()
-            );
-            if ($user) {
-                $dataStar['user_id'] = $user->id;
-            }
-            $voteStar = StarRating::create($dataStar);
+                'content' => $data['content']
+            ]);
             $starAvg = StarRating::getByStory($voteStar->story_id)->get()->avg('point_star');
     
             $story = Story::find($voteStar->story_id);
@@ -234,8 +227,9 @@ class StoriesController extends Controller
     private function rules($request)
     {
         $rules = [
-            'story_id' => 'required|exists:stories,id',
+            'story_id' => ['required', 'exists:stories,id'],
             'point_star' => 'integer|min:1|max:10',
+            'content' => 'required|string|min:30|max:500'
         ];
         return $rules;
     }
@@ -249,15 +243,18 @@ class StoriesController extends Controller
             'min' => ':attribute thấp nhất :min điểm',
             'max' => ':attribute cao nhất :max điểm',
             'integer' => ':attribute phải là số',
-            'exists' => ':attribute không tồn tại'
+            'exists' => ':attribute không tồn tại',
+            'string' => ':attribute phải là một chuỗi'
         ];
     }
 
     private function attributes()
     {
         return [
+            'user_id' => 'Tài khoản',
             'story_id' => 'Tên truyện',
             'point_star' => 'Điểm bình chọn',
+            'content' => 'Nội dung đánh giá'
         ];
     }
 }

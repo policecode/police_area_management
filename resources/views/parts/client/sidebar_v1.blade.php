@@ -97,136 +97,132 @@ $user = Auth::user();
                                 alt="Tủ truyện">
                         </a>
                     </li>
-                    {{-- <li class="mr-5 last:mr-0 btn-login">
-                        <div class="block xl:hidden">
-                            <div class="user sm:relative flex show-info-user">
-                                <span
-                                    class="inline-block overflow-hidden rounded-full avatar w-7 h-7 img_full img-h-full cursor-pointer">
+                    {{-- Trạng thái đăng nhập Start --}}
+                    @if ($user)
+                        <li class="mr-5 xl:mr-0 last:mr-0">
+                            <div class="user sm:relative show-info-user">
+                                <span @click="show_profile = !show_profile" class="inline-block overflow-hidden rounded-full avatar w-9 h-9 img_full img-h-full">
                                     <picture>
-                                        <source media="(min-width:0px)"
-                                            data-srcset="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
-                                            srcset="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}">
-                                        <img loading="auto"
-                                            src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
-                                            data-src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
-                                            alt="Hắc Hoàng Đại Đế" class="img-fluid">
+                                        <img loading="lazy"
+                                            :src="user.avatar_url"
+                                            :alt="user.name" class="img-fluid">
                                     </picture>
                                 </span>
-                                <div class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
-                                    <div class="box p-2 rounded-lg border border-solid border-[#128c7e] bg-white">
-                                        <div class="box-info flex">
-                                            <div class="info-user flex-1 text-center">
-                                                <a href="dang-nhap.html"
-                                                    class="inline-block px-4 py-2 rounded border border-solid border-[#128c7e] mr-5"
-                                                    title="Đăng nhập">
-                                                    <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
-                                                    <span>Đăng nhập</span>
-                                                </a>
-                                                <a href="dang-ky.html"
-                                                    class="inline-block px-4 py-2 rounded border border-solid border-[#128c7e]"
-                                                    title="Đăng ký">
-                                                    <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
-                                                    <span>Đăng ký</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hidden xl:block">
-                            <a href="dang-nhap.html" class="inline-block mr-5" title="Đăng nhập">
-                                <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
-                                <span>Đăng nhập</span>
-                            </a>
-                            <a href="dang-ky.html" class="inline-block" title="Đăng ký">
-                                <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
-                                <span>Đăng ký</span>
-                            </a>
-                        </div>
-                    </li> --}}
-                    {{-- <li class="mr-5 xl:mr-0 last:mr-0">
-                        <div class="user sm:relative show-info-user">
-                            <span class="inline-block overflow-hidden rounded-full avatar w-9 h-9 img_full img-h-full">
-                                <picture>
-                                    <source media="(min-width:0px)"
-                                        data-srcset="https://cdn.blhvip.vn/uploads/users/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
-                                        srcset="https://cdn.blhvip.vn/uploads/users/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png">
-                                    <img loading="lazy"
-                                        src="https://cdn.blhvip.vn/uploads/users/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
-                                        data-src="https://cdn.blhvip.vn/uploads/users/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
-                                        alt="acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
-                                        class="img-fluid">
-                                </picture>
-                            </span>
-                            <div class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
-                                <div class="box p-4 rounded-lg border border-solid border-[#128c7e] bg-white">
-                                    <div id="info-header-result" data-action="https://blhvip.vn/load-user-header-info"
-                                        class="inited">
-                                        <div class="box-info flex">
-                                            <span
-                                                class="avatar mr-4 img_full img-h-full overflow-hidden rounded-full w-24 h-24">
-                                                <picture>
-                                                    <source media="(min-width:0px)"
-                                                        data-srcset="https://cdn.blhvip.vn/uploads/users/thumbs/150x0/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
-                                                        srcset="https://cdn.blhvip.vn/uploads/users/thumbs/150x0/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png">
-                                                    <img loading="lazy"
-                                                        src="https://cdn.blhvip.vn/uploads/users/thumbs/150x0/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
-                                                        data-src="https://cdn.blhvip.vn/uploads/users/thumbs/150x0/acg8ocjcndu6nxtn5fcoscv-2ziiy-t0ce18fr-yazmizudnusqewimds96-c.png"
-                                                        alt="Hoàng Đạt Nguyễn" class="img-fluid">
-                                                </picture>
-                                            </span>
-                                            <div class="info-user flex-1">
-                                                <p
-                                                    class="name mb-2 font-bold text-[#444] line-clamp-1 xl:text-[1.75rem] text-[1.25rem]">
-                                                    Hoàng Đạt Nguyễn</p>
-                                                <p class="text-[0.75rem]"></p>
-                                                <div class="flex">
-                                                    <span class="icon w-9 shrink-0 mr-2">
-                                                        <img src="uploads/demo/linhthach-end.png" alt="Linh Thạch">
-                                                    </span>
-                                                    <div class="block">
-                                                        <span class="text-[0.75rem] block mt-1">Linh Thạch: 0</span>
-                                                        <span class="text-[0.75rem] block mt-1">Linh Thạch KM: 0</span>
+                                <div v-if="show_profile" @click="show_profile = false" class="fixed top-0 right-0 bottom-0 left-0"></div>
+                                <div v-if="show_profile" class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full active">
+                                    <div class="box p-4 rounded-lg border border-solid border-[#128c7e] bg-white">
+                                        <div id="info-header-result" class="inited">
+                                            <div class="box-info flex">
+                                                <span
+                                                    class="avatar mr-4 img_full img-h-full overflow-hidden rounded-full w-24 h-24">
+                                                    <picture>
+                                                        <img loading="lazy"
+                                                            :src="user.avatar_url"
+                                                            :alt="user.name" class="img-fluid">
+                                                    </picture>
+                                                </span>
+                                                <div class="info-user flex-1">
+                                                    <p class="name mb-2 font-bold text-[#444] line-clamp-1 xl:text-[1.75rem] text-[1.25rem]">@{{user.name}}</p>
+                                                    <p class="text-[0.75rem]"></p>
+                                                    <div class="flex">
+                                                        <span class="icon w-9 shrink-0 mr-2">
+                                                            <img src="{{asset('assets/images/linhthach-end.png')}}" alt="Linh Thạch">
+                                                        </span>
+                                                        <div class="block">
+                                                            <span class="text-[0.75rem] block mt-1">Linh Thạch: 0</span>
+                                                            <span class="text-[0.75rem] block mt-1">Linh Thạch KM: 0</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex mt-1">
+                                                        <span class="icon w-9 shrink-0 mr-2">
+                                                            <img src="{{asset('assets/images/5start-100x67.png')}}" alt="Linh Phiếu">
+                                                        </span>
+                                                        <span class="text-[0.75rem]">Linh Phiếu: 0</span>
                                                     </div>
                                                 </div>
-                                                <div class="flex mt-1">
-                                                    <span class="icon w-9 shrink-0 mr-2">
-                                                        <img src="uploads/demo/5start-100x67.png" alt="Linh Phiếu">
-                                                    </span>
-                                                    <span class="text-[0.75rem]">Linh Phiếu: 0</span>
-                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="flex -mx-1 flex-wrap mt-2">
-                                        <div class="basis-1/2 px-1 mb-2">
-                                            <a href="https://blhvip.vn/trang-ca-nhan/13922" title="Trang cá nhân"
-                                                class="btn btn-border-green w-full">Trang cá nhân</a>
-                                        </div>
-                                        <div class="basis-1/2 px-1 mb-2">
-                                            <a href="https://blhvip.vn/chon-phuong-thuc-thanh-toan"
-                                                title="Thêm Linh Thạch" class="btn btn-border-green w-full">Thêm Linh
-                                                Thạch</a>
-                                        </div>
-                                        <div class="basis-1/2 px-1 mb-2">
-                                            <a href="https://blhvip.vn/thong-tin-ca-nhan" title="Chi tiết tài khoản"
-                                                class="btn btn-border-green w-full">Chi tiết tài khoản</a>
-                                        </div>
-                                        <div class="basis-1/2 px-1 mb-2">
-                                            <a href="https://blhvip.vn/nhap-giftcode" title="Nhập giftcode"
-                                                class="btn btn-border-green w-full">Nhập giftcode</a>
-                                        </div>
-                                        <div class="basis-1/2 px-1 mb-2">
-                                            <a href="https://blhvip.vn/dang-xuat" title="Đăng xuất"
-                                                class="btn btn-border-green w-full">Đăng xuất</a>
+                                        <div class="flex -mx-1 flex-wrap mt-2">
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{route('member.profile', ['user_id' => $user->id])}}" title="Trang cá nhân"
+                                                    class="btn btn-border-green w-full">Trang cá nhân</a>
+                                            </div>
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{route('member.payment')}}"
+                                                    title="Thêm Linh Thạch" class="btn btn-border-green w-full">Thêm Linh
+                                                    Thạch</a>
+                                            </div>
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{route('member.profile_detail')}}" title="Chi tiết tài khoản"
+                                                    class="btn btn-border-green w-full">Chi tiết tài khoản</a>
+                                            </div>
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{route('member.gilfcode')}}" title="Nhập giftcode"
+                                                    class="btn btn-border-green w-full">Nhập giftcode</a>
+                                            </div>
+                                            <div class="basis-1/2 px-1 mb-2">
+                                                <a href="{{route('auth.logout')}}" title="Đăng xuất"
+                                                    class="btn btn-border-green w-full">Đăng xuất</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </li> --}}
+                        </li>
+                    @else
+                        <li class="mr-5 last:mr-0 btn-login">
+                            <div class="block xl:hidden">
+                                <div class="user sm:relative flex show-info-user">
+                                    <span
+                                        class="inline-block overflow-hidden rounded-full avatar w-7 h-7 img_full img-h-full cursor-pointer">
+                                        <picture>
+                                            <source media="(min-width:0px)"
+                                                data-srcset="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
+                                                srcset="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}">
+                                            <img loading="auto"
+                                                src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
+                                                data-src="{{ asset('assets/uploads/users/avatar/thumbs/150x0/user_3.png') }}"
+                                                alt="Hắc Hoàng Đại Đế" class="img-fluid">
+                                        </picture>
+                                    </span>
+                                    <div class="box-option absolute top-[60px] sm:top-[100%] right-0 z-10 sm:w-[400px] w-full">
+                                        <div class="box p-2 rounded-lg border border-solid border-[#128c7e] bg-white">
+                                            <div class="box-info flex">
+                                                <div class="info-user flex-1 text-center">
+                                                    <a href="{{route('member.form_login')}}"
+                                                        class="inline-block px-4 py-2 rounded border border-solid border-[#128c7e] mr-5"
+                                                        title="Đăng nhập">
+                                                        <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
+                                                        <span>Đăng nhập</span>
+                                                    </a>
+                                                    <a href="{{route('member.form_register')}}"
+                                                        class="inline-block px-4 py-2 rounded border border-solid border-[#128c7e]"
+                                                        title="Đăng ký">
+                                                        <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
+                                                        <span>Đăng ký</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hidden xl:block">
+                                <a href="{{route('member.form_login')}}" class="inline-block mr-5" title="Đăng nhập">
+                                    <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
+                                    <span>Đăng nhập</span>
+                                </a>
+                                <a href="{{route('member.form_register')}}" class="inline-block" title="Đăng ký">
+                                    <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
+                                    <span>Đăng ký</span>
+                                </a>
+                            </div>
+                        </li>
+                    @endif
+                    {{-- Trạng thái đăng nhập End --}}
+             
                     <li class="mr-5 last:mr-0 menu-mobile block xl:hidden relative">
+                        <div v-if="show_navbar" @click="show_navbar = false" class="fixed top-0 right-0 bottom-0 left-0"></div>
                         <span @click="show_navbar = !show_navbar" class="show-menu-mobile flex cursor-pointer">
                             <svg viewBox='0 0 30 30' class="w-[30px]" xmlns='http://www.w3.org/2000/svg'>
                                 <path stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round'
@@ -252,18 +248,18 @@ $user = Auth::user();
                             </div>
                             <hr class="w-full h-[1px] bg-[#128c7e] my-2">
                             <ul>
-                                {{-- <li>
-                                    <a href="dang-nhap.html" class="inline-block" title="Đăng nhập">
+                                <li>
+                                    <a href="{{route('member.form_login')}}" class="inline-block" title="Đăng nhập">
                                         <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
                                         <span>Đăng nhập</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="dang-ky.html" class="inline-block" title="Đăng ký">
+                                    <a href="{{route('member.form_register')}}" class="inline-block" title="Đăng ký">
                                         <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
                                         <span>Đăng ký</span>
                                     </a>
-                                </li> --}}
+                                </li>
                                 <li>
                                     <a @click="show_categories = true" href="javascript:void(0)" title="Thể loại">Thể
                                         loại</a>
@@ -409,8 +405,10 @@ $user = Auth::user();
         loading: false,
         show_categories: false,
         show_navbar: false,
+        show_profile: false,
         items: [],
         msgSearch: '',
+        user: {{ Illuminate\Support\Js::from($user) }},
         // isThemeLight: LocalStorageHelper.get('sidebar_theme_web', false),
         querySearch: {
             total: 0,

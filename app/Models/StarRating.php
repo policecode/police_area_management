@@ -15,9 +15,9 @@ class StarRating extends Model
     public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
 
     protected $fillable = [
-        'user_id', 'story_id', 'ip_address', 'point_star', 'key_date'
+        'user_id', 'story_id', 'ip_address', 'point_star', 'content'
     ];
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function scopeGetByStory($query, $story_id) {
         $query->where('story_id', $story_id);
@@ -27,10 +27,10 @@ class StarRating extends Model
         $query->where('user_id', $user_id);
         return $query;
     }
-    public function scopeGetByKeydate($query, $keydate) {
-        $query->where('key_date', $keydate);
-        return $query;
-    }
+    // public function scopeGetByKeydate($query, $keydate) {
+    //     $query->where('key_date', $keydate);
+    //     return $query;
+    // }
     public function scopeGetByIpAdress($query, $keydate) {
         $query->where('ip_address', $keydate);
         return $query;

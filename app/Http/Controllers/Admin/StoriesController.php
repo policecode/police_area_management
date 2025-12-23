@@ -294,7 +294,7 @@ class StoriesController extends Controller
     private function rules($request)
     {
         $rules = [
-            'title' => 'required|max:255|unique:stories,title',
+            'title' => ['required', 'max:255', 'unique:stories,title'],
             'slug' => 'required|unique:stories,slug',
             'author_id' => 'required|integer',
             'status' => 'required|integer',
