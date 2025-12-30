@@ -97,7 +97,7 @@ public function login(Request $request)
                 'email' => $user['email'],
                 'password' => Hash::make(Str::random(12)), // Mật khẩu ngẫu nhiên
                 'email_verified_at' => Carbon::now(),
-                'avatar' => $user->avatar,
+                'avatar' => downloadImageFromUrl($user->avatar, 'member/avatar/') ?: null,
                 'socialite' => 'google',
                 'socialite_id' => $user['id'],
                 'group_id' => GroupRole::READER['id'],

@@ -216,6 +216,19 @@ function jtrigger_error(message, style) {
         document.querySelector("body").insertAdjacentHTML("beforeend", html);
     };
 
+    jAlertCLient = function(message, type='primary') {
+        var html = `<div id="fvn-popup-error" class="toastify ${type} on toastify-right toastify-top toastify-rounded" style="top: 15px;">
+            <span>${message}</span>
+            <span  onclick="document.querySelector('#fvn-popup-error').remove()" class="toast-close">&times;</span>
+        </div>`;
+        setTimeout(() => {
+            if (document.querySelector("#fvn-popup-error")) {
+                document.querySelector("#fvn-popup-error").remove();
+            }
+        }, 4000);
+        document.querySelector("body").insertAdjacentHTML("beforeend", html);
+    }
+
     /**
      * Show a force popup - Can not be dismiss
      * @param message

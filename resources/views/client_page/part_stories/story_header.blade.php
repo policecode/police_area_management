@@ -169,12 +169,12 @@
                 </div>
 
                 <p class="lg:text-[0.875rem] font-bold mb-2">
-                        Bình luận <span class="text-[#dc3545]">(*)</span> :
+                        Bình luận <span class="text-[#dc3545]">(*)</span> : @{{ itemStar.content.length }}/500
                     </p>
                     <textarea v-model="itemStar.content"
                         class="form-control border border-solid border-[#ebebeb] bg-white rounded-md h-16 resize-none mb-2 w-full px-3 py-2"
                         ></textarea>
-                    <p class="text-note text-[#607d8b] mb-4">Nội dung đánh giá ít nhất 30 ký tự và không nhiều hơn 500 ký tự!</p>
+                    <p v-if="errors.content" class="text-note text-[#d31f1f] mb-4">Nội dung đánh giá ít nhất 30 ký tự và không nhiều hơn 500 ký tự!</p>
                 <div class="flex items-center justify-between">
                     <button type="button" @click="voteStar()" class="btn btn-green !rounded">Đánh giá</button>
                     <p class="count-rating text-[#128c7e] lg:text-[0.875rem]">Đánh giá: @{{ itemDetail.star_count }} lượt</p>
@@ -194,6 +194,7 @@
             point_star: 0,
             content: ''
         },
+        errors: {},
         tmpStars: 0,
         images: {
             starOn: "fa-solid fa-star",
@@ -258,7 +259,7 @@
         methods: {
             isAuthLogin() {
                 if (!this.user) {
-                    alert("Bạn cần đăng nhập tài khoản để sử dụng chức năng này");
+                    jAlertCLient("Bạn cần đăng nhập tài khoản để sử dụng chức năng này", 'danger');
                     return true;
                 }
              },
@@ -288,12 +289,14 @@
             async voteStar() {
                 let jsonData = await new RouteApi().post(`${this.apiUrl}/star-rating`, this.itemStar);
                 if (jsonData.status) {
-                    alert(jsonData.message);
+                    this.errors = {};
+                    jAlertCLient(jsonData.message, 'success');
+                    this.showStar = false;
                 } else {
-                    alert(jsonData.message);
+                    this.errors = jsonData.errors;
+                    jAlertCLient(jsonData.message, 'danger');
                 }
                 // document.querySelector('div[modal-rs="modal-rating"]').classList.add("invisible", "pointer-events-none", "opacity-0");
-                this.showStar = false;
             }
         },
         watch: {

@@ -1,3 +1,8 @@
+<?php
+use Illuminate\Support\Facades\Auth;
+$user = Auth::user();
+
+?>
 @extends('layouts.frontend_v1')
 @section('head')
     <meta name="robots" content="none" />
@@ -17,6 +22,7 @@
         var apiUrlChapter =
             '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
     </script>
+
     <div id="app_chapter"
         :style="{
                backgroundColor: styles.backgroundColor,
@@ -113,47 +119,35 @@
                     </select>
                 </div>
                 <div class="text-center">
-                    <a href="javascript:void(0)" title="Báo lỗi chương"
-                        class="btn bg-[#f0ad4e] !text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2"
-                        modal-rs-target="modal-report">
+                    <a  @click="showFormReport" href="javascript:void(0)" title="Báo lỗi chương"
+                        class="btn bg-[#f0ad4e] !text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2">
                         <i class="fa-solid fa-triangle-exclamation mr-2"></i>Báo lỗi chương
                     </a>
                 </div>
             </div>
 
-            <div class="container mt-6">
-                <div id="comment-chapter-box"
-                    class="box-comment-wapper p-3 rounded bg-[#fff] mb-6 shadow-[2px_2px_6px_rgba(0,0,0,.13)]">
-                    <div class="fb-comments" data-href="{{ route('client.story', ['story_slug' => $story['slug']]) }}"
-                        data-width="100%" data-colorscheme="dark" data-numposts="10" data-mobile="true"></div>
-                </div>
-            </div>
+        
         </section>
-        <div class="fixed top-0 right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-[#00000099] duration-500 md:inset-0 invisible pointer-events-none opacity-0"
-            modal-rs="modal-report">
-            <div class="popup-form md:max-w-[500px] bg-white relative mx-auto max-h-screen w-full max-w-[90%] overflow-y-auto rounded-md md:h-auto"
-                modal-rs-content="">
-                <span
-                    class="close-modal bg-[#128c7e] rounded p-1 flex w-6 h-6 items-center justify-center cursor-pointer absolute top-4 right-4 z-[1]"
-                    modal-rs-close="">
+        <div ref="formReportChapter" class="fixed top-0 right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-[#00000099] duration-500 md:inset-0 invisible pointer-events-none opacity-0">
+            <div v-if="show_error_report" @click="show_error_report = false" class="fixed top-0 right-0 bottom-0 left-0"></div>
+            <div class="popup-form md:max-w-[500px] bg-white relative mx-auto max-h-screen w-full max-w-[90%] overflow-y-auto rounded-md md:h-auto">
+                <span @click="show_error_report = false"
+                    class="close-modal bg-[#128c7e] rounded p-1 flex w-6 h-6 items-center justify-center cursor-pointer absolute top-4 right-4 z-[1]">
                     <img src="{{ asset('assets/images/close-modal.png') }}" alt="">
                 </span>
                 <p class="font-medium text-center text-[#000] text-[1.3rem] p-4 border-b-[1px] border-solid border-[#ebebeb]">
                     Báo lỗi chương</p>
-                <div id="report_chapter_error_form" class="form p-4 formValidation" accept-charset="utf8" absolute
-                    data-success="NOTIFICATION.toastrMessageReload">
-                    <input type="hidden" name="_token" value="f6n6nXmbaeGSTOsTpgAo7wkhO38kABB3FFG2GsG7"> <input
-                        type="hidden" name="story_id" value="383">
-                    <input type="hidden" name="chapter_id" value="561808">
-                    <input type="hidden" name="user_id" value="">
-                    <p class="text-note text-[#607d8b] mb-2">Nhập mô tả lỗi</p>
-                    <textarea
-                        class="form-control border border-solid border-[#ebebeb] bg-white rounded-md h-16 resize-none mb-2 w-full px-3 py-2"
-                        name="content" rules="required" m-required="Vui lòng nhập mô tả lỗi"></textarea>
-                    <button id="report_chapter_error_btn" class="btn btn-green !rounded">Báo cáo</button>
+                <div id="report_chapter_error_form" class="form p-4 formValidation" accept-charset="utf8" >
+                  
+                    <p class="text-note text-[#607d8b] mb-2">Nhập mô tả lỗi: <b>@{{itemDetail.content.length}}/500</b></p>
+                    <textarea v-model="itemDetail.content"
+                        class="form-control border border-solid border-[#ebebeb] bg-white rounded-md h-16 resize-none mb-2 w-full px-3 py-2"></textarea>
+                    <span>Nội dung báo cáo không được quá 500 từ</span>
+                    <button @click="sendReportChapter" id="report_chapter_error_btn" class="btn btn-green !rounded">Báo cáo</button>
                 </div>
             </div>
         </div>
+        <div v-if="show_setting" @click="show_setting = false" class="fixed top-0 right-0 bottom-0 left-0"></div>
         <div class="chapter-action-box-wrapper">
             <div class="position-relative">
                 <div class="setting-frontend font-bold" :class="{'active' : show_setting}">
@@ -219,7 +213,7 @@
                     <a @click="show_setting = true" href="javascript:void(0)" class="item-action show-chapter-theme-setting" title="Cài đặt giao diện">
                         <i class="fa-solid fa-gear"></i>
                     </a>
-                    <a href="javascript:void(0)" class="item-action scroll-to-commnet-box" title="Bình luận truyện">
+                    <a @click="scrollTarget" href="javascript:void(0)" class="item-action scroll-to-commnet-box" title="Bình luận truyện">
                         <i class="fa-solid fa-comments"></i>
                     </a>
                     <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" class="item-action"
@@ -229,22 +223,39 @@
                     <a @click="resetStyles" href="javascript:void(0)" class="item-action" title="Trở về mặc định">
                         <i class="fa-solid fa-repeat"></i>
                     </a>
-                    <a href="javascript:void(0)" class="item-action" modal-rs-target="modal-report" title="Trở về mặc định">
+                    <a @click="showFormReport" href="javascript:void(0)" class="item-action" modal-rs-target="modal-report" title="Báo lỗi chương">
                         <i class="fa-solid fa-circle-exclamation"></i>
                     </a>
                 </div>
             </div>
         </div>
     </div>
+    {{-- Comment Start --}}
+        {{-- <div class="container mt-6">
+                <div id="comment-chapter-box"
+                    class="box-comment-wapper p-3 rounded bg-[#fff] mb-6 shadow-[2px_2px_6px_rgba(0,0,0,.13)]">
+                    <div class="fb-comments" data-href="{{ route('client.story', ['story_slug' => $story['slug']]) }}"
+                        data-width="100%" data-colorscheme="dark" data-numposts="10" data-mobile="true"></div>
+                </div>
+            </div> --}}
+        <div id="comment_block" class="container">
+            @include('client_page.part_stories.story_comment')
+
+        </div>
+
+    {{-- Comment End --}}
+
     @if (!$is_admin)
         {{-- @include('parts.ads.ads_modal_redirect') --}}
     @endif
 
-    <a id="scroll-to-top-btn" class="bottom-right"><i class="fas fa-angle-double-up"></i></a>
+    {{-- <a id="scroll-to-top-btn" class="bottom-right"><i class="fas fa-angle-double-up"></i></a> --}}
     <script>
         var vue_chapter_app = {
             loading: false,
             show_setting: false,
+            show_error_report: false,
+            user: {{ Illuminate\Support\Js::from($user) }},
             show: {
                 chapter_top: false,
                 chapter_bottom: false,
@@ -265,10 +276,15 @@
                 order_by: 'id',
                 order_type: 'ASC'
             },
-            itemDetail: {},
+            itemDetail: {
+                story_id: {{ $story['id'] }},
+                chapter_id: {{ $chaper['id'] }},
+                content: ''
+            },
             story: {{ Illuminate\Support\Js::from($story) }},
             chaper: {{ Illuminate\Support\Js::from($chaper) }},
             apiUrl: FVN_LARAVEL_HOME + '/read',
+            apiMember: FVN_LARAVEL_HOME + '/api/member',
             pointInTime: null,
         };
         var appChapter = new Vue({
@@ -282,6 +298,18 @@
 
             },
             methods: {
+                isAuthLogin() {
+                if (!this.user) {
+                    jAlertCLient("Đăng nhập tài khoản", 'danger');
+                    return true;
+                }
+             },
+             showFormReport() {
+                if (this.isAuthLogin()) {
+                        return;
+                    }
+                    this.show_error_report = true
+                },
                 addContentToCanvas() {
                     // const element = this.$refs.htmlContentHolder;
                   
@@ -294,9 +322,9 @@
                             chaper_id: this.chaper.id
                         });
                         if (jsonData.status) {
-                            console.log(jsonData.message);
+                            jAlertCLient(jsonData.message, 'success');
                         } else {
-                            console.log(jsonData.message);
+                            jAlertCLient(jsonData.message, 'danger');
                         }
                     }, 60000);
                 },
@@ -344,6 +372,22 @@
                     }
                     LocalStorageHelper.setObject('fvn_story_history', results);
 
+                },
+                scrollTarget() {
+                    const target = document.getElementById('comment_block');
+                    target.scrollIntoView({
+                        behavior: 'smooth', // Cuộn mượt mà (không nhảy bộp phát)
+                        block: 'start'      // Căn lề trên của mục tiêu sát mép trình duyệt
+                    });
+                },
+                async sendReportChapter() {
+                      let jsonData = await new RouteApi().post(`${this.apiMember}/report-chapter`, this.itemDetail);
+                      this.show_error_report = false;
+                        if (jsonData.status) {
+                            jAlertCLient(jsonData.message, 'success');
+                        } else {
+                            jAlertCLient(jsonData.message, 'danger');
+                        }
                 }
             },
             watch: {
@@ -365,6 +409,14 @@
                 'styles.color'(newVal) {
                     this.addContentToCanvas();
                     LocalStorageHelper.set('chaper_color', newVal);
+                },
+                'show_error_report'(newVal) {
+                    const element = this.$refs.formReportChapter;
+                    if (newVal) {
+                        element.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
+                    } else {
+                        element.classList.add('invisible', 'pointer-events-none', 'opacity-0');
+                    }
                 }
             },
         });

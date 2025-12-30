@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Level;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +11,7 @@ use App\Traits\Filterable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, Filterable;
-    protected $appends = ['group', 'avatar_url'];
+    protected $appends = ['group', 'avatar_url', 'banner_url', 'level_info'];
     public $filterKeywords = ['email', 'name']; // Sử dụng trong trường hợp có trường keyword
     public $filterFields  = ['email', 'name']; // SỬ dụng khi tìm kiếm dữ liệu cùng với tên trường trong DB
     /**
@@ -53,6 +54,17 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         // Không nên dùng attribute để query dữ liệu
             return $this->avatar ? asset($this->avatar) : asset('assets/images/avatar_default.png');
+    }
+    public function getBannerUrlAttribute()
+    {
+        // Không nên dùng attribute để query dữ liệu
+            return $this->banner ? asset($this->banner) : asset('assets/images/banner_default.png');
+    }
+
+    public function getLevelInfoAttribute()
+    {
+        $level = Level::getLevel($this->level);
+        return $level ? $level : Level::LEVEL1;
     }
 
     public function scopeGetByEmail($query, $email) {

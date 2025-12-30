@@ -12,7 +12,8 @@ use App\Http\Controllers\Member\LoginController AS MemberLoginController;
 use App\Http\Controllers\Member\RegisterController AS MemberRegisterController;
 use App\Http\Controllers\Member\ResetPasswordController AS MemberResetPasswordController;
 use App\Http\Controllers\Member\ProfileController AS MemberProfileController;
-
+use App\Http\Controllers\Member\ReportChapterController;
+use App\Http\Controllers\Member\MemberActionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -162,6 +163,13 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
     Route::post('/api/member/post-comment', [MemberCommentController::class, 'postComment'])->name('member.action.comment');
     Route::post('/api/member/like-comment', [MemberCommentController::class, 'likeComment'])->name('member.action.like-comment');
     
+    // Report Chapter
+    Route::post('/api/member/report-chapter', [ReportChapterController::class, 'reportChapter'])->name('member.action.report-chapter');
+
+    // Upload avatar, banner
+    Route::post('/api/member/upload-action/{action}', [MemberActionController::class, 'uploadAction'])->name('member.action.upload');
+    // Update thông tin cá nhân
+    Route::post('/api/member/update-profile', [MemberActionController::class, 'updateProfile'])->name('member.action.update_profile');
 
 });
 // Auth
@@ -186,6 +194,16 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
 
 // 'throttle:30,1', visit_website
 Route::group(['middleware' => ['throttle:60,1']], function() {
+    Route::get('/test_client', function (Request $request) {
+        dd($request->ips());
+            // $respones = downloadImageFromUrl('https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482752AXp/anh-mo-ta.png', 'member/avatar/');
+            // return response()->json([
+            //     'status' => 1,
+            //     'message' => 'Thành công',
+            //     'data' => asset($respones)
+            // ]);
+        });
+
     Route::get('/', [HomeController::class, 'index'])->name('index');
     Route::get('pages/huong-dan', [HomeController::class, 'huongdan'])->name('client.huong-dan');
     Route::get('pages/dieu-khoan-dich-vu', [HomeController::class, 'dieukhoandichvu'])->name('client.dieu-khoan-dich-vu');
@@ -217,7 +235,5 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
     Route::get('/{story_slug}/chuong-{chaper_position}', [ChapersClientController::class, 'index'])->name('client.chaper');
     // Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index']);
     
-    Route::get('/test_client', function (Request $request) {
-        dd($request->ips());
-    });
+  
 });

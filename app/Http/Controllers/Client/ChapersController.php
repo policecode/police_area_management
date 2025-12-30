@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\FavoriteStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
 use App\Models\Story;
+use App\Models\User;
+use App\Models\UserReadStory;
 use App\Models\ViewDay;
 use App\Models\ViewMonth;
 use App\Models\ViewWeek;
@@ -191,11 +194,36 @@ class ChapersController extends Controller
                     'percentage' => round((1/$story->total_chapter) * 100, 2)
                 ]);
             }
+            // Xử lý khi đã đăng nhập
+            $message = 'Đăng nhập để bắt đầu tu luyện';
+            if (Auth::id()) {
+                $message = '+1 exp';
+                $user = User::find(Auth::id());
+                $user->exp += 1;
+                $user->total_chapter += 1;
+                // Cập nhật bảng user_read_stories
+                $userReadStory = UserReadStory::GetByUser($user->id)->GetByStory($data['story_id'])->first();
+                if ($userReadStory) {
+                    $userReadStory->last_chapter_id = $data['chaper_id'];
+                    $userReadStory->story_count += 1;
+                    $userReadStory->update();
+                } else {
+                    UserReadStory::create([
+                        'user_id' => $user->id,
+                        'story_id' => $data['story_id'],
+                        'last_chapter_id' => $data['chaper_id'],
+                        'story_count' => 1,
+                        'favorite' => FavoriteStatus::NOTINTERESTED['id']
+                    ]);
+                    $user->total_story += 1;
+                }
+                $user->update();
+            }
             DB::commit();
             return response()->json([
                 'status' => 1,
                 'data' => [],
-                'message' => 'Tăng lượt view'
+                'message' => $message
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();

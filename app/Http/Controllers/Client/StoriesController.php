@@ -240,8 +240,8 @@ class StoriesController extends Controller
             'required' => ':attribute bắt buộc phải nhập',
             'email' => ':attribute không đúng định dạng',
             'unique' => ':attribute đã tồn tại',
-            'min' => ':attribute thấp nhất :min điểm',
-            'max' => ':attribute cao nhất :max điểm',
+            'min' => ':attribute ít nhất :min ký tự',
+            'max' => ':attribute nhiều nhất :max ký tự',
             'integer' => ':attribute phải là số',
             'exists' => ':attribute không tồn tại',
             'string' => ':attribute phải là một chuỗi'

@@ -3,6 +3,9 @@
 use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 define('FVN_VERSION_LARAVEL', '1.0.5');
 
 function get_all_categories($type = 1) {
@@ -95,3 +98,25 @@ function get_key_by_day($name='date', $time=null) {
         return (int) $key;
     }
 }
+
+function downloadImageFromUrl($imageUrl, $savePath){
+            // 1. Tải nội dung hình ảnh
+            $response = Http::get($imageUrl);
+
+            if ($response->successful()) {
+                // 2. Lấy nội dung file
+                $contents = $response->body();
+
+                $filename = Str::random(20) . '.jpg'; 
+
+                // 4. Lưu vào thư mục 'storage/app/public/images'
+                $path = $savePath . $filename;
+                Storage::disk()->put($path, $contents);
+
+                return $path;
+            }
+
+            return false;
+
+
+    }

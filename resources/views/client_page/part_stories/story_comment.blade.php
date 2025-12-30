@@ -220,7 +220,7 @@
              },
              isAuthLogin() {
                 if (!this.user) {
-                    alert("Bạn cần đăng nhập tài khoản để sử dụng chức năng này");
+                    jAlertCLient("Bạn cần đăng nhập tài khoản để sử dụng chức năng này", 'danger');
                     return true;
                 }
              },
@@ -333,7 +333,7 @@
                               messErrr += `<br />${jsonData.errors[key][0]}`
                           }
                       }
-                      jAlert(messErrr);
+                      jAlertCLient(messErrr, 'danger');
                   }
                  this.loading = false;
              },
@@ -374,7 +374,7 @@
                               messErrr += `<br />${jsonData.errors[key][0]}`
                           }
                       }
-                      jAlert(messErrr);
+                      jAlertCLient(messErrr, 'danger');
                   }
              },
              nextPage() {

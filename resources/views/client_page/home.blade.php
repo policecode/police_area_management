@@ -11,7 +11,7 @@
              ],
             "author": [{
                 "@type": "Person",
-                "name": "Truyện Full Việt",
+                "name": "Hăc Hoàng Đại Đế",
                 "url": "{{ route('index') }}"
               }]
           }

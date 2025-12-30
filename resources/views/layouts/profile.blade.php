@@ -36,26 +36,36 @@ $option = SettingHelpers::getInstance();
     <meta name="exchange-rate" content="1">
     {{-- <meta name="author" content="" /> --}}
 
-    <link rel="preload" href="{{ asset('assets/fonts/Roboto-Regularb2fd.ttf?v='.FVN_VERSION_LARAVEL) }}" as="font" crossorigin="anonymous">
-    <link rel="preload" href="{{ asset('assets/fonts/Roboto-Boldb2fd.ttf?v='.FVN_VERSION_LARAVEL) }}" as="font" crossorigin="anonymous">
-    <link rel="preload" href="{{ asset('assets/css/fontawesome-free-6.2.0-web/webfonts/fa-solid-900b2fd.woff2?v='.FVN_VERSION_LARAVEL) }}"
+    <link rel="preload" href="{{ asset('assets/fonts/Roboto-Regularb2fd.ttf?v=' . FVN_VERSION_LARAVEL) }}" as="font"
+        crossorigin="anonymous">
+    <link rel="preload" href="{{ asset('assets/fonts/Roboto-Boldb2fd.ttf?v=' . FVN_VERSION_LARAVEL) }}" as="font"
+        crossorigin="anonymous">
+    <link rel="preload"
+        href="{{ asset('assets/css/fontawesome-free-6.2.0-web/webfonts/fa-solid-900b2fd.woff2?v=' . FVN_VERSION_LARAVEL) }}"
         as="font" type="font/woff2" crossorigin="anonymous">
-    <link rel="preload" href="{{ asset('assets/css/fontawesome-free-6.2.0-web/webfonts/fa-brands-400b2fd.woff2?v='.FVN_VERSION_LARAVEL) }}"
+    <link rel="preload"
+        href="{{ asset('assets/css/fontawesome-free-6.2.0-web/webfonts/fa-brands-400b2fd.woff2?v=' . FVN_VERSION_LARAVEL) }}"
         as="font" type="font/woff2" crossorigin="anonymous">
 
-    <link href="{{ asset('assets/css/fontawesome-free-6.2.0-web/css/all.minb2fd.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('assets/frontend/css/toastify.minbb07.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('assets/css/fontawesome-free-6.2.0-web/css/all.minb2fd.css?v=' . FVN_VERSION_LARAVEL) }}"
+        type="text/css" rel="stylesheet" />
+    <link href="{{ asset('assets/frontend/css/toastify.minbb07.css?v=' . FVN_VERSION_LARAVEL) }}" type="text/css"
+        rel="stylesheet" />
 
-    <link href="{{ asset('assets/css/swiper-bundle.minb2fd.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('assets/css/swiper-bundle.minb2fd.css?v=' . FVN_VERSION_LARAVEL) }}" type="text/css"
+        rel="stylesheet" />
 
-    <link href="{{ asset('assets/css/output0841.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('assets/css/main0841.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('assets/frontend/css/appb0ac.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('assets/css/custom-frontend.css?v='.FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('assets/css/output0841.css?v=' . FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('assets/css/main0841.css?v=' . FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('assets/frontend/css/appb0ac.css?v=' . FVN_VERSION_LARAVEL) }}" type="text/css"
+        rel="stylesheet" />
+    <link href="{{ asset('assets/css/custom-frontend.css?v=' . FVN_VERSION_LARAVEL) }}" type="text/css"
+        rel="stylesheet" />
+    <link href="{{ asset('assets/css/account.css?v=' . FVN_VERSION_LARAVEL) }}" type="text/css" rel="stylesheet" />
     
     <script src="{{ asset('assets_global/js/jQuery3.6.0.min.js') }}"></script>
     <script src="{{ asset('assets_global/js/vue.js') }}"></script>
-    <script src="{{ asset('assets_global/js/routeapi.js?v='.FVN_VERSION_LARAVEL) }}"></script>
+    <script src="{{ asset('assets_global/js/routeapi.js?v=' . FVN_VERSION_LARAVEL) }}"></script>
 
     <script>
         var FVN_LARAVEL_HOME = '{{ route('index') }}';
@@ -65,35 +75,36 @@ $option = SettingHelpers::getInstance();
     {{-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8382233036922182"
         crossorigin="anonymous"></script> --}}
 
-        {{-- Xác minh google để chèn quảng cáo --}}
-        {{-- <meta name="google-adsense-account" content="ca-pub-8382233036922182"> --}}
-        {{-- Google analytic --}}
+    {{-- Xác minh google để chèn quảng cáo --}}
+    {{-- <meta name="google-adsense-account" content="ca-pub-8382233036922182"> --}}
+    {{-- Google analytic --}}
     <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{env('TAG_ANALYTICS')}}"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('TAG_ANALYTICS') }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-            gtag('config', '{{env('TAG_ANALYTICS')}}');
-        </script>
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', '{{ env('TAG_ANALYTICS') }}');
+    </script>
     {{-- https://www.pinterest.com/settings/claim --}}
     {{-- <meta name="p:domain_verify" content="26a13293359fa2cba36263accbd91ab4"/> --}}
     {{-- Thêm các thành phần bổ sung --}}
     @yield('head')
 </head>
 
-<body class="wrapper mx-auto 2xl:text-[16px] text-[14px] text-[#252525] leading-snug font-['Roboto',sans-serif] overflow-x-hidden">
+<body
+    class="wrapper mx-auto 2xl:text-[16px] text-[14px] text-[#252525] leading-snug font-['Roboto',sans-serif] overflow-x-hidden">
+    <div class="main-content__admin bg-[#f4f6f9] xl:pl-[250px]">
+        @include('parts.member.sidebar')
+        @yield('content')
+        <div class="footer-addmin flex items-center justify-center bg-white py-3">
+        </div>
+    </div>
 
-    @include('parts.client.sidebar_v2')
-
-    @yield('content')
-
-    @include('parts.client.footer_v1')
-
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous"
-        src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v21.0&appId=8969948979690020"></script>
     {{-- @include('parts.ads.adsense_social') --}}
     {{-- @include('parts.ads.adsense_popunder') --}}
     @yield('scripts')

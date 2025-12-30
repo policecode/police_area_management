@@ -66,7 +66,7 @@
                     <span class="font-bold ml-2 shrink-0">Mới nhất</span>
                 </label>
             </div>
-            <div id="list-chapter-result">
+            <div ref="listChapterResult">
                 <table class="table-list__chapter w-full">
                     <thead>
                         <tr class="text-white bg-[#212529]">
@@ -134,7 +134,7 @@
 
             async getItems() {
                 this.loading = true;
-                this.items = [];
+                // this.items = [];
                 this.buildQueryItem();
                 const jsonData = await new RouteApi().get(this.getItemUrl);
 
@@ -173,6 +173,7 @@
                 }
             },
             nextPage(page) {
+            
                 this.querySearch.page = page;
                 this.getItems();
             },

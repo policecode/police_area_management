@@ -17,6 +17,7 @@ class AddFieldTableStories extends Migration
             $table->integer('total_like')->default(0);
             $table->integer('total_favorite')->default(0);
             $table->integer('total_comment')->default(0);
+            $table->integer('total_report')->default(0);
             $table->bigInteger('last_comment_id')->default(0);
         });
     }
@@ -32,6 +33,7 @@ class AddFieldTableStories extends Migration
               $table->dropColumn('total_like');
             $table->dropColumn('total_favorite');
             $table->dropColumn('total_comment');
+            $table->dropColumn('total_report');
              $table->dropColumn('last_comment_id');
         });
     }

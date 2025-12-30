@@ -79,4 +79,15 @@ final class Level extends Enum
     const LEVEL66 = ['id' => 66, 'name' => 'Trảm Thiện Thi', 'next_exp' => 5287364396];
     const LEVEL67 = ['id' => 67, 'name' => 'Trảm Tự Ngã Thi', 'next_exp' => 8920610410];
     const LEVEL68 = ['id' => 68, 'name' => 'Đạo Tổ', 'next_exp' => 0];
+
+    public static function getLevel($levelId)
+    {
+        foreach (self::getConstants() as $level) {
+            if ($level['id'] == $levelId) {
+                return $level;
+            }
+        }
+        return null;
+    }
+
 }
