@@ -88,7 +88,7 @@ public function login(Request $request)
     {
         $user = Socialite::driver('google')->user();
         $isUser = User::getByEmail($user['email'])->first();
-        if ($isUser > 0) {
+        if ($isUser) {
             Auth::login($isUser, true);
         } else {
             // Chưa có tài khoản, tiến hành tạo mới và đăng nhập
