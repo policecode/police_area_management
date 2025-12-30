@@ -68,7 +68,7 @@ class MemberActionController extends Controller
             $user->name = $data['name'];
             $user->gender = $data['gender'];
             $user->date_of_birth = $data['date_of_birth'];
-            if ($data['password']) {
+            if (!empty($data['password'])) {
                 $user->password = Hash::make($data['password']);
             }
             $user->save();
@@ -79,7 +79,8 @@ class MemberActionController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 0,
-                'message' => 'Cập nhật thông tin cá nhân thất bại.'
+                'message' => 'Cập nhật thông tin cá nhân thất bại.',
+                'errors' => $th->getMessage()
             ]);
         }
     }

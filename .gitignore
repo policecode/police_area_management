@@ -2,6 +2,8 @@
 /public/hot
 /public/storage
 /public/stories
+/public/member
+/public/photos
 /storage/*.key
 /vendor
 .env
