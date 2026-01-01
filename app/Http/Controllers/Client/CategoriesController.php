@@ -18,7 +18,7 @@ class CategoriesController extends Controller
 
     public function index(Request $request, $tag_slug)
     {
-        $option = SettingHelpers::getInstance();
+        // $option = SettingHelpers::getInstance();
         $queryDefault = array(
             'page' => 1,
             'per_page' => 16,

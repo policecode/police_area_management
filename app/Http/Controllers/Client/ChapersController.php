@@ -200,6 +200,9 @@ class ChapersController extends Controller
                 $message = '+1 exp';
                 $user = User::find(Auth::id());
                 $user->exp += 1;
+                if ($user->exp >= $user->level_info['next_exp']) {
+                    $user->level += 1;
+                }
                 $user->total_chapter += 1;
                 // Cập nhật bảng user_read_stories
                 $userReadStory = UserReadStory::GetByUser($user->id)->GetByStory($data['story_id'])->first();

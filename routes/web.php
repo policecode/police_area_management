@@ -148,6 +148,9 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
 
     // Profile
     Route::get('/member/profile/{user_id}', [MemberProfileController::class, 'getProfile'])->name('member.profile');
+    Route::get('/member/profile/{user_id}/comments', [MemberProfileController::class, 'getProfileComments'])->name('member.profile.comments');
+    Route::get('/member/profile/{user_id}/votes', [MemberProfileController::class, 'getProfileVotes'])->name('member.profile.votes');
+
     Route::get('/member/profile-detail', [MemberProfileController::class, 'getProfileDetail'])->name('member.profile_detail');
     Route::get('/member/payment', [MemberProfileController::class, 'payment'])->name('member.payment');
     Route::get('/member/alert', [MemberProfileController::class, 'alert'])->name('member.alert');
@@ -171,6 +174,8 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
     // Update thông tin cá nhân
     Route::post('/api/member/update-profile', [MemberActionController::class, 'updateProfile'])->name('member.action.update_profile');
 
+    // Handle story
+    Route::post('/api/member/save-favorite-story', [MemberActionController::class, 'saveFavoriteStory'])->name('member.action.save_favorite_story');
 });
 // Auth
 Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], function() {

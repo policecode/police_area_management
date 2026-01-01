@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Enums\FavoriteStatus;
 use App\Enums\StatusStory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
+use Illuminate\Support\Facades\Auth;
+
 class Story extends Model
 {
     use HasFactory, Filterable;
-    protected $appends = ['status_name'];
+    protected $appends = ['status_name', 'is_convert'];
     public $filterKeywords = ['title', 'title_eng']; // Sử dụng trong trường hợp có trường keyword
     public $filterFields  = ['title', 'status']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
     public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
@@ -41,6 +44,15 @@ class Story extends Model
         }
         return '';
     }
+    public function getIsConvertAttribute()
+    {
+        // Không nên dùng attribute để query dữ liệu
+        if ( strpos($this->title, '(c)')) {
+            return true;
+        }
+        return false;
+    }
+
     public function scopeNoById($query, $id) {
         $query->where('stories.id', '!=', $id);
         return $query;
@@ -82,10 +94,29 @@ class Story extends Model
         if ($this->joinAuthor ) {
             return $query;
         }
-        $query->select('stories.*', 'authors.name AS author_name', 'authors.slug AS author_slug')
-        ->leftJoin('authors', function($join) {
-            $join->on('stories.author_id', '=', 'authors.id');
+        $user = Auth::user();
+        $like = FavoriteStatus::LIKE['id'];
+        $query->select('stories.*', 'a1.name AS author_name', 'a1.slug AS author_slug', 's1.point_star AS is_ratings', 's2.id AS is_favorite')
+        ->leftJoin('authors as a1', function($join) {
+            $join->on('stories.author_id', '=', 'a1.id');
         });
+        if ($user) {
+            $query->leftJoin('star_ratings AS s1', function ($join) use($user) {
+                $join->on('stories.id', '=', 's1.story_id')->where('s1.user_id', '=', $user->id);
+            });
+
+            $query->leftJoin('user_read_stories AS s2', function ($join) use($user, $like) {
+                $join->on('stories.id', '=', 's2.story_id')->where('s2.user_id', '=', $user->id)->where('s2.favorite', '=', $like);
+            });
+        } else {
+            $query->leftJoin('star_ratings AS s1', function ($join) use($user) {
+                $join->on('stories.id', '=', 's1.story_id')->where('s1.user_id', '=', -1);
+            });
+
+            $query->leftJoin('user_read_stories AS s2', function ($join) use($like) {
+                $join->on('stories.id', '=', 's2.story_id')->where('s2.user_id', '=', -1)->where('s2.favorite', '=', $like);
+            });
+        }
         $this->joinAuthor = true;
         return $query;
     }

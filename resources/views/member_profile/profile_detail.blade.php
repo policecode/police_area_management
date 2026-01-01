@@ -125,7 +125,6 @@ $genderoptions = Gender::getValues();
             data: vue_member_profile_detail_app,
             mounted: function() {
                 // this.changeThemes();
-                console.log(this.user);
 
             },
             computed: {},

@@ -258,20 +258,22 @@ $user = Auth::user();
                             </div>
                             <hr class="w-full h-[1px] bg-[#128c7e] my-2">
                             <ul>
-                                <li>
-                                    <a href="{{ route('member.form_login') }}" class="inline-block"
-                                        title="Đăng nhập">
-                                        <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
-                                        <span>Đăng nhập</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('member.form_register') }}" class="inline-block"
-                                        title="Đăng ký">
-                                        <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
-                                        <span>Đăng ký</span>
-                                    </a>
-                                </li>
+                                @if (!$user)
+                                    <li>
+                                        <a href="{{ route('member.form_login') }}" class="inline-block"
+                                            title="Đăng nhập">
+                                            <i class="fa-solid fa-right-to-bracket text-[#128c7e] mr-1"></i></i>
+                                            <span>Đăng nhập</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('member.form_register') }}" class="inline-block"
+                                            title="Đăng ký">
+                                            <i class="fa-solid fa-user-plus text-[#128c7e] mr-1"></i>
+                                            <span>Đăng ký</span>
+                                        </a>
+                                    </li>
+                                @endif
                                 <li>
                                     <a @click="show_categories = true" href="javascript:void(0)" title="Thể loại">Thể
                                         loại</a>

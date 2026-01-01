@@ -58,12 +58,11 @@
                         class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2">
                         <i class="fa-solid fa-book-open-reader mr-2"></i>Đọc từ đầu
                     </a>
-                    {{-- <a href="javascript:void(0)" data-action="https://banlong.us/do-favorite-story"
-                                    data-item="352"
-                                    class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2 btn-favorite-story not-login ">
-                                    <i class="fa-solid fa-book mr-2"></i>
-                                    <span class="save-story-text">Lưu truyện</span>
-                                </a> --}}
+                    <a @click="saveFavoriteStory" href="javascript:void(0)"class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2 btn-favorite-story not-login ">
+                        <i class="fa-solid fa-book mr-2"></i>
+                        <span v-if="itemDetail.is_favorite" class="save-story-text">Bỏ lưu</span>
+                        <span v-else class="save-story-text">Lưu công pháp</span>
+                    </a>
                     <a href="javascript:void(0)" title="D.S Chương"
                         class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2 scroll-to-target"
                         data-target=".tab-story__detail" onclick="$('#but-show-list-chapter').click()">
@@ -78,9 +77,10 @@
                                     <span class="text">Ủng hộ</span>
                                 </a> --}}
                     <a @click="showFormStar" href="javascript:void(0)" title="Ủng hộ"
-                        class="btn-item sm:min-w-[130px] flex-1 sm:flex-none text-[#128c7e] hover:text-[#128c7e] flex flex-col justify-center items-center text-[0.875rem] rounded py-1 px-2 hover:shadow-[0_0.5em_0.5em_-0.3em_rgba(14,109,98,1)]">
+                        class="btn-item sm:min-w-[130px] flex-1 sm:flex-none text-[#128c7e] hover:text-[#128c7e] flex flex-col justify-center items-center text-[0.875rem] rounded py-1 px-2 hover:shadow-[0_0.5em_0.5em_-0.3em_rgba(14,109,98,1)]" :class="{ 'text-[#ffd700]': itemDetail.is_ratings > 0 }">
                         <i class="fa-solid fa-star mb-2"></i>
-                        <span class="text">Đánh giá</span>
+                        <span v-if="itemDetail.is_ratings > 0" class="text">Đã đánh giá</span>
+                        <span v-else class="text">Đánh giá</span>
                     </a>
 
                     <div class="fb-share-button"
@@ -201,12 +201,14 @@
             starHalf: "fa-regular fa-star-half-stroke",
             starOff: "fa-regular fa-star"
         },
-        apiUrl: FVN_LARAVEL_HOME + '/story'
+        apiUrl: FVN_LARAVEL_HOME + '/story',
+        apiMemberUrl: FVN_LARAVEL_HOME + '/api/member',
     };
     var appHeaderStory = new Vue({
         el: '#app_information_story_header',
         data: vue_story_header_app,
         mounted: function() {
+            console.log(this.itemDetail);
             
         },
         computed: {
@@ -291,12 +293,26 @@
                 if (jsonData.status) {
                     this.errors = {};
                     jAlertCLient(jsonData.message, 'success');
+                    this.itemDetail.is_ratings = 1;
                     this.showStar = false;
                 } else {
-                    this.errors = jsonData.errors;
+                    if (jsonData.errors) {
+                        this.errors = jsonData.errors;
+                    }
                     jAlertCLient(jsonData.message, 'danger');
                 }
                 // document.querySelector('div[modal-rs="modal-rating"]').classList.add("invisible", "pointer-events-none", "opacity-0");
+            },
+            async saveFavoriteStory() {
+                let jsonData = await new RouteApi().post(`${this.apiMemberUrl}/save-favorite-story`, {
+                    story_id: this.itemDetail.id
+                }); 
+                if (jsonData.status) {
+                    jAlertCLient(jsonData.message, 'success');
+                    this.itemDetail.is_favorite = jsonData.is_favorite;
+                } else {
+                    jAlertCLient(jsonData.message, 'danger');
+                }
             }
         },
         watch: {

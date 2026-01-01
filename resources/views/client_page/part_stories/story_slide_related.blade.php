@@ -17,7 +17,7 @@
                          @endif
                      </a>
                      <h3>
-                         <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="Thế Giới Hoàn Mỹ"
+                         <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="{{ $item['title'] }}"
                              class="title line-clamp-1 my-1 2xl:text-[1.125rem] text-[0.875rem] font-bold">
                              {{ ucwords($item['title']) }}
                          </a>

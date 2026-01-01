@@ -28,15 +28,10 @@ class StoriesController extends Controller
     {
         // $option = SettingHelpers::getInstance();
         $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
-        $story['thumbnail'] = route('index') . '/' . $story->thumbnail;
-        $isResult = strpos($story['title'], '(c)');
-        if ($isResult) {
-            $story->is_convert = true;
-        } else {
-            $story->is_convert = false;
-        }
+        $story->thumbnail = asset($story->thumbnail);
+ 
         $story = $story->toArray();
-
+        // dd($story);
         $now = Carbon::now();
         $chapters = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'DESC')->skip(0)->take(6)->get()->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
@@ -63,6 +58,9 @@ class StoriesController extends Controller
                 $item->is_convert = false;
             }
         })->toArray();
+
+        $starRatings = StarRating::JoinUser()->where('story_id', $story['id'])->orderBy('created_at', 'DESC')->skip(0)->take(6)->get()->toArray();
+        // dd($starRatings->toArray());
         $breadcrumb = [
             [
                 "title" => "Trang chủ",
@@ -96,7 +94,8 @@ class StoriesController extends Controller
             'chapters' => $chapters,
             'story_by_author' => $storyByAuthor,
             'related_stories' => $relatedStories,
-            'first_chapter' => $first_chapter
+            'first_chapter' => $first_chapter,
+            'star_ratings' => $starRatings
         );
         return view('client_page.stories', $dataView);
 
@@ -152,7 +151,7 @@ class StoriesController extends Controller
             if ($flag) {
                 return response()->json([
                     'status' => 0, 
-                    'message' => 'Bạn đã bình chọn cho bộ tuyện này, bạn có thể tìm hiểu những bộ truyện khác',
+                    'message' => 'Bạn đã đánh giá bộ công pháp này, bạn có thể tìm hiểu những bộ công pháp',
                 ]);
             }
   
@@ -174,7 +173,7 @@ class StoriesController extends Controller
             return response()->json([
                 'status' => 1, 
                 'data' => $starAvg,
-                'message' => 'Cảm ơn bạn đã bình chọn cho bộ truyện'
+                'message' => 'Cảm ơn bạn đã đưa ra đánh giá cho bộ công pháp này'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();

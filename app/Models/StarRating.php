@@ -10,6 +10,8 @@ class StarRating extends Model
 {
     use HasFactory, Filterable;
     protected $appends = [];
+    private $joinUser = false;
+
     public $filterKeywords = []; // Sử dụng trong trường hợp có trường keyword
     public $filterFields  = []; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
     public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
@@ -33,6 +35,20 @@ class StarRating extends Model
     // }
     public function scopeGetByIpAdress($query, $keydate) {
         $query->where('ip_address', $keydate);
+        return $query;
+    }
+
+    public function scopeJoinUser($query) {
+        if ($this->joinUser ) {
+            return $query;
+        }
+        $query->select('star_ratings.*', 'u.name')
+        ->leftJoin('users as u', function($join) {
+            $join->on('star_ratings.user_id', '=', 'u.id');
+        }); 
+
+        $this->joinUser = true;
+
         return $query;
     }
 }

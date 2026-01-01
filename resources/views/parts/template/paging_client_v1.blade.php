@@ -42,7 +42,7 @@ if ($before - 2 <= 1) {
 ?>
 <div class="pagination">
     @if ($previousLink)
-        <a class="next-page !px-4" href="$previousLink" title="Trước">Trước</a>
+        <a class="next-page !px-4" href="{{ $previousLink }}" title="Trước">Trước</a>
     @endif
     @if ($isPrevPage)
         <a href="{{ $currentUrl . '&page=1' }}">1</a>
@@ -62,7 +62,7 @@ if ($before - 2 <= 1) {
         <a href="{{ $currentUrl . '&page=' . $max_page }}">{{ $max_page }}</a>
     @endif
     @if ($nextLink)
-        <a class="next-page !px-4" href="$nextLink" title="Sau">Sau</a>
+        <a class="next-page !px-4" href="{{ $nextLink }}" title="Sau">Sau</a>
     @endif
     <div class="jum-box" data-lastpage="26" data-ajax="0" data-url="{{ $currentUrl }}">
         <input type="text" name="page" placeholder="Số trang">

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Member;
 
-
+use App\Enums\FavoriteStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Story;
 use App\Models\User;
+use App\Models\UserReadStory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -50,6 +53,76 @@ class MemberActionController extends Controller
             ]);
         }
 
+    }
+
+    public function saveFavoriteStory(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+            'story_id' => 'required|exists:stories,id'
+        ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 0,
+                    'errors' => $validator->errors(),
+                    'message' => 'validation'
+                ]);
+            }
+
+            DB::beginTransaction();
+            $data = $validator->validated();
+        
+            $story = Story::find($data['story_id']);
+            $user = User::find(Auth::id());
+            $userReadStory = UserReadStory::GetByUser($user->id)->GetByStory($story->id)->first();
+            $message = '';
+            $is_favorite = false;
+            if ($userReadStory) {
+                if ($userReadStory->favorite == FavoriteStatus::LIKE['id']) {
+                    $userReadStory->favorite = FavoriteStatus::NOTINTERESTED['id'];
+                    $userReadStory->update();
+                    $story->total_favorite -= 1;
+                    $story->update();
+                    $message = 'Bỏ công pháp khỏi Tàng Kinh Các';
+                } else {
+                    $userReadStory->favorite = FavoriteStatus::LIKE['id'];
+                    $userReadStory->update();
+                    $story->total_favorite += 1;
+                    $story->update();
+                    $message = 'Thêm công pháp vào Tàng Kinh Các';
+                    $is_favorite = true;
+                }
+            } else {
+                $userReadStory = UserReadStory::create([
+                    'user_id' => $user->id,
+                    'story_id' => $story->id,
+                    'last_chapter_id' => null,
+                    'story_count' => 0,
+                    'favorite' => FavoriteStatus::LIKE['id']
+                ]);
+                $story->total_favorite += 1;
+                $story->update();
+                $message = 'Thêm công pháp vào Tàng Kinh Các';
+                $is_favorite = true;
+            }
+            // $story->update();
+        
+            // Xử lý khi đã đăng nhập
+         
+            DB::commit();
+            return response()->json([
+                'status' => 1,
+                'data' => [],
+                'is_favorite' => $is_favorite,
+                'message' => $message
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function updateProfile(Request $request) {

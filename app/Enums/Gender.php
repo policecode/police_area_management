@@ -15,4 +15,12 @@ final class Gender extends Enum
     const FEMALE =   ['key' => 2, 'value' => 'Nữ'];
     const UNKNOƯN =   ['key' => 3, 'value' => 'Không xác định'];
 
+    public static function getValueByKey($key)
+    {
+        foreach (self::getValues() as $gender) {
+            if ($gender['key'] == $key) {
+                return $gender['value'];
+            }
+        }
+    }
 }

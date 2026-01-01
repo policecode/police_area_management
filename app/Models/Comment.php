@@ -30,6 +30,7 @@ class Comment extends Model
 
     private $joinUser = false;
     private $joinUserAndStory = false;
+    private $joinStory = false;
 
     public function getViewNameAttribute()
     {
@@ -48,7 +49,7 @@ class Comment extends Model
     }
     public function scopeGetByUser($query, $user_id)
     {
-        $query->where('user_id', $user_id);
+        $query->where('comments.user_id', $user_id);
         return $query;
     }
     public function scopeGetByParent($query, $parent_id)
@@ -117,6 +118,20 @@ class Comment extends Model
             });
 
         $this->joinUserAndStory = true;
+        return $query;
+    }
+
+    public function scopeJoinStory($query)
+    {
+        if ($this->joinStory) {
+            return $query;
+        }
+        $query->select('comments.*', 'stories.title', 'stories.slug')
+            ->leftJoin('stories', function ($join) {
+                $join->on('comments.story_id', '=', 'stories.id');
+            });
+
+        $this->joinStory = true;
         return $query;
     }
 
