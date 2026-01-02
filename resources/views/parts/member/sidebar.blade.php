@@ -15,8 +15,10 @@ $user = Auth::user();
          </p>
          <div class="admin-nav px-2 mt-2">
              <ul>
-                 <li><a href="{{route('member.profile_detail')}}" class="active" title="Thông tin cá nhân"><i
-                             class="fa-solid fa-user mr-2"></i>Thông tin cá nhân</a></li>
+                 <li><a href="{{route('member.profile_detail')}}" 
+                    class="@if(request()->routeIs('member.profile_detail')) active @endif" 
+                    title="Thông tin cá nhân"><i
+                    class="fa-solid fa-user mr-2"></i>Thông tin cá nhân</a></li>
                  {{-- <li class=""><a href="{{route('member.payment')}}" title="Lịch sử giao dịch"><i
                              class="fa-solid fa-file-invoice-dollar mr-2"></i>Lịch sử giao dịch</a>
                      <ul>
@@ -30,13 +32,21 @@ $user = Auth::user();
                                  đề cử</a></li>
                      </ul>
                      <span class="btn-dropdown-menu "><i class="fa fa-angle-left" aria-hidden="true"></i></span>
-                 </li> --}}
+                 </li>
                  <li><a href="{{route('member.alert')}}" class="" title="Thông báo"><i
-                             class="fa-solid fa-bell mr-2"></i>Thông báo</a></li>
-                 <li><a href="{{route('member.mystory')}}" class="" title="Truyện của tôi"><i
-                             class="fa-solid fa-book-open-reader mr-2"></i>Truyện của tôi</a></li>
-                 <li><a href="{{route('member.gilfcode')}}" class="" title="Nhập Giftcode"><i
-                             class="fa-solid fa-gift mr-2"></i>Nhập Giftcode</a></li>
+                             class="fa-solid fa-bell mr-2"></i>Thông báo</a></li> --}}
+                 <li><a href="{{route('member.mystory')}}" 
+                    class="@if(request()->routeIs('member.mystory') || request()->routeIs('member.mystory.favorites')) active @endif" 
+                    title="Công pháp của tôi"><i
+                    class="fa-solid fa-book-open-reader mr-2"></i>Công pháp của tôi</a></li>
+                 <li>
+                    <a href="{{route('member.gilfcode')}}" 
+                        class="@if(request()->routeIs('member.gilfcode')) active @endif" 
+                        title="Nhập Giftcode">
+                        <i class="fa-solid fa-gift mr-2"></i>N
+                        hập Giftcode
+                    </a>
+                </li>
                  <li><a href="{{route('auth.logout')}}" title=""><i
                              class="fa-solid fa-arrow-right-from-bracket mr-2"></i>Đăng xuất</a></li>
              </ul>

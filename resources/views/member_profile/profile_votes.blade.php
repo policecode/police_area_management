@@ -10,7 +10,7 @@
                 @include('member_profile.parts.profile_logo')
                 <div id="member_profile_app" class="p-5">
                     @include('member_profile.parts.profile_nav')
-                    <p class="font-bold text-[1.25rem] mb-4 text-[rgba(0,0,0,0.8)]">Bình luận</p>
+                    <p class="font-bold text-[1.25rem] mb-4 text-[rgba(0,0,0,0.8)]">Đánh giá</p>
                     <div class="list-comment">
                         @foreach ($records as $item)
                             <div
@@ -23,7 +23,7 @@
                                     <span>Công pháp: </span>
                                     <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="{{ $item['title'] }}" class="link text-[#4497f8]">{{ ucwords($item['title']) }}</a>
                                 </p>
-                                <p><span class="mr-4">Like: {{ $item['like'] }} <i class="fa-regular fa-thumbs-up text-[#007bff]"></i></span></p>
+                                <p><span class="mr-4">Đánh giá: {{ $item['point_star'] }} <i class="fa-solid fa-star text-[#ffd700]"></i></span></p>
                                 <p><span>Thời gian:</span> {{ dateFormat($item['created_at']) }}</p>
                             </div>
                             

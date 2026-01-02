@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Member;
 
+use App\Enums\FavoriteStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\StarRating;
 use App\Models\User;
+use App\Models\UserReadStory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -20,44 +24,41 @@ class ProfileController extends Controller
             'page_title' => 'Lai lịch đạo hữu ' . $user->name,
             'description' => 'Thông tin đạo hữu ' . $user->name,
             'user' => $user,
-            'is_nav' => 1
         );
         return view('member_profile.profile', $dataView);
     }
 
         public function getProfileVotes(Request $request, $user_id)
     {
-        return 'getProfileVotes';
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 16,
+            'per_page' => 20,
             'order_by' => 'id',
-            'order_type' => 'DESC',
-            'parent_id' => 0
+            'order_type' => 'DESC'
         );
         $request->merge(array_merge($queryDefault, $request->query()));
-        $query = Comment::JoinStory()->GetByUser($user_id);
+        $query = StarRating::JoinStory()->GetByUser($user_id);
         $count = $query->count();
-        $CommentCollection = $query->filter($request)->get();
-        // dd($CommentCollection->toArray());
+        $StarRatingsCollection = $query->filter($request)->get();
+        // dd($StarRatingsCollection->toArray());
         $user = User::find($user_id);
         $dataView = array(
             'page_title' => 'Bình luận của đạo hữu ' . $user->name,
             'description' => 'Bình luận của đạo hữu ' . $user->name,
             'user' => $user,
-            'is_nav' => 2,
-            'records' => $CommentCollection,
+            'records' => $StarRatingsCollection,
             'total_records' => $count,
             'per_page' => $request->per_page,
             'page' =>$request->page,
         );
-        return view('member_profile.profile_comment', $dataView);
+        return view('member_profile.profile_votes', $dataView);
     }
+
     public function getProfileComments(Request $request, $user_id)
     {
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 16,
+            'per_page' => 20,
             'order_by' => 'id',
             'order_type' => 'DESC',
             'parent_id' => 0
@@ -72,7 +73,6 @@ class ProfileController extends Controller
             'page_title' => 'Bình luận của đạo hữu ' . $user->name,
             'description' => 'Bình luận của đạo hữu ' . $user->name,
             'user' => $user,
-            'is_nav' => 3,
             'records' => $CommentCollection,
             'total_records' => $count,
             'per_page' => $request->per_page,
@@ -102,11 +102,105 @@ class ProfileController extends Controller
 
     public function mystory(Request $request)
     {
-        return 'mystory';
+         $queryDefault = array(
+            'page' => 1,
+            'per_page' => 20,
+            'order_by' => 'updated_at',
+            'order_type' => 'DESC'
+        );
+        $request->merge(array_merge($queryDefault, $request->query()));
+        $query = UserReadStory::JoinStoryChapterAuthor()->GetByUser(Auth::id())->GetByLastChapter();
+        $count = $query->count();
+        $collection = $query->filter($request)->get()->each(function ($item, $key) {
+            $isResult = strpos($item['story_title'], '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
+        });
+        // dd($collection->toArray());
+        $breadcrumb = [
+            [
+                "title" => "Trình quản trị",
+                "url" => route('member.profile_detail', [])
+            ],
+            [
+                "title" => 'Công pháp đã tu luyện',
+                "url" => ''
+            ]
+        ];
+        $dataView = array(
+            'page_title' => 'Công pháp của ta',
+            'description' => 'Thông tin các bộ công pháp ta đã tu luyện',
+            'records' => $collection,
+            'total_records' => $count,
+            'per_page' => $request->per_page,
+            'page' =>$request->page,
+            'breadcrumb' => $breadcrumb
+        );
+        return view('member_profile.profile_story_read', $dataView);
+    }
+
+    public function mystoryFavorite(Request $request)
+    {
+         $queryDefault = array(
+            'page' => 1,
+            'per_page' => 20,
+            'order_by' => 'updated_at',
+            'order_type' => 'DESC'
+        );
+        $request->merge(array_merge($queryDefault, $request->query()));
+        $query = UserReadStory::JoinStoryAuthor()->GetByUser(Auth::id())->GetByFavorite(FavoriteStatus::LIKE['id']);
+        $count = $query->count();
+        $collection = $query->filter($request)->get()->each(function ($item, $key) {
+            $isResult = strpos($item['story_title'], '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
+        });
+        // dd($collection->toArray());
+        $breadcrumb = [
+            [
+                "title" => "Trình quản trị",
+                "url" => route('member.profile_detail', [])
+            ],
+            [
+                "title" => 'Tàng Kinh Các',
+                "url" => ''
+            ]
+        ];
+        $dataView = array(
+            'page_title' => 'Tàng Kinh Các',
+            'description' => 'Thông tin các bộ công pháp ta đã lưu lại',
+            'records' => $collection,
+            'total_records' => $count,
+            'per_page' => $request->per_page,
+            'page' =>$request->page,
+            'breadcrumb' => $breadcrumb
+        );
+        return view('member_profile.profile_story_favorites', $dataView);
     }
 
     public function gilfcode(Request $request)
     {
-        return 'gilfcode';
+        $breadcrumb = [
+            [
+                "title" => "Trình quản trị",
+                "url" => route('member.profile_detail', [])
+            ],
+            [
+                "title" => 'Nhập Giftcode',
+                "url" => ''
+            ]
+        ];
+         $dataView = array(
+            'page_title' => 'Nhập Giftcode',
+            'description' => 'Nhập mã để lấy hầu bao',
+            'breadcrumb' => $breadcrumb
+        );
+        return view('member_profile.profile_gilfcode', $dataView);
     }
 }

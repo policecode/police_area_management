@@ -122,11 +122,8 @@ $user = Auth::user();
                                                     </picture>
                                                 </span>
                                                 <div class="info-user flex-1">
-                                                    <p
-                                                        class="name mb-2 font-bold text-[#444] line-clamp-1 xl:text-[1.75rem] text-[1.25rem]">
-                                                        @{{ user.name }}</p>
-                                                    <p class="text-[0.75rem]"></p>
-                                                    <div class="flex">
+                                                    <p class="name mb-2 font-bold text-[#444] line-clamp-1 xl:text-[1.75rem] text-[1.25rem]">@{{ user.name }}</p>
+                                                    {{-- <div class="flex">
                                                         <span class="icon w-9 shrink-0 mr-2">
                                                             <img src="{{ asset('assets/images/linhthach-end.png') }}"
                                                                 alt="Linh Thạch">
@@ -143,6 +140,12 @@ $user = Auth::user();
                                                                 alt="Linh Phiếu">
                                                         </span>
                                                         <span class="text-[0.75rem]">Linh Phiếu: 0</span>
+                                                    </div> --}}
+                                                    <div class="flex">
+                                                        <span class="text-[0.75rem]">Tu vi: @{{user.level_info.name}}</span>
+                                                    </div>
+                                                    <div class="flex mt-1">
+                                                        <span class="text-[0.75rem]">Chân nguyên: @{{ user.exp }}/@{{ user.level_info.next_exp }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -153,11 +156,11 @@ $user = Auth::user();
                                                     title="Trang cá nhân" class="btn btn-border-green w-full">Trang cá
                                                     nhân</a>
                                             </div>
-                                            <div class="basis-1/2 px-1 mb-2">
+                                            {{-- <div class="basis-1/2 px-1 mb-2">
                                                 <a href="{{ route('member.payment') }}" title="Thêm Linh Thạch"
                                                     class="btn btn-border-green w-full">Thêm Linh
                                                     Thạch</a>
-                                            </div>
+                                            </div> --}}
                                             <div class="basis-1/2 px-1 mb-2">
                                                 <a href="{{ route('member.profile_detail') }}"
                                                     title="Chi tiết tài khoản" class="btn btn-border-green w-full">Chi

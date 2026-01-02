@@ -11,9 +11,10 @@ class StarRating extends Model
     use HasFactory, Filterable;
     protected $appends = [];
     private $joinUser = false;
+    private $joinStory = false;
 
     public $filterKeywords = []; // Sử dụng trong trường hợp có trường keyword
-    public $filterFields  = []; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
+    public $filterFields  = ['user_id', 'story_id']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
     public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
 
     protected $fillable = [
@@ -22,11 +23,11 @@ class StarRating extends Model
     public $timestamps = true;
 
     public function scopeGetByStory($query, $story_id) {
-        $query->where('story_id', $story_id);
+        $query->where('star_ratings.story_id', $story_id);
         return $query;
     }
     public function scopeGetByUser($query, $user_id) {
-        $query->where('user_id', $user_id);
+        $query->where('star_ratings.user_id', $user_id);
         return $query;
     }
     // public function scopeGetByKeydate($query, $keydate) {
@@ -49,6 +50,19 @@ class StarRating extends Model
 
         $this->joinUser = true;
 
+        return $query;
+    }
+
+    public function scopeJoinStory($query) {
+        if ($this->joinStory ) {
+            return $query;
+        }
+        $query->select('star_ratings.*', 's.title', 's.slug')
+        ->leftJoin('stories as s', function($join) {
+            $join->on('star_ratings.story_id', '=', 's.id');
+        }); 
+
+        $this->joinStory = true;
         return $query;
     }
 }

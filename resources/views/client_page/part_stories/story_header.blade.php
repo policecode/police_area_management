@@ -208,7 +208,7 @@
         el: '#app_information_story_header',
         data: vue_story_header_app,
         mounted: function() {
-            console.log(this.itemDetail);
+            // console.log(this.itemDetail);
             
         },
         computed: {

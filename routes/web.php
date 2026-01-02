@@ -121,62 +121,7 @@ Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], funct
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
 
-// Member Auth
-Route::group(['middleware' => ['throttle:60,1']], function() {
-       // Login bằng mạng xã hội
-    Route::get('/auth/google', [MemberLoginController::class, 'redirectSocialiteGoogle'])->name('auth.socialite.google');
-    Route::get('/auth/google/callback', [MemberLoginController::class, 'loginSocialiteGoogle'])->name('auth.socialite.google.callback');
 
-    // Login cho member
-    Route::get('/member/login', [MemberLoginController::class, 'showFormLogin'])->name('member.form_login');
-    Route::post('/member/login', [MemberLoginController::class, 'login'])->name('member.login');
-    Route::get('/member/register', [MemberRegisterController::class, 'showFormRegister'])->name('member.form_register');
-    Route::post('/member/register', [MemberRegisterController::class, 'register'])->name('member.store');
-    // Route::get('/member/testmail', [MemberRegisterController::class, 'testmail']);
-    // Chức năng quyên mật khẩu
-    Route::get('/member/forgot-password', [MemberResetPasswordController::class, 'showFormForgotPassword'])->name('member.form_forgot_password');
-    Route::post('/member/forgot-password', [MemberResetPasswordController::class, 'sendResetLinkEmail'])->name('member.send_reset_link_email');
-    Route::get('/member/reset-password/{token}', [MemberResetPasswordController::class, 'showFormResetPassword'])->name('member.form_reset_password');
-    Route::post('/member/reset-password', [MemberResetPasswordController::class, 'resetPassword'])->name('member.reset_password');
-
-     // Liên kết sẽ được gửi vào email của người đăng ký
-    Route::get('/email/verify/{remember_token}', [MemberRegisterController::class, 'emailVerify'])->name('verification.verify');
-    
-    // Link thông báo vertify khi người dùng đăng ký tài khoản, chưa xác thực email
-    Route::get('/member/email/verify/{email}', [MemberRegisterController::class, 'repeatVetifyForm'])->name('verification.notice');
-    Route::post('/member/email/verify/{email}', [MemberRegisterController::class, 'repeatVetify'])->name('verification.repeat');
-
-    // Profile
-    Route::get('/member/profile/{user_id}', [MemberProfileController::class, 'getProfile'])->name('member.profile');
-    Route::get('/member/profile/{user_id}/comments', [MemberProfileController::class, 'getProfileComments'])->name('member.profile.comments');
-    Route::get('/member/profile/{user_id}/votes', [MemberProfileController::class, 'getProfileVotes'])->name('member.profile.votes');
-
-    Route::get('/member/profile-detail', [MemberProfileController::class, 'getProfileDetail'])->name('member.profile_detail');
-    Route::get('/member/payment', [MemberProfileController::class, 'payment'])->name('member.payment');
-    Route::get('/member/alert', [MemberProfileController::class, 'alert'])->name('member.alert');
-    Route::get('/member/my-story', [MemberProfileController::class, 'mystory'])->name('member.mystory');
-    Route::get('/member/gilf-code', [MemberProfileController::class, 'gilfcode'])->name('member.gilfcode');
-
-});
-
-// Member Action
-Route::group(['middleware' => ['throttle:60,1']], function() {
-    // Comment
-    Route::get('/api/member/list-comment', [MemberCommentController::class, 'getListComments'])->name('member.action.list-comment');
-    Route::post('/api/member/post-comment', [MemberCommentController::class, 'postComment'])->name('member.action.comment');
-    Route::post('/api/member/like-comment', [MemberCommentController::class, 'likeComment'])->name('member.action.like-comment');
-    
-    // Report Chapter
-    Route::post('/api/member/report-chapter', [ReportChapterController::class, 'reportChapter'])->name('member.action.report-chapter');
-
-    // Upload avatar, banner
-    Route::post('/api/member/upload-action/{action}', [MemberActionController::class, 'uploadAction'])->name('member.action.upload');
-    // Update thông tin cá nhân
-    Route::post('/api/member/update-profile', [MemberActionController::class, 'updateProfile'])->name('member.action.update_profile');
-
-    // Handle story
-    Route::post('/api/member/save-favorite-story', [MemberActionController::class, 'saveFavoriteStory'])->name('member.action.save_favorite_story');
-});
 // Auth
 Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], function() {
 
@@ -241,4 +186,62 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
     // Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index']);
     
   
+});
+
+// Member Auth
+Route::group(['middleware' => ['throttle:60,1']], function() {
+       // Login bằng mạng xã hội
+    Route::get('/auth/google', [MemberLoginController::class, 'redirectSocialiteGoogle'])->name('auth.socialite.google');
+    Route::get('/auth/google/callback', [MemberLoginController::class, 'loginSocialiteGoogle'])->name('auth.socialite.google.callback');
+
+    // Login cho member
+    Route::get('/member/login', [MemberLoginController::class, 'showFormLogin'])->name('member.form_login');
+    Route::post('/member/login', [MemberLoginController::class, 'login'])->name('member.login');
+    Route::get('/member/register', [MemberRegisterController::class, 'showFormRegister'])->name('member.form_register');
+    Route::post('/member/register', [MemberRegisterController::class, 'register'])->name('member.store');
+    // Route::get('/member/testmail', [MemberRegisterController::class, 'testmail']);
+    // Chức năng quyên mật khẩu
+    Route::get('/member/forgot-password', [MemberResetPasswordController::class, 'showFormForgotPassword'])->name('member.form_forgot_password');
+    Route::post('/member/forgot-password', [MemberResetPasswordController::class, 'sendResetLinkEmail'])->name('member.send_reset_link_email');
+    Route::get('/member/reset-password/{token}', [MemberResetPasswordController::class, 'showFormResetPassword'])->name('member.form_reset_password');
+    Route::post('/member/reset-password', [MemberResetPasswordController::class, 'resetPassword'])->name('member.reset_password');
+
+     // Liên kết sẽ được gửi vào email của người đăng ký
+    Route::get('/email/verify/{remember_token}', [MemberRegisterController::class, 'emailVerify'])->name('verification.verify');
+    
+    // Link thông báo vertify khi người dùng đăng ký tài khoản, chưa xác thực email
+    Route::get('/member/email/verify/{email}', [MemberRegisterController::class, 'repeatVetifyForm'])->name('verification.notice');
+    Route::post('/member/email/verify/{email}', [MemberRegisterController::class, 'repeatVetify'])->name('verification.repeat');
+
+    // Profile
+    Route::get('/member/profile/{user_id}', [MemberProfileController::class, 'getProfile'])->name('member.profile');
+    Route::get('/member/profile/{user_id}/votes', [MemberProfileController::class, 'getProfileVotes'])->name('member.profile.votes');
+    Route::get('/member/profile/{user_id}/comments', [MemberProfileController::class, 'getProfileComments'])->name('member.profile.comments');
+
+    Route::get('/member/profile-detail', [MemberProfileController::class, 'getProfileDetail'])->name('member.profile_detail');
+    Route::get('/member/payment', [MemberProfileController::class, 'payment'])->name('member.payment');
+    Route::get('/member/alert', [MemberProfileController::class, 'alert'])->name('member.alert');
+    Route::get('/member/my-story', [MemberProfileController::class, 'mystory'])->name('member.mystory');
+    Route::get('/member/my-story/favorites', [MemberProfileController::class, 'mystoryFavorite'])->name('member.mystory.favorites');
+    Route::get('/member/gilf-code', [MemberProfileController::class, 'gilfcode'])->name('member.gilfcode');
+
+});
+
+// Member Action
+Route::group(['middleware' => ['throttle:60,1']], function() {
+    // Comment
+    Route::get('/api/member/list-comment', [MemberCommentController::class, 'getListComments'])->name('member.action.list-comment');
+    Route::post('/api/member/post-comment', [MemberCommentController::class, 'postComment'])->name('member.action.comment');
+    Route::post('/api/member/like-comment', [MemberCommentController::class, 'likeComment'])->name('member.action.like-comment');
+    
+    // Report Chapter
+    Route::post('/api/member/report-chapter', [ReportChapterController::class, 'reportChapter'])->name('member.action.report-chapter');
+
+    // Upload avatar, banner
+    Route::post('/api/member/upload-action/{action}', [MemberActionController::class, 'uploadAction'])->name('member.action.upload');
+    // Update thông tin cá nhân
+    Route::post('/api/member/update-profile', [MemberActionController::class, 'updateProfile'])->name('member.action.update_profile');
+
+    // Handle story
+    Route::post('/api/member/save-favorite-story', [MemberActionController::class, 'saveFavoriteStory'])->name('member.action.save_favorite_story');
 });
