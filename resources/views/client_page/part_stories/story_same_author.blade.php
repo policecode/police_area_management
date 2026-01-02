@@ -46,11 +46,19 @@
                      <ul class="list-story__item">
                          @foreach ($star_ratings as $item)
                              <li class="text-[0.875rem] py-3 px-4 border-b-[1px] border-solid border-[#f4f4f4]">
-                                 <a href="{{route('member.profile', ['user_id' => $item['user_id']])}}" title="{{ $item['name'] }}" class="w-[75%] text-[0.875rem] block">
-                                     <span class="line-clamp-1 inline-block">{{ $item['name'] }} -</span>
-                                     <span class="line-clamp-1 inline-block">{{ $item['point_star'] }} <i
-                                             class="fa-solid fa-star text-[#ffd700]"></i></span>
-                                 </a>
+                                @if ($item['user_id'])
+                                    <a href="{{route('member.profile', ['user_id' => $item['user_id']])}}" title="{{ $item['name'] }}" class="w-[75%] text-[0.875rem] block">
+                                        <span class="line-clamp-1 inline-block">{{ $item['name'] }} -</span>
+                                        <span class="line-clamp-1 inline-block">{{ $item['point_star'] }} <i
+                                                class="fa-solid fa-star text-[#ffd700]"></i></span>
+                                    </a>
+                                @else
+                                    <a href="#" title="{{ $item['name'] }}" class="w-[75%] text-[0.875rem] block">
+                                        <span class="line-clamp-1 inline-block">{{ $item['name'] }} -</span>
+                                        <span class="line-clamp-1 inline-block">{{ $item['point_star'] }} <i
+                                                class="fa-solid fa-star text-[#ffd700]"></i></span>
+                                    </a>
+                                @endif
                                  <span class="block text-[0.825rem] text-[#999] mt-1"> {{ $item['content'] }}</span>
 
                              </li>
