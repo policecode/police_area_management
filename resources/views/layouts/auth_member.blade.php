@@ -74,7 +74,6 @@ $option = SettingHelpers::getInstance();
 </head>
 
 <body class="wrapper mx-auto 2xl:text-[16px] text-[14px] text-[#252525] leading-snug font-['Roboto',sans-serif] overflow-x-hidden"  style="background-image: url({{ asset('assets/uploads/demo/background-min.jpg') }});">
-
     @yield('content')
 
     @include('parts.client.footer_v1')

@@ -12,11 +12,11 @@ $option = SettingHelpers::getInstance();
     <section class="section-regis py-12 bg-[#f2f3f5] flex items-center ">
         <div class="container">
             <div class="module-content max-w-[450px] mx-auto  lg:p-7 p-4">
-                <picture class="flex justify-center">
+                <a href="{{ route('index') }}" class="flex justify-center">
                     <img loading="auto"
                         src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}"
                         style="max-height: 150px;" alt="Hắc Hoàng Đại Đế" class="img-fluid" />
-                </picture>
+                </a>
                 <div class="text-center">
                     <p class="title text-center xl:text-[1.875rem] text-[1.25rem] text-[#373941] mb-5">Vui lòng kích hoạt
                         tài khoản <b>{{ $email }}</b> của bạn</p>

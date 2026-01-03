@@ -54,7 +54,7 @@ class TopStoryController extends Controller
         ];
 
         // Title Header
-        $page_title = 'Danh Sách Truyện Mới';
+        $page_title = 'Danh Sách Truyện Mới Cập Nhật';
         
          // Desccription Header
          $description = 'Trạng thái cập nhật các bộ truyện mới nhất';

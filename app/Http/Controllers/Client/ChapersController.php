@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
 use App\Models\Story;
+use App\Models\TopMemberDay;
 use App\Models\User;
 use App\Models\UserReadStory;
 use App\Models\ViewDay;
@@ -221,6 +222,18 @@ class ChapersController extends Controller
                     $user->total_story += 1;
                 }
                 $user->update();
+                // Cập nhật bảng kinh nghiệm theo ngày
+                $topMemberDay = TopMemberDay::GetByUser($user->id)->getByKey(get_key_by_day())->first();
+                if ($topMemberDay) {
+                    $topMemberDay->exp_day += 1;
+                    $topMemberDay->update();
+                } else {
+                    TopMemberDay::create([
+                        'user_id' => $user->id,
+                        'exp_day' => 1,
+                        'key' => get_key_by_day()
+                    ]);
+                }
             }
             DB::commit();
             return response()->json([

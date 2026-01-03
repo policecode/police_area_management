@@ -36,7 +36,7 @@
                                     <span class="text-[#28a745] mr-2">{{ $item['total_chapter'] }} chương</span>
                                     <span class="text-[#007bff]">{{ $item['view_count'] }} đọc</span>
                                 </div>
-                                <span @click="saveFavoriteStory($event, {{ $item['story_id'] }})"
+                                <span @click="clearFavoriteStory($event, {{ $item['story_id'] }})"
                                     class="delete absolute top-1 right-2 z-[3] text-[#252525] hover:text-[#de3939] cursor-pointer remove-favorite-story">
                                     <i class="fa-solid fa-xmark"></i>
                                 </span>
@@ -68,7 +68,7 @@
             },
             methods: {
 
-                async saveFavoriteStory(e, story_id) {
+                async clearFavoriteStory(e, story_id) {
                     let jsonData = await new RouteApi().post(`${this.apiMemberUrl}/save-favorite-story`, {
                         story_id: story_id
                     });

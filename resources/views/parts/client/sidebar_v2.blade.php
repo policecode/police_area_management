@@ -90,9 +90,9 @@ $user = Auth::user();
                 </form>
                 <ul class="flex items-center user-option">
                     <li class="mr-5 last:mr-0">
-                        <a @click="showCabinet" href="javascript:void(0)" title="Tủ truyện" class="mystory" show-story>
+                        <a @click="showCabinet" href="javascript:void(0)" title="Tàng kinh các" class="mystory" show-story>
                             <img src="{{ asset('assets/images/bookmark2.png') }}" class="object-contain w-7"
-                                alt="Tủ truyện">
+                                alt="Tàng kinh các">
                         </a>
                     </li>
                     

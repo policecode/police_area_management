@@ -28,7 +28,7 @@ class ProfileController extends Controller
         return view('member_profile.profile', $dataView);
     }
 
-        public function getProfileVotes(Request $request, $user_id)
+    public function getProfileVotes(Request $request, $user_id)
     {
         $queryDefault = array(
             'page' => 1,
@@ -49,7 +49,7 @@ class ProfileController extends Controller
             'records' => $StarRatingsCollection,
             'total_records' => $count,
             'per_page' => $request->per_page,
-            'page' =>$request->page,
+            'page' => $request->page,
         );
         return view('member_profile.profile_votes', $dataView);
     }
@@ -76,7 +76,7 @@ class ProfileController extends Controller
             'records' => $CommentCollection,
             'total_records' => $count,
             'per_page' => $request->per_page,
-            'page' =>$request->page,
+            'page' => $request->page,
         );
         return view('member_profile.profile_comment', $dataView);
     }
@@ -102,7 +102,7 @@ class ProfileController extends Controller
 
     public function mystory(Request $request)
     {
-         $queryDefault = array(
+        $queryDefault = array(
             'page' => 1,
             'per_page' => 20,
             'order_by' => 'updated_at',
@@ -136,7 +136,7 @@ class ProfileController extends Controller
             'records' => $collection,
             'total_records' => $count,
             'per_page' => $request->per_page,
-            'page' =>$request->page,
+            'page' => $request->page,
             'breadcrumb' => $breadcrumb
         );
         return view('member_profile.profile_story_read', $dataView);
@@ -144,7 +144,7 @@ class ProfileController extends Controller
 
     public function mystoryFavorite(Request $request)
     {
-         $queryDefault = array(
+        $queryDefault = array(
             'page' => 1,
             'per_page' => 20,
             'order_by' => 'updated_at',
@@ -178,10 +178,55 @@ class ProfileController extends Controller
             'records' => $collection,
             'total_records' => $count,
             'per_page' => $request->per_page,
-            'page' =>$request->page,
+            'page' => $request->page,
             'breadcrumb' => $breadcrumb
         );
         return view('member_profile.profile_story_favorites', $dataView);
+    }
+
+    public function callApiMyStory(Request $request)
+    {
+        try {
+            if ($request->status == 'read') {
+                $query = UserReadStory::filter($request)->JoinStoryChapterAuthor()->GetByUser(Auth::id())->GetByLastChapter();
+            } else if ($request->status == 'favorite') {
+                $query = UserReadStory::filter($request)->JoinStoryAuthor()->GetByUser(Auth::id())->GetByFavorite(FavoriteStatus::LIKE['id']);
+            }
+            $res = [
+                'result' => 1,
+                'data' => [],
+                'page' => $request->page,
+                'per_page' => $request->per_page,
+                'total' => 0
+            ];
+            if ($request->is_paginate) {
+                $res['total'] = $query->count();
+            } else {
+                $collection = $query->get();
+               $status = $request->status;
+                $res['data'] = $collection->each(function ($item, $key) use ($status) {
+                    $item->story_url =  route('client.story', ['story_slug' => $item->story_slug]);
+                    $item->author_url =  route('client.author', ['author_slug' => $item->author_slug]);
+                    if ($status == 'read') {
+                        $item->chapter_url =  route('client.chaper', ['story_slug' => $item->story_slug, 'chaper_position' => $item->chapter_position]);
+                    }
+             
+                    $isResult = strpos($item->title, '(c)');
+                    if ($isResult) {
+                        $item->is_convert = true;
+                    } else {
+                        $item->is_convert = false;
+                    }
+                })->toArray();
+            }
+            return response()->json($res);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function gilfcode(Request $request)
@@ -196,7 +241,7 @@ class ProfileController extends Controller
                 "url" => ''
             ]
         ];
-         $dataView = array(
+        $dataView = array(
             'page_title' => 'Nhập Giftcode',
             'description' => 'Nhập mã để lấy hầu bao',
             'breadcrumb' => $breadcrumb

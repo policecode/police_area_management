@@ -12,11 +12,11 @@ $option = SettingHelpers::getInstance();
     <section class="section-regis py-12 bg-[#f2f3f5] flex items-center ">
         <div class="container">
             <div class="module-content max-w-[450px] mx-auto  lg:p-7 p-4">
-                <picture class="flex justify-center">
+                <a href="{{ route('index') }}" title="Trang chủ" class="flex justify-center">
                     <img loading="auto"
                         src="{{ $option->getOptionImage('fvn_logo') ? $option->getOptionImage('fvn_logo') : asset('assets/images/logo_text.png') }}" style="max-height: 150px;"
                         alt="Hắc Hoàng Đại Đế" class="img-fluid" />
-                </picture>
+                </a>
                 <div class="text-center">
                     <p class="title font-bold text-center xl:text-[1.875rem] text-[1.25rem] text-[#373941] mb-5">{{ $page_title }}</p>
                     @if (session('msg'))
@@ -44,10 +44,8 @@ $option = SettingHelpers::getInstance();
                     @enderror
               
                     <button type="submit" class="btn btn-green w-full !rounded-md lg:text-[1.125rem] mb-4">Đăng nhập</button>
-                    <a href="{{route('member.form_forgot_password')}}" title="Quên mật khẩu" class="link text-[#222] block w-fit mx-auto mb-4"
-                        modal-rs-target="foget_pass" style="cursor: pointer;">Quên mật khẩu</a>
-                    <a href="{{ route('member.form_register') }}" title="Đăng ký"
-                        class="btn btn-border-green !flex w-fit mx-auto !rounded-md min-w-[200px]">Đăng ký</a>
+                    <a href="{{route('member.form_forgot_password')}}" title="Quên mật khẩu" class="link text-[#222] block w-fit mx-auto mb-4" style="cursor: pointer;">Quên mật khẩu</a>
+                    <a href="{{ route('member.form_register') }}" title="Đăng ký" class="btn btn-border-green !flex w-fit mx-auto !rounded-md min-w-[200px]">Đăng ký</a>
                 </form>
                 <p class="mt-5 text-center">Hoặc đăng nhập qua</p>
                 <div class="text-center">

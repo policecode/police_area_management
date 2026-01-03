@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Member;
 use App\Enums\FavoriteStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Story;
+use App\Models\TopMemberDay;
 use App\Models\User;
 use App\Models\UserReadStory;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class MemberActionController extends Controller
 {
      public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified'])->except(['getTopMember']);
     }
     public function uploadAction(Request $request, $action) {
         // action: avatar, banner
@@ -155,6 +156,45 @@ class MemberActionController extends Controller
                 'message' => 'Cập nhật thông tin cá nhân thất bại.',
                 'errors' => $th->getMessage()
             ]);
+        }
+    }
+
+    public function getTopMember(Request $request) {
+          try {
+            if ($request->view == 'day') {
+                $query = TopMemberDay::filter($request)->getByKey(get_key_by_day());
+            } elseif ($request->view == 'all') {
+                $query = User::filter($request);
+            }
+
+            $res = [
+                'result' => 1,
+                'data' => [],
+                'page' => $query->getPageNumber(),
+                'per_page' => $query->getPerPage(),
+                'total' => 0
+            ];
+            if($request->is_paginate){
+                $res['total'] = $query->getTotal();
+            }else{
+                if ($request->view == 'all') {
+                    $colection = $query->get();
+                    $res['data']  = $colection->each(function ($item, $key) {
+                        $item->profile_url = route('member.profile', ['user_id' => $item['id']]);
+                    });
+                } else {
+                    $colection = $query->joinUser()->get();
+                    $res['data']  = $colection->each(function ($item, $key) {
+                        $item->profile_url = route('member.profile', ['user_id' => $item['user_id']]);
+                        $item->avatar_url = $item->avatar ? asset($item->avatar) : asset('assets/images/avatar_default.png');
+                    });
+                }
+            }
+            return response()->json($res);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0, 'data'=> [], 'message' => $e->getMessage()
+            ], 400);
         }
     }
 

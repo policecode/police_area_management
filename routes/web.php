@@ -230,18 +230,22 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
 // Member Action
 Route::group(['middleware' => ['throttle:60,1']], function() {
     // Comment
-    Route::get('/api/member/list-comment', [MemberCommentController::class, 'getListComments'])->name('member.action.list-comment');
-    Route::post('/api/member/post-comment', [MemberCommentController::class, 'postComment'])->name('member.action.comment');
-    Route::post('/api/member/like-comment', [MemberCommentController::class, 'likeComment'])->name('member.action.like-comment');
+    Route::get('/api/member/list-comment', [MemberCommentController::class, 'getListComments']);
+    Route::post('/api/member/post-comment', [MemberCommentController::class, 'postComment']);
+    Route::post('/api/member/like-comment', [MemberCommentController::class, 'likeComment']);
     
     // Report Chapter
-    Route::post('/api/member/report-chapter', [ReportChapterController::class, 'reportChapter'])->name('member.action.report-chapter');
+    Route::post('/api/member/report-chapter', [ReportChapterController::class, 'reportChapter']);
 
     // Upload avatar, banner
-    Route::post('/api/member/upload-action/{action}', [MemberActionController::class, 'uploadAction'])->name('member.action.upload');
+    Route::post('/api/member/upload-action/{action}', [MemberActionController::class, 'uploadAction']);
     // Update thông tin cá nhân
-    Route::post('/api/member/update-profile', [MemberActionController::class, 'updateProfile'])->name('member.action.update_profile');
+    Route::post('/api/member/update-profile', [MemberActionController::class, 'updateProfile']);
+    Route::get('api/member/list-top-member', [MemberActionController::class, 'getTopMember']);
 
     // Handle story
-    Route::post('/api/member/save-favorite-story', [MemberActionController::class, 'saveFavoriteStory'])->name('member.action.save_favorite_story');
+    Route::post('/api/member/save-favorite-story', [MemberActionController::class, 'saveFavoriteStory']);
+    Route::get('api/member/my-story', [MemberProfileController::class, 'callApiMyStory']);
+
+
 });
