@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\LockStories;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
+use App\Models\CoppyrightStory;
 use App\Models\StarRating;
 use App\Models\Story;
 use App\Models\StoryCategory;
@@ -19,6 +21,23 @@ use Illuminate\Support\Facades\Validator;
 
 class StoriesController extends Controller
 {
+
+    private function isCoppyrightStory($story) {
+        if ($story['is_lock'] != LockStories::LOCK['key']) {
+            $user = Auth::user();
+            if ($user) {
+                $isCoppyright =CoppyrightStory::GetByUser($user->id)->GetByStory($story['id'])->first();
+                if (!$isCoppyright) {
+                    return true;
+                    return view('client_page.coppyright', $dataView);
+                }
+            } else {
+                return true;
+                return view('client_page.coppyright', $dataView);
+            }
+        }
+        return false;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -28,6 +47,7 @@ class StoriesController extends Controller
     {
         // $option = SettingHelpers::getInstance();
         $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
+        
         $story->thumbnail = asset($story->thumbnail);
  
         $story = $story->toArray();
@@ -97,6 +117,10 @@ class StoriesController extends Controller
             'first_chapter' => $first_chapter,
             'star_ratings' => $starRatings
         );
+        $isCoppyright = $this->isCoppyrightStory($story);
+        if ($isCoppyright) {
+            return view('client_page.coppyright', $dataView);
+        }
         return view('client_page.stories', $dataView);
 
     }

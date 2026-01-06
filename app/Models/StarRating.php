@@ -23,7 +23,11 @@ class StarRating extends Model
     public $timestamps = true;
 
     public function scopeGetByStory($query, $story_id) {
-        $query->where('star_ratings.story_id', $story_id);
+         if (is_array($story_id)) {
+            $query->whereIn('star_ratings.story_id', $story_id);
+        } else {
+            $query->where('star_ratings.story_id', $story_id);
+        }
         return $query;
     }
     public function scopeGetByUser($query, $user_id) {

@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\LockStories;
 use App\Enums\StatusStory;
 use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Models\Category;
 use App\Models\Chaper;
+use App\Models\Comment;
+use App\Models\ReportChapter;
+use App\Models\StarRating;
 use App\Models\Story;
 use App\Models\StoryCategory;
+use App\Models\UserReadStory;
 use App\Models\ViewDay;
 use App\Models\ViewMonth;
 use App\Models\ViewWeek;
@@ -19,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+
 class StoriesController extends Controller
 {
     /**
@@ -31,60 +37,62 @@ class StoriesController extends Controller
         $dataView = array(
             'page_title' => 'Quản lý truyện',
         );
-       
+
         return view('admin_page.stories.lists', $dataView);
     }
-    public function getItems(Request $request) {
+    public function getItems(Request $request)
+    {
         // Thêm dữ liệu vào trong query
         if ($request->category_id) {
             $list_story_id = StoryCategory::GetByCategoryId($request->category_id)->get()->pluck('story_id')->toArray();
             if (count($list_story_id) <= 1) {
-                $list_id_str = implode(',', $list_story_id).",";
+                $list_id_str = implode(',', $list_story_id) . ",";
             } else {
                 $list_id_str = implode(',', $list_story_id);
             }
-            $request->merge(array_merge($request->query(),[
+            $request->merge(array_merge($request->query(), [
                 'id' => $list_id_str
             ]));
         }
-      try {
-        //code...
-        $query = Story::filter($request);
-        $res = [
-            'result' => 1,
-            'data' => [],
-            'page' => $query->getPageNumber(),
-            'per_page' => $query->getPerPage(),
-            'total' => 0
-        ];
-        if($request->is_paginate){
-            $res['total'] = $query->getTotal();
-        }else{
-            $results = $query->get();
-            $story_arr= $results->pluck('id');
-            $listStoryCat = StoryCategory::JoinCategory()->whereIn('story_id', $story_arr)->get()->groupBy('story_id');
-            $listCat = [];
-            $listCatName = [];
-            foreach ($listStoryCat as $key => $items) {
-                for ($i=0; $i < $items->count(); $i++) { 
-                    $listCat[$key][] = $items[$i]->category_id;
-                    $listCatName[$key][] = $items[$i];
+        try {
+            //code...
+            $query = Story::filter($request);
+            $res = [
+                'result' => 1,
+                'data' => [],
+                'page' => $query->getPageNumber(),
+                'per_page' => $query->getPerPage(),
+                'total' => 0
+            ];
+            if ($request->is_paginate) {
+                $res['total'] = $query->getTotal();
+            } else {
+                $results = $query->get();
+                $story_arr = $results->pluck('id')->toArray();
+                $listStoryCat = StoryCategory::JoinCategory()->whereIn('story_id', $story_arr)->get()->groupBy('story_id');
+                $listCat = [];
+                $listCatName = [];
+                foreach ($listStoryCat as $key => $items) {
+                    for ($i = 0; $i < $items->count(); $i++) {
+                        $listCat[$key][] = $items[$i]->category_id;
+                        $listCatName[$key][] = $items[$i];
+                    }
                 }
+                $results->each(function ($item, $key) use ($listCat, $listCatName) {
+                    $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                    $item->category = $listCat[$item->id];
+                    $item->category_obj = $listCatName[$item->id];
+                });
+                $res['data'] = $results;
             }
-            $results->each(function ($item, $key) use($listCat, $listCatName){
-                $item->thumbnail = route('index') . '/' . $item->thumbnail;
-                $item->url = route('client.story', ['story_slug' => $item->slug]);
-                $item->category = $listCat[$item->id];
-                $item->category_obj = $listCatName[$item->id];
-            });
-            $res['data'] = $results;
+            return response()->json($res);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
+            ], 400);
         }
-        return response()->json($res);
-      } catch (\Throwable $e) {
-        return response()->json([
-            'result' => 0, 'data'=> [], 'message' => $e->getMessage()
-        ], 400);
-      }
     }
 
     /**
@@ -99,21 +107,21 @@ class StoriesController extends Controller
             $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => 0, 
+                    'status' => 0,
                     'errors' => $validator->errors(),
                     'message' => 'validation'
                 ]);
             }
             DB::beginTransaction();
             $data = $validator->validated();
-    
+
             $user = Auth::user();
             $thumbnail = '';
-     
+
             if ($request->hasFile('thumbnail')) {
                 $thumbnail = $request->file('thumbnail')->store('stories/thumbnail');
             }
-    
+
             $story = Story::create([
                 'user_id' => $user->id,
                 'title' => $data['title'],
@@ -123,6 +131,7 @@ class StoriesController extends Controller
                 'description' => $data['description'],
                 'author_id' => $data['author_id'],
                 'status' => $data['status'],
+                'is_lock' => $data['is_lock'] ?? LockStories::LOCK['key'],
             ]);
             // Add Category
             $listStoryCategory = [];
@@ -133,22 +142,22 @@ class StoriesController extends Controller
                         'category_id' => $cat
                     ];
                 }
-                
             }
-      
+
             if ((count($listStoryCategory) > 0)) {
                 StoryCategory::insert($listStoryCategory);
             }
             DB::commit();
             return response()->json([
-                'status' => 1, 
+                'status' => 1,
                 'data' => $story,
                 'message' => 'Create success'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -167,14 +176,14 @@ class StoriesController extends Controller
             $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => 0, 
+                    'status' => 0,
                     'errors' => $validator->errors(),
                     'message' => 'validation'
                 ]);
             }
             DB::beginTransaction();
             $data = $validator->validated();
-    
+
             $dataUpdate = [
                 'title' => $data['title'],
                 'title_eng' => Str::slug($data['title'], " "),
@@ -182,14 +191,15 @@ class StoriesController extends Controller
                 'description' => $data['description'],
                 'author_id' => $data['author_id'],
                 'status' => $data['status'],
+                'is_lock' => $data['is_lock'] ?? LockStories::LOCK['key'],
             ];
-    
+
             if ($request->hasFile('thumbnail')) {
                 Storage::delete($story->thumbnail);
                 $thumbnail = $request->file('thumbnail')->store('stories/thumbnail');
                 $dataUpdate['thumbnail'] = $thumbnail;
             }
-    
+
             $story->update($dataUpdate);
             // Add Category
             $listStoryCategory = [];
@@ -203,18 +213,19 @@ class StoriesController extends Controller
             }
             StoryCategory::where('story_id', $story->id)->delete();
             if ((count($listStoryCategory) > 0)) {
-                StoryCategory::insert($listStoryCategory); 
+                StoryCategory::insert($listStoryCategory);
             }
             DB::commit();
             return response()->json([
-                'status' => 1, 
+                'status' => 1,
                 'data' => $story,
                 'message' => 'Update success'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -235,28 +246,41 @@ class StoriesController extends Controller
             ViewDay::where('story_id', $story->id)->delete();
             ViewWeek::where('story_id', $story->id)->delete();
             ViewMonth::where('story_id', $story->id)->delete();
+
+            ReportChapter::where('story_id', $story->id)->delete();
+            UserReadStory::where('story_id', $story->id)->delete();
+            StarRating::where('story_id', $story->id)->delete();
+            $commentCollection = Comment::where('story_id', $story->id)->get();
+            $comment_arr = $commentCollection->pluck('id');
+            Comment::where('story_id', $story->id)->delete();
+            if (count($comment_arr) > 0) {
+                Comment::whereIn('parent_id', $comment_arr)->delete();
+            }
+
             $status = $story->delete();
             DB::commit();
             return response()->json([
-                'status' => $status, 
+                'status' => $status,
                 'message' => 'Delete success'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage()
             ], 400);
         }
     }
 
-    public function handleListStories(Request $request) {
+    public function handleListStories(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'list_id' => 'array',
             'action' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'status' => 0, 
+                'status' => 0,
                 'errors' => $validator->errors(),
                 'message' => 'validation'
             ]);
@@ -276,20 +300,33 @@ class StoriesController extends Controller
                 ViewWeek::GetByStory($data['list_id'])->delete();
                 ViewMonth::GetByStory($data['list_id'])->delete();
                 Story::GetById($data['list_id'])->delete();
+
+                ReportChapter::GetByStory($data['list_id'])->delete();
+                UserReadStory::GetByStory($data['list_id'])->delete();
+                StarRating::GetByStory($data['list_id'])->delete();
+                $commentCollection = Comment::GetByStory($data['list_id'])->get();
+                $comment_arr = $commentCollection->pluck('id')->toArray();
+                Comment::GetByStory($data['list_id'])->delete();
+                if (count($comment_arr) > 0) {
+                    Comment::GetByParent($comment_arr)->delete();
+                }
             }
             DB::commit();
             return response()->json([
-                'status' => 1, 
+                'status' => 1,
                 'data' => $result,
                 'message' => 'Handle Stories success'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage(),
             ], 400);
         }
     }
+
+    
 
     private function rules($request)
     {
@@ -299,12 +336,12 @@ class StoriesController extends Controller
             'author_id' => 'required|integer',
             'status' => 'required|integer',
             'description' => '',
-            'category' => 'array'
+            'category' => 'array',
+            'is_lock' => ''
         ];
         if ($request->id) {
-            $rules['title'] = 'required|unique:stories,title,'.$request->id;
-            $rules['slug'] = 'required|unique:stories,slug,'.$request->id;
-      
+            $rules['title'] = 'required|unique:stories,title,' . $request->id;
+            $rules['slug'] = 'required|unique:stories,slug,' . $request->id;
         }
         return $rules;
     }
@@ -330,29 +367,32 @@ class StoriesController extends Controller
             'group_id' => 'Nhóm',
             'author_id' => 'Tác giả',
             'status' => 'Trạng thái truyện',
-            'description' => 'Thông tin về truyện'
+            'description' => 'Thông tin về truyện',
+            'is_lock' => 'Trạng thái chia sẻ truyện',
         ];
     }
-    
-    public function autoConvertDescriptionToHtml() {
-        $listStory = Story::where('description', 'LIKE','%\n%')->get();
+
+    public function autoConvertDescriptionToHtml()
+    {
+        $listStory = Story::where('description', 'LIKE', '%\n%')->get();
         $count = 0;
         foreach ($listStory as $key => $story) {
-            $story->description = preg_replace("/[\n]+/", "\n\n",$story->description);
+            $story->description = preg_replace("/[\n]+/", "\n\n", $story->description);
             $story->description = nl2br($story->description);
-            $story->description = preg_replace("/\n/", "",$story->description);
+            $story->description = preg_replace("/\n/", "", $story->description);
             $story->update();
             $count++;
         }
- 
+
         return response()->json([
-            'data' => $listStory[0], 
+            'data' => $listStory[0],
             'count' =>  $count,
             'status' => 1,
         ]);
     }
 
-    public function autoDestroyStoryByCategory(Request $request, $category_slug) {
+    public function autoDestroyStoryByCategory(Request $request, $category_slug)
+    {
         $category = Category::GetBySlug($category_slug)->first();
         if (!$category) {
             return response()->json([
@@ -363,7 +403,7 @@ class StoriesController extends Controller
         DB::beginTransaction();
         try {
             $result = Story::where('total_chapter',  0)->delete();
-            $listStory = StoryCategory::JoinStory()->GetByCategoryId($category->id)->where('stories.view_count','=', 0)->orderBy('stories.last_chapers', 'ASC')->skip(0)->take(50)->get();
+            $listStory = StoryCategory::JoinStory()->GetByCategoryId($category->id)->where('stories.view_count', '=', 0)->orderBy('stories.last_chapers', 'ASC')->skip(0)->take(50)->get();
             $count = 0;
             $last_data_destroy = '';
             foreach ($listStory as $key => $story) {
@@ -380,7 +420,7 @@ class StoriesController extends Controller
             DB::commit();
             return response()->json([
                 'status' => 1,
-                'message' => 'Delete success: '.$count.' and '.$result.' stories have 0 chapter',
+                'message' => 'Delete success: ' . $count . ' and ' . $result . ' stories have 0 chapter',
                 'last_data' => $last_data_destroy
             ]);
         } catch (\Throwable $e) {
@@ -390,47 +430,48 @@ class StoriesController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
-
     }
 
-    public function autoConvertPercentageView() {
+    public function autoConvertPercentageView()
+    {
         DB::beginTransaction();
         $all_views_days = ViewDay::joinStory()->get();
         foreach ($all_views_days as $key => $item) {
-            $item->percentage = round(($item->view/$item->total_chapter) * 100, 1);
+            $item->percentage = round(($item->view / $item->total_chapter) * 100, 1);
             $item->update();
         }
         $all_views_weeks = ViewWeek::joinStory()->get();
         foreach ($all_views_weeks as $key => $item) {
-            $item->percentage = round(($item->view/$item->total_chapter) * 100, 1);
+            $item->percentage = round(($item->view / $item->total_chapter) * 100, 1);
             $item->update();
         }
         $all_views_months = ViewMonth::joinStory()->get();
         foreach ($all_views_months as $key => $item) {
-            $item->percentage = round(($item->view/$item->total_chapter) * 100, 1);
+            $item->percentage = round(($item->view / $item->total_chapter) * 100, 1);
             $item->update();
         }
         $stories = Story::get();
         foreach ($stories as $key => $item) {
             if ($item->view_count > 0) {
-                $item->total_percentage = round(($item->view_count/$item->total_chapter) * 100, 1);
+                $item->total_percentage = round(($item->view_count / $item->total_chapter) * 100, 1);
                 $item->update();
             }
         }
         DB::commit();
- 
+
         return response()->json([
             'status' => 1,
             'message' => 'Convert Percentage success',
         ]);
     }
 
-    public function autoConvertTotalChapter() {
+    public function autoConvertTotalChapter()
+    {
         $count = Story::count();
         $per_page = 100;
-        $totalPage = ceil($count/$per_page);
+        $totalPage = ceil($count / $per_page);
         $incrent = 0;
-        for ($page=0; $page < $totalPage; $page++) { 
+        for ($page = 0; $page < $totalPage; $page++) {
             $listStory = Story::skip($page * $per_page)->take($per_page)->get();
             foreach ($listStory as $key => $story) {
                 $story->total_chapter = Chaper::getByStory($story->id)->count();
@@ -439,13 +480,14 @@ class StoriesController extends Controller
             }
         }
         return response()->json([
-            'message' => 'Cập nhật thành công: '.$incrent, 
+            'message' => 'Cập nhật thành công: ' . $incrent,
             'status' => 1,
         ]);
     }
 
-    public function getthumbnail(Request $request) {
-           // $images = Storage::disk('public')->put('example.txt', 'Anh Là Nguyễn Hoàng Đạt');
+    public function getthumbnail(Request $request)
+    {
+        // $images = Storage::disk('public')->put('example.txt', 'Anh Là Nguyễn Hoàng Đạt');
         // $images = $request->file('thumbnail')->store('stories/thumbnail');
         //  asset('storage/photos/131622436_2878115665801114_8573924252147972299_n.jpg')
         // $contents = Storage::url('example.txt');
@@ -454,9 +496,10 @@ class StoriesController extends Controller
         return Storage::get('photos/3DVeDHCK808EGGEAfQV90ePa1PUrnf650WLOV7Fu.jpg');
     }
 
-    public function toolUploadStory(Request $request) {
+    public function toolUploadStory(Request $request)
+    {
         $data = $request->all();
-        
+
         try {
             DB::beginTransaction();
             $isCheckStory = Story::getBySlug(Str::slug($data['title'], "-"))->first();
@@ -481,12 +524,12 @@ class StoriesController extends Controller
                     $skip_position = $lastChaper->position + 1;
                 }
                 return response()->json([
-                    'status' => 1, 
+                    'status' => 1,
                     'data' => $isCheckStory,
-                    'message' => $data['title'].' đã tồn tại',
+                    'message' => $data['title'] . ' đã tồn tại',
                     'skip_position' => $skip_position
                 ]);
-            } 
+            }
             // return response()->json([
             //     'status' => 1, 
             //     'data' => Str::slug($data['title'], "-"),
@@ -500,12 +543,12 @@ class StoriesController extends Controller
                     'slug' => Str::slug($data['author'], "-")
                 ]);
             }
-            
+
             // Add story
             $thumbnail = '';
             if ($request->hasFile('avatar')) {
-                    $thumbnail = $request->file('avatar')->store('stories/thumbnail');
-                }
+                $thumbnail = $request->file('avatar')->store('stories/thumbnail');
+            }
             $enumStatus = [];
             foreach (StatusStory::getValues() as $key => $enumObj) {
                 if ($enumObj['slug'] == Str::slug($data['status'])) {
@@ -513,15 +556,15 @@ class StoriesController extends Controller
                 }
             }
             $status = StatusStory::COMMINGOUT['key'];
-        
+
             if (count($enumStatus) > 0) {
                 $status = $enumStatus['key'];
             }
 
-            $description = preg_replace("/[\n]+/", "\n\n",$data['description']);
+            $description = preg_replace("/[\n]+/", "\n\n", $data['description']);
             $description = nl2br($description);
-            $description = preg_replace("/\n/", "",$description);
-        
+            $description = preg_replace("/\n/", "", $description);
+
             $story = Story::create([
                 'user_id' => 1,
                 'title' => $data['title'],
@@ -543,21 +586,20 @@ class StoriesController extends Controller
                             'slug' => Str::slug($cat, "-")
                         ]);
                     }
-               
+
                     $listStoryCategory[] = [
                         'story_id' => $story->id,
                         'category_id' => $tmpCat->id
                     ];
                 }
-                
             }
-      
+
             if ((count($listStoryCategory) > 0)) {
                 StoryCategory::insert($listStoryCategory);
             }
             DB::commit();
             return response()->json([
-                'status' => 1, 
+                'status' => 1,
                 'data' => $story,
                 'message' => 'Create success',
                 'skip_position' => 1
@@ -565,11 +607,14 @@ class StoriesController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'data'=> [], 'message' => $e->getMessage()
+                'status' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
             ], 200);
         }
     }
-    public function toolUploadChaper(Request $request, Story $story) {
+    public function toolUploadChaper(Request $request, Story $story)
+    {
         DB::beginTransaction();
         try {
             $list_chapers = $request->list_chaper;
@@ -577,8 +622,8 @@ class StoriesController extends Controller
             foreach ($list_chapers as $key => $chaper_obj) {
                 $listPosition[] = $chaper_obj['position'];
             }
-            $resultChapers = Chaper::getByStory($story->id)->whereIn('position',$listPosition)->get();
- 
+            $resultChapers = Chaper::getByStory($story->id)->whereIn('position', $listPosition)->get();
+
             $dataInsert = [];
             foreach ($list_chapers as $key => $chaper_obj) {
                 $flag = true;
@@ -599,7 +644,6 @@ class StoriesController extends Controller
                         'updated_at' => Carbon::now(),
                     ));
                 }
-                
             }
             $result = '';
             if (count($dataInsert) > 0) {
@@ -618,7 +662,7 @@ class StoriesController extends Controller
                     }
                 }
                 $status = StatusStory::COMMINGOUT['key'];
-            
+
                 if (count($enumStatus) > 0) {
                     $status = $enumStatus['key'];
                 }
@@ -630,14 +674,16 @@ class StoriesController extends Controller
             }
             DB::commit();
             return response()->json([
-                'status' => 1, 
+                'status' => 1,
                 'data' => $result,
-                'message' => 'Upload '.count($dataInsert).' records'
+                'message' => 'Upload ' . count($dataInsert) . ' records'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'data'=> [], 'message' => $e->getMessage()
+                'status' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
             ], 200);
         }
     }

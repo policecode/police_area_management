@@ -28,7 +28,11 @@ class UserReadStory extends Model
         return $query;
     }
     public function scopeGetByStory($query, $story_id) {
-        $query->where('user_read_stories.story_id', $story_id);
+         if (is_array($story_id)) {
+            $query->whereIn('user_read_stories.story_id', $story_id);
+        } else {
+            $query->where('user_read_stories.story_id', $story_id);
+        }
         return $query;
     }
     public function scopeGetByFavorite($query, $favorite) {

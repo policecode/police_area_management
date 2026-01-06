@@ -96,7 +96,7 @@
                         </li>
                         <li v-for="(item, index) in memberTopItems" v-if="index > 0" class="flex items-center p-2 border-b-[1px] border-solid border-[#f4f4f4]">
                             <span
-                                class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">2</span>
+                                class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">@{{ index + 1 }}</span>
                             <a :href="item.profile_url" :title="item.name"
                                 class="title text-[0.75rem] text-[#444] flex-1 mr-2 line-clamp-1">@{{item.name}}</a>
                             <span class="text-[11px]">@{{item.level_info.name}}</span>
@@ -140,7 +140,7 @@
                         </li>
                         <li v-for="(item, index) in memberTopDayItems" v-if="index > 0" class="flex items-center p-2 border-b-[1px] border-solid border-[#f4f4f4]">
                             <span
-                                class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">2</span>
+                                class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">@{{ index + 1 }}</span>
                             <a :href="item.profile_url" :title="item.name"
                                 class="title text-[0.75rem] text-[#444] flex-1 mr-2 line-clamp-1">@{{item.name}}</a>
                             <span class="text-[11px]">@{{item.exp_day}}</span>

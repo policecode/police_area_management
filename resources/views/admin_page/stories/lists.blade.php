@@ -1,5 +1,7 @@
-<?php 
+<?php
 use App\Enums\StatusStory;
+use App\Enums\LockStories;
+
 ?>
 @extends('layouts.backend')
 @section('content')
@@ -10,7 +12,8 @@ use App\Enums\StatusStory;
     <script src="{{ asset('assets_global/js/vue-multiselect.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets_global/css/vue-multiselect.min.css') }}">
     <script>
-        var statusStory = <?= json_encode(StatusStory::getValues()) ?>
+        var statusStory = {{ Illuminate\Support\Js::from(StatusStory::getValues()) }};
+        var lockStories = {{ Illuminate\Support\Js::from(LockStories::getValues()) }};
     </script>
     <div id="app">
         <template v-if="screen=='list'">
@@ -24,8 +27,14 @@ use App\Enums\StatusStory;
                 <div class="col-3">
                     <select v-model="querySearch.category_id" class="form-select">
                         <option value="">Thể loại</option>
-                        <option v-for="(item, index) in categories" :value="item.id">@{{item.name}}</option>
-                      </select>
+                        <option v-for="(item, index) in categories" :value="item.id">@{{ item.name }}</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <select v-model="querySearch.is_lock" class="form-select">
+                        <option value="">Truyện bản quyền</option>
+                        <option v-for="item in lockStories" :value="item.key">@{{ item.value }}</option>
+                    </select>
                 </div>
                 <div class="col-3">
                     <input v-model="querySearch.keyword" type="text" class="form-control" placeholder="Search...">
@@ -57,36 +66,35 @@ use App\Enums\StatusStory;
                             <thead>
                                 <tr>
                                     <th>
-                                        <input type="checkbox" v-model="checkAll" value="1" />    
+                                        <input type="checkbox" v-model="checkAll" value="1" />
                                     </th>
                                     <th>Ảnh bìa</th>
                                     <th>
-                                        <a  @click="orderBy('title')" class="link-offset-1">
+                                        <a @click="orderBy('title')" class="link-offset-1">
                                             Tên truyện
                                             <i v-if="isOrder('title', 'ASC')" class="fa-solid fa-sort-up"></i>
                                             <i v-if="isOrder('title', 'DESC')" class="fa-solid fa-sort-down"></i>
                                         </a>
-                              
+
                                     </th>
-                                    <th>Đường dẫn</th>
                                     <th>Thể loại</th>
                                     <th>Tổng số chương</th>
                                     <th>
-                                        <a  @click="orderBy('view_count')" class="link-offset-1">
-                                            Số lượt xem    
+                                        <a @click="orderBy('view_count')" class="link-offset-1">
+                                            Số lượt xem
                                             <i v-if="isOrder('view_count', 'ASC')" class="fa-solid fa-sort-up"></i>
                                             <i v-if="isOrder('view_count', 'DESC')" class="fa-solid fa-sort-down"></i>
                                         </a>
                                     </th>
                                     <th>
-                                        <a  @click="orderBy('last_chapers')" class="link-offset-1">
+                                        <a @click="orderBy('last_chapers')" class="link-offset-1">
                                             Chương cập nhật mới nhất
                                             <i v-if="isOrder('last_chapers', 'ASC')" class="fa-solid fa-sort-up"></i>
                                             <i v-if="isOrder('last_chapers', 'DESC')" class="fa-solid fa-sort-down"></i>
                                         </a>
                                     </th>
                                     <th>
-                                        <a  @click="orderBy('updated_at')" class="link-offset-1">
+                                        <a @click="orderBy('updated_at')" class="link-offset-1">
                                             Cập nhật gần đây nhất
                                             <i v-if="isOrder('updated_at', 'ASC')" class="fa-solid fa-sort-up"></i>
                                             <i v-if="isOrder('updated_at', 'DESC')" class="fa-solid fa-sort-down"></i>
@@ -100,7 +108,6 @@ use App\Enums\StatusStory;
                                     <th></th>
                                     <th width="10%">Ảnh bìa</th>
                                     <th>Tên truyện</th>
-                                    <th>Đường dẫn</th>
                                     <th>Thể loại</th>
                                     <th>Tổng số chương</th>
                                     <th>Số lượt xem</th>
@@ -112,30 +119,41 @@ use App\Enums\StatusStory;
                             <tbody>
                                 <tr v-for="(item, index) in items">
                                     <td>
-                                        <input type="checkbox" v-model="listId" :value="item.id" />       
+                                        <input type="checkbox" v-model="listId" :value="item.id" />
                                     </td>
                                     <td><img :src="item.thumbnail" class="img-thumbnail w-100" /></td>
-                                    <td>@{{ item.title }}</td>
-                                    <td>@{{ item.slug }}</td>
                                     <td>
-                                        <button v-for="(cat, t) in item.category_obj" class="btn btn-info btn-sm mr-2 mb-2">@{{cat.name}}</button>
+                                        <a :href="item.url" :title="item.url"
+                                            target="_blank">@{{ item.title }}</a>
+                                    </td>
+                                    <td>
+                                        <button v-for="(cat, t) in item.category_obj"
+                                            class="btn btn-info btn-sm mr-2 mb-2">@{{ cat.name }}</button>
                                     </td>
                                     <td>@{{ item.total_chapter }}</td>
                                     <td>@{{ item.view_count }}</td>
                                     <td>@{{ displayDate(item.last_chapers) }}</td>
                                     <td>@{{ displayDate(item.updated_at) }}</td>
                                     <td>
-                                        <a :href="item.url" class="btn btn-primary mb-1" title="Đi đến trang truyện">
-                                            <i class="fa-regular fa-eye"></i>  
+                                        <a class="btn btn-primary mb-1"
+                                            :title="item.is_lock == 2 ? 'Mở khóa truyện' : 'Khóa truyện'"
+                                            @click="toggleLockStory($event, item)">
+                                            <i v-if="item.is_lock == 2" class="fa-solid fa-lock"></i>
+                                            <i v-else class="fa-solid fa-lock-open"></i>
                                         </a>
-                                        <a :href="linkChapers(item.id)" class="btn btn-success mb-1" title="Danh sách các chương">
-                                            <i class="fa-solid fa-book"></i>    
+                                        <a :href="linkChapers(item.id)" class="btn btn-success mb-1"
+                                            title="Danh sách các chương">
+                                            <i class="fa-solid fa-book"></i>
                                         </a>
                                         <a @click="showItem(item)" class="btn btn-warning mb-1" title="Sửa">
-                                            <i class="fa-solid fa-wrench"></i>    
+                                            <i class="fa-solid fa-wrench"></i>
                                         </a>
                                         <a @click="deleteItem(item)" class="btn btn-danger mb-1" title="Xóa">
                                             <i class="fa-regular fa-trash-can"></i>
+                                        </a>
+                                        <a v-if="item.is_lock == 2" @click="showCoppyrightUser(item)"
+                                            class="btn btn-secondary mb-1" title="Bản quyền">
+                                            <i class="fa-regular fa-copyright"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -154,11 +172,12 @@ use App\Enums\StatusStory;
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
+        {{-- Form Thêm và sửa truyện Start --}}
         <template v-if="screen=='detail'">
             <div>
                 <form @submit="save">
-                    <legend v-if="itemDetail.id" class="text-primary">Thêm người dùng mới</legend>
-                    <legend v-else class="text-primary">Thêm người dùng mới</legend>
+                    <legend v-if="itemDetail.id" class="text-primary">Thêm bộ truyện mới</legend>
+                    <legend v-else class="text-primary">Thêm bộ truyện mới</legend>
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
@@ -168,7 +187,7 @@ use App\Enums\StatusStory;
                                 <div v-if="errors.title" class="invalid-feedback">@{{ errors.title[0] }}</div>
                             </div>
                         </div>
-    
+
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="">Slug</label>
@@ -177,24 +196,31 @@ use App\Enums\StatusStory;
                                 <div v-if="errors.slug" class="invalid-feedback">@{{ errors.slug[0] }}</div>
                             </div>
                         </div>
-    
+
                         <div class="col-6">
-                            <div class="mb-3">
-                                <label for="">Ảnh đại diện</label>
-                                <div class="input-group mb-3">
-                                    <input type="file" @change="uploadFile($event, 'thumbnail')" class="form-control" id="inputUploadThumbnail">
+                            <div class="row mb-3">
+                                <div class="col-8">
+                                    <label for="">Ảnh đại diện</label>
+                                    <div class="input-group mb-3">
+                                        <input type="file" @change="uploadFile($event, 'thumbnail')"
+                                            class="form-control" id="inputUploadThumbnail">
+                                    </div>
                                 </div>
-                                <img v-if="itemDetail.thumbnail" :src="itemDetail.thumbnail" class="rounded mx-auto d-block w-100" alt="Image thumbnail">
+                                <div class="col-4">
+                                    <img v-if="itemDetail.thumbnail" :src="itemDetail.thumbnail"
+                                        class="rounded mx-auto d-block w-100" alt="Image thumbnail">
+                                </div>
                             </div>
                         </div>
-    
+
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="">Trạng thái truyện</label>
                                 <select v-model="itemDetail.status" class="form-control"
                                     :class={'is-invalid':errors.status}>
                                     <option value="">Trạng thái truyện</option>
-                                    <option v-for="item in statusStory" :value="item.key">@{{item.value}}</option>
+                                    <option v-for="item in statusStory" :value="item.key">@{{ item.value }}
+                                    </option>
                                 </select>
                                 <div v-if="errors.status" class="invalid-feedback">@{{ errors.status[0] }}</div>
                             </div>
@@ -203,7 +229,11 @@ use App\Enums\StatusStory;
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="">Tác giả</label>
-                                <multiselect v-model="selectedAuthor" :class={'is-invalid':errors.author_id} @search-change="getAuthors" :options="authors" :multiple="false" :close-on-select="true" :searchable="true" placeholder="Tìm kiếm tác giả" label="name" track-by="id" class="alignleft actions" :show-labels="false" :allow-empty="true"></multiselect> 
+                                <multiselect v-model="selectedAuthor" :class={'is-invalid':errors.author_id}
+                                    @search-change="getAuthors" :options="authors" :multiple="false"
+                                    :close-on-select="true" :searchable="true" placeholder="Tìm kiếm tác giả"
+                                    label="name" track-by="id" class="alignleft actions" :show-labels="false"
+                                    :allow-empty="true"></multiselect>
                                 <div v-if="errors.author_id" class="invalid-feedback">@{{ errors.author_id[0] }}</div>
                             </div>
                         </div>
@@ -211,13 +241,30 @@ use App\Enums\StatusStory;
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="">Thể loại</label>
-                                <multiselect v-model="selectedCat" :options="categories" :multiple="true" :close-on-select="true" :searchable="true" placeholder="Thể loại" label="name" track-by="id" class="alignleft actions" :show-labels="false" :allow-empty="true" ></multiselect> 
+                                <multiselect v-model="selectedCat" :options="categories" :multiple="true"
+                                    :close-on-select="true" :searchable="true" placeholder="Thể loại" label="name"
+                                    track-by="id" class="alignleft actions" :show-labels="false"
+                                    :allow-empty="true"></multiselect>
                             </div>
                         </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="">Mở Khóa Truyện</label>
+                                <select v-model="itemDetail.is_lock" class="form-control"
+                                    :class={'is-invalid':errors.is_lock}>
+                                    <option value="">Mở Khóa truyện</option>
+                                    <option v-for="item in lockStories" :value="item.key">@{{ item.value }}
+                                    </option>
+                                </select>
+                                <div v-if="errors.is_lock" class="invalid-feedback">@{{ errors.is_lock[0] }}</div>
+                            </div>
+                        </div>
+
                         <div class="col-12">
                             <div class="mb-3">
                                 <label for="">Giới thiệu truyện</label>
-                                <fvn-text-editor v-model="itemDetail.description" label="Giới thiệu truyện"></fvn-text-editor>
+                                <fvn-text-editor v-model="itemDetail.description"
+                                    label="Giới thiệu truyện"></fvn-text-editor>
                             </div>
                         </div>
                         <div class="col-12">
@@ -229,9 +276,100 @@ use App\Enums\StatusStory;
 
             </div>
         </template>
+        {{-- Form Thêm và sửa truyện End --}}
+
+        {{-- Form phân quyền các bộ truyện bị khóa Start --}}
+        <template v-if="screen=='role'">
+ 
+            <div class="card shadow mb-4 mt-2">
+                <div class="card-header py-3 d-flex justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Phân quyền đọc bộ truyện: @{{capitalizeFirstLetter(itemDetail.title)}}</h6>
+                    <button @click="screen = 'list'" type="button" class="btn-close bg-danger" ></button>
+                </div>
+                <div class="card-body mb-4">
+                    <div class="card-header py-3 bg-gradient-light d-flex align-items-center">
+                        <div class="col-6">
+                            <input v-model="keySearhUser" type="text" class="form-control" placeholder="Email hoặc biệt danh cần tìm kiếm">
+                        </div>
+                        <div class="col-6">
+                            <h6 class="m-0 font-weight-bold text-center text-success">Kết quả tìm kiếm các tài khoản</h6>
+                        </div>
+                    </div>
+                    <div v-if="loadingSearchUser" class="spinner-border text-success" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <div v-if="searchUserItems.length > 0" class="table-responsive">
+                        {{-- <div class="alert alert-success">Message</div> --}}
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Danh tính</th>
+                                    <th>Avatar</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item, index) in searchUserItems">
+                                    <td>@{{item.id}}</td>
+                                    <td>@{{item.email}}</td>
+                                    <td>@{{ item.name }}</td>
+                                    <td width="10%"><img :src="item.avatar_url" class="img-thumbnail w-100" /></td>
+                                    <td>
+                                         <a @click="handleCoppyrightUser(item, 'add')" class="btn btn-success mb-1" title="Thêm">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </a>
+                                    </td>
+                         
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="card-header py-3 bg-gradient-light d-flex align-items-center">
+                        <h6 class="m-0 font-weight-bold text-center text-success">Các tài khoản có quyền truy cập bộ truyện</h6>
+                    </div>
+              
+                    <div v-if="userItems.length > 0" class="table-responsive">
+                        {{-- <div class="alert alert-success">Message</div> --}}
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Danh tính</th>
+                                    <th>Avatar</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item, index) in userItems">
+                                    <td>@{{item.id}}</td>
+                                    <td>@{{item.email}}</td>
+                                    <td>@{{ item.name }}</td>
+                                    <td width="10%"><img :src="item.avatar_url" class="img-thumbnail w-100" /></td>
+                                    <td>
+                                         <a @click="handleCoppyrightUser(item, 'remove')" class="btn btn-danger mb-1" title="Thêm">
+                                            <i class="fa-regular fa-circle-xmark"></i>
+                                        </a>
+                                    </td>
+                         
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <fvn-paging :page="getCoppyrightPaging.page" :per_page="getCoppyrightPaging.per_page" :total="getCoppyrightPaging.total"
+                    @change-limit="changeCoppyrightLimit" @change-page="(page) => nextCoppyrightPage(page)"></fvn-paging>
+            </div>
+        </template>
+        {{-- Form phân quyền các bộ truyện bị khóa End --}}
 
     </div>
-    
+
     <script src="{{ asset('backend/js/manager_stories.js?version=' . FVN_VERSION_LARAVEL) }}"></script>
 @endsection
 

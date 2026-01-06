@@ -44,7 +44,11 @@ class Comment extends Model
 
     public function scopeGetByStory($query, $story_id)
     {
-        $query->where('story_id', $story_id);
+        if (is_array($story_id)) {
+            $query->whereIn('comments.story_id', $story_id);
+        } else {
+            $query->where('comments.story_id', $story_id);
+        }
         return $query;
     }
     public function scopeGetByUser($query, $user_id)
@@ -55,9 +59,9 @@ class Comment extends Model
     public function scopeGetByParent($query, $parent_id)
     {
         if (is_array($parent_id)) {
-            $query->whereIn('parent_id', $parent_id);
+            $query->whereIn('comments.parent_id', $parent_id);
         } else {
-            $query->where('parent_id', $parent_id);
+            $query->where('comments.parent_id', $parent_id);
         }
         return $query;
     }

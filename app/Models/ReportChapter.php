@@ -27,7 +27,11 @@ class ReportChapter extends Model
     }
 
     public function scopeGetByStory($query, $story_id) {
-        $query->where('report_chapters.story_id', $story_id);
+        if (is_array($story_id)) {
+            $query->whereIn('report_chapters.story_id', $story_id);
+        } else {
+            $query->where('report_chapters.story_id', $story_id);
+        }
         return $query;
     }
 

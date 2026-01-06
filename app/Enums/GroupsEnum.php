@@ -117,6 +117,14 @@ final class GroupsEnum extends Enum
         [
             'role' => 'admin.stories.handleListStories',
             'name' => 'Xử lý theo danh sách'
+        ],
+        [
+            'role' => 'admin.stories.handleCoppyrightStories',
+            'name' => 'Xử lý các bộ truyện có bản quyền'
+        ],
+        [
+            'role' => 'admin.stories.getCoppyRightStoryItems',
+            'name' => 'Danh sách các tài khoản được xem bộ truyện'
         ]
     ]];
     const CHAPTER =   ['value' => 'Quản lý các chương truyện', 'permission' => [

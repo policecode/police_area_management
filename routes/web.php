@@ -62,6 +62,9 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
             Route::post('/update/{story}', 'StoriesController@update')->name('update')->middleware('can:admin.stories.update');
             Route::delete('/{story}', 'StoriesController@destroy')->name('destroy')->middleware('can:admin.stories.destroy');
             Route::post('/handle-list-stories', 'StoriesController@handleListStories')->name('handleListStories')->middleware('can:admin.stories.handleListStories');
+            Route::post('/handle-coppyright-stories', 'CoppyrightStoryController@handleCoppyrightStories')->name('handleCoppyrightStories')->middleware('can:admin.stories.handleCoppyrightStories');
+            Route::get('/get-coppyright-story-items', 'CoppyrightStoryController@getItems')->name('getCoppyRightStoryItems')->middleware('can:admin.stories.getCoppyRightStoryItems');
+
         });
         // Route::resource('stories', 'StoriesController');
 
@@ -143,7 +146,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
 
 
 // 'throttle:30,1', visit_website
-Route::group(['middleware' => ['throttle:60,1']], function() {
+Route::group(['middleware' => ['throttle:30,1']], function() {
     Route::get('/test_client', function (Request $request) {
         dd($request->ips());
             // $respones = downloadImageFromUrl('https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482752AXp/anh-mo-ta.png', 'member/avatar/');
@@ -189,7 +192,7 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
 });
 
 // Member Auth
-Route::group(['middleware' => ['throttle:60,1']], function() {
+Route::group(['middleware' => ['throttle:20,1']], function() {
        // Login bằng mạng xã hội
     Route::get('/auth/google', [MemberLoginController::class, 'redirectSocialiteGoogle'])->name('auth.socialite.google');
     Route::get('/auth/google/callback', [MemberLoginController::class, 'loginSocialiteGoogle'])->name('auth.socialite.google.callback');
@@ -228,7 +231,7 @@ Route::group(['middleware' => ['throttle:60,1']], function() {
 });
 
 // Member Action
-Route::group(['middleware' => ['throttle:60,1']], function() {
+Route::group(['middleware' => ['throttle:20,1']], function() {
     // Comment
     Route::get('/api/member/list-comment', [MemberCommentController::class, 'getListComments']);
     Route::post('/api/member/post-comment', [MemberCommentController::class, 'postComment']);

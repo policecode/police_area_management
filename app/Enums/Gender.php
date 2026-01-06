@@ -13,7 +13,7 @@ final class Gender extends Enum
 {
     const MALE =   ['key' => 1, 'value' => 'Nam'];
     const FEMALE =   ['key' => 2, 'value' => 'Nữ'];
-    const UNKNOƯN =   ['key' => 3, 'value' => 'Không xác định'];
+    const UNKNOWN =   ['key' => 3, 'value' => 'Không xác định'];
 
     public static function getValueByKey($key)
     {
