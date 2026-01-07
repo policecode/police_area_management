@@ -4,6 +4,7 @@
 /public/stories
 /public/member
 /public/photos
+/public/ads.txt
 /storage/*.key
 /vendor
 .env
