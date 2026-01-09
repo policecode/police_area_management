@@ -1,1 +1,12 @@
-<iframe src="https://breakingscattered.com/ba9tsjz57q?key=818cfcf56f6443453609b2bc4142f45b" autoplay=”true” target=”_blank”  width="100%" frameborder="0"></iframe>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8382233036922182"
+     crossorigin="anonymous"></script>
+<!-- hachoangdaide chapter -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-8382233036922182"
+     data-ad-slot="5487456276"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>

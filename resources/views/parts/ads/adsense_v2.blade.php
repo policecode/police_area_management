@@ -1,1 +1,10 @@
-<iframe src="https://breakingscattered.com/f33kppcw?key=089d23c6ebaf4f5f8a92a8625af38b37" autoplay=”true” target=”_blank”  width="100%" frameborder="0"></iframe>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8382233036922182"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-8382233036922182"
+     data-ad-slot="6119651446"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>

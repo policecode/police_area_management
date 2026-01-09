@@ -22,7 +22,9 @@ $user = Auth::user();
         var apiUrlChapter =
             '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
     </script>
-
+      {{-- Quảng cáo adsense Start --}}
+        @include('parts.ads.adsense_v1')
+    {{-- Quảng cáo adsense End --}}
     <div id="app_chapter"
         :style="{
                backgroundColor: styles.backgroundColor,
@@ -56,6 +58,7 @@ $user = Auth::user();
                         @endforeach
                     </select>
                 </div>
+          
 
                 <div id="chapter-content_s"
                     style="font-size:18px;line-height:24px;font-family:Roboto;">
@@ -83,6 +86,8 @@ $user = Auth::user();
                         {{-- {!! $chaper['content'] !!} --}}
                     </div>
                 </div>
+
+                
             </div>
             <div class="container chapter-page-apply" style="">
     
@@ -230,6 +235,9 @@ $user = Auth::user();
             </div>
         </div>
     </div>
+    {{-- Quảng cáo adsense Start --}}
+        @include('parts.ads.adsense_v2')
+    {{-- Quảng cáo adsense End --}}
     {{-- Comment Start --}}
         {{-- <div class="container mt-6">
                 <div id="comment-chapter-box"

@@ -1,1 +1,0 @@
-<iframe src="https://breakingscattered.com/f285hx36?key=e86dd7f081993900d30d107cbbfc7980" autoplay=”true” target=”_blank”  width="100%" frameborder="0"></iframe>

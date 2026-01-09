@@ -29,11 +29,9 @@ class StoriesController extends Controller
                 $isCoppyright =CoppyrightStory::GetByUser($user->id)->GetByStory($story['id'])->first();
                 if (!$isCoppyright) {
                     return true;
-                    return view('client_page.coppyright', $dataView);
                 }
             } else {
                 return true;
-                return view('client_page.coppyright', $dataView);
             }
         }
         return false;
@@ -47,7 +45,14 @@ class StoriesController extends Controller
     {
         // $option = SettingHelpers::getInstance();
         $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
-        
+        if (!$story) {
+            // dd($story);
+            abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
+        }
+        $isCoppyright = $this->isCoppyrightStory($story);
+        if ($isCoppyright) {
+            abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
+        }
         $story->thumbnail = asset($story->thumbnail);
  
         $story = $story->toArray();
@@ -117,10 +122,7 @@ class StoriesController extends Controller
             'first_chapter' => $first_chapter,
             'star_ratings' => $starRatings
         );
-        $isCoppyright = $this->isCoppyrightStory($story);
-        if ($isCoppyright) {
-            return view('client_page.coppyright', $dataView);
-        }
+        
         return view('client_page.stories', $dataView);
 
     }
