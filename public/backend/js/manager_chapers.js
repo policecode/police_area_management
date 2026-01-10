@@ -202,6 +202,20 @@ var app = new Vue({
                 jAlert(jsonData.message);
             }
         },
+        async handleContentLength(e) {
+            e.preventDefault()
+            
+            this.loading = true;
+            jsonData = await new RouteApi().get(`${FVN_LARAVEL_HOME}/api/manager/stories/auto-convert-content-length-chapter/${this.story.id}` );
+            this.loading = false;
+
+             if (jsonData.status) {
+                this.getItems();
+                jnotice(jsonData.message);
+            } else {
+                jAlert(jsonData.message);
+            }
+        },
         async save(e) {
             e.preventDefault()
             this.loading = true;

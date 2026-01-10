@@ -432,24 +432,31 @@ class StoriesController extends Controller
         }
     }
 
-    public function autoConvertContentLength()
+    public function autoConvertContentLength(Request $request, $story)
     {
-        $count = Chaper::count();
-        $per_page = 100;
-        $totalPage = ceil($count / $per_page);
-        $incrent = 0;
-        for ($page = 0; $page < $totalPage; $page++) {
-            $listStory = Chaper::skip($page * $per_page)->take($per_page)->get();
-            foreach ($listStory as $key => $chapter) {
-                $chapter->content_length = count(explode(" ", $chapter->content));
-                $chapter->update();
-                $incrent++;
+        try {
+            $count = Chaper::GetByStory($story)->count();
+            $per_page = 100;
+            $totalPage = ceil($count / $per_page);
+            $incrent = 0;
+            for ($page = 0; $page < $totalPage; $page++) {
+                $listStory = Chaper::GetByStory($story)->skip($page * $per_page)->take($per_page)->get();
+                foreach ($listStory as $key => $chapter) {
+                    $chapter->content_length = count(explode(" ", $chapter->content));
+                    $chapter->update();
+                    $incrent++;
+                }
             }
+            return response()->json([
+                'message' => 'Cập nhật thành công: ' . $incrent.' chương',
+                'status' => 1,
+            ]);
+        } catch (\Throwable $th) {
+             return response()->json([
+                'message' => $th->getMessage(),
+                'status' => 0,
+            ]);
         }
-        return response()->json([
-            'message' => 'Cập nhật thành công: ' . $incrent.' chương',
-            'status' => 1,
-        ]);
     }
 
     public function autoConvertTotalChapter()

@@ -25,6 +25,7 @@ class Chaper extends Model
         $query->where('position', $position);
         return $query;
     }
+
     public function scopeGetByStory($query, $story_id) {
         if (is_array($story_id)) {
             $query->whereIn('story_id', $story_id);

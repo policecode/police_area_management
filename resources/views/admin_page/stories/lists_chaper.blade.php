@@ -25,6 +25,7 @@
                 <span v-else>Xóa theo vị trí</span>
             </a>
             <a @click="changeScreen('import')" class="btn btn-success">Import Chương</a>
+            <a @click="handleContentLength" class="btn btn-success">Content Length</a>
             
            <template v-if="position.screen">
             <div>
