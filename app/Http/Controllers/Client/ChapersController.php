@@ -44,7 +44,12 @@ class ChapersController extends Controller
             $story['is_convert'] = false;
         }
         $chaperList = Chaper::selectNotContent()->getByStory($story['id'])->orderBy('position', 'ASC')->get();
-        $chaper = Chaper::getByPosition($chaper_position)->getByStory($story['id'])->first()->toArray();
+        $chaper = Chaper::getByPosition($chaper_position)->getByStory($story['id'])->first();
+        if (!($chaper->content_length > 0)) {
+            $chaper->content_length = count(explode(" ", $chaper->content));
+            $chaper->update();
+        }
+        $chaper = $chaper->toArray();
         $linkPrev = '#';
         $linkNext = '#';
         for ($i = 0; $i < count($chaperList); $i++) {
@@ -60,9 +65,8 @@ class ChapersController extends Controller
             # code...
         }
         $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $chaper['position']]);
-        $arrContent = explode(" ", $chaper['content']);
-        $chaper['content_length'] = count($arrContent);
-        // dd($chaper['content']);
+        
+        // dd($chaper['content_length']);
         if (!$is_admin) {
             $chaper['content'] = $this->addAdsToContent($chaper['content']);
         }

@@ -34,7 +34,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
             Route::post('/tool-upload-chaper/{story}', 'StoriesController@toolUploadChaper');
             Route::get('/auto-destroy-story-by-category/{category_slug}', 'StoriesController@autoDestroyStoryByCategory');
             Route::get('/auto-convert-total-chapter', 'StoriesController@autoConvertTotalChapter');
-            Route::get('/auto-convert-percentage-view', 'StoriesController@autoConvertPercentageView');
+            Route::get('/auto-convert-content-length-chapter', 'StoriesController@autoConvertContentLength');
             Route::delete('/auto_delete_{story}', 'StoriesController@destroy');
         });
 

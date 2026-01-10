@@ -87,6 +87,7 @@ class ChaperController extends Controller
                 'slug' => $data['slug'],
                 'story_id' => $story->id,
                 'content' => $data['content'],
+                'content_length' => count(explode(" ", $data['content'])),
                 'position' => $data['position']
             ]);
             $total_chapter = $story->total_chapter + 1;
@@ -143,6 +144,7 @@ class ChaperController extends Controller
 
             DB::beginTransaction();
             $data = $validator->validated();
+            $data['content_length'] = count(explode(" ", $data['content']));
             $chaper->update($data);
 
             DB::commit();

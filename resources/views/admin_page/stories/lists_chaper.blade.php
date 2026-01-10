@@ -78,7 +78,13 @@
                                 <tr>
                                     <th></th>
                                     <th>Chương</th>
-                                    <th>Đường dẫn tĩnh</th>
+                                    <th>
+                                        <a  @click="orderBy('content_length')" class="link-offset-1">
+                                            Số từ trong chương
+                                            <i v-if="isOrder('content_length', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('content_length', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
                                     <th>
                                         <a  @click="orderBy('position')" class="link-offset-1">
                                             Vị trí
@@ -107,7 +113,7 @@
                                 <tr>
                                     <th></th>
                                     <th>Chương</th>
-                                    <th>Đường dẫn tĩnh</th>
+                                    <th>Số từ trong chương</th>
                                     <th>Vị trí</th>
                                     <th>Số lượt xem</th>
                                     <th>Cập nhật gần đây nhất</th>
@@ -118,7 +124,7 @@
                                 <tr v-for="(item, index) in items">
                                     <td>@{{ index + 1 }}</td>
                                     <td>@{{ item.name }}</td>
-                                    <td>@{{ item.slug }}</td>
+                                    <td>@{{ item.content_length }}</td>
                                     <td>@{{ item.position }}</td>
                                     <td>@{{ item.view }}</td>
                                     <td>@{{ displayDate(item.updated_at) }}</td>

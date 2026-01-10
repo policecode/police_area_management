@@ -432,36 +432,23 @@ class StoriesController extends Controller
         }
     }
 
-    public function autoConvertPercentageView()
+    public function autoConvertContentLength()
     {
-        DB::beginTransaction();
-        $all_views_days = ViewDay::joinStory()->get();
-        foreach ($all_views_days as $key => $item) {
-            $item->percentage = round(($item->view / $item->total_chapter) * 100, 1);
-            $item->update();
-        }
-        $all_views_weeks = ViewWeek::joinStory()->get();
-        foreach ($all_views_weeks as $key => $item) {
-            $item->percentage = round(($item->view / $item->total_chapter) * 100, 1);
-            $item->update();
-        }
-        $all_views_months = ViewMonth::joinStory()->get();
-        foreach ($all_views_months as $key => $item) {
-            $item->percentage = round(($item->view / $item->total_chapter) * 100, 1);
-            $item->update();
-        }
-        $stories = Story::get();
-        foreach ($stories as $key => $item) {
-            if ($item->view_count > 0) {
-                $item->total_percentage = round(($item->view_count / $item->total_chapter) * 100, 1);
-                $item->update();
+        $count = Chaper::count();
+        $per_page = 100;
+        $totalPage = ceil($count / $per_page);
+        $incrent = 0;
+        for ($page = 0; $page < $totalPage; $page++) {
+            $listStory = Chaper::skip($page * $per_page)->take($per_page)->get();
+            foreach ($listStory as $key => $chapter) {
+                $chapter->content_length = count(explode(" ", $chapter->content));
+                $chapter->update();
+                $incrent++;
             }
         }
-        DB::commit();
-
         return response()->json([
+            'message' => 'Cập nhật thành công: ' . $incrent.' chương',
             'status' => 1,
-            'message' => 'Convert Percentage success',
         ]);
     }
 
@@ -640,6 +627,7 @@ class StoriesController extends Controller
                         'user_id' => 1,
                         'slug' => Str::slug($chaper_obj['name'], "-"),
                         'story_id' => $story->id,
+                        'content_length' => count(explode(" ", $chaper_obj['content'])),
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
                     ));
