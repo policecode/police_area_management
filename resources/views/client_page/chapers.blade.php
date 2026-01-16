@@ -23,7 +23,9 @@ $user = Auth::user();
             '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
     </script>
       {{-- Quảng cáo adsense Start --}}
+      @if ((bool) env('IS_ADSENSE', false))
         @include('parts.ads.adsense_v1')
+      @endif
     {{-- Quảng cáo adsense End --}}
     <div id="app_chapter"
         :style="{
@@ -236,7 +238,9 @@ $user = Auth::user();
         </div>
     </div>
     {{-- Quảng cáo adsense Start --}}
+    @if ((bool) env('IS_ADSENSE', false))
         @include('parts.ads.adsense_v2')
+    @endif
     {{-- Quảng cáo adsense End --}}
     {{-- Comment Start --}}
         {{-- <div class="container mt-6">
