@@ -189,7 +189,9 @@ var app = new Vue({
                 let jsonData = await new RouteApi().get(
                     `${FVN_LARAVEL_HOME}/admin/author/get-items?keyword=${newKey}&per_page=5`
                 );
-                this.searchUserItems = jsonData.data;
+                this.authors = jsonData.data;
+                console.log(this.authors);
+                
             }, 300);
         },
         nextPage(page) {
