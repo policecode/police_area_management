@@ -182,7 +182,11 @@ class HomeController extends Controller
                 $item->thumbnail = route('index') . '/' . $item->thumbnail;
                 $item->url = route('client.story', ['story_slug' => $item->slug]);
                 $item->author_url = route('client.author', ['author_slug' => $item->author_slug]);
-                $item->chapter_url = route('client.chaper', ['story_slug' => $item['slug'], 'chaper_position' => $item['position']]);
+                if ($item['position']) {
+                    $item->chapter_url = route('client.chaper', ['story_slug' => $item['slug'], 'chaper_position' => $item['position']]);
+                } else {{
+                    $item->chapter_url = '';
+                }}
                 $dt = new Carbon($item->created_at); //Tạo 1 datetime
                 $item->after_day = $now->diffInDays($dt);
                 $isResult = strpos($item->title, '(c)');
