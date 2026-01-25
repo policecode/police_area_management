@@ -208,7 +208,11 @@ class ProfileController extends Controller
                     $item->story_url =  route('client.story', ['story_slug' => $item->story_slug]);
                     $item->author_url =  route('client.author', ['author_slug' => $item->author_slug]);
                     if ($status == 'read') {
-                        $item->chapter_url =  route('client.chaper', ['story_slug' => $item->story_slug, 'chaper_position' => $item->chapter_position]);
+                        if ($item->chapter_position) {
+                            $item->chapter_url =  route('client.chaper', ['story_slug' => $item->story_slug, 'chaper_position' => $item->chapter_position]);
+                        } else {
+                            $item->chapter_url =  '#';
+                        }
                     }
              
                     $isResult = strpos($item->title, '(c)');

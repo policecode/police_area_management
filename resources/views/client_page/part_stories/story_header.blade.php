@@ -46,7 +46,9 @@
                 <div class="story-info lg:text-[0.875rem] mb-2">
                     {{-- <span class="text-[#dc3545] mr-2">1.538.521 chữ</span> --}}
                     <span class="text-[#28a745] mr-2">{{ $story['total_chapter'] }} chương</span>
-                    <span class="text-[#007bff]">{{ $story['view_count'] }} Đọc</span>
+                    <span class="text-[#007bff] mr-2">{{ $story['view_count'] }} Đọc</span>
+                    <span class="text-[#d31f1f]">{{ $story['total_favorite'] }} Lưu</span>
+
                 </div>
                 {{-- <p class="text-[#28a745] mb-2">
                                 <span class="font-bold">0</span>

@@ -147,12 +147,16 @@
             },
 
             capitalizeFirstLetter(string) {
-                const words = string.split(" ");
-                for (let i = 0; i < words.length; i++) {
-                    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+                if (string.trim()) {
+                    const words = string.split(" ");
+                    for (let i = 0; i < words.length; i++) {
+                        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+                    }
+                    string = words.join(" ");
+                    return string;
+                } else {
+                    return '';
                 }
-                string = words.join(" ");
-                return string;
             }
         },
         watch: {
