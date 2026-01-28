@@ -98,6 +98,15 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
             Route::delete('/{category}', 'CategoryController@destroy')->name('destroy')->middleware('can:admin.category.destroy');
         });
 
+        // Comments
+        Route::prefix('comments')->name('comments.')->group(function () {
+            Route::get('/', 'CommentsController@index')->name('index')->middleware('can:admin.comments.getItems');
+            Route::get('/get-items', 'CommentsController@getItems')->name('getItems')->middleware('can:admin.comments.getItems');
+            // Route::post('/', 'CommentsController@store')->name('store')->middleware('can:admin.comments.store');
+            // Route::put('/{comments}', 'CommentsController@update')->name('update')->middleware('can:admin.comments.update');
+            Route::delete('/{comments}', 'CommentsController@destroy')->name('destroy')->middleware('can:admin.comments.destroy');
+        });
+
         // Setting
         Route::get('/settings', 'SettingController@index')->name('setting.index')->middleware('can:admin.setting.pageOne');
         Route::post('/settings/page-one', 'SettingController@settingPageOne')->name('setting.pageOne')->middleware('can:admin.setting.pageOne');
