@@ -6,6 +6,8 @@
                             data-colorscheme="dark" data-numposts="10" data-mobile="true"></div> --}}
      <p class="text-[1.125rem] md:text-[1.25rem] mb-4 font-bold text[rgba(0,0,0,0.8)]">Bình luận (@{{story.total_comment}})</p>
      <div class="simple-comment-box">
+        <p class="mb-2 text-center font-medium">** Đạo hữu nào thấy có vấn đề ở bộ truyện thì để lại bình luận cho mình sớm khắc phục nhé.</p>
+
          <div v-if="user" class="simple-form-comment executed" style="align-items: stretch;" target="0">
              <div class="list-tag-user">
              </div>
