@@ -47,6 +47,8 @@
         'child_route' => [
             ['page' => 'admin.author.index', 'title' => 'Danh sách tác giả'],
             ['page' => 'admin.category.index', 'title' => 'Thể loại truyện'],
+            ['page' => 'admin.comments.index', 'title' => 'Quản lý bình luận'],
+
         ],
     ])
     @include('parts.backend.item_page', [

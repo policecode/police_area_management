@@ -97,6 +97,25 @@ final class GroupsEnum extends Enum
         ],
     ]];
 
+    const COMMENTS =   ['value' => 'Quản lý bình luận', 'permission' => [
+        [
+            'role' => 'admin.comments.getItems',
+            'name' => 'Xem'
+        ],
+        [
+            'role' => 'admin.comments.store',
+            'name' => 'Thêm mới'
+        ],
+        [
+            'role' => 'admin.comments.update',
+            'name' => 'Cập nhật'
+        ],
+        [
+            'role' => 'admin.comments.destroy',
+            'name' => 'Xóa'
+        ],
+    ]];
+
     const STORY =   ['value' => 'Quản lý Bộ truyện', 'permission' => [
         [
             'role' => 'admin.stories.getItems',

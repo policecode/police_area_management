@@ -146,7 +146,7 @@ class Comment extends Model
             $item->url_avatar = $item->avatar ? asset($item->avatar) : asset('assets/images/avatar_default.png');
             $item->url_profile = route('member.profile', ['user_id' => $item->user_id]);
             $item->url_ask_avatar = $item->ask_avatar ? asset($item->ask_avatar) : asset('assets/images/avatar_default.png');
-            $item->url_ask_profile = route('member.profile', ['user_id' => $item->ask_user_id]);
+            $item->url_ask_profile = $item->ask_user_id ? route('member.profile', ['user_id' => $item->ask_user_id]) : null;
             $item->after_minutes = $now->diffInMinutes(new Carbon($item->created_at));
         })->groupBy('parent_id')->toArray();
         return $resutls;
