@@ -95,6 +95,9 @@ $option = SettingHelpers::getInstance();
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v21.0&appId=8969948979690020"></script>
     @include('parts.ads.adsense_social')
     @yield('scripts')
+
+    @include('parts.client.adSecurity')
+
 </body>
 
 </html>

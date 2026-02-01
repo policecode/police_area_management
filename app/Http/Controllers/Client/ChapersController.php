@@ -96,7 +96,12 @@ class ChapersController extends Controller
             'breadcrumb' => $breadcrumb,
             'is_admin' => $is_admin
         );
-        return view('client_page.chapers', $dataView);
+
+        if ($chaper_position <= 100 || $user) {
+            return view('client_page.chapers', $dataView);
+        } else {
+            return view('client_page.chapers_errors', $dataView);
+        }
     }
 
     public function addAdsToContent($content) {

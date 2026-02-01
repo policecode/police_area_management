@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Client\AdSecurityController;
 use App\Http\Controllers\Client\ChapersController AS ChapersClientController;
 use App\Http\Controllers\Client\AuthorController AS AuthorClientController;
 use App\Http\Controllers\Client\CategoriesController AS CategoriesClientController;
@@ -123,7 +124,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
 Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
-
+// Endpoint để ghi nhận click chuột
+Route::post('/log-ad-click', [AdSecurityController::class, 'logClick'])->name('ads.log');
 
 // Auth
 Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], function() {

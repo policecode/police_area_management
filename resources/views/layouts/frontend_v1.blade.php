@@ -96,6 +96,8 @@ $option = SettingHelpers::getInstance();
     @include('parts.ads.adsense_social')
     {{-- @include('parts.ads.adsense_popunder') --}}
     @yield('scripts')
+
+    @include('parts.client.adSecurity')
 </body>
 
 </html>
