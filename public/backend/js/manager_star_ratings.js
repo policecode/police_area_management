@@ -5,9 +5,8 @@ var vue_data = {
     getItemUrl: '',
     items: [],
     screen: 'list',
-    itemDetail: {
-        group_id: ""
-    },
+    itemDetail: { },
+    files: {},
     listId: [],
     errors: {},
     queryToDate: '',
@@ -17,14 +16,25 @@ var vue_data = {
         page: 1,
         per_page: 20,
         keyword: '',
+        parent_id: '0',
+        story: '',
+        user: '',
         order_by: 'id',
         order_type: 'DESC'
     },
-    apiUrl: FVN_LARAVEL_HOME + '/admin/users'
+    apiUrl: FVN_LARAVEL_HOME + '/admin/star-ratings',
+    stories: [],
+    users: [],
+    multiselect: {
+        story: null,
+        user: null,
+    },
+    pointInTime: null,
+
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
 // Vue.component('datepicker', vuejsDatepicker);
-// Vue.component('multiselect', window.VueMultiselect.default);
+Vue.component('multiselect', window.VueMultiselect.default);
 // Vue.component('star-rating', VueStarRating.default);
 var app = new Vue({
     el: '#app',
@@ -37,6 +47,9 @@ var app = new Vue({
     computed: {
     },
     methods: {
+        convertStringAfterTime(after_minutes) {
+                 return getStringAfterTime(after_minutes, 'vi');
+             },
         updateQueryFromUrl() {
             if (window.location.hash) {
                 let querySearch = queryToObject(window.location.hash.substring(1));
@@ -51,20 +64,22 @@ var app = new Vue({
         },
         showItem(item) {
             this.itemDetail = item;
-            this.screen = 'detail';
+            this.screen = 'comment_childs';
         },
         closeItem() {
-            this.itemDetail = {
-                group_id: ""
-            };
+            this.itemDetail = { };
             this.errors = {};
             this.screen = 'list';
         },
         async deleteItem(item) {
-            if (confirm(`Do you want to delete the User: ${item.email}`)) {
-                let jsonData = await new RouteApi().delete(`${this.apiUrl}/delete/${item.id}`, {});
-                jnotice(jsonData.message);
-                this.getItems();
+            if (confirm(`Do you want to delete the Star Rating: ${item.name}`)) {
+                let jsonData = await new RouteApi().delete(`${this.apiUrl}/${item.id}`, {});
+                if (jsonData.status) {
+                    jnotice(jsonData.message);
+                    this.getItems();
+                } else {
+                    jAlert(jsonData.message);
+                }
             }
         },
         searchItem() {
@@ -76,6 +91,8 @@ var app = new Vue({
             this.buildQueryItem();
             const jsonData = await new RouteApi().get(this.getItemUrl)
             this.loading = false;
+            // console.log(jsonData);
+            
             if (jsonData.result) {
                 this.items = jsonData.data;
                 if (this.itemDetail.id) {
@@ -116,20 +133,28 @@ var app = new Vue({
             }
             return this[this.currentAction]();
         },
-        async save() {
+        async save(e) {
             this.loading = true;
             let jsonData;
             if (this.itemDetail.id) {
-                jsonData = await new RouteApi().put(`${this.apiUrl}/update/${this.itemDetail.id}`,this.itemDetail )
+                jsonData = await new RouteApi().put(`${this.apiUrl}/${this.itemDetail.id}`,this.itemDetail )
             } else {
-                jsonData = await new RouteApi().post(`${this.apiUrl}/create`,this.itemDetail );
+                jsonData = await new RouteApi().post(`${this.apiUrl}`,this.itemDetail );
             }
             this.loading = false;
+            
             if (jsonData.status) {
                 jnotice(jsonData.message);
-                if (this.itemDetail.id) {
-                    this.itemDetail = jsonData.data;
-                } else {
+                this.itemDetail = jsonData.data;
+                let flag = true;
+                for (i in this.items) {
+                    if (this.items[i].id == this.itemDetail.id) {
+                        flag = false;
+                        this.items[i] = this.itemDetail;
+                        break;
+                    }
+                }
+                if (flag) {
                     this.items.unshift(jsonData.data)
                 }
                 this.closeItem();
@@ -143,7 +168,7 @@ var app = new Vue({
         displayDate(date, timezone) {
             if (date) {
                 if (timezone) {
-                    return format_date(date, 'h:i d-m-Y', true)
+                    return format_date(date, 'Y-m-d h:i:s', true)
                 } else {
                     return format_date(date)
                 }
@@ -189,8 +214,10 @@ var app = new Vue({
                 if (i == 'book_date_min' || i == 'book_date_max') {
                     value = format_date(value);
                 }
-                paramSearch[i] = value
-                this.getItemUrl += '&' + i + '=' + value;
+                if (value) {
+                    paramSearch[i] = value
+                    this.getItemUrl += '&' + i + '=' + value;
+                }
             }
 
             paramSearch['order_by'] = this.querySearch.order_by
@@ -208,18 +235,56 @@ var app = new Vue({
                 page: 1,
                 per_page: 20,
                 keyword: '',
+                parent_id: '0',
+                story: '',
+                user: '',
                 order_by: 'id',
                 order_type: 'DESC'
             };
             this.searchItem();
         },
-        formatMoney(value) {
-            return formatMoney(value);
+        async getStories(newKey) {
+            if (this.pointInTime) {
+                clearTimeout(this.pointInTime);
+            }
+            this.pointInTime = setTimeout(async () => {
+                let jsonData = await new RouteApi().get(
+                    `${FVN_LARAVEL_HOME}/admin/stories/get-items?keyword=${newKey}&per_page=5`
+                );
+                this.stories = jsonData.data;
+                // console.log(this.stories);
+                
+            }, 300);
+        },
+        async getUsers(newKey) {
+            if (this.pointInTime) {
+                clearTimeout(this.pointInTime);
+            }
+            this.pointInTime = setTimeout(async () => {
+                let jsonData = await new RouteApi().get(
+                    `${FVN_LARAVEL_HOME}/admin/users/get-items?keyword=${newKey}&per_page=5`
+                );
+                this.users = jsonData.data;
+                // console.log(this.users);
+                
+            }, 300);
         },
 
     },
     watch: {
-
-
-    },
+        'multiselect.story': function (newVal) {
+            if (newVal) {
+                this.querySearch.story = newVal.id;
+            } else {
+                this.querySearch.story = '';
+            }
+        },
+        'multiselect.user': function (newVal) {
+            if (newVal) {
+                this.querySearch.user = newVal.id;
+            } else {
+                this.querySearch.user = '';
+            }
+        },
+    }
 });

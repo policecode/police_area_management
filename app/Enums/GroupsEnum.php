@@ -116,6 +116,25 @@ final class GroupsEnum extends Enum
         ],
     ]];
 
+    const STARRATINGS =   ['value' => 'Quản lý đánh giá', 'permission' => [
+        [
+            'role' => 'admin.starRatings.getItems',
+            'name' => 'Xem'
+        ],
+        [
+            'role' => 'admin.starRatings.store',
+            'name' => 'Thêm mới'
+        ],
+        [
+            'role' => 'admin.starRatings.update',
+            'name' => 'Cập nhật'
+        ],
+        [
+            'role' => 'admin.starRatings.destroy',
+            'name' => 'Xóa'
+        ],
+    ]];
+
     const STORY =   ['value' => 'Quản lý Bộ truyện', 'permission' => [
         [
             'role' => 'admin.stories.getItems',

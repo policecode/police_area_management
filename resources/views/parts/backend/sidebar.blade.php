@@ -48,7 +48,7 @@
             ['page' => 'admin.author.index', 'title' => 'Danh sách tác giả'],
             ['page' => 'admin.category.index', 'title' => 'Thể loại truyện'],
             ['page' => 'admin.comments.index', 'title' => 'Quản lý bình luận'],
-
+            ['page' => 'admin.starRatings.index', 'title' => 'Quản lý đánh giá sao'],
         ],
     ])
     @include('parts.backend.item_page', [

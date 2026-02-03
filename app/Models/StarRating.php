@@ -12,6 +12,8 @@ class StarRating extends Model
     protected $appends = [];
     private $joinUser = false;
     private $joinStory = false;
+    private $joinStoryAndUser = false;
+
 
     public $filterKeywords = []; // Sử dụng trong trường hợp có trường keyword
     public $filterFields  = ['user_id', 'story_id']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
@@ -67,6 +69,22 @@ class StarRating extends Model
         }); 
 
         $this->joinStory = true;
+        return $query;
+    }
+
+    public function scopeJoinStoryAndUser($query) {
+        if ($this->joinStory ) {
+            return $query;
+        }
+        $query->select('star_ratings.*', 's.title', 's.slug', 'u.name')
+        ->leftJoin('stories as s', function($join) {
+            $join->on('star_ratings.story_id', '=', 's.id');
+        })
+        ->leftJoin('users as u', function($join) {
+            $join->on('star_ratings.user_id', '=', 'u.id');
+        });
+
+        $this->joinStoryAndUser = true;
         return $query;
     }
 }

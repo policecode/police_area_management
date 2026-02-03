@@ -88,9 +88,21 @@
         <template v-if="screen=='detail'">
             <div>
                 <form @submit="save">
-                    <legend v-if="itemDetail.id" class="text-primary">Thêm người dùng mới</legend>
+                    <legend v-if="itemDetail.id" v-else class="text-primary">Thêm người dùng mới</legend>
                     <legend v-else class="text-primary">Thêm người dùng mới</legend>
                     <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3 text-center">
+                               <img :src="itemDetail.avatar_url" alt="Avatar" style=" max-height: 100px;">
+                            </div>
+                        </div>
+
+                        <div class="col-6 text-center">
+                            <div class="mb-3">
+                               <img :src="itemDetail.banner_url" alt="Banner" style="max-height: 100px;">
+                            </div>
+                        </div>
+
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="">Tên</label>
@@ -131,6 +143,49 @@
                                 <div v-if="errors.password" class="invalid-feedback">@{{ errors.group_id[0] }}</div>
                             </div>
                         </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label>Ngày tạo</label>
+                                <div class="alert alert-primary">@{{ displayDate(itemDetail.created_at, true) }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label>Email Verified</label>
+                                <div class="alert alert-primary">@{{ displayDate(itemDetail.email_verified_at, true) }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label>Cảnh giới</label>
+                                <div class="alert alert-primary">@{{ itemDetail.level_info.name }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label>Linh lực</label>
+                                <div class="alert alert-primary">@{{ itemDetail.exp }}/@{{ itemDetail.level_info.next_exp }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label>Số bộ truyện đang đọc</label>
+                                <div class="alert alert-primary">@{{ itemDetail.total_story }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label>Số chương truyện đã đọc</label>
+                                <div class="alert alert-primary">@{{ itemDetail.total_chapter }}</div>
+                            </div>
+                        </div>
+
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Lưu lại</button>
                             <button @click="closeItem" class="btn btn-danger">Hủy</button>

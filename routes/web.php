@@ -108,6 +108,15 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
             Route::delete('/{comments}', 'CommentsController@destroy')->name('destroy')->middleware('can:admin.comments.destroy');
         });
 
+        // Star Ratings
+        Route::prefix('star-ratings')->name('starRatings.')->group(function () {
+            Route::get('/', 'StarRatingController@index')->name('index')->middleware('can:admin.starRatings.getItems');
+            Route::get('/get-items', 'StarRatingController@getItems')->name('getItems')->middleware('can:admin.starRatings.getItems');
+            // Route::post('/', 'StarRatingController@store')->name('store')->middleware('can:admin.starRatings.store');
+            // Route::put('/{starRating}', 'StarRatingController@update')->name('update')->middleware('can:admin.starRatings.update');
+            Route::delete('/{starRating}', 'StarRatingController@destroy')->name('destroy')->middleware('can:admin.starRatings.destroy');
+        });
+
         // Setting
         Route::get('/settings', 'SettingController@index')->name('setting.index')->middleware('can:admin.setting.pageOne');
         Route::post('/settings/page-one', 'SettingController@settingPageOne')->name('setting.pageOne')->middleware('can:admin.setting.pageOne');
