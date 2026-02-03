@@ -1,4 +1,4 @@
- <div class="basis-full xl:basis-1/4 px-2">
+ <div class="basis-full xl:basis-1/4 px-2 w-10">
      <div class="sidebar-story">
          @if (count($story_by_author))
              <div
@@ -59,7 +59,7 @@
                                                 class="fa-solid fa-star text-[#ffd700]"></i></span>
                                     </a>
                                 @endif
-                                 <span class="block text-[0.825rem] text-[#999] mt-1"> {{ $item['content'] }}</span>
+                                 <span class="block text-[0.825rem] text-[#999] mt-1" style="overflow-wrap: break-word;"> {{ $item['content'] }}</span>
 
                              </li>
                          @endforeach
