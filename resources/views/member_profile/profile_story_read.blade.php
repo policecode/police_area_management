@@ -24,7 +24,9 @@
                                         @endif
                                         {{ ucwords($item['story_title']) }}
                                     </a>
-                                    <a href="{{ route('client.chaper', ['story_slug' => $item['story_slug'], 'chaper_position' => $item['chapter_position']]) }}" class="text-[0.875rem] text-[#999] block">{{ ucwords($item['chapter_title']) }}</a>
+                                    @if ($item['chapter_position'])
+                                        <a href="{{ route('client.chaper', ['story_slug' => $item['story_slug'], 'chaper_position' => $item['chapter_position']]) }}" class="text-[0.875rem] text-[#999] block">{{ ucwords($item['chapter_title']) }}</a>
+                                    @endif
                                     <span class="text-[0.875rem] block mt-2">Mới nhất: {{ dateFormat($item['updated_at'], 'H:i:s d-m-Y') }}</span>
                                 </div>
                                 <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}" class="text-[0.75rem] text-[#999] inline-block">{{ ucwords($item['author_name']) }}</a>
@@ -35,6 +37,7 @@
                     @endforeach
        
                 </div>
+                @include('parts.template.paging_client_v1')
 
             </div>
         </div>

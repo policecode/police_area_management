@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Member;
 use App\Enums\FavoriteStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\CoppyrightStory;
 use App\Models\StarRating;
 use App\Models\User;
 use App\Models\UserReadStory;
@@ -104,7 +105,7 @@ class ProfileController extends Controller
     {
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 20,
+            'per_page' => 10,
             'order_by' => 'updated_at',
             'order_type' => 'DESC'
         );
@@ -146,7 +147,7 @@ class ProfileController extends Controller
     {
         $queryDefault = array(
             'page' => 1,
-            'per_page' => 20,
+            'per_page' => 10,
             'order_by' => 'updated_at',
             'order_type' => 'DESC'
         );
@@ -182,6 +183,48 @@ class ProfileController extends Controller
             'breadcrumb' => $breadcrumb
         );
         return view('member_profile.profile_story_favorites', $dataView);
+    }
+
+    public function mystoryCopyright(Request $request)
+    {
+        $queryDefault = array(
+            'page' => 1,
+            'per_page' => 20,
+            'order_by' => 'updated_at',
+            'order_type' => 'DESC'
+        );
+        $request->merge(array_merge($queryDefault, $request->query()));
+        $query = CoppyrightStory::JoinStory()->GetByUser(Auth::id());
+        $count = $query->count();
+        $collection = $query->filter($request)->get()->each(function ($item, $key) {
+            $isResult = strpos($item['story_title'], '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
+        });
+        // dd($collection->toArray());
+        $breadcrumb = [
+            [
+                "title" => "Trình quản trị",
+                "url" => route('member.profile_detail', [])
+            ],
+            [
+                "title" => 'Tàng Kinh Các',
+                "url" => ''
+            ]
+        ];
+        $dataView = array(
+            'page_title' => 'Công pháp đã mua',
+            'description' => 'Thông tin các bộ công pháp đã mua của bạn',
+            'records' => $collection,
+            'total_records' => $count,
+            'per_page' => $request->per_page,
+            'page' => $request->page,
+            'breadcrumb' => $breadcrumb
+        );
+        return view('member_profile.profile_story_copyright', $dataView);
     }
 
     public function callApiMyStory(Request $request)

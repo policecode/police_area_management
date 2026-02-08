@@ -6,11 +6,11 @@
                 class="block sm:min-w-[180px] text-center p-2 border-r-[1px] border-solid border-[#128c7e] bg-white text-[#128c7e] 
                 @if(request()->routeIs('member.mystory')) active @endif">Công pháp đã tu luyện</a>
         </li>
-        {{-- <li>
-            <a href="https://blhvip.vn/truyen-cua-toi/dang-mua" title="Truyện đang mua"
-                class="block sm:min-w-[180px] text-center p-2 border-r-[1px] border-solid border-[#128c7e] bg-white text-[#128c7e] ">Truyện
-                đang mua</a>
-        </li> --}}
+        <li>
+            <a href="{{route('member.mystory.copyright')}}" title="Công pháp bản quyền"
+                class="block sm:min-w-[180px] text-center p-2 border-r-[1px] border-solid border-[#128c7e] bg-white text-[#128c7e] 
+                @if(request()->routeIs('member.mystory.copyright')) active @endif">Công pháp đã mua</a>
+        </li>
         <li>
             <a href="{{route('member.mystory.favorites')}}" title="Công pháp đã lưu"
                 class="block sm:min-w-[180px] text-center p-2 border-r-[1px] border-solid border-[#128c7e] bg-white text-[#128c7e] 

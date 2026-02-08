@@ -36,7 +36,7 @@ $user = Auth::user();
                  <li><a href="{{route('member.alert')}}" class="" title="Thông báo"><i
                              class="fa-solid fa-bell mr-2"></i>Thông báo</a></li> --}}
                  <li><a href="{{route('member.mystory')}}" 
-                    class="@if(request()->routeIs('member.mystory') || request()->routeIs('member.mystory.favorites')) active @endif" 
+                    class="@if(request()->routeIs('member.mystory') || request()->routeIs('member.mystory.favorites') || request()->routeIs('member.mystory.copyright')) active @endif" 
                     title="Công pháp của tôi"><i
                     class="fa-solid fa-book-open-reader mr-2"></i>Công pháp của tôi</a></li>
                  <li>

@@ -51,15 +51,35 @@
                             <thead>
                                 <tr>
                                     <th></th>
+                                    <th>Tài khoản</th>
                                     <th>Địa chỉ Ip</th>
-                                    <th>Số lượng request</th>
-                                    <th>Thời gian tạo</th>
-                                    <th>Thời gian cập nhật cuối</th>
+                                    <th>
+                                        <a @click="updateOrdering('count')" class="link-offset-1">
+                                            Tổng request
+                                            <i v-if="isOrder('count', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('count', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a @click="updateOrdering('created_at')" class="link-offset-1">
+                                            Created At
+                                            <i v-if="isOrder('created_at', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('created_at', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a @click="updateOrdering('updated_at')" class="link-offset-1">
+                                            Updated At
+                                            <i v-if="isOrder('updated_at', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('updated_at', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
                                     <th></th>
+                                    <th>Tài khoản</th>
                                     <th>Địa chỉ Ip</th>
                                     <th>Số lượng request</th>
                                     <th>Thời gian tạo</th>
@@ -69,6 +89,7 @@
                             <tbody>
                                 <tr v-for="(item, index) in items">
                                     <td>@{{ index + 1 }}</td>
+                                    <td>@{{ item.email }}</td>
                                     <td>@{{ item.ip_address }}</td>
                                     <td>@{{ item.count }}</td>
                                     <td>@{{ formatdate(item.created_at) }}</td>

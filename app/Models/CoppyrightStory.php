@@ -19,7 +19,7 @@ class CoppyrightStory extends Model
     ];
 
     private $joinUser = false;
-
+    private $joinStory = false;
 
     public function scopeGetByStory($query, $story_id)
     {
@@ -45,6 +45,21 @@ class CoppyrightStory extends Model
             $join->on('coppyright_stories.user_id', '=', 'u.id');
         });
         $this->joinUser = true;
+        return $query;
+    }
+
+    public function scopeJoinStory($query) {
+        if ($this->joinStory ) {
+            return $query;
+        }
+        $query->select('coppyright_stories.*', 's.title AS story_title', 's.slug AS story_slug', 's.thumbnail', 's.total_chapter', 's.view_count', 'a.name AS author_name', 'a.slug AS author_slug')
+        ->leftJoin('stories AS s', function($join) {
+            $join->on('coppyright_stories.story_id', '=', 's.id');
+        })
+        ->leftJoin('authors AS a', function($join) {
+            $join->on('s.author_id', '=', 'a.id');
+        });
+        $this->joinStory = true;
         return $query;
     }
 }

@@ -11,10 +11,11 @@
 
                 @include('member_profile.parts.profile_story_nav')
 
-                <div id="app_member_story_favorite" class="flex flex-wrap -mx-2">
+                <div class="flex flex-wrap -mx-2">
                     @foreach ($records as $item)
                         <div class="basis-full md:basis-1/2 px-2 mb-4 item-favotite-story-{{ $item['story_id'] }}">
-                            <div class="card-readed rounded h-full p-4 pr-8 bg-white shadow-[2px_2px_9px_rgba(0,0,0,.14)] relative">
+                            <div
+                                class="card-readed rounded h-full p-4 pr-8 bg-white shadow-[2px_2px_9px_rgba(0,0,0,.14)] relative">
                                 <div class="block mr-2">
                                     <a href="{{ route('client.story', ['story_slug' => $item['story_slug']]) }}"
                                         title="{{ $item['story_title'] }}"
@@ -36,10 +37,7 @@
                                     <span class="text-[#28a745] mr-2">{{ $item['total_chapter'] }} chương</span>
                                     <span class="text-[#007bff]">{{ $item['view_count'] }} đọc</span>
                                 </div>
-                                <span @click="clearFavoriteStory($event, {{ $item['story_id'] }})"
-                                    class="delete absolute top-1 right-2 z-[3] text-[#252525] hover:text-[#de3939] cursor-pointer remove-favorite-story">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </span>
+                                
                             </div>
                         </div>
                     @endforeach
@@ -50,42 +48,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        var vue_member_story_favorite_app = {
-            showStar: false,
-
-            apiMemberUrl: FVN_LARAVEL_HOME + '/api/member',
-        };
-        var appMemberStoryFavorite= new Vue({
-            el: '#app_member_story_favorite',
-            data: vue_member_story_favorite_app,
-            mounted: function() {
-                // console.log(this.itemDetail);
-
-            },
-            computed: {
-
-            },
-            methods: {
-
-                async clearFavoriteStory(e, story_id) {
-                    let jsonData = await new RouteApi().post(`${this.apiMemberUrl}/save-favorite-story`, {
-                        story_id: story_id
-                    });
-                    if (jsonData.status) {
-                        jAlertCLient(jsonData.message, 'success');
-                        document.querySelector(`.item-favotite-story-${story_id}`).remove();
-                    } else {
-                        jAlertCLient(jsonData.message, 'danger');
-                    }
-                }
-            },
-            watch: {
-
-            },
-        });
-    </script>
 @endsection
 
 @section('scripts')

@@ -198,6 +198,15 @@ var app = new Vue({
             this.querySearch.order_by = key;
             this.getItems();
         },
+        isOrder(name, type) {
+            if (
+                this.querySearch.order_by == name &&
+                this.querySearch.order_type == type
+            ) {
+                return true;
+            }
+            return false;
+        },
         displayOrdering(key) {
             if (this.querySearch.order_by == key) {
                 if (this.querySearch.order_type == 'ASC') {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\LockStories;
 use App\Enums\StatusStory;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
@@ -26,7 +27,7 @@ class HomeController extends Controller
         $option = SettingHelpers::getInstance();
         $now = Carbon::now();
         // Truyện hot
-        $hot_stories = Story::joinAuthor()->where('star_average', '>', 7)->orderBy('star_average', 'DESC')->skip(0)->take(14)->get()->each(function ($item, $key) use ($now) {
+        $hot_stories = Story::joinAuthor()->GetByUnLock(LockStories::LOCK['key'])->where('star_average', '>', 7)->orderBy('star_average', 'DESC')->skip(0)->take(14)->get()->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $dt = new Carbon($item->created_at); //Tạo 1 datetime
             $item->after_day = $now->diffInDays($dt);;
@@ -38,7 +39,7 @@ class HomeController extends Controller
             }
         })->toArray();
         // Truyện Mới
-        $new_stories = Story::joinAuthor()->orderBy('created_at', 'DESC')->skip(0)->take(15)->get();
+        $new_stories = Story::joinAuthor()->GetByUnLock(LockStories::LOCK['key'])->orderBy('created_at', 'DESC')->skip(0)->take(15)->get();
         $new_stories = $new_stories->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $isResult = strpos($item->title, '(c)');
@@ -49,7 +50,7 @@ class HomeController extends Controller
             }
         })->toArray();
         // Chương truyện mới
-        $new_chapters = Story::joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(15)->get();
+        $new_chapters = Story::joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('last_chapers', 'DESC')->skip(0)->take(15)->get();
         // $story_arr= $new_chapter->pluck('id');
         // $listStoryCat = StoryCategory::getListCategoryByStory( $story_arr);
         $new_chapters = $new_chapters->each(function ($item, $key) use ($now) {
@@ -68,7 +69,7 @@ class HomeController extends Controller
         // Thể loại truyện vả mặt
         $category = Category::getBySlug('va-mat')->first();
         if ($category) {
-            $full_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('id', 'DESC')->skip(0)->take(6)->get();
+            $full_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('id', 'DESC')->skip(0)->take(6)->get();
             $story_arr = $full_stories_collection->pluck('id');
             $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
             $full_stories = $full_stories_collection->each(function ($item, $key) use ($listStoryCat) {
@@ -87,7 +88,7 @@ class HomeController extends Controller
         // Thể loại truyện Tiên hiệp
         $category = Category::getBySlug('tien-hiep')->first();
         if ($category) {
-            $tienhiep_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(14)->get();
+            $tienhiep_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('last_chapers', 'DESC')->skip(0)->take(14)->get();
             $story_arr = $tienhiep_stories_collection->pluck('id');
             $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
             $tienhiep_stories = $tienhiep_stories_collection->each(function ($item, $key) use ($listStoryCat) {
@@ -104,10 +105,10 @@ class HomeController extends Controller
             $tienhiep_stories = [];
         }
 
-        // Thể loại truyện Nữ Cường
+        // Thể loại truyện Hệ Thống
         $category = Category::getBySlug('he-thong')->first();
         if ($category) {
-            $nucuong_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->orderBy('last_chapers', 'DESC')->skip(0)->take(14)->get();
+            $nucuong_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('last_chapers', 'DESC')->skip(0)->take(14)->get();
             $story_arr = $nucuong_stories_collection->pluck('id');
             $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
             $nucuong_stories = $nucuong_stories_collection->each(function ($item, $key) use ($listStoryCat) {
@@ -124,7 +125,7 @@ class HomeController extends Controller
             $nucuong_stories = [];
         }
         // Truyện convert
-        $convert_stories_collection = Story::joinAuthor()->where('title', 'LIKE', "%(c)%")->orderBy('id', 'DESC')->skip(0)->take(9)->get();
+        $convert_stories_collection = Story::joinAuthor()->where('title', 'LIKE', "%(c)%")->GetByUnLock(LockStories::LOCK['key'])->orderBy('id', 'DESC')->skip(0)->take(9)->get();
         $convert_stories = $convert_stories_collection->each(function ($item, $key) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $isResult = strpos($item->title, '(c)');

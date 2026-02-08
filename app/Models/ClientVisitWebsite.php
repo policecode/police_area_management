@@ -22,12 +22,33 @@ class ClientVisitWebsite extends Model
         'user_id', 'ip_address', 'count', 'key'
     ];
 
+    private $joinUser = false;
+
     public function scopeGetByKey($query, $key) {
-        $query->where('key', $key);
+        $query->where('client_visit_websites.key', $key);
         return $query;
     }
     public function scopeGetByIpAdress($query, $ipAdress) {
-        $query->where('ip_address', $ipAdress);
+        $query->where('client_visit_websites.ip_address', $ipAdress);
+        return $query;
+    }
+
+    public function scopeGetByUser($query, $userId) {
+        $query->where('client_visit_websites.user_id', $userId);
+        return $query;
+    }
+
+     public function scopeJoinUsers($query)
+    {
+        if ($this->joinUser) {
+            return $query;
+        }
+        $query->select('client_visit_websites.*', 'u1.name', 'u1.email')
+            ->leftJoin('users AS u1', function ($join) {
+                $join->on('client_visit_websites.user_id', '=', 'u1.id');
+            });
+
+        $this->joinUser = true;
         return $query;
     }
 }

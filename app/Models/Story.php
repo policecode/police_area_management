@@ -84,6 +84,10 @@ class Story extends Model
         $query->where('stories.author_id', $author_id);
         return $query;
     }
+    public function scopeGetByUnLock($query, $is_lock) {
+        $query->where('stories.is_lock', $is_lock);
+        return $query;
+    }
     public function scopeGetById($query, $id) {
         if (is_array($id)) {
             $query->whereIn('stories.id', $id);

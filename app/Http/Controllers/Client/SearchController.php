@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\LockStories;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Author;
@@ -38,7 +39,7 @@ class SearchController extends Controller
             return redirect(route('index'));
         }
         $now = Carbon::now();
-        $query = Story::filter($request)->joinAuthorAndChapter();
+        $query = Story::filter($request)->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key']);
         if ($request->keyword) {
             $query->searchByAuthor($request->keyword);
         }

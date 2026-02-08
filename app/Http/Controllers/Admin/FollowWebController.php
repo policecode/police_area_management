@@ -35,7 +35,7 @@ class FollowWebController extends Controller
         }
       try {
         //code...
-        $query = ClientVisitWebsite::filter($request);
+        $query = ClientVisitWebsite::JoinUsers()->filter($request);
         $res = [
             'result' => 1,
             'data' => [],

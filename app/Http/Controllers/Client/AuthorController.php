@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\LockStories;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Author;
@@ -32,7 +33,7 @@ class AuthorController extends Controller
             return abort(404);
         }
         $now = Carbon::now();
-        $query = Story::getByAuthor($author['id']);
+        $query = Story::getByAuthor($author['id'])->GetByUnLock(LockStories::LOCK['key']);
         $count = $query->count();
         $storyCollection = $query->filter($request)->get();
         $listId = $storyCollection->pluck('id')->toArray();

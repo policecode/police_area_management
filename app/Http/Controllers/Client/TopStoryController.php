@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\LockStories;
 use App\Enums\StatusStory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class TopStoryController extends Controller
         $request->merge(array_merge($queryDefault, $request->query()));
       
         $now = Carbon::now();
-        $query = Story::filter($request)->joinAuthor();
+        $query = Story::filter($request)->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
         $count = $query->getTotal();
         $storyCollection = $query->get();
         // $listId = $storyCollection->pluck('id')->toArray();
@@ -82,7 +83,7 @@ class TopStoryController extends Controller
         $request->merge(array_merge($queryDefault, $request->query()));
       
         $now = Carbon::now();
-        $query = Story::filter($request)->joinAuthor();
+        $query = Story::filter($request)->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
         $count = $query->getTotal();
         $storyCollection = $query->get();
         // $listId = $storyCollection->pluck('id')->toArray();
@@ -140,7 +141,7 @@ class TopStoryController extends Controller
         $request->merge(array_merge($queryDefault, $request->query()));
       
         $now = Carbon::now();
-        $query = Story::filter($request)->joinAuthor();
+        $query = Story::filter($request)->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
         $count = $query->getTotal();
         $storyCollection = $query->get();
         // $listId = $storyCollection->pluck('id')->toArray();
@@ -198,7 +199,7 @@ class TopStoryController extends Controller
         $request->merge(array_merge($queryDefault, $request->query()));
       
         $now = Carbon::now();
-        $query = Story::filter($request)->joinAuthor();
+        $query = Story::filter($request)->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
         $count = $query->getTotal();
         $storyCollection = $query->get();
         // $listId = $storyCollection->pluck('id')->toArray();

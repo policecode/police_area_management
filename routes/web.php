@@ -205,7 +205,7 @@ Route::group(['middleware' => ['throttle:30,1']], function() {
     
     Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
     Route::get('/read-api/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'callChapterApi'])->name('client.api.chaper');
-    Route::get('/{story_slug}/chuong-{chaper_position}', [ChapersClientController::class, 'index'])->name('client.chaper');
+    Route::get('/{story_slug}/chuong-{chaper_position}', [ChapersClientController::class, 'index'])->middleware(['visit_website'])->name('client.chaper');
     // Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index']);
     
   
@@ -246,6 +246,7 @@ Route::group(['middleware' => ['throttle:20,1']], function() {
     Route::get('/member/alert', [MemberProfileController::class, 'alert'])->name('member.alert');
     Route::get('/member/my-story', [MemberProfileController::class, 'mystory'])->name('member.mystory');
     Route::get('/member/my-story/favorites', [MemberProfileController::class, 'mystoryFavorite'])->name('member.mystory.favorites');
+    Route::get('/member/my-story/copyright', [MemberProfileController::class, 'mystoryCopyright'])->name('member.mystory.copyright');
     Route::get('/member/gilf-code', [MemberProfileController::class, 'gilfcode'])->name('member.gilfcode');
 
 });

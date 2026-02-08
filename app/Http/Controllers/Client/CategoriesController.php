@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\LockStories;
 use App\Enums\TotalChapter;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Category;
-use App\Models\Chaper;
 use App\Models\Story;
-use App\Models\StoryCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 
 class CategoriesController extends Controller
 {
@@ -31,7 +30,7 @@ class CategoriesController extends Controller
             return abort(404);
         }
         $now = Carbon::now();
-        $query = Story::getByCategory($category['id'])->joinAuthor();
+        $query = Story::getByCategory($category['id'])->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
         $count = $query->count();
         $storyCollection = $query->filter($request)->get();
         // $listId = $storyCollection->pluck('id')->toArray();
@@ -108,7 +107,7 @@ class CategoriesController extends Controller
             return abort(404);
         }
 
-        $query = Story::filter($request)->joinAuthor();
+        $query = Story::filter($request)->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
         $now = Carbon::now();
         $listStory = $query->get()->each(function ($item, $key) use ($now)  {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;

@@ -19,27 +19,40 @@ class VisitWebsite
     public function handle(Request $request, Closure $next,  ...$guards)
     {
         try {
-            $result = ClientVisitWebsite::getByKey(get_key_by_day())->getByIpAdress($request->ip())->first();
-            if ($result) {
-                if (Auth::user()) {
-                    $result->user_id = Auth::user()->id;
+            if (Auth::id()) {
+                $result = ClientVisitWebsite::getByKey(get_key_by_day())->getByIpAdress($request->ip())->GetByUser(Auth::id())->first();
+                if ($result) {
+                    $result->count += 1;
+                    $result->save();
+                } else {
+                    $insertData = [
+                        'ip_address' => $request->ip(),
+                        'key' => get_key_by_day(),
+                        'count' => 1,
+                        'user_id' => Auth::id()
+                    ];
+                    // dd($insertData);
+                    $client = ClientVisitWebsite::create($insertData);
                 }
-                $result->count += 1;
-                $result->save();
             } else {
-                $insertData = [
-                    'ip_address' => $request->ip(),
-                    'key' => get_key_by_day(),
-                    'count' => 1
-                ];
-                // dd($insertData);
-                if (Auth::user()) {
-                    $insertData['user_id'] = Auth::user()->id;
+                $result = ClientVisitWebsite::getByKey(get_key_by_day())->getByIpAdress($request->ip())->whereNull('user_id')->first();
+                // dd($result->toArray());
+                if ($result) {
+                    $result->count += 1;
+                    $result->save();
+                } else {
+                    $insertData = [
+                        'ip_address' => $request->ip(),
+                        'key' => get_key_by_day(),
+                        'count' => 1
+                    ];
+                    // dd($insertData);
+                    $client = ClientVisitWebsite::create($insertData);
                 }
-                $client = ClientVisitWebsite::create($insertData);
             }
         } catch (\Throwable $th) {
             //throw $th;
+            dd($th->getMessage());
         }
         return $next($request);
     }
