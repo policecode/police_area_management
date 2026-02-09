@@ -35,20 +35,18 @@ class VisitWebsite
                     $client = ClientVisitWebsite::create($insertData);
                 }
             } else {
-                $result = ClientVisitWebsite::getByKey(get_key_by_day())->getByIpAdress($request->ip())->whereNull('user_id')->first();
-                // dd($result->toArray());
-                if ($result) {
-                    $result->count += 1;
-                    $result->save();
-                } else {
-                    $insertData = [
-                        'ip_address' => $request->ip(),
-                        'key' => get_key_by_day(),
-                        'count' => 1
-                    ];
-                    // dd($insertData);
-                    $client = ClientVisitWebsite::create($insertData);
-                }
+                // $result = ClientVisitWebsite::getByKey(get_key_by_day())->getByIpAdress($request->ip())->whereNull('user_id')->first();
+                // if ($result) {
+                //     $result->count += 1;
+                //     $result->save();
+                // } else {
+                //     $insertData = [
+                //         'ip_address' => $request->ip(),
+                //         'key' => get_key_by_day(),
+                //         'count' => 1
+                //     ];
+                //     $client = ClientVisitWebsite::create($insertData);
+                // }
             }
         } catch (\Throwable $th) {
             //throw $th;
