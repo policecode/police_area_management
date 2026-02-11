@@ -199,25 +199,34 @@ class TopStoryController extends Controller
             'order_by' => 'view',
             'order_type' => 'DESC',
         );
-        $request->merge(array_merge($queryDefault, $request->query()));
         $page_title = '';
         $description = '';
+        $query = '';
         if ($view_slug == 'day') {
             $page_title = 'Xem Nhiều Trong Ngày';
             $description = 'Danh Sách Truyện Được Xem Nhiều Trong Ngày';
-            $query = ViewDay::filter($request)->getByKey(get_key_by_day('date'));
+            $queryDefault['key'] = get_key_by_day('date');
         } elseif ($view_slug == 'week') {
             $page_title = 'Xem Nhiều Trong Tuần';
             $description = 'Danh Sách Truyện Được Xem Nhiều Trong Tuần';
+            $queryDefault['key'] = get_key_by_day('week');
 
-            $query = ViewWeek::filter($request)->getByKey(get_key_by_day('week'));
         } elseif ($view_slug == 'month') {
             $page_title = 'Xem Nhiều Trong Tháng';
             $description = 'Danh Sách Truyện Được Xem Nhiều Trong Tháng';
-            $query = ViewMonth::filter($request)->getByKey(get_key_by_day('month'));
-        } elseif ($view_slug == 'all') {
-            # code...
+            $queryDefault['key'] = get_key_by_day('month');
+
         }
+        $request->merge(array_merge($queryDefault, $request->query()));
+          if ($view_slug == 'day') {
+            $query = ViewDay::filter($request)->getByKey(get_key_by_day('date'));
+        } elseif ($view_slug == 'week') {
+            $query = ViewWeek::filter($request)->getByKey(get_key_by_day('week'));
+        } elseif ($view_slug == 'month') {
+            $query = ViewMonth::filter($request)->getByKey(get_key_by_day('month'));
+        }
+        $count = $query->getTotal();
+        // dd($count);
 
         $colection = $query->joinStory()->get();
         $listStory  = $colection->each(function ($item, $key) {
@@ -229,8 +238,7 @@ class TopStoryController extends Controller
                 $item->is_convert = false;
             }
         })->toArray();
-        $count = $query->getTotal();
-        // dd($listStory);
+
         $breadcrumb = [
             [
                 "title" => "Trang chủ",

@@ -10,7 +10,7 @@ class ViewDay extends Model
 {
     use HasFactory, Filterable;
     public $filterKeywords = ['story_id', ]; // Sử dụng trong trường hợp có trường keyword
-    public $filterFields  = ['story_id', ]; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
+    public $filterFields  = ['story_id', 'key']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
     /**
      * The attributes that are mass assignable.
      *
