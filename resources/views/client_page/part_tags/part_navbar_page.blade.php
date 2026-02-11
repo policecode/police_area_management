@@ -31,7 +31,7 @@
                 @if (request()->routeIs('client.view-story'))
                         <a href="javascript:void(0)" title="Xem nhiều" class="block p-2 rounded bg-[#0e6d62]">Xem nhiều</a>
                 @else
-                    <a href="{{route('client.view-story')}}" title="Xem nhiều" class="block p-2 rounded">Xem nhiều</a>
+                    <a href="{{route('client.view-story', ['view_slug' => 'day'])}}" title="Xem nhiều" class="block p-2 rounded">Xem nhiều</a>
                 @endif
             </li>
 

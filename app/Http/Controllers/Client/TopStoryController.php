@@ -10,8 +10,12 @@ use App\Models\Category;
 use App\Models\Chaper;
 use App\Models\Story;
 use App\Models\StoryCategory;
+use App\Models\ViewDay;
+use App\Models\ViewMonth;
+use App\Models\ViewWeek;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+
 class TopStoryController extends Controller
 {
     public function newUpdateStory(Request $request)
@@ -23,17 +27,17 @@ class TopStoryController extends Controller
             'order_type' => 'DESC'
         );
         $request->merge(array_merge($queryDefault, $request->query()));
-      
+
         $now = Carbon::now();
         $query = Story::filter($request)->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
         $count = $query->getTotal();
         $storyCollection = $query->get();
         // $listId = $storyCollection->pluck('id')->toArray();
         // $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
+        $listStory = $storyCollection->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
-            $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
+            $item->last_update = $item->last_chapers ? $now->diffInMinutes(new Carbon($item->last_chapers)) : $now->diffInMinutes(new Carbon($item->created_at));
             // $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
             $isResult = strpos($item->title, '(c)');
             if ($isResult) {
@@ -56,15 +60,15 @@ class TopStoryController extends Controller
 
         // Title Header
         $page_title = 'Danh Sách Truyện Mới Cập Nhật';
-        
-         // Desccription Header
-         $description = 'Trạng thái cập nhật các bộ truyện mới nhất';
+
+        // Desccription Header
+        $description = 'Trạng thái cập nhật các bộ truyện mới nhất';
         $dataView = array(
             'page_title' => $page_title,
             'records' => $listStory,
             'total_records' => $count,
             'per_page' => $request->per_page,
-            'page' =>$request->page,
+            'page' => $request->page,
             'breadcrumb' => $breadcrumb,
             'description' => $description
         );
@@ -81,17 +85,17 @@ class TopStoryController extends Controller
             'star_average_min' => 7
         );
         $request->merge(array_merge($queryDefault, $request->query()));
-      
+
         $now = Carbon::now();
         $query = Story::filter($request)->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
         $count = $query->getTotal();
         $storyCollection = $query->get();
         // $listId = $storyCollection->pluck('id')->toArray();
         // $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
+        $listStory = $storyCollection->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
-            $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
+            $item->last_update = $item->last_chapers ? $now->diffInMinutes(new Carbon($item->last_chapers)) : $now->diffInMinutes(new Carbon($item->created_at));
             // $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
             $isResult = strpos($item->title, '(c)');
             if ($isResult) {
@@ -114,15 +118,15 @@ class TopStoryController extends Controller
 
         // Title Header
         $page_title = 'Danh Sách Truyện Hot';
-        
-         // Desccription Header
-         $description = 'Các bộ truyện đang được độc giả yêu thích';
+
+        // Desccription Header
+        $description = 'Các bộ truyện đang được độc giả yêu thích';
         $dataView = array(
             'page_title' => $page_title,
             'records' => $listStory,
             'total_records' => $count,
             'per_page' => $request->per_page,
-            'page' =>$request->page,
+            'page' => $request->page,
             'breadcrumb' => $breadcrumb,
             'description' => $description
         );
@@ -139,17 +143,17 @@ class TopStoryController extends Controller
             'status' => StatusStory::FULL['key']
         );
         $request->merge(array_merge($queryDefault, $request->query()));
-      
+
         $now = Carbon::now();
         $query = Story::filter($request)->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
         $count = $query->getTotal();
         $storyCollection = $query->get();
         // $listId = $storyCollection->pluck('id')->toArray();
         // $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
+        $listStory = $storyCollection->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $item->after_day = $now->diffInDays(new Carbon($item->created_at));
-            $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
+            $item->last_update = $item->last_chapers ? $now->diffInMinutes(new Carbon($item->last_chapers)) : $now->diffInMinutes(new Carbon($item->created_at));
             // $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
             $isResult = strpos($item->title, '(c)');
             if ($isResult) {
@@ -172,43 +176,52 @@ class TopStoryController extends Controller
 
         // Title Header
         $page_title = 'Danh Sách Truyện Full';
-        
-         // Desccription Header
-         $description = 'Danh sách các bộ truyện đã ra hết';
+
+        // Desccription Header
+        $description = 'Danh sách các bộ truyện đã ra hết';
         $dataView = array(
             'page_title' => $page_title,
             'records' => $listStory,
             'total_records' => $count,
             'per_page' => $request->per_page,
-            'page' =>$request->page,
+            'page' => $request->page,
             'breadcrumb' => $breadcrumb,
             'description' => $description
         );
         return view('client_page.top_story', $dataView);
     }
 
-    public function viewStory(Request $request)
+    public function viewStory(Request $request, $view_slug)
     {
         $queryDefault = array(
             'page' => 1,
             'per_page' => 12,
-            'order_by' => 'view_count',
+            'order_by' => 'view',
             'order_type' => 'DESC',
-            'view_count_min' => 100
         );
         $request->merge(array_merge($queryDefault, $request->query()));
-      
-        $now = Carbon::now();
-        $query = Story::filter($request)->joinAuthor()->GetByUnLock(LockStories::LOCK['key']);
-        $count = $query->getTotal();
-        $storyCollection = $query->get();
-        // $listId = $storyCollection->pluck('id')->toArray();
-        // $allCategoriesOfStory = StoryCategory::getListCategoryByStory($listId);
-        $listStory = $storyCollection->each(function ($item, $key) use ($now)  {
+        $page_title = '';
+        $description = '';
+        if ($view_slug == 'day') {
+            $page_title = 'Xem Nhiều Trong Ngày';
+            $description = 'Danh Sách Truyện Được Xem Nhiều Trong Ngày';
+            $query = ViewDay::filter($request)->getByKey(get_key_by_day('date'));
+        } elseif ($view_slug == 'week') {
+            $page_title = 'Xem Nhiều Trong Tuần';
+            $description = 'Danh Sách Truyện Được Xem Nhiều Trong Tuần';
+
+            $query = ViewWeek::filter($request)->getByKey(get_key_by_day('week'));
+        } elseif ($view_slug == 'month') {
+            $page_title = 'Xem Nhiều Trong Tháng';
+            $description = 'Danh Sách Truyện Được Xem Nhiều Trong Tháng';
+            $query = ViewMonth::filter($request)->getByKey(get_key_by_day('month'));
+        } elseif ($view_slug == 'all') {
+            # code...
+        }
+
+        $colection = $query->joinStory()->get();
+        $listStory  = $colection->each(function ($item, $key) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
-            $item->after_day = $now->diffInDays(new Carbon($item->created_at));
-            $item->last_update = $item->last_chapers?$now->diffInMinutes(new Carbon($item->last_chapers)):$now->diffInMinutes(new Carbon($item->created_at));
-            // $item->categories = empty($allCategoriesOfStory[$item->id])?[]:$allCategoriesOfStory[$item->id];
             $isResult = strpos($item->title, '(c)');
             if ($isResult) {
                 $item->is_convert = true;
@@ -216,6 +229,7 @@ class TopStoryController extends Controller
                 $item->is_convert = false;
             }
         })->toArray();
+        $count = $query->getTotal();
         // dd($listStory);
         $breadcrumb = [
             [
@@ -223,26 +237,21 @@ class TopStoryController extends Controller
                 "url" => route('index', [])
             ],
             [
-                "title" => 'Xem nhiều',
-                "url" => route('client.full-story')
+                "title" => $page_title,
+                "url" => route('client.view-story', ['view_slug' => $view_slug])
             ]
         ];
 
-        // Title Header
-        $page_title = 'Danh Sách Truyện Được Xem Nhiều';
-        
-         // Desccription Header
-         $description = 'Danh sách các bộ truyện được xem nhiều nhất của Truyện Full Việt';
         $dataView = array(
             'page_title' => $page_title,
             'records' => $listStory,
             'total_records' => $count,
             'per_page' => $request->per_page,
-            'page' =>$request->page,
+            'page' => $request->page,
             'breadcrumb' => $breadcrumb,
-            'description' => $description
+            'description' => $description,
+            'view_slug' => $view_slug
         );
-        return view('client_page.top_story', $dataView);
+        return view('client_page.view_story', $dataView);
     }
-
 }

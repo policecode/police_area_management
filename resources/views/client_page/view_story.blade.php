@@ -5,18 +5,35 @@
 @endsection
 @section('content')
     @include('client_page.part_tags.part_navbar_page')
-    
+
     <section class="section-cate py-3 min-h-[79vh]">
         <div class="container">
             <div class="flex flex-wrap -mx-2">
                 <div class="px-2 basis-full xl:basis-3/4 xl:order-2">
+                    <div class="flex items-center justify-end mb-2 head-all pr-3">
+                        <a href="{{ route('client.view-story', ['view_slug' => 'day']) }}" title="Ngày"
+                            class="readmore
+                            @if ($view_slug == 'day') bg-[#0e6d62] text-white @else text-[#128c7e] bg-[#ccdbdc] @endif
+                             text-[0.875rem] mr-3 p-2">Ngày 
+                        </a>
+                        <a href="{{ route('client.view-story', ['view_slug' => 'week']) }}" title="Tuần"
+                            class="readmore
+                            @if ($view_slug == 'week') bg-[#0e6d62] text-white @else text-[#128c7e] bg-[#ccdbdc] @endif
+                            text-[0.875rem] mr-3 p-2">Tuần 
+                        </a>
+                        <a href="{{ route('client.view-story', ['view_slug' => 'month']) }}" title="Tháng"
+                            class="readmore
+                            @if ($view_slug == 'month') bg-[#0e6d62] text-white @else text-[#128c7e] bg-[#ccdbdc] @endif
+                            text-[0.875rem] mr-3 p-2">Tháng 
+                        </a>
+                    </div>
                     <div class="flex flex-wrap -mx-1">
                         @foreach ($records as $item)
                             <div class="px-1 basis-1/2 mb-2">
                                 <div
                                     class="novel-item h-full p-4 bg-white flex flex-wrap transition-all duration-300 hover:shadow-[2px_2px_9px_rgba(0,0,0,.44)] border-t-[1px] border-dashed border-[#bababa]">
                                     <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
-                                        title="{{ $item['title'] }}"
+                                        title="{{ route('client.story', ['story_slug' => $item['slug']]) }}"
                                         class="img shrink-0 w-[90px] h-[130px] img-h-full rounded-lg overflow-hidden mr-2 relative">
                                         <picture>
                                             <source media="(min-width:0px)" srcset="{{ $item['thumbnail'] }}">
@@ -51,8 +68,11 @@
                                         </div>
                                         <div class="story-info lg:text-[0.875rem]">
                                             {{-- <span class="text-[#dc3545] mr-1 whitespace-nowrap">584.910 Chữ</span> --}}
-                                            <span class="text-[#28a745] mr-1 whitespace-nowrap">{{$item['total_chapter']}} Chương</span>
-                                            <span class="text-[#007bff] mr-1 whitespace-nowrap">{{$item['view_count']}} Đọc</span>
+                                            <span
+                                                class="text-[#28a745] mr-1 whitespace-nowrap">{{ $item['total_chapter'] }}
+                                                Chương</span>
+                                            <span class="text-[#007bff] mr-1 whitespace-nowrap">{{ $item['view'] }}
+                                                Đọc</span>
                                         </div>
                                         <div class="s-content text-[0.75rem] text-[#3a3a3a] mt-2 pl-3 line-clamp-4">
                                             {!! $item['description'] !!}
@@ -67,14 +87,13 @@
                 </div>
                 @include('client_page.part_tags.new_stories_v1', [
                     'is_chapter' => true,
-                    'is_story' => true
+                    'is_story' => true,
                 ])
             </div>
 
         </div>
 
     </section>
-
 @endsection
 
 

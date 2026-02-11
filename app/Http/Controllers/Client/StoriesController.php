@@ -211,18 +211,25 @@ class StoriesController extends Controller
 
     public function getTopViewStories(Request $request) {
         try {
+            $view_url = '';
             if ($request->view == 'day') {
                 $query = ViewDay::filter($request)->getByKey(get_key_by_day('date'));
+                $view_url = route('client.view-story', ['view_slug' => 'day']);
             } elseif ($request->view == 'week') {
                 $query = ViewWeek::filter($request)->getByKey(get_key_by_day('week'));
+                $view_url = route('client.view-story', ['view_slug' => 'week']);
+
             } elseif ($request->view == 'month') {
                 $query = ViewMonth::filter($request)->getByKey(get_key_by_day('month'));
+                $view_url = route('client.view-story', ['view_slug' => 'month']);
+
             } elseif ($request->view == 'all') {
                 # code...
             }
             $res = [
                 'result' => 1,
                 'data' => [],
+                'view_url' => $view_url,
                 'page' => $query->getPageNumber(),
                 'per_page' => $query->getPerPage(),
                 'total' => 0

@@ -371,7 +371,7 @@ $user = Auth::user();
                     <li><a href="{{ route('client.full-story') }}" title="">Hoàn thành</a></li>
                     <li><a href="{{ route('client.new-update') }}" title="">Mới cập nhật</a></li>
                     <li><a href="{{ route('client.hot-story') }}" title="">Truyện hay</a></li>
-                    <li><a href="{{ route('client.view-story') }}" title="">Xem nhiều</a></li>
+                    <li><a href="{{ route('client.view-story', ['view_slug' => 'day']) }}" title="">Xem nhiều</a></li>
                     <li><a href="{{ route('client.superSearch') }}" title="">Filter</a></li>
 
                     {{-- <li><a href="https://forum.banlong.us/" title="">Giao diện cũ</a></li>

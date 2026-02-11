@@ -23,9 +23,9 @@
                             Trong Tuần</h2>
                         <h2 v-if="querySearch.view == 'month'" class="font-bold text-[1.125rem] text-center">Xem Nhiều
                             Trong Tháng</h2>
-                        {{-- <a href="truyen-yeu-thich.html" title="Tất cả"
+                        <a :href="view_url" title="Tất cả"
                             class="readmore text-[#128c7e] text-[0.875rem] absolute top-1/2 right-4 -translate-y-1/2">Tất
-                            cả <i class="ml-2 fa-solid fa-right-long"></i></a> --}}
+                            cả <i class="ml-2 fa-solid fa-right-long"></i></a>
                     </div>
                     <ul class="list-story">
                         <li v-if="items[0]" class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
@@ -159,6 +159,7 @@
     var vue_top_rating_stories_app = {
         loading: false,
         items: [],
+        view_url: '#',
         querySearch: {
             total: 0,
             page: 1,
@@ -199,6 +200,7 @@
                 this.loading = false;
                 if (jsonData.result) {
                     this.items = jsonData.data;
+                    this.view_url = jsonData.view_url;
                 } else {
                     this.items = [];
                 }
