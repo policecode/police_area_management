@@ -8,10 +8,10 @@
         <div
             class="flex flex-nowrap whitespace-nowrap md:whitespace-normal overflow-x-auto md:overflow-x-visible md:flex-wrap -mx-1">
             @foreach ($last_comments as $item)
-                <div class="basis-[70%] md:basis-1/3 px-1 mb-2">
+                <div class="basis-[70%] md:basis-1/3 w-[100%] px-1 mb-2">
                     <div
                         class="author-vn h-full flex p-3 bg-white rounded transition-all duration-300 hover:shadow-[2px_2px_9px_rgba(0,0,0,.44)]">
-                        <div class="content novel-item">
+                        <div class="content novel-item w-[100%]">
                              <h4 class="flex xl:text-[1rem] text-[0.75rem]">
                                 <a href="{{ route('member.profile', ['user_id' => $item['user_id']]) }}"
                                     title="{{ $item['name'] }}"
