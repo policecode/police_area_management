@@ -44,7 +44,8 @@
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Nhóm</th>
-                                    <th>Thời gian</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Verified</th>
                                     <th>Sửa</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -55,7 +56,8 @@
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Nhóm</th>
-                                    <th>Thời gian</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Verified</th>
                                     <th>Sửa</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -67,6 +69,7 @@
                                     <td>@{{ item.email }}</td>
                                     <td>@{{ item.group.name }}</td>
                                     <td>@{{ displayDate(item.created_at) }}</td>
+                                    <td>@{{ item.email_verified_at ? displayDate(item.email_verified_at) : 'Chưa xác thực' }}</td>
                                     <td><a @click="showItem(item)" class="btn btn-warning">Sửa</a></td>
                                     <td><a @click="deleteItem(item)" class="btn btn-danger">Xóa</a></td>
                                 </tr>

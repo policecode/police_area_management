@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\LockStories;
+use App\Enums\ProposeStatus;
 use App\Enums\StatusStory;
 use App\Http\Controllers\Controller;
 use App\Models\Author;
@@ -132,6 +133,7 @@ class StoriesController extends Controller
                 'author_id' => $data['author_id'],
                 'status' => $data['status'],
                 'is_lock' => $data['is_lock'] ?? LockStories::LOCK['key'],
+                'propose' => $data['propose'] ?? ProposeStatus::DROP['key'],
             ]);
             // Add Category
             $listStoryCategory = [];
@@ -192,6 +194,7 @@ class StoriesController extends Controller
                 'author_id' => $data['author_id'],
                 'status' => $data['status'],
                 'is_lock' => $data['is_lock'] ?? LockStories::LOCK['key'],
+                'propose' => $data['propose'] ?? ProposeStatus::DROP['key'],
             ];
 
             if ($request->hasFile('thumbnail')) {
@@ -337,7 +340,8 @@ class StoriesController extends Controller
             'status' => 'required|integer',
             'description' => '',
             'category' => 'array',
-            'is_lock' => ''
+            'is_lock' => '',
+            'propose' => '',
         ];
         if ($request->id) {
             $rules['title'] = 'required|unique:stories,title,' . $request->id;
@@ -369,6 +373,7 @@ class StoriesController extends Controller
             'status' => 'Trạng thái truyện',
             'description' => 'Thông tin về truyện',
             'is_lock' => 'Trạng thái chia sẻ truyện',
+            'propose' => 'Trạng thái đề xuất truyện',
         ];
     }
 

@@ -22,7 +22,8 @@
     @include('client_page.part_home.pro-cate')
     @include('client_page.part_home.top-story')
     @include('client_page.part_home.ranking_v2')
-    @include('client_page.part_home.authorvn')
+    {{-- @include('client_page.part_home.authorvn') --}}
+    @include('client_page.part_home.last-comments')
     {{-- @include('client_page.part_home.just-finished') --}}
     {{-- @include('client_page.part_home.new-story') --}}
 @endsection

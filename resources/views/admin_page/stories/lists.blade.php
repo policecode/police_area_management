@@ -1,6 +1,8 @@
 <?php
 use App\Enums\StatusStory;
 use App\Enums\LockStories;
+use App\Enums\ProposeStatus;
+
 
 ?>
 @extends('layouts.backend')
@@ -14,6 +16,7 @@ use App\Enums\LockStories;
     <script>
         var statusStory = {{ Illuminate\Support\Js::from(StatusStory::getValues()) }};
         var lockStories = {{ Illuminate\Support\Js::from(LockStories::getValues()) }};
+        var proposeStatus = {{ Illuminate\Support\Js::from(ProposeStatus::getValues()) }};
     </script>
     <div id="app">
         <template v-if="screen=='list'">
@@ -24,16 +27,22 @@ use App\Enums\LockStories;
             </div>
             <a @click="changeScreen('detail')" class="btn btn-primary">Thêm mới</a>
             <div class="row mt-4">
-                <div class="col-3">
+                <div class="col-2">
                     <select v-model="querySearch.category_id" class="form-select">
                         <option value="">Thể loại</option>
                         <option v-for="(item, index) in categories" :value="item.id">@{{ item.name }}</option>
                     </select>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <select v-model="querySearch.is_lock" class="form-select">
                         <option value="">Truyện bản quyền</option>
                         <option v-for="item in lockStories" :value="item.key">@{{ item.value }}</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <select v-model="querySearch.propose" class="form-select">
+                        <option value="">Đề xuất truyện</option>
+                        <option v-for="item in proposeStatus" :value="item.key">@{{ item.value }}</option>
                     </select>
                 </div>
                 <div class="col-3">
@@ -155,6 +164,11 @@ use App\Enums\LockStories;
                                             class="btn btn-secondary mb-1" title="Bản quyền">
                                             <i class="fa-regular fa-copyright"></i>
                                         </a>
+                                        <a @click="togglePropose($event, item)"
+                                            class="btn mb-1" :class="item.propose == 2 ? 'btn-info' : 'btn-outline-info'" :title="item.propose == 2 ? 'Đề Xuất' : 'Không Đề Xuất'">
+                                            <i v-if="item.propose == 2" class="fa-solid fa-file-circle-check"></i>
+                                            <i v-else class="fa-solid fa-file-circle-xmark"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -252,11 +266,22 @@ use App\Enums\LockStories;
                                 <label for="">Mở Khóa Truyện</label>
                                 <select v-model="itemDetail.is_lock" class="form-control"
                                     :class={'is-invalid':errors.is_lock}>
-                                    <option value="">Mở Khóa truyện</option>
                                     <option v-for="item in lockStories" :value="item.key">@{{ item.value }}
                                     </option>
                                 </select>
                                 <div v-if="errors.is_lock" class="invalid-feedback">@{{ errors.is_lock[0] }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="">Đề xuất truyện</label>
+                                <select v-model="itemDetail.propose" class="form-control"
+                                    :class={'is-invalid':errors.propose}>
+                                    <option v-for="item in proposeStatus" :value="item.key">@{{ item.value }}
+                                    </option>
+                                </select>
+                                <div v-if="errors.propose" class="invalid-feedback">@{{ errors.propose[0] }}</div>
                             </div>
                         </div>
 

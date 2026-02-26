@@ -15,7 +15,7 @@ class Story extends Model
     use HasFactory, Filterable;
     protected $appends = ['status_name', 'is_convert', 'lock_status_name', 'url'];
     public $filterKeywords = ['title', 'title_eng']; // Sử dụng trong trường hợp có trường keyword
-    public $filterFields  = ['title', 'status', 'is_lock']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
+    public $filterFields  = ['title', 'status', 'is_lock', 'propose']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
     public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
     /**
      * The attributes that are mass assignable.
@@ -23,13 +23,15 @@ class Story extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'title', 'title_eng', 'slug', 'thumbnail', 'description', 'star_count', 'star_average', 'view_count', 'author_id', 'status', 'created_at', 'updated_at', 'last_chapers', 'chaper_id', 'total_chapter', 'total_favorite', 'total_percentage', 'total_report', 'last_comment_id', 'total_like', 'total_comment', 'is_lock'
+        'user_id', 'title', 'title_eng', 'slug', 'thumbnail', 'description', 'star_count', 'star_average', 'view_count', 'author_id', 'status', 'created_at', 'updated_at', 'last_chapers', 'chaper_id', 'total_chapter', 'total_favorite', 'total_percentage', 'total_report', 'last_comment_id', 'total_like', 'total_comment', 'is_lock', 'propose'
     ];
 
     private $joinAuthor = false;
     private $joinCategories = false;
     private $joinLastChapers = false;
     private $joinAuthorAndChapter = false;
+    private $joinLastComment = false;
+
     public function categories() {
         return $this->belongsToMany(Category::class, 'story_categories', 'story_id', 'category_id');
     }
@@ -168,6 +170,21 @@ class Story extends Model
         return $query;
     }
 
+    public function scopeJoinLastComment($query) {
+        if ($this->joinLastComment ) {
+            return $query;
+        }
+        $query->select('stories.title', 'stories.slug', 'c.content', 'c.user_id', 'c.created_at', 'u.name')
+        ->leftJoin('comments as c', function($join) {
+            $join->on('stories.last_comment_id', '=', 'c.id');
+        })
+        ->leftJoin('users AS u', function($join) {
+            $join->on('c.user_id', '=', 'u.id');
+        });
+        $this->joinLastComment = true;
+        return $query;
+    }
+
     public function scopeSearchByAuthor($query, $author_name) {
         $query->joinAuthor();
         $query->orWhere('authors.name', 'LIKE', '%' . $author_name . '%');
@@ -180,5 +197,14 @@ class Story extends Model
         return $query;
     }
 
+    public function scopeGetLastComment($query) {
+        $query->where('stories.last_comment_id', '>', 0);
+        return $query;
+    }
+
+    public function scopeGetByPropose($query, $propose_status) {
+        $query->where('stories.propose', '=', $propose_status);
+        return $query;
+    }
 
 }

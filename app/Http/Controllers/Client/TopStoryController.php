@@ -219,14 +219,13 @@ class TopStoryController extends Controller
         }
         $request->merge(array_merge($queryDefault, $request->query()));
           if ($view_slug == 'day') {
-            $query = ViewDay::filter($request)->getByKey(get_key_by_day('date'));
+            $query = ViewDay::filter($request);
         } elseif ($view_slug == 'week') {
-            $query = ViewWeek::filter($request)->getByKey(get_key_by_day('week'));
+            $query = ViewWeek::filter($request);
         } elseif ($view_slug == 'month') {
-            $query = ViewMonth::filter($request)->getByKey(get_key_by_day('month'));
+            $query = ViewMonth::filter($request);
         }
         $count = $query->getTotal();
-        // dd($count);
 
         $colection = $query->joinStory()->get();
         $listStory  = $colection->each(function ($item, $key) {

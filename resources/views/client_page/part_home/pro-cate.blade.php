@@ -1,15 +1,15 @@
 <section class="py-1 pro-cate mb-4">
     <div class="container">
         <div class="flex items-center justify-between mb-2 head-all bg-white py-3 px-5">
-            <h2 class="title font-bold 2xl:text-[1.5rem] text-[1.25rem]">Tiên Hiệp</h2>
-            <a href="{{ route('client.tag', ['tag_slug' => 'tien-hiep']) }}" title="Tất cả"
+            <h2 class="title font-bold 2xl:text-[1.5rem] text-[1.25rem]">Biên Tập Viên Đề Cử</h2>
+            {{-- <a href="{{ route('client.tag', ['tag_slug' => 'tien-hiep']) }}" title="Tất cả"
                 class="readmore text-[#128c7e] text-[0.875rem] ">
                 Tất cả <i class="ml-2 fa-solid fa-right-long"></i>
-            </a>
+            </a> --}}
         </div>
         <div class="swiper-container slide-cate">
             <div class="swiper-wrapper">
-                @foreach ($tienhiep_stories as $item)
+                @foreach ($propose_stories as $item)
                     <div class="swiper-slide">
                         <div class="card-story max-w-[300px]">
                             <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}"

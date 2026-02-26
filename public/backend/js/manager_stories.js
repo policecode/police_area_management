@@ -26,10 +26,12 @@ var vue_data = {
         keyword: "",
         category_id: "",
         is_lock: "",
+        propose: "",
         order_by: "id",
         order_type: "DESC",
     },
     apiUrl: FVN_LARAVEL_HOME + "/admin/stories",
+    proposeStatus: proposeStatus,
     statusStory: statusStory,
     categories: [],
     authors: [],
@@ -380,6 +382,7 @@ var app = new Vue({
                 order_by: "id",
                 order_type: "DESC",
                 is_lock: "",
+                propose: "",
             };
             this.searchItem();
         },
@@ -404,6 +407,15 @@ var app = new Vue({
                 this.itemDetail.is_lock = 2;
             } else {
                 this.itemDetail.is_lock = 1;
+            }
+            await this.save(e);
+        },
+        async togglePropose(e, item) {
+            this.itemDetail = item;
+            if (this.itemDetail.propose == 1) {
+                this.itemDetail.propose = 2;
+            } else {
+                this.itemDetail.propose = 1;
             }
             await this.save(e);
         },

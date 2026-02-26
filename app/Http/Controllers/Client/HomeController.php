@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Enums\LockStories;
+use App\Enums\ProposeStatus;
 use App\Enums\StatusStory;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
@@ -30,7 +31,7 @@ class HomeController extends Controller
         $hot_stories = Story::joinAuthor()->GetByUnLock(LockStories::LOCK['key'])->where('star_average', '>', 7)->orderBy('star_average', 'DESC')->skip(0)->take(14)->get()->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $dt = new Carbon($item->created_at); //Tạo 1 datetime
-            $item->after_day = $now->diffInDays($dt);;
+            $item->after_day = $now->diffInDays($dt);
             $isResult = strpos($item->title, '(c)');
             if ($isResult) {
                 $item->is_convert = true;
@@ -67,43 +68,35 @@ class HomeController extends Controller
         })->toArray();
 
         // Thể loại truyện vả mặt
-        $category = Category::getBySlug('va-mat')->first();
-        if ($category) {
-            $full_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('id', 'DESC')->skip(0)->take(6)->get();
-            $story_arr = $full_stories_collection->pluck('id');
-            $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
-            $full_stories = $full_stories_collection->each(function ($item, $key) use ($listStoryCat) {
-                $item->thumbnail = route('index') . '/' . $item->thumbnail;
-                $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
-                $isResult = strpos($item->title, '(c)');
-                if ($isResult) {
-                    $item->is_convert = true;
-                } else {
-                    $item->is_convert = false;
-                }
-            })->toArray();
-        } else {
-            $full_stories = [];
-        }
-        // Thể loại truyện Tiên hiệp
-        $category = Category::getBySlug('tien-hiep')->first();
-        if ($category) {
-            $tienhiep_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('last_chapers', 'DESC')->skip(0)->take(14)->get();
-            $story_arr = $tienhiep_stories_collection->pluck('id');
-            $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
-            $tienhiep_stories = $tienhiep_stories_collection->each(function ($item, $key) use ($listStoryCat) {
-                $item->thumbnail = route('index') . '/' . $item->thumbnail;
-                $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
-                $isResult = strpos($item->title, '(c)');
-                if ($isResult) {
-                    $item->is_convert = true;
-                } else {
-                    $item->is_convert = false;
-                }
-            })->toArray();
-        } else {
-            $tienhiep_stories = [];
-        }
+        // $category = Category::getBySlug('va-mat')->first();
+        // if ($category) {
+        //     $full_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('id', 'DESC')->skip(0)->take(6)->get();
+        //     $story_arr = $full_stories_collection->pluck('id');
+        //     $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
+        //     $full_stories = $full_stories_collection->each(function ($item, $key) use ($listStoryCat) {
+        //         $item->thumbnail = route('index') . '/' . $item->thumbnail;
+        //         $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+        //         $isResult = strpos($item->title, '(c)');
+        //         if ($isResult) {
+        //             $item->is_convert = true;
+        //         } else {
+        //             $item->is_convert = false;
+        //         }
+        //     })->toArray();
+        // } else {
+        //     $full_stories = [];
+        // }
+        // Biên tập viên đề cử
+     
+        $propose_stories_collection = Story::joinAuthorAndChapter()->GetByPropose(ProposeStatus::PROPOSE['key'])->orderBy('last_chapers', 'DESC')->get();
+        $story_arr = $propose_stories_collection->pluck('id');
+        $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
+        $propose_stories = $propose_stories_collection->each(function ($item, $key) use ($listStoryCat) {
+            $item->thumbnail = route('index') . '/' . $item->thumbnail;
+            $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+         
+        })->toArray();
+     
 
         // Thể loại truyện Hệ Thống
         $category = Category::getBySlug('he-thong')->first();
@@ -125,15 +118,22 @@ class HomeController extends Controller
             $nucuong_stories = [];
         }
         // Truyện convert
-        $convert_stories_collection = Story::joinAuthor()->where('title', 'LIKE', "%(c)%")->GetByUnLock(LockStories::LOCK['key'])->orderBy('id', 'DESC')->skip(0)->take(9)->get();
-        $convert_stories = $convert_stories_collection->each(function ($item, $key) {
-            $item->thumbnail = route('index') . '/' . $item->thumbnail;
-            $isResult = strpos($item->title, '(c)');
-            if ($isResult) {
-                $item->is_convert = true;
-            } else {
-                $item->is_convert = false;
-            }
+        // $convert_stories_collection = Story::joinAuthor()->where('title', 'LIKE', "%(c)%")->GetByUnLock(LockStories::LOCK['key'])->orderBy('id', 'DESC')->skip(0)->take(9)->get();
+        // $convert_stories = $convert_stories_collection->each(function ($item, $key) {
+        //     $item->thumbnail = route('index') . '/' . $item->thumbnail;
+        //     $isResult = strpos($item->title, '(c)');
+        //     if ($isResult) {
+        //         $item->is_convert = true;
+        //     } else {
+        //         $item->is_convert = false;
+        //     }
+        // })->toArray();
+
+        // Bình luận mới nhất
+        $last_comments_collection = Story::JoinLastComment()->GetLastComment()->orderBy('last_comment_id', 'DESC')->skip(0)->take(16)->get();
+        $last_comments = $last_comments_collection->each(function ($item, $key) use ($now) {
+            $dt = new Carbon($item->created_at); //Tạo 1 datetime
+            $item->after_minutes = $now->diffInMinutes($dt);
         })->toArray();
 
         $dataView = array(
@@ -141,10 +141,11 @@ class HomeController extends Controller
             'hot_stories' => $hot_stories,
             'new_stories' => $new_stories,
             'new_chapters' => $new_chapters,
-            'full_stories' => $full_stories,
-            'convert_stories' => $convert_stories,
-            'tienhiep_stories' => $tienhiep_stories,
-            'nucuong_stories' => $nucuong_stories
+            // 'full_stories' => $full_stories,
+            // 'convert_stories' => $convert_stories,
+            'propose_stories' => $propose_stories,
+            'nucuong_stories' => $nucuong_stories,
+            'last_comments' => $last_comments,
         );
 
         return view('client_page.home', $dataView);
