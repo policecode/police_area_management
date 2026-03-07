@@ -22,11 +22,7 @@ $user = Auth::user();
         var apiUrlChapter =
             '{{ route('client.api.chaper', ['story_slug' => $story['slug'], 'chaper_slug' => $chaper['slug']]) }}';
     </script>
-      {{-- Quảng cáo adsense Start --}}
-      @if ((bool) env('IS_ADSENSE', false))
-        @include('parts.ads.adsense_v1')
-      @endif
-    {{-- Quảng cáo adsense End --}}
+
     <div id="app_chapter"
         :style="{
                backgroundColor: styles.backgroundColor,
@@ -237,11 +233,7 @@ $user = Auth::user();
             </div>
         </div>
     </div>
-    {{-- Quảng cáo adsense Start --}}
-    @if ((bool) env('IS_ADSENSE', false))
-        @include('parts.ads.adsense_v2')
-    @endif
-    {{-- Quảng cáo adsense End --}}
+
     {{-- Comment Start --}}
         {{-- <div class="container mt-6">
                 <div id="comment-chapter-box"
