@@ -32,9 +32,12 @@
                                             class=" line-clamp-1 text-[0.75rem] text-[#999] mt-[2px]"
                                             title="{{ $item['chaper_name'] }}">{{ $item['chaper_name'] }}</a>
                                     </div>
-                                    <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}"
-                                        title="{{ $item['author_name'] }}"
-                                        class="author text-[0.625rem] w-[21%] line-clamp-1">{{ $item['author_name'] }}</a>
+                                    @if ($item['author_slug'])
+                                        <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}"
+                                            title="{{ $item['author_name'] }}"
+                                            class="author text-[0.625rem] w-[21%] line-clamp-1">{{ $item['author_name'] }}</a>
+                                    @endif
+                               
                                 </li>
                             @endforeach
                         </ul>
@@ -64,9 +67,11 @@
                                             @endif
                                             {{ ucwords($item['title']) }}
                                         </a>
-                                        <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}"
-                                            title="{{ $item['author_name'] }}"
-                                            class="author text-[0.625rem] w-[21%] line-clamp-1 text-[#999999]">{{ $item['author_name'] }}</a>
+                                        @if ($item['author_slug'])
+                                            <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}"
+                                                title="{{ $item['author_name'] }}"
+                                                class="author text-[0.625rem] w-[21%] line-clamp-1 text-[#999999]">{{ $item['author_name'] }}</a>
+                                        @endif
                                     </div>
                                 </li>
                             @endforeach
@@ -111,11 +116,13 @@
                                             {{ ucwords($item['title']) }}</a>
                                     </h3>
                                     <div class="flex items-center justify-between">
-                                        <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}"
-                                            title="{{ $item['author_name'] }}"
-                                            class="author text-[#6c757d] lg:text-[0.875rem] mr-2 mb-1 line-clamp-1">
-                                            {{ $item['author_name'] }}
-                                        </a>
+                                         @if ($item['author_slug'])
+                                            <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}"
+                                                title="{{ $item['author_name'] }}"
+                                                class="author text-[#6c757d] lg:text-[0.875rem] mr-2 mb-1 line-clamp-1">
+                                                {{ $item['author_name'] }}
+                                            </a>
+                                        @endif
                                         @if ($item['is_convert'])
                                             <span title="Convert" class="inline-block shrink-0 py-[2px] px-[11px] border border-solid text-[11px] rounded text-[#128c7e] border-[#128c7e]">Convert</span>
                                         @else
