@@ -13,9 +13,11 @@
                         class="author-vn h-full flex p-3 bg-white rounded transition-all duration-300 hover:shadow-[2px_2px_9px_rgba(0,0,0,.44)]">
                         <div class="content novel-item w-[100%]">
                              <h4 class="flex xl:text-[1rem] text-[0.75rem]">
-                                <a href="{{ route('member.profile', ['user_id' => $item['user_id']]) }}"
-                                    title="{{ $item['name'] }}"
-                                    class="title font-bold line-clamp-1 mb-2 text-[#d31f1f]">{{ $item['name'] }}</a>
+                                @if ($item['user_id'])
+                                    <a href="{{ route('member.profile', ['user_id' => $item['user_id']]) }}"
+                                        title="{{ $item['name'] }}"
+                                        class="title font-bold line-clamp-1 mb-2 text-[#d31f1f]">{{ $item['name'] }}</a>
+                                @endif
                                 <span class="ml-2">đã bình luận công pháp</span>
                             </h4>
                             <h3>
