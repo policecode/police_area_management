@@ -18,11 +18,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Traits\FileWord;
 
 class StoriesController extends Controller
 {
-    use FileWord;
     private function isCoppyrightStory($story) {
         if ($story['is_lock'] != LockStories::LOCK['key']) {
             $user = Auth::user();
