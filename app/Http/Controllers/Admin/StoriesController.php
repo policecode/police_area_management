@@ -41,6 +41,7 @@ class StoriesController extends Controller
 
         return view('admin_page.stories.lists', $dataView);
     }
+    
     public function getItems(Request $request)
     {
         // Thêm dữ liệu vào trong query

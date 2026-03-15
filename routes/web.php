@@ -201,6 +201,9 @@ Route::group(['middleware' => ['throttle:30,1']], function() {
     Route::get('/story/top-rating', [StoriesClientController::class, 'getTopViewStories'])->name('story.top-rating');
     Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->middleware(['auth', 'verified'])->name('story.rating');
     Route::get('/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
+    // Lấy 20 chương truyện đầu tiên gộp nội dung thành 1 trang
+    Route::get('/dev-total-20-chapter/{story_slug}', [StoriesClientController::class, 'devTotal20Chapter'])->name('client.dev_total_20_chapter');
+
     // Route::get('/story/{story_slug}', [StoriesClientController::class, 'index']);
     
     Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');

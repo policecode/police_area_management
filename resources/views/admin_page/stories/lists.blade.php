@@ -132,8 +132,10 @@ use App\Enums\ProposeStatus;
                                     </td>
                                     <td><img :src="item.thumbnail" class="img-thumbnail w-100" /></td>
                                     <td>
-                                        <a :href="item.url" :title="item.url"
-                                            target="_blank">@{{ item.title }}</a>
+                                        <a :href="item.url" :title="item.url" target="_blank">@{{ item.title }}</a>
+                                            <a :href="item.dev_url" target="_blank" title="Lấy text làm audio" style="font-size: 30px;">
+                                                <i class="fa-brands fa-dev"></i>
+                                            </a>
                                     </td>
                                     <td>
                                         <button v-for="(cat, t) in item.category_obj"

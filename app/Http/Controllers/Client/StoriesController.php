@@ -18,10 +18,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\FileWord;
 
 class StoriesController extends Controller
 {
-
+    use FileWord;
     private function isCoppyrightStory($story) {
         if ($story['is_lock'] != LockStories::LOCK['key']) {
             $user = Auth::user();
@@ -288,5 +289,36 @@ class StoriesController extends Controller
             'point_star' => 'Điểm bình chọn',
             'content' => 'Nội dung đánh giá'
         ];
+    }
+
+    public function devTotal20Chapter(Request $request, $story_slug) {
+        $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
+        if (!$story) {
+            abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
+        }
+        if ($request->page) {
+            $page = $request->page;
+        } else {
+            $page = 1;
+        }
+        $chapters = Chaper::getByStory($story['id'])->orderBy('position', 'ASC')->skip(($page - 1) * 20)->take(20)->get();
+        $content = '';
+        $contentDesc = strip_tags($story['description']);
+        foreach ($chapters as $item) {
+            $item['content'] = preg_replace('/<([a-z1-6]+)[^>]*>(\d+)<\/\1>/', '', $item['content']);
+            $content .= strip_tags($item['content']);
+        }
+        $contentDesc = handleFixSpellingErrors($contentDesc);
+        $content = handleFixSpellingErrors($content);
+        
+        $dataView = array(
+            'page_title' => ucwords($story['title']) . ' - ' . ucwords('Dev Total 20 Chapter'),
+            'story' => $story,
+            'chapters' => $chapters,
+            'content' => $content,
+            'description' => $contentDesc
+        );
+        // dd($content);
+        return view('client_page.dev_chapers', $dataView);
     }
 }

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class Story extends Model
 {
     use HasFactory, Filterable;
-    protected $appends = ['status_name', 'is_convert', 'lock_status_name', 'url'];
+    protected $appends = ['status_name', 'is_convert', 'lock_status_name', 'url', 'dev_url'];
     public $filterKeywords = ['title', 'title_eng']; // Sử dụng trong trường hợp có trường keyword
     public $filterFields  = ['title', 'status', 'is_lock', 'propose']; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
     public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
@@ -72,6 +72,11 @@ class Story extends Model
     public function getUrlAttribute()
     {
         return route('client.story', ['story_slug' => $this->slug]);
+    }
+
+    public function getDevUrlAttribute()
+    {
+        return route('client.dev_total_20_chapter', ['story_slug' => $this->slug]);
     }
 
     public function scopeNoById($query, $id) {

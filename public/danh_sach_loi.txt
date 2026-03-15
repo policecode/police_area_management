@@ -1,0 +1,267 @@
+/,
+-,
+ă n,ăn
+b.a.o,bao
+b áo,báo
+bá o,báo
+b ạc,bạc
+b.ạ.c,bạc
+b.ạc,bạc
+bạ.c,bạc
+b ẩn,bẩn
+b.ắ.n,bắn
+b ăng,băng
+b.ă.n.g,băng
+b.ăn.g,băng
+b.ăng,băng
+b ú,bú
+b.ú,bú
+b.úi,búi
+b.út,bút
+b úa,búa
+b.ú.a,búa
+b.úa,búa
+b.ú.p,búp
+b.úp,búp
+b úp,búp
+b.o.m,bom
+b ón,bón
+b.ó.n,bón
+b.ón,bón
+bó.n,bón
+b ội,bội
+b.ộ.i,bội
+b.ội,bội
+bộ.i,bội
+b ệnh,bệnh
+b ím,bím
+b.í.m,bím
+b.ím,bím
+bí.m,bím
+b u ô n,buôn
+c ao,cao
+c.a.o,cao
+c.ao,cao
+ca.o,cao
+c ần,cần
+c.ầ.n,cần
+c.ần,cần
+cầ.n,cần
+c ắt,cắt
+c.ắ.t,cắt
+c.ắt,cắt
+cắ.t,cắt
+c.ắ.n,cắn
+c.ờ,cờ
+c ờ,cờ
+c.ổ,cổ
+c ổ,cổ
+c ứa,cứa
+c.h.â.n,chân
+ch.óng,chóng
+ch.ó,chó
+c.h.é.m,chém
+c.het,chết
+c.h.e.t,chết
+ch.et,chết
+ch ết,chết
+ch.ết,chết
+c.h.ết,chết
+ch.ế.t,chết
+c.h.ế.t,chết
+C.h.ế.t,Chết
+c.h.ặ.t,chặt
+c.h.ử.i,chửi
+ch.óng,chóng
+c.o.n,con
+c.uối,cuối
+d.ụ.c,dục
+d.a.o,dao
+d.ư.ợ.c,dược
+đ.á.n.h,đánh
+đ ánh,đánh
+đ.ả.o,đảo
+đ ập,đập
+đ.â.m,đâm
+đ.ấ.m,đấm
+đ.ầ.u,đầu
+đ ố,đố
+đ ời,đời
+gh en,ghen
+gh ét,ghét
+g.i.ế.c,giết
+G.i.ế.c,Giết
+g.i.ế.t,giết
+hahaha,ha ha ha
+h.a.c.ker,hacker
+h.i.ế.p,hiếp
+h ôi,hôi
+h.ô.i,hôi
+h.ôi,hôi
+hô.i,hôi
+h ồn,hồn
+hồ n,hồn
+h.ồ.n,hồn
+hồ.n,hồn
+h.ồn,hồn
+kh inh,khinh
+k.h.í,khí
+kh óc,khóc
+kh ổ,khổ
+kí ch,kích
+k.í.c.h,kích
+k.í.ch,kích
+k.ích,kích
+kí.c.h,kích
+kíc.h,kích
+kí.ch,kích
+k ỵ,kỵ
+l àm,làm
+l.à.m,làm
+l.àm,làm
+là.m,làm
+l inh,linh
+li nh,linh
+l óc,lóc
+l.o.ạ.n,loạn
+l.ồ.ng,lồng
+l ừa,lừa
+lừ a,lừa
+l ừ a,lừa
+l.ừa,lừa
+lừ.a,lừa
+l.ừ.a,lừa
+l.u.â.n,luân
+li ếm,liếm
+l.i.ế.m,liếm
+li.ếm,liếm
+l.iếm,liếm
+m.a.n.g,mang
+mạ.n.g,mạng
+m.ạ,mạ
+m áu,máu
+m.á.u,máu
+m.áu,máu
+má.u,máu
+m óc,móc
+m.ó.c,móc
+m.óc,móc
+mó.c,móc
+m.ô.n.g,mông
+m ộng,mộng
+n.ạ.n,nạn
+ng ấy,ngấy
+n g ư ờ i,người
+n.g.ự.c,ngực
+nh ạt,nhạt
+nh ẫn,nhẫn
+nh.ụ.c,nhục
+n.u.ô.i,nuôi
+p.hạ.m,phạm
+ph á,phá
+ph ản,phản
+p.h.ả.n,phản
+ph.ản,phản
+phả.n,phản
+p.h.ụ,phụ
+s ản,sản
+s âu,sâu
+s ở,sở
+s.ú.n.g,súng
+s uy,suy
+su y,suy
+s.u.y,suy
+su.y,suy
+s.uy,suy
+t.a.i,tai
+t.a.y,tay
+t àn,tàn
+tà n,tàn
+t.à.n,tàn
+t.àn,tàn
+tà.n,tàn
+t âm,tâm
+t ật,tật
+t.ấ.n,tấn
+t.o.ạ.c,toạc
+to.ạ.c,toạc
+to.ạc,toạc
+to ạc,toạc
+th iên,thiên
+th ỉu,thỉu
+th ù,thù
+t.h.ù,thù
+th.ù,thù
+t.hù,thù
+t.h.i,thi
+t.h.ể,thể
+t.h.ả.m,thảm
+t.h.a.i,thai
+t.h.u.ố.c,thuốc
+th ối,thối
+th.ối,thối
+th ương,thương
+th.ương,thương
+th ường,thường
+th.ường,thường
+t hư,thư
+th ư,thư
+t.h.ư,thư
+t.hư,thư
+th.ư,thư
+t ù,tù
+t.ử,tử
+t im,tim
+t.i.m,tim
+t.im,tim
+ti.m,tim
+t ị,tị
+t.ị,tị
+tì nh,tình
+t.ì.n.h,tình
+t.ì.nh,tình
+t.ình,tình
+tì.nh,tình
+t.r.a,tra
+x ác,xác
+xá c,xác
+x.ác,xác
+xá.c,xác
+x.á.c,xác
+x.é,xé
+x é,xé
+x in,xin
+x i.n,xin
+x.in,xin
+xi.n,xin
+x úc,xúc
+x.ú.c,xúc
+x.úc,xúc
+xú.c,xúc
+s au,sau
+s.a.u,sau
+s.au,sau
+sa.u,sau
+si nh,sinh
+s.i.n.h,sinh
+si.nh,sinh
+s.inh,sinh
+si.n.h,sinh
+s u,su
+s.u,su
+u ng,ung
+u.n.g,ung
+u.ng,ung
+un.g,ung
+ứ c,ức
+ứ.c,ức
+v ị,vị
+v ẫy,vẫy
+v ệ,vệ
+v.ệ,vệ
+v.út,vút
+v ùng,vùng
+v.ũ,vũ
+v.ú,vú
+v ú,vú
+qu a,qua
