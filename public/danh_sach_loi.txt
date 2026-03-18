@@ -1,9 +1,13 @@
+&nbsp;, 
 /,
 -,
 ă n,ăn
 b.a.o,bao
 b áo,báo
 bá o,báo
+b ạo,bạo
+b..ạo,bạo
+b.ạo,bạo
 b ạc,bạc
 b.ạ.c,bạc
 b.ạc,bạc
@@ -132,6 +136,11 @@ l.ừa,lừa
 lừ.a,lừa
 l.ừ.a,lừa
 l.u.â.n,luân
+l ực,lực
+lự..c,lực
+lự.c,lực
+l.ự.c,lực
+l.ực,lực
 li ếm,liếm
 l.i.ế.m,liếm
 li.ếm,liếm
@@ -149,7 +158,12 @@ m.óc,móc
 mó.c,móc
 m.ô.n.g,mông
 m ộng,mộng
+n ạn,nạn
 n.ạ.n,nạn
+N@n,nạn
+n@n,nạn
+nạ..n,nạn
+n..ạn,nạn
 ng ấy,ngấy
 n g ư ờ i,người
 n.g.ự.c,ngực
@@ -163,6 +177,10 @@ ph ản,phản
 p.h.ả.n,phản
 ph.ản,phản
 phả.n,phản
+ph ân,phân
+p.h.â.n,phân
+p.h.ân,phân
+ph.ân,phân
 p.h.ụ,phụ
 s ản,sản
 s âu,sâu
@@ -173,7 +191,10 @@ su y,suy
 s.u.y,suy
 su.y,suy
 s.uy,suy
+t ai,tai
 t.a.i,tai
+t..ai,tai
+ta..i,tai
 t.a.y,tay
 t àn,tàn
 tà n,tàn
@@ -210,7 +231,9 @@ t.h.ư,thư
 t.hư,thư
 th.ư,thư
 t ù,tù
+t.ù,tù
 t.ử,tử
+t ử,tử
 t im,tim
 t.i.m,tim
 t.im,tim
