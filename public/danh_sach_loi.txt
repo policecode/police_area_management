@@ -1,6 +1,7 @@
 &nbsp;, 
 /,
 -,
+@,a
 ă n,ăn
 b.a.o,bao
 b áo,báo
@@ -18,6 +19,9 @@ b ăng,băng
 b.ă.n.g,băng
 b.ăn.g,băng
 b.ăng,băng
+b ắt,bắt
+b.ắ.t,bắt
+b.ắt,bắt
 b ú,bú
 b.ú,bú
 b.úi,búi
@@ -25,6 +29,9 @@ b.út,bút
 b úa,búa
 b.ú.a,búa
 b.úa,búa
+bụ ng,bụng
+b.ụ.n.g,bụng
+bụ.ng,bụng
 b.ú.p,búp
 b.úp,búp
 b úp,búp
@@ -43,6 +50,10 @@ b.í.m,bím
 b.ím,bím
 bí.m,bím
 b u ô n,buôn
+c ảnh,cảnh
+c ả n h,cảnh
+c.ảnh,cảnh
+c.ả.n.h,cảnh
 c ao,cao
 c.a.o,cao
 c.ao,cao
@@ -63,8 +74,14 @@ c ổ,cổ
 c ứa,cứa
 c.h.â.n,chân
 ch.óng,chóng
+C.h.ó,chó
+c hó,chó
+c h ó,chó
 ch.ó,chó
+c.h.ó,chó
 c.h.é.m,chém
+c h ế t,chết
+ch ết,chết
 c.het,chết
 c.h.e.t,chết
 ch.et,chết
@@ -91,6 +108,11 @@ d.ư.ợ.c,dược
 đ.ầ.u,đầu
 đ ố,đố
 đ ời,đời
+đ iên,điên
+đi ên,điên
+đ.i.ê.n,điên
+đi.ên,điên
+đ.iên,điên
 gh en,ghen
 gh ét,ghét
 g.i.ế.c,giết
@@ -148,6 +170,8 @@ l.iếm,liếm
 m.a.n.g,mang
 mạ.n.g,mạng
 m.ạ,mạ
+M á u,máu
+m á u,máu
 m áu,máu
 m.á.u,máu
 m.áu,máu
@@ -156,6 +180,8 @@ m óc,móc
 m.ó.c,móc
 m.óc,móc
 mó.c,móc
+m ổ,mổ
+m.ổ,mổ
 m.ô.n.g,mông
 m ộng,mộng
 n ạn,nạn
@@ -164,6 +190,9 @@ N@n,nạn
 n@n,nạn
 nạ..n,nạn
 n..ạn,nạn
+n ạt,nạt
+n.ạ.t,nạt
+n.ạt,nạt
 ng ấy,ngấy
 n g ư ờ i,người
 n.g.ự.c,ngực
@@ -214,11 +243,30 @@ th ù,thù
 t.h.ù,thù
 th.ù,thù
 t.hù,thù
+th i,thi
 t.h.i,thi
+t h i,thi
+T h i,thi
+t h ị t,thịt
+th ịt,thịt
+t hịt,thịt
+t.h.ị.t,thịt
+t.h.ịt,thịt
+th.ịt,thịt
+t.hịt,thịt
+t h ể,thể
+th ể,thể
 t.h.ể,thể
+th ảm,thảm
 t.h.ả.m,thảm
+th ai,thai
 t.h.a.i,thai
+th uốc,thuốc
 t.h.u.ố.c,thuốc
+th.uốc,thuốc
+th oát,thoát
+th.oát,thoát
+t.h.o.á.t,thoát
 th ối,thối
 th.ối,thối
 th ương,thương
@@ -261,6 +309,10 @@ x úc,xúc
 x.ú.c,xúc
 x.úc,xúc
 xú.c,xúc
+s át,sát
+s á t,sát
+s.át,sát
+s.á.t,sát
 s au,sau
 s.a.u,sau
 s.au,sau
@@ -279,6 +331,9 @@ un.g,ung
 ứ c,ức
 ứ.c,ức
 v ị,vị
+v iện,viện
+v.i.ệ.n,viện
+v.iện,viện
 v ẫy,vẫy
 v ệ,vệ
 v.ệ,vệ
