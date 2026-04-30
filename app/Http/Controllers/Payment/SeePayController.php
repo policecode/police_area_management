@@ -109,8 +109,8 @@ class SeePayController extends Controller
         } 
         DB::beginTransaction();
         try {
-            
-            $transaction = PayTransaction::where('code', $request->content)->first();
+            $content = explode(' ', $request->content);
+            $transaction = PayTransaction::where('code', $content[0])->first();
             if (!$transaction) {
                 return response()->json([
                     'status' => 0,
@@ -129,8 +129,10 @@ class SeePayController extends Controller
                     $transaction->status = PaymentTransactionStatus::SUCCESS['key'];
                     $transaction->transactions_code = $request->id;
                     $transaction->transaction_date = $request->transactionDate;
-                    $transaction->sub_account = $request->subAccount;
                     $transaction->transfer_type = $request->transferType;
+                    $transaction->account_number = $request->accountNumber;
+                    $transaction->sub_account = $request->subAccount;
+
                     $transaction->save();
                     // Nạp tiền vào tài khoản người dùng
                     $user = User::find($transaction->user_id);
