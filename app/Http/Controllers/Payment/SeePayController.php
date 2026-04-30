@@ -100,6 +100,12 @@ class SeePayController extends Controller
 
     public function handleWebhook(Request $request)
     {
+        $test = "MBVCB.14012227537.577093.WZ1777529573M1A1ZW.CT tu 1021005659 NGUYEN HOANG DAT toi 0961555152 NGUYEN HOANG DAT tai MB- Ma GD ACSP/ tq577093";
+        
+       
+        
+        
+
         // 1. Kiểm tra API Key từ Header
         $apiKey = $request->header('Authorization');
         $expectedKey = "Apikey " . env('API_KEY_SEPAY'); // Lưu key trong file .env
@@ -109,8 +115,10 @@ class SeePayController extends Controller
         } 
         DB::beginTransaction();
         try {
-            $content = explode(' ', $request->content);
-            $transaction = PayTransaction::where('code', $content[0])->first();
+            $pattern = '/(HZ.*?ZW)/';
+            preg_match($pattern, $request->content, $matches);
+            $code = $matches[0];
+            $transaction = PayTransaction::where('code', $code)->first();
             if (!$transaction) {
                 return response()->json([
                     'status' => 0,
@@ -163,13 +171,15 @@ class SeePayController extends Controller
     private function getTransactionCode($amount_key)
     {
         // Tiền tố (ví dụ: GD là Giao Dịch)
-        $prefix = "GD";
+        $prefix_start = "HZ";
+        $prefix_end = "ZW";
+
         // Lấy timestamp hiện tại (đảm bảo tính duy nhất theo thời gian)
         $timestamp = time();
         // Gói giao dịch
         $money = 'M' . $amount_key; // Thêm tiền tố gói giao dịch
         // user id tài khoản giao dịch
         $user = 'A' . auth()->id();
-        return $prefix . $timestamp . $money . $user;
+        return $prefix_start . $timestamp . $money . $user.$prefix_end;
     }
 }
