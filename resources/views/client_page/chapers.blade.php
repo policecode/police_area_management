@@ -85,7 +85,7 @@ $user = Auth::user();
 
             </div>
             <div class="container chapter-page-apply" style="">
-                <template v-if="!chaper.unlocked_content">
+                <template v-if="(chaper.money > 0) && !chaper.unlocked_content">
                     <div
                         class="lock flex justify-center my-2 relative before:absolute before:w-full before:h-[1px] before:bg-[#ccc] before:top-1/2 before:left-0 before:translate-y-1/2">
                         <span

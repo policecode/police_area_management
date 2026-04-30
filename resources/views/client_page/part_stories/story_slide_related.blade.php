@@ -22,7 +22,7 @@
                              {{ ucwords($item['title']) }}
                          </a>
                      </h3>
-                     <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}" title="Thần Đông"
+                     <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}" title="{{ ucwords($item['author_name']) }}"
                          class="cate lg:text-[0.875rem]">
                          {{ ucwords($item['author_name']) }}
                      </a>
