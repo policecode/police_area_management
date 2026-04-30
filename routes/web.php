@@ -1,20 +1,21 @@
 <?php
 
 use App\Http\Controllers\Client\AdSecurityController;
-use App\Http\Controllers\Client\ChapersController AS ChapersClientController;
-use App\Http\Controllers\Client\AuthorController AS AuthorClientController;
-use App\Http\Controllers\Client\CategoriesController AS CategoriesClientController;
+use App\Http\Controllers\Client\ChapersController as ChapersClientController;
+use App\Http\Controllers\Client\AuthorController as AuthorClientController;
+use App\Http\Controllers\Client\CategoriesController as CategoriesClientController;
 use App\Http\Controllers\Client\HomeController;
-use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
+use App\Http\Controllers\Client\StoriesController as StoriesClientController;
 use App\Http\Controllers\Client\SearchController;
 use App\Http\Controllers\Client\TopStoryController;
-use App\Http\Controllers\Member\CommentController AS MemberCommentController;
-use App\Http\Controllers\Member\LoginController AS MemberLoginController;
-use App\Http\Controllers\Member\RegisterController AS MemberRegisterController;
-use App\Http\Controllers\Member\ResetPasswordController AS MemberResetPasswordController;
-use App\Http\Controllers\Member\ProfileController AS MemberProfileController;
+use App\Http\Controllers\Member\CommentController as MemberCommentController;
+use App\Http\Controllers\Member\LoginController as MemberLoginController;
+use App\Http\Controllers\Member\RegisterController as MemberRegisterController;
+use App\Http\Controllers\Member\ResetPasswordController as MemberResetPasswordController;
+use App\Http\Controllers\Member\ProfileController as MemberProfileController;
 use App\Http\Controllers\Member\ReportChapterController;
 use App\Http\Controllers\Member\MemberActionController;
+use App\Http\Controllers\Payment\SeePayController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -31,11 +32,11 @@ use Illuminate\Http\Request;
 */
 
 
-Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth', 'verified']], function() {
+Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth', 'verified']], function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', 'DashboardController@index')->name('dashboard')->middleware('can:admin.users.getItems');
 
-       
+
 
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', 'UserController@index')->name('index')->middleware('can:admin.users.getItems');
@@ -65,18 +66,17 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
             Route::post('/handle-list-stories', 'StoriesController@handleListStories')->name('handleListStories')->middleware('can:admin.stories.handleListStories');
             Route::post('/handle-coppyright-stories', 'CoppyrightStoryController@handleCoppyrightStories')->name('handleCoppyrightStories')->middleware('can:admin.stories.handleCoppyrightStories');
             Route::get('/get-coppyright-story-items', 'CoppyrightStoryController@getItems')->name('getCoppyRightStoryItems')->middleware('can:admin.stories.getCoppyRightStoryItems');
-
         });
         // Route::resource('stories', 'StoriesController');
 
-         // Chapers
-         Route::get('/chapers/get-items', 'ChaperController@getItems')->name('chapers.getItems')->middleware('can:admin.chapers.getItems');
-         Route::get('/chapers/{story}', 'ChaperController@index')->name('chapers.index')->middleware('can:admin.chapers.getItems');
-         Route::post('/chapers/{story}', 'ChaperController@store')->name('chapers.store')->middleware('can:admin.chapers.store');
-         Route::put('/chapers/{story}/{chaper}', 'ChaperController@update')->name('chapers.update')->middleware('can:admin.chapers.update');
-         Route::delete('/chapers/{story}/{chaper}', 'ChaperController@destroy')->name('chapers.destroy')->middleware('can:admin.chapers.destroy');
-         Route::delete('/chapers/{story}', 'ChaperController@destroyAll')->name('chapers.destroyAll')->middleware('can:admin.chapers.destroy');
-         Route::post('/chapers/upload/{story}', 'ChaperController@uploadChapterByWord')->name('chapers.upload');
+        // Chapers
+        Route::get('/chapers/get-items', 'ChaperController@getItems')->name('chapers.getItems')->middleware('can:admin.chapers.getItems');
+        Route::get('/chapers/{story}', 'ChaperController@index')->name('chapers.index')->middleware('can:admin.chapers.getItems');
+        Route::post('/chapers/{story}', 'ChaperController@store')->name('chapers.store')->middleware('can:admin.chapers.store');
+        Route::put('/chapers/{story}/{chaper}', 'ChaperController@update')->name('chapers.update')->middleware('can:admin.chapers.update');
+        Route::delete('/chapers/{story}/{chaper}', 'ChaperController@destroy')->name('chapers.destroy')->middleware('can:admin.chapers.destroy');
+        Route::delete('/chapers/{story}', 'ChaperController@destroyAll')->name('chapers.destroyAll')->middleware('can:admin.chapers.destroy');
+        Route::post('/chapers/upload/{story}', 'ChaperController@uploadChapterByWord')->name('chapers.upload');
 
 
         // Author
@@ -132,7 +132,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         // Follow web: Theo dõi các thông số trang web
         Route::get('/visit-website', 'FollowWebController@index')->name('visitWebsite.index')->middleware('can:admin.visitWebsite.getItems');
         Route::get('/visit-website/get-items', 'FollowWebController@getItems')->name('visitWebsite.getItems')->middleware('can:admin.visitWebsite.getItems');
-
     });
 });
 
@@ -146,7 +145,7 @@ Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], funct
 Route::post('/log-ad-click', [AdSecurityController::class, 'logClick'])->name('ads.log');
 
 // Auth
-Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], function() {
+Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], function () {
 
     // Login và Register thông thường
     Route::get('/login', 'LoginController@showFormLogin')->name('auth.form_login');
@@ -159,23 +158,23 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth', 'middleware' => []], f
     // Xử lý hành động gửi lại email
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
-     
+
         return back()->with('message', 'Verification link sent!');
     })->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
 });
 
 
 // 'throttle:30,1', visit_website
-Route::group(['middleware' => ['throttle:30,1']], function() {
+Route::group(['middleware' => ['throttle:30,1']], function () {
     Route::get('/test_client', function (Request $request) {
         dd($request->ips());
-            // $respones = downloadImageFromUrl('https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482752AXp/anh-mo-ta.png', 'member/avatar/');
-            // return response()->json([
-            //     'status' => 1,
-            //     'message' => 'Thành công',
-            //     'data' => asset($respones)
-            // ]);
-        });
+        // $respones = downloadImageFromUrl('https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482752AXp/anh-mo-ta.png', 'member/avatar/');
+        // return response()->json([
+        //     'status' => 1,
+        //     'message' => 'Thành công',
+        //     'data' => asset($respones)
+        // ]);
+    });
 
     Route::get('/', [HomeController::class, 'index'])->name('index');
     Route::get('pages/huong-dan', [HomeController::class, 'huongdan'])->name('client.huong-dan');
@@ -183,7 +182,7 @@ Route::group(['middleware' => ['throttle:30,1']], function() {
     Route::get('pages/ban-quyen', [HomeController::class, 'banquyen'])->name('client.ban-quyen');
     Route::get('pages/chinh-sach-bao-mat', [HomeController::class, 'chinhsachbaomat'])->name('client.chinh-sach-bao-mat');
     Route::get('pages/lien-he', [HomeController::class, 'lienhe'])->name('client.lien-he');
-    
+
     Route::get('/truyen-moi-cap-nhat', [TopStoryController::class, 'newUpdateStory'])->name('client.new-update');
     Route::get('/truyen-hot', [TopStoryController::class, 'hotStory'])->name('client.hot-story');
     Route::get('/truyen-full', [TopStoryController::class, 'fullStory'])->name('client.full-story');
@@ -196,7 +195,7 @@ Route::group(['middleware' => ['throttle:30,1']], function() {
     Route::get('/tag/{tag_slug}', [CategoriesClientController::class, 'index'])->name('client.tag');
     Route::get('/author/{author_slug}', [AuthorClientController::class, 'index'])->name('client.author');
     Route::get('/total-chapter/{slug_total}', [CategoriesClientController::class, 'getTotalChapter'])->name('client.total-chapter');
-    
+
     Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
     Route::get('/story/top-rating', [StoriesClientController::class, 'getTopViewStories'])->name('story.top-rating');
     Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->middleware(['auth', 'verified'])->name('story.rating');
@@ -205,18 +204,18 @@ Route::group(['middleware' => ['throttle:30,1']], function() {
     Route::get('/dev-total-20-chapter/{story_slug}', [StoriesClientController::class, 'devTotal20Chapter'])->name('client.dev_total_20_chapter');
 
     // Route::get('/story/{story_slug}', [StoriesClientController::class, 'index']);
-    
+
     Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
     Route::get('/read-api/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'callChapterApi'])->name('client.api.chaper');
     Route::get('/{story_slug}/chuong-{chaper_position}', [ChapersClientController::class, 'index'])->middleware(['visit_website'])->name('client.chaper');
     // Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index']);
-    
-  
+
+
 });
 
 // Member Auth
-Route::group(['middleware' => ['throttle:20,1']], function() {
-       // Login bằng mạng xã hội
+Route::group(['middleware' => ['throttle:20,1']], function () {
+    // Login bằng mạng xã hội
     Route::get('/auth/google', [MemberLoginController::class, 'redirectSocialiteGoogle'])->name('auth.socialite.google');
     Route::get('/auth/google/callback', [MemberLoginController::class, 'loginSocialiteGoogle'])->name('auth.socialite.google.callback');
 
@@ -232,9 +231,9 @@ Route::group(['middleware' => ['throttle:20,1']], function() {
     Route::get('/member/reset-password/{token}', [MemberResetPasswordController::class, 'showFormResetPassword'])->name('member.form_reset_password');
     Route::post('/member/reset-password', [MemberResetPasswordController::class, 'resetPassword'])->name('member.reset_password');
 
-     // Liên kết sẽ được gửi vào email của người đăng ký
+    // Liên kết sẽ được gửi vào email của người đăng ký
     Route::get('/email/verify/{remember_token}', [MemberRegisterController::class, 'emailVerify'])->name('verification.verify');
-    
+
     // Link thông báo vertify khi người dùng đăng ký tài khoản, chưa xác thực email
     Route::get('/member/email/verify/{email}', [MemberRegisterController::class, 'repeatVetifyForm'])->name('verification.notice');
     Route::post('/member/email/verify/{email}', [MemberRegisterController::class, 'repeatVetify'])->name('verification.repeat');
@@ -245,22 +244,26 @@ Route::group(['middleware' => ['throttle:20,1']], function() {
     Route::get('/member/profile/{user_id}/comments', [MemberProfileController::class, 'getProfileComments'])->name('member.profile.comments');
 
     Route::get('/member/profile-detail', [MemberProfileController::class, 'getProfileDetail'])->name('member.profile_detail');
-    Route::get('/member/payment', [MemberProfileController::class, 'payment'])->name('member.payment');
     Route::get('/member/alert', [MemberProfileController::class, 'alert'])->name('member.alert');
     Route::get('/member/my-story', [MemberProfileController::class, 'mystory'])->name('member.mystory');
     Route::get('/member/my-story/favorites', [MemberProfileController::class, 'mystoryFavorite'])->name('member.mystory.favorites');
     Route::get('/member/my-story/copyright', [MemberProfileController::class, 'mystoryCopyright'])->name('member.mystory.copyright');
     Route::get('/member/gilf-code', [MemberProfileController::class, 'gilfcode'])->name('member.gilfcode');
+    // =========================== Payment =================================
+    Route::get('/member/payment', [SeePayController::class, 'index'])->name('member.payment.client');
+    Route::post('/api/member/payment/qrcode', [SeePayController::class, 'getQrCode'])->name('member.payment.qrcode');
+    Route::post('/api/member/payment/check-status', [SeePayController::class, 'checkPaymentStatus'])->name('member.payment.check_status');
+    
 
 });
 
 // Member Action
-Route::group(['middleware' => ['throttle:20,1']], function() {
+Route::group(['middleware' => ['throttle:20,1']], function () {
     // Comment
     Route::get('/api/member/list-comment', [MemberCommentController::class, 'getListComments']);
     Route::post('/api/member/post-comment', [MemberCommentController::class, 'postComment']);
     Route::post('/api/member/like-comment', [MemberCommentController::class, 'likeComment']);
-    
+
     // Report Chapter
     Route::post('/api/member/report-chapter', [ReportChapterController::class, 'reportChapter']);
 
@@ -273,6 +276,4 @@ Route::group(['middleware' => ['throttle:20,1']], function() {
     // Handle story
     Route::post('/api/member/save-favorite-story', [MemberActionController::class, 'saveFavoriteStory']);
     Route::get('api/member/my-story', [MemberProfileController::class, 'callApiMyStory']);
-
-
 });

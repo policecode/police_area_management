@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\TouristController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\StoriesController AS StoriesClientController;
 use App\Http\Controllers\Client\ChapersController AS ChapersClientController;
+use App\Http\Controllers\Payment\SeePayController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -45,4 +47,5 @@ Route::get('search/keyword', [HomeController::class, 'searchKeyword']);
 
 // Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar']);
 Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews']);
+Route::post('/member/payment/webhook', [SeePayController::class, 'handleWebhook']);
 

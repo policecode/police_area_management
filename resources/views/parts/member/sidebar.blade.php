@@ -19,6 +19,13 @@ $user = Auth::user();
                     class="@if(request()->routeIs('member.profile_detail')) active @endif" 
                     title="Thông tin cá nhân"><i
                     class="fa-solid fa-user mr-2"></i>Thông tin cá nhân</a></li>
+                <li>
+                    <a href="{{route('member.payment.client')}}" 
+                        class="@if(request()->routeIs('member.payment.client')) active @endif" 
+                        title="Nạp linhh thạch">
+                        <i class="fa-regular fa-money-bill-1 mr-2"></i>Nạp linh thạch
+                    </a>
+                </li>
                  {{-- <li class=""><a href="{{route('member.payment')}}" title="Lịch sử giao dịch"><i
                              class="fa-solid fa-file-invoice-dollar mr-2"></i>Lịch sử giao dịch</a>
                      <ul>
@@ -43,8 +50,7 @@ $user = Auth::user();
                     <a href="{{route('member.gilfcode')}}" 
                         class="@if(request()->routeIs('member.gilfcode')) active @endif" 
                         title="Nhập Giftcode">
-                        <i class="fa-solid fa-gift mr-2"></i>N
-                        hập Giftcode
+                        <i class="fa-solid fa-gift mr-2"></i>Nhập Giftcode
                     </a>
                 </li>
                  <li><a href="{{route('auth.logout')}}" title=""><i
