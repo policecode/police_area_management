@@ -135,6 +135,8 @@ class StoriesController extends Controller
                 'status' => $data['status'],
                 'is_lock' => $data['is_lock'] ?? LockStories::LOCK['key'],
                 'propose' => $data['propose'] ?? ProposeStatus::DROP['key'],
+                'buy_money' => $data['buy_money'] ?? '',
+                'buy_position' => $data['buy_position'] ?? '',
             ]);
             // Add Category
             $listStoryCategory = [];
@@ -196,6 +198,8 @@ class StoriesController extends Controller
                 'status' => $data['status'],
                 'is_lock' => $data['is_lock'] ?? LockStories::LOCK['key'],
                 'propose' => $data['propose'] ?? ProposeStatus::DROP['key'],
+                'buy_money' => $data['buy_money'] ?? '',
+                'buy_position' => $data['buy_position'] ?? '',
             ];
 
             if ($request->hasFile('thumbnail')) {
@@ -343,6 +347,8 @@ class StoriesController extends Controller
             'category' => 'array',
             'is_lock' => '',
             'propose' => '',
+            'buy_money' => '',
+            'buy_position' => '',
         ];
         if ($request->id) {
             $rules['title'] = 'required|unique:stories,title,' . $request->id;
@@ -375,6 +381,8 @@ class StoriesController extends Controller
             'description' => 'Thông tin về truyện',
             'is_lock' => 'Trạng thái chia sẻ truyện',
             'propose' => 'Trạng thái đề xuất truyện',
+            'buy_money' => 'Số tiền cần để mua chương truyện',
+            'buy_position' => 'Vị trí bắt đầu khóa chương truyện',
         ];
     }
 
@@ -636,14 +644,20 @@ class StoriesController extends Controller
                 }
                 # code...
                 if ($flag) {
-                    $dataInsert[] = array_merge((array)$chaper_obj, array(
+                    $arr_tmp_merge = array(
                         'user_id' => 1,
                         'slug' => Str::slug($chaper_obj['name'], "-"),
                         'story_id' => $story->id,
                         'content_length' => count(explode(" ", $chaper_obj['content'])),
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
-                    ));
+                    );
+                    if (($story->buy_money > 0) && $story->buy_position && ($chaper_obj['position'] >= $story->buy_position)) {
+                        $arr_tmp_merge['money'] = $story->buy_money;
+                    } else {
+                        $arr_tmp_merge['money'] = 0;
+                    }
+                    $dataInsert[] = array_merge((array)$chaper_obj, $arr_tmp_merge);
                 }
             }
             $result = '';

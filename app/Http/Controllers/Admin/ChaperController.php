@@ -88,7 +88,8 @@ class ChaperController extends Controller
                 'story_id' => $story->id,
                 'content' => $data['content'],
                 'content_length' => count(explode(" ", $data['content'])),
-                'position' => $data['position']
+                'position' => $data['position'],
+                'money' => $data['money']
             ]);
             $total_chapter = $story->total_chapter + 1;
             $story->update([
@@ -233,6 +234,8 @@ class ChaperController extends Controller
             'name' => 'required|max:255',
             'slug' => 'required|max:255',
             'content' => '',
+            'money' => '',
+
         ];
         if ($request->id) {
             $rules['position'] = ['required', 'integer', function ($attr, $value, $fail) use ($request, $story_id) {

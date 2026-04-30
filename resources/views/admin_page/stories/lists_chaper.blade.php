@@ -107,6 +107,7 @@
                                             <i v-if="isOrder('updated_at', 'DESC')" class="fa-solid fa-sort-down"></i>
                                         </a>
                                     </th>
+                                    <th>Giá bán</th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
@@ -118,6 +119,7 @@
                                     <th>Vị trí</th>
                                     <th>Số lượt xem</th>
                                     <th>Cập nhật gần đây nhất</th>
+                                    <th>Giá bán</th>
                                     <th>Hành động</th>
                                 </tr>
                             </tfoot>
@@ -129,6 +131,7 @@
                                     <td>@{{ item.position }}</td>
                                     <td>@{{ item.view }}</td>
                                     <td>@{{ displayDate(item.updated_at) }}</td>
+                                    <td>@{{ item.money }}</td>
                                     <td>
                                         <a @click="showItem(item)" class="btn btn-warning">Sửa</a>
                                         <a @click="deleteItem(item)" class="btn btn-danger mt-1">Xóa</a>
@@ -179,6 +182,15 @@
                                 <input type="number" min="1" v-model="itemDetail.position" class="form-control"
                                     :class={'is-invalid':errors.position} placeholder="Vị trí...">
                                 <div v-if="errors.position" class="invalid-feedback">@{{ errors.position[0] }}</div>
+                            </div>
+                        </div>
+
+                         <div class="col-6">
+                            <div class="mb-3">
+                                <label for="">Giá bán (linh thạch)</label>
+                                <input type="number" min="0" v-model="itemDetail.money" class="form-control"
+                                    :class={'is-invalid':errors.money} placeholder="Giá bán...">
+                                <div v-if="errors.money" class="invalid-feedback">@{{ errors.money[0] }}</div>
                             </div>
                         </div>
     

@@ -80,8 +80,9 @@
                             class="border-t-[1px] border-solid border-[#dee2e6] hover:bg-[rgba(0,0,0,.09)]">
                             <td class="py-2 px-3 text-center w-[10%]">@{{ index + 1 }}</td>
                             <td class="py-2 px-3">
-                                <a :href="item.url" :title="item.name"
-                                    class="text line-clamp-1 hover:text-[#252525]">
+                                <a :href="item.url" :title="item.name" class="text line-clamp-1 hover:text-[#252525]">
+                                    <i v-if="(item.money > 0) && !item.unlocked_content" class="fa-solid fa-lock mr-1 text-[#d31f1f]"></i>
+                                    <i v-if="(item.money > 0) && item.unlocked_content" class="fa-solid fa-lock-open mr-1 text-[#28a745]"></i>
                                     @{{ item.name }}
                                 </a>
                             </td>

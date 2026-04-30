@@ -20,4 +20,16 @@ class OrderChapter extends Model
     protected $fillable = [
         'user_id', 'story_id', 'chapter_id', 'money'
     ];
+
+    public function scopeGetByUser($query, $user_id) {
+        return $query->where('order_chapters.user_id', $user_id);
+    }
+
+    public function scopeGetByStory($query, $story_id) {
+        return $query->where('order_chapters.story_id', $story_id);
+    }
+
+    public function scopeGetByChapter($query, $chapter_id) {
+        return $query->where('order_chapters.chapter_id', $chapter_id);
+    }
 }

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
 use App\Models\CoppyrightStory;
+use App\Models\OrderChapter;
+use App\Models\OrderMonth;
 use App\Models\StarRating;
 use App\Models\Story;
 use App\Models\StoryCategory;
@@ -140,13 +142,21 @@ class StoriesController extends Controller
             if($request->is_paginate){
                 $res['total'] = $query->getTotal();
             }else{
+                $orderChapter = [];
+                if (Auth::check()) {
+                     $orderChapter = OrderChapter::getByUser(Auth::id())->GetByStory($request->story_id)->get()->groupBy('chapter_id')->toArray();
+                     
+                }
                 $now = Carbon::now();
-                $res['data']  = $query->get()->each(function ($item, $key) use($now){
+                $res['data']  = $query->get()->each(function ($item, $key) use($now, $orderChapter){
                     $item->url = route('client.chaper', [
                         'story_slug' => $item->story_slug,
                         'chaper_position' => $item->position,
                     ]);
                     $item->after_minutes = $now->diffInMinutes(new Carbon($item->created_at));
+                    if (($item->money > 0) && !empty($orderChapter[$item->id])) {
+                        $item->unlocked_content = true;
+                    }
                 });
             }
             return response()->json($res);
@@ -244,6 +254,34 @@ class StoriesController extends Controller
                     $item->url = route('client.story', ['story_slug' => $item->slug]);
                     $item->author_url = route('client.author', ['author_slug' => $item['author_slug']]);
                     // $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
+                    
+                });
+            }
+            return response()->json($res);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0, 'data'=> [], 'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function getTopOrderStories(Request $request) {
+        try {
+            $query = OrderMonth::filter($request)->getByKey(get_key_by_day('month'));
+            $res = [
+                'result' => 1,
+                'data' => [],
+                'page' => $query->getPageNumber(),
+                'per_page' => $query->getPerPage(),
+                'total' => 0
+            ];
+            if($request->is_paginate){
+                $res['total'] = $query->getTotal();
+            }else{
+                $res['data']  = $query->joinStory()->get()->each(function ($item, $key) {
+                    $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                    $item->url = route('client.story', ['story_slug' => $item->slug]);
+                    $item->author_url = route('client.author', ['author_slug' => $item['author_slug']]);
                     
                 });
             }

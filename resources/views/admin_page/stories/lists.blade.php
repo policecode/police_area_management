@@ -192,9 +192,49 @@ use App\Enums\ProposeStatus;
         <template v-if="screen=='detail'">
             <div>
                 <form @submit="save">
-                    <legend v-if="itemDetail.id" class="text-primary">Thêm bộ truyện mới</legend>
+                    <legend v-if="itemDetail.id" class="text-primary">Cập nhật thông tin bộ truyện</legend>
                     <legend v-else class="text-primary">Thêm bộ truyện mới</legend>
                     <div class="row">
+                        <template v-if="itemDetail.id">
+                            <div class="col-6">
+                               <div class="mb-3">
+                                   <label for="">Số lượt xem:</label>
+                                   <span>@{{itemDetail.view_count}}</span>
+                                 
+                               </div>
+                           </div>
+                           <div class="col-6">
+                               <div class="mb-3">
+                                   <label for="">Tổng số chương:</label>
+                                   <span>@{{itemDetail.total_chapter}}</span>
+                               </div>
+                           </div>
+                           <div class="col-6">
+                               <div class="mb-3">
+                                   <label for="">Số lượng comments:</label>
+                                   <span>@{{itemDetail.total_comment}}</span>
+                               </div>
+                           </div>
+                           <div class="col-6">
+                               <div class="mb-3">
+                                   <label for="">Số lượng comments:</label>
+                                   <span>@{{itemDetail.total_comment}}</span>
+                               </div>
+                           </div>
+                           <div class="col-6">
+                               <div class="mb-3">
+                                   <label for="">Số lượng người yêu thích:</label>
+                                   <span>@{{itemDetail.total_favorite}}</span>
+                               </div>
+                           </div>
+                           <div class="col-6">
+                               <div class="mb-3">
+                                   <label for="">Số tiền bộ truyện kiếm được:</label>
+                                   <span>@{{itemDetail.total_money}}</span>
+                               </div>
+                           </div>
+
+                        </template>
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="">Tên truyện</label>
@@ -284,6 +324,24 @@ use App\Enums\ProposeStatus;
                                     </option>
                                 </select>
                                 <div v-if="errors.propose" class="invalid-feedback">@{{ errors.propose[0] }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="">Số tiền mỗi chương truyện (Áp dụng dùng tool upload)</label>
+                                <input type="number" v-model="itemDetail.buy_money" class="form-control" min="0"
+                                    :class={'is-invalid':errors.buy_money} placeholder="Số tiền mỗi chương truyện...">
+                                <div v-if="errors.buy_money" class="invalid-feedback">@{{ errors.buy_money[0] }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="">Vị trí bắt đầu khóa chương truyện (Áp dụng dùng tool upload)</label>
+                                <input type="number" v-model="itemDetail.buy_position" class="form-control" min="0"
+                                    :class={'is-invalid':errors.buy_position} placeholder="Vị trí bắt đầu khóa chương truyện...">
+                                <div v-if="errors.buy_position" class="invalid-feedback">@{{ errors.buy_position[0] }}</div>
                             </div>
                         </div>
 

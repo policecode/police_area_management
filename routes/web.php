@@ -198,6 +198,7 @@ Route::group(['middleware' => ['throttle:30,1']], function () {
 
     Route::get('/story/get-list-chapers', [StoriesClientController::class, 'getListChapers'])->name('api.story.chapers');
     Route::get('/story/top-rating', [StoriesClientController::class, 'getTopViewStories'])->name('story.top-rating');
+    Route::get('/story/top-orders', [StoriesClientController::class, 'getTopOrderStories'])->name('story.top-orders');
     Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->middleware(['auth', 'verified'])->name('story.rating');
     Route::get('/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
     // Lấy 20 chương truyện đầu tiên gộp nội dung thành 1 trang
@@ -208,6 +209,8 @@ Route::group(['middleware' => ['throttle:30,1']], function () {
     Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
     Route::get('/read-api/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'callChapterApi'])->name('client.api.chaper');
     Route::get('/{story_slug}/chuong-{chaper_position}', [ChapersClientController::class, 'index'])->middleware(['visit_website'])->name('client.chaper');
+    
+
     // Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index']);
 
 
@@ -253,7 +256,7 @@ Route::group(['middleware' => ['throttle:20,1']], function () {
     Route::get('/member/payment', [SeePayController::class, 'index'])->name('member.payment.client');
     Route::post('/api/member/payment/qrcode', [SeePayController::class, 'getQrCode'])->name('member.payment.qrcode');
     Route::post('/api/member/payment/check-status', [SeePayController::class, 'checkPaymentStatus'])->name('member.payment.check_status');
-    
+    Route::post('/api/member/order-chapter', [ChapersClientController::class, 'buyChapter'])->name('member.payment.buy_chaper');
 
 });
 

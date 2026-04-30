@@ -6,6 +6,8 @@ use App\Enums\FavoriteStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
+use App\Models\OrderChapter;
+use App\Models\OrderMonth;
 use App\Models\Story;
 use App\Models\TopMemberDay;
 use App\Models\User;
@@ -44,12 +46,11 @@ class ChapersController extends Controller
             $story['is_convert'] = false;
         }
         $chaperList = Chaper::selectNotContent()->getByStory($story['id'])->orderBy('position', 'ASC')->get();
-        $chaper = Chaper::getByPosition($chaper_position)->getByStory($story['id'])->first();
-        if (!($chaper->content_length > 0)) {
-            $chaper->content_length = count(explode(" ", $chaper->content));
-            $chaper->update();
-        }
-        $chaper = $chaper->toArray();
+        // Lấy chương truyện theo vị trí
+        $chaper = $this->getChapterContent($chaper_position, $story['id']);
+  
+        // dd($chaper);
+
         $linkPrev = '#';
         $linkNext = '#';
         for ($i = 0; $i < count($chaperList); $i++) {
@@ -101,6 +102,106 @@ class ChapersController extends Controller
             return view('client_page.chapers', $dataView);
         } else {
             return view('client_page.chapers_errors', $dataView);
+        }
+    }
+
+    private function getChapterContent($chaper_position, $story_id) {
+        $chapter = Chaper::getByPosition($chaper_position)->getByStory($story_id)->first();
+        if (!($chapter->content_length > 0)) {
+            // Cập nhật lại sôt từ của chương
+            $chapter->content_length = count(explode(" ", $chapter->content));
+            $chapter->update();
+        }
+        if ($chapter->money > 0) {
+            $user = Auth::user();
+            if ($user) {
+                $orderChapter = OrderChapter::GetByUser($user->id)->GetByChapter($chapter->id)->first();
+                if ($orderChapter) {
+                    $chapter->content = $this->addAdsToContent($chapter->content);
+                    $chapter->unlocked_content = true;
+
+                } else {
+                    $chapter->content = mb_substr($chapter->content, 0, 500). '...';
+                }
+            } else {
+                $chapter->content = mb_substr($chapter->content, 0, 500). '...';
+            }
+        }
+        $chapter = $chapter->toArray();
+        return $chapter;
+    }
+
+    public function buyChapter(Request $request) {
+        DB::beginTransaction();
+        try {
+            if (!Auth::id()) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Vui lòng đăng nhập để mua chương'
+                ], 400);
+            }
+            $user = User::find(Auth::id());
+            $story = Story::find($request->story_id);
+            $chaper = Chaper::getByPosition($request->chaper_position)->getByStory($story->id)->first();
+            if (!$chaper) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Chương không tồn tại'
+                ], 400);
+            }
+
+            $checkerOrderChapter = OrderChapter::GetByUser($user->id)->GetByChapter($chaper->id)->first();
+            if ($checkerOrderChapter) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Bạn đã mua chương này rồi'
+                ], 400);
+            }
+         
+            if ($user->money < $chaper->money) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Số dư không đủ để mua chương'
+                ], 400);
+            }
+            // Trừ tiền người dùng
+            $user->money -= $chaper->money;
+            $user->update();
+            //  tạo bản ghi mua chương
+            OrderChapter::create([
+                'user_id' => $user->id,
+                'story_id' => $story->id,
+                'chapter_id' => $chaper->id,
+                'money' => $chaper->money,
+            ]);
+            // Cập nhật doanh thu cho truyện
+            $story->total_money += $chaper->money;
+            $story->update();
+            // Cập nhật doanh thu của tháng
+            $orderMonth = OrderMonth::GetByStory($story->id)->getByKey(get_key_by_day('month'))->first();
+            if ($orderMonth) {
+                $orderMonth->money += $chaper->money;
+                $orderMonth->update();
+            } else {
+                OrderMonth::create([
+                    'story_id' => $story->id,
+                    'money' => $chaper->money,
+                    'key' => get_key_by_day('month')
+                ]);
+            }
+    
+            DB::commit();
+            return response()->json([
+                'status' => 1,
+                'message' => 'Mua chương thành công'
+             
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 400);
         }
     }
 

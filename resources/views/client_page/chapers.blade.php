@@ -25,9 +25,9 @@ $user = Auth::user();
 
     <div id="app_chapter"
         :style="{
-               backgroundColor: styles.backgroundColor,
-               color: styles.color,
-        }" >
+            backgroundColor: styles.backgroundColor,
+            color: styles.color,
+        }">
         <section class="py-4 read-stories">
             <div class="container chapter-content-container chapter-page-apply" style="">
                 <div class="box-control py-3 flex justify-center">
@@ -46,8 +46,8 @@ $user = Auth::user();
                         <i class="fa-solid fa-angle-right ml-2"></i>
                     </a>
                 </div>
-                
-                <div class="justify-center" :class="{'flex':show.chapter_top}" hidden>
+
+                <div class="justify-center" :class="{ 'flex': show.chapter_top }" hidden>
                     <select class="xl:py-2 xl:px-4 bg-[#128c7e] mx-1 py-2 text-white" onchange="location = this.value;">
                         @foreach ($chaper_list as $item)
                             <option
@@ -56,10 +56,9 @@ $user = Auth::user();
                         @endforeach
                     </select>
                 </div>
-          
 
-                <div id="chapter-content_s"
-                    style="font-size:18px;line-height:24px;font-family:Roboto;">
+
+                <div id="chapter-content_s" style="font-size:18px;line-height:24px;font-family:Roboto;">
                     <h1 class="chapter-title font-bold mb-2">{{ $chaper['name'] }}</h1>
                     <p class="info-detail mb-1">
                         <i class="fa-solid fa-book mr-1"></i> {{ ucwords($story['title']) }}
@@ -76,19 +75,40 @@ $user = Auth::user();
                         fontSize: styles.fontSize + 'px',
                         lineHeight: styles.lineHeight + 'px',
                         fontFamily: styles.fontFamily
-                    }" 
-                    v-html="chaper.content"
-                    class="s-content text-justify mt-4 published-content px-1"
-                    >
-                    {{-- <canvas ref="myCanvas" style="width: 100%; height: 100%;"></canvas> --}}
+                    }"
+                        v-html="chaper.content" class="s-content text-justify mt-4 published-content px-1">
+                        {{-- <canvas ref="myCanvas" style="width: 100%; height: 100%;"></canvas> --}}
                         {{-- {!! $chaper['content'] !!} --}}
                     </div>
                 </div>
 
-                
+
             </div>
             <div class="container chapter-page-apply" style="">
-    
+                <template v-if="!chaper.unlocked_content">
+                    <div
+                        class="lock flex justify-center my-2 relative before:absolute before:w-full before:h-[1px] before:bg-[#ccc] before:top-1/2 before:left-0 before:translate-y-1/2">
+                        <span
+                            class="lock-icon bg-white relative flex items-center justify-center w-9 h-9 rounded-full border border-solid border-[#ccc]"><i
+                                class="fa-solid fa-lock"></i></span>
+                    </div>
+                    <div class="box-buy-chapter my-5">
+                        <p class="title text-center lg:text-[1.5rem] text-[1.25rem] font-bold mb-3">
+                            Cần @{{ chaper.money }} Linh Thạch để mở khóa chương này
+                        </p>
+                        <div class="flex flex-col mb-3 text-[1.125rem]">
+                            <a @click="buyChapter" href="javascript:void(0)" title="Mở khóa chương"
+                                class="btn btn-green !rounded mb-1 min-w-[200px] w-fit mx-auto unlock-chapter-btn"
+                                data-chapter="297136">Mở khóa chương</a>
+                                
+                            {{-- <a href="javascript:void(0)" title="Mở Combo/Full" class="btn btn-open !rounded text-white bg-[#f90] min-w-[200px] w-fit mx-auto mb-1 btn-unlock-all-chapter"><i class="fa-solid fa-gift mr-2"></i> Mở Combo/Full</a> --}}
+                            <a href="{{ route('member.payment.client') }}" title="Thêm Linh Thạch"
+                                class="btn btn-green !rounded mb-1 min-w-[200px] w-fit mx-auto"><i
+                                    class="fa-solid fa-crown mr-1"></i> Thêm Linh Thạch</a>
+                        </div>
+                    </div>
+                </template>
+
                 <div class="flex justify-between flex-wrap mt-6">
                     <p class="text-[#128c7e]">
                         Sưu Tầm, {{ dateFormat($chaper['created_at']) }}
@@ -111,8 +131,8 @@ $user = Auth::user();
                         <i class="fa-solid fa-angle-right ml-2"></i>
                     </a>
                 </div>
-      
-                <div class="justify-center mb-4" :class="{'flex': show.chapter_bottom}" hidden>
+
+                <div class="justify-center mb-4" :class="{ 'flex': show.chapter_bottom }" hidden>
                     <select class="xl:py-2 xl:px-4 bg-[#128c7e] mx-1 py-2 text-white" onchange="location = this.value;">
                         @foreach ($chaper_list as $item)
                             <option
@@ -122,47 +142,71 @@ $user = Auth::user();
                     </select>
                 </div>
                 <div class="text-center">
-                    <a  @click="showFormReport" href="javascript:void(0)" title="Báo lỗi chương"
+                    <a @click="showFormReport" href="javascript:void(0)" title="Báo lỗi chương"
                         class="btn bg-[#f0ad4e] !text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2">
                         <i class="fa-solid fa-triangle-exclamation mr-2"></i>Báo lỗi chương
                     </a>
                 </div>
             </div>
 
-        
+
         </section>
-        <div ref="formReportChapter" class="fixed top-0 right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-[#00000099] duration-500 md:inset-0 invisible pointer-events-none opacity-0">
-            <div v-if="show_error_report" @click="show_error_report = false" class="fixed top-0 right-0 bottom-0 left-0"></div>
-            <div class="popup-form md:max-w-[500px] bg-white relative mx-auto max-h-screen w-full max-w-[90%] overflow-y-auto rounded-md md:h-auto">
+
+        <div v-if="loading" id="loader" >
+            <div class="sk-cube-grid">
+                <div class="sk-cube sk-cube1"></div>
+                <div class="sk-cube sk-cube2"></div>
+                <div class="sk-cube sk-cube3"></div>
+                <div class="sk-cube sk-cube4"></div>
+                <div class="sk-cube sk-cube5"></div>
+                <div class="sk-cube sk-cube6"></div>
+                <div class="sk-cube sk-cube7"></div>
+                <div class="sk-cube sk-cube8"></div>
+                <div class="sk-cube sk-cube9"></div>
+            </div>
+        </div>
+
+        <div ref="formReportChapter"
+            class="fixed top-0 right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-[#00000099] duration-500 md:inset-0 invisible pointer-events-none opacity-0">
+            <div v-if="show_error_report" @click="show_error_report = false" class="fixed top-0 right-0 bottom-0 left-0">
+            </div>
+            <div
+                class="popup-form md:max-w-[500px] bg-white relative mx-auto max-h-screen w-full max-w-[90%] overflow-y-auto rounded-md md:h-auto">
                 <span @click="show_error_report = false"
                     class="close-modal bg-[#128c7e] rounded p-1 flex w-6 h-6 items-center justify-center cursor-pointer absolute top-4 right-4 z-[1]">
                     <img src="{{ asset('assets/images/close-modal.png') }}" alt="">
                 </span>
-                <p class="font-medium text-center text-[#000] text-[1.3rem] p-4 border-b-[1px] border-solid border-[#ebebeb]">
+                <p
+                    class="font-medium text-center text-[#000] text-[1.3rem] p-4 border-b-[1px] border-solid border-[#ebebeb]">
                     Báo lỗi chương</p>
-                <div id="report_chapter_error_form" class="form p-4 formValidation" accept-charset="utf8" >
-                  
-                    <p class="text-note text-[#607d8b] mb-2">Nhập mô tả lỗi: <b>@{{itemDetail.content.length}}/500</b></p>
+                <div id="report_chapter_error_form" class="form p-4 formValidation" accept-charset="utf8">
+
+                    <p class="text-note text-[#607d8b] mb-2">Nhập mô tả lỗi: <b>@{{ itemDetail.content.length }}/500</b></p>
                     <textarea v-model="itemDetail.content"
                         class="form-control border border-solid border-[#ebebeb] bg-white rounded-md h-16 resize-none mb-2 w-full px-3 py-2"></textarea>
                     <span>Nội dung báo cáo không được quá 500 từ</span>
-                    <button @click="sendReportChapter" id="report_chapter_error_btn" class="btn btn-green !rounded">Báo cáo</button>
+                    <button @click="sendReportChapter" id="report_chapter_error_btn" class="btn btn-green !rounded">Báo
+                        cáo</button>
                 </div>
             </div>
         </div>
         <div v-if="show_setting" @click="show_setting = false" class="fixed top-0 right-0 bottom-0 left-0"></div>
         <div class="chapter-action-box-wrapper">
             <div class="position-relative">
-                <div class="setting-frontend font-bold" :class="{'active' : show_setting}">
+                <div class="setting-frontend font-bold" :class="{ 'active': show_setting }">
                     <p class="title-setting text-[1rem] lg:text-[1.25rem]">Cài đặt giao diện</p>
                     <div class="p-3">
                         <div class="flex justify-between items-center mb-8">
-                            <p class="title-item text-[0.9375rem]">Cỡ chữ (<span class="preview-value">@{{styles.fontSize}}</span>px):</p>
-                            <input v-model="styles.fontSize" type="range" id="fontsize" min="12" max="30" />
+                            <p class="title-item text-[0.9375rem]">Cỡ chữ (<span
+                                    class="preview-value">@{{ styles.fontSize }}</span>px):</p>
+                            <input v-model="styles.fontSize" type="range" id="fontsize" min="12"
+                                max="30" />
                         </div>
                         <div class="flex justify-between items-center mb-8">
-                            <p class="title-item text-[0.9375rem]">Cách dòng (<span class="preview-value">@{{styles.lineHeight}}</span>px):</p>
-                            <input v-model="styles.lineHeight" type="range" id="lineheight" min="20" max="50" />
+                            <p class="title-item text-[0.9375rem]">Cách dòng (<span
+                                    class="preview-value">@{{ styles.lineHeight }}</span>px):</p>
+                            <input v-model="styles.lineHeight" type="range" id="lineheight" min="20"
+                                max="50" />
                         </div>
                         <div class="flex justify-between items-center mb-8">
                             <p class="title-item text-[0.9375rem]">Font chữ :</p>
@@ -206,17 +250,19 @@ $user = Auth::user();
                             </a>
                             <a @click="show_setting = false" href="javascript:void(0)"
                                 class="inline-block text-[1rem] !text-white !rounded bg-[#7c7c7c] py-2 px-4 hover:bg-[#4c4c4c]"
-                             title="Trở về mặc định">
+                                title="Trở về mặc định">
                                 <i class="fa-regular fa-rectangle-xmark mr-2"></i>Đóng
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="chapter-action-box">
-                    <a @click="show_setting = true" href="javascript:void(0)" class="item-action show-chapter-theme-setting" title="Cài đặt giao diện">
+                    <a @click="show_setting = true" href="javascript:void(0)"
+                        class="item-action show-chapter-theme-setting" title="Cài đặt giao diện">
                         <i class="fa-solid fa-gear"></i>
                     </a>
-                    <a @click="scrollTarget" href="javascript:void(0)" class="item-action scroll-to-commnet-box" title="Bình luận truyện">
+                    <a @click="scrollTarget" href="javascript:void(0)" class="item-action scroll-to-commnet-box"
+                        title="Bình luận truyện">
                         <i class="fa-solid fa-comments"></i>
                     </a>
                     <a href="{{ route('client.story', ['story_slug' => $story['slug']]) }}" class="item-action"
@@ -226,7 +272,8 @@ $user = Auth::user();
                     <a @click="resetStyles" href="javascript:void(0)" class="item-action" title="Trở về mặc định">
                         <i class="fa-solid fa-repeat"></i>
                     </a>
-                    <a @click="showFormReport" href="javascript:void(0)" class="item-action" modal-rs-target="modal-report" title="Báo lỗi chương">
+                    <a @click="showFormReport" href="javascript:void(0)" class="item-action"
+                        modal-rs-target="modal-report" title="Báo lỗi chương">
                         <i class="fa-solid fa-circle-exclamation"></i>
                     </a>
                 </div>
@@ -235,17 +282,17 @@ $user = Auth::user();
     </div>
 
     {{-- Comment Start --}}
-        {{-- <div class="container mt-6">
+    {{-- <div class="container mt-6">
                 <div id="comment-chapter-box"
                     class="box-comment-wapper p-3 rounded bg-[#fff] mb-6 shadow-[2px_2px_6px_rgba(0,0,0,.13)]">
                     <div class="fb-comments" data-href="{{ route('client.story', ['story_slug' => $story['slug']]) }}"
                         data-width="100%" data-colorscheme="dark" data-numposts="10" data-mobile="true"></div>
                 </div>
             </div> --}}
-        <div id="comment_block" class="container">
-            @include('client_page.part_stories.story_comment')
+    <div id="comment_block" class="container">
+        @include('client_page.part_stories.story_comment')
 
-        </div>
+    </div>
 
     {{-- Comment End --}}
 
@@ -303,21 +350,21 @@ $user = Auth::user();
             },
             methods: {
                 isAuthLogin() {
-                if (!this.user) {
-                    jAlertCLient("Đăng nhập tài khoản", 'danger');
-                    return true;
-                }
-             },
-             showFormReport() {
-                if (this.isAuthLogin()) {
+                    if (!this.user) {
+                        jAlertCLient("Đăng nhập tài khoản", 'danger');
+                        return true;
+                    }
+                },
+                showFormReport() {
+                    if (this.isAuthLogin()) {
                         return;
                     }
                     this.show_error_report = true
                 },
                 addContentToCanvas() {
                     // const element = this.$refs.htmlContentHolder;
-                  
-                    
+
+
                 },
                 addViewStory() {
                     setTimeout(async () => {
@@ -337,12 +384,12 @@ $user = Auth::user();
                 },
                 resetStyles() {
                     this.styles = {
-                            fontSize: 20,
-                            lineHeight: 24,
-                            fontFamily: 'Roboto',
-                            backgroundColor: '#ffffff',
-                            color: '#292e33'
-                        };
+                        fontSize: 20,
+                        lineHeight: 24,
+                        fontFamily: 'Roboto',
+                        backgroundColor: '#ffffff',
+                        color: '#292e33'
+                    };
                 },
                 setStyles(color, background) {
                     this.styles.color = color;
@@ -381,17 +428,35 @@ $user = Auth::user();
                     const target = document.getElementById('comment_block');
                     target.scrollIntoView({
                         behavior: 'smooth', // Cuộn mượt mà (không nhảy bộp phát)
-                        block: 'start'      // Căn lề trên của mục tiêu sát mép trình duyệt
+                        block: 'start' // Căn lề trên của mục tiêu sát mép trình duyệt
                     });
                 },
                 async sendReportChapter() {
-                      let jsonData = await new RouteApi().post(`${this.apiMember}/report-chapter`, this.itemDetail);
-                      this.show_error_report = false;
-                        if (jsonData.status) {
-                            jAlertCLient(jsonData.message, 'success');
-                        } else {
-                            jAlertCLient(jsonData.message, 'danger');
-                        }
+                    let jsonData = await new RouteApi().post(`${this.apiMember}/report-chapter`, this
+                        .itemDetail);
+                    this.show_error_report = false;
+                    if (jsonData.status) {
+                        jAlertCLient(jsonData.message, 'success');
+                    } else {
+                        jAlertCLient(jsonData.message, 'danger');
+                    }
+                },
+                async buyChapter() {
+                    this.loading = true;
+                    let jsonData = await new RouteApi().post(`${this.apiMember}/order-chapter`, {
+                        story_id: this.story.id,
+                        chaper_position: this.chaper.position
+                    });
+                    this.loading = false;
+
+                    if (jsonData.status) {
+                        jAlertCLient(jsonData.message, 'success');
+                        setTimeout(() => {
+                           location.reload();
+                        }, 3000);
+                    } else {
+                        jAlertCLient(jsonData.message, 'danger');
+                    }
                 }
             },
             watch: {
