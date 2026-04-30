@@ -100,12 +100,6 @@ class SeePayController extends Controller
 
     public function handleWebhook(Request $request)
     {
-        $test = "MBVCB.14012227537.577093.WZ1777529573M1A1ZW.CT tu 1021005659 NGUYEN HOANG DAT toi 0961555152 NGUYEN HOANG DAT tai MB- Ma GD ACSP/ tq577093";
-        
-       
-        
-        
-
         // 1. Kiểm tra API Key từ Header
         $apiKey = $request->header('Authorization');
         $expectedKey = "Apikey " . env('API_KEY_SEPAY'); // Lưu key trong file .env

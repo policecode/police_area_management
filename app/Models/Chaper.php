@@ -18,7 +18,7 @@ class Chaper extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'name', 'slug', 'story_id', 'content', 'position', 'view', 'content_length'
+        'user_id', 'name', 'slug', 'story_id', 'content', 'position', 'view', 'content_length', 'money'
     ];
     private $joinStory = false;
     public function scopeGetByPosition($query, $position) {
