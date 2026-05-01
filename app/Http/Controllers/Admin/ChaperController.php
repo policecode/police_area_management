@@ -293,20 +293,21 @@ class ChaperController extends Controller
                     $listPosition[] = $position;
                     $tmpPath = $file->getPathname();
                     $resultArr = $this->readFileWord($tmpPath);
-                    // return response()->json([
-                    //     'status' => 1,
-                    //     'data' => [],
-                    //     'message' => 'success',
-                    //     'data' => $resultArr
-                    // ]);
+                    $money = 0;
+                    if (($story->buy_money > 0) && $story->buy_position && ($position >= $story->buy_position)) {
+                        $money = $story->buy_money;
+                    }
+
                     $data[] = array_merge([
                         'position' => $position,
                         'user_id' => $user->id,
                         'story_id' => $story->id,
+                        'money' => $money,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
                     ], $resultArr);
                 }
+
 
                 $resultChapers = Chaper::getByStory($story->id)->whereIn('position', $listPosition)->get();
                 foreach ($data as $key => $chapter) {
