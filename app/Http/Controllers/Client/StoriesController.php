@@ -56,14 +56,22 @@ class StoriesController extends Controller
         }
         $story->thumbnail = asset($story->thumbnail);
  
-        $story = $story->toArray();
-        // dd($story);
+        // $story = $story->toArray();
+        // Lấy các chương mới nhất của truyện và kiểm tra xem người dùng đã mua chương đó chưa
+        $orderChapter = [];
+        if (Auth::check()) {
+            $orderChapter = OrderChapter::getByUser(Auth::id())->GetByStory($story->id)->get()->groupBy('chapter_id')->toArray();
+        }
         $now = Carbon::now();
-        $chapters = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'DESC')->skip(0)->take(6)->get()->each(function ($item, $key) use ($now) {
-            $item->thumbnail = route('index') . '/' . $item->thumbnail;
+        $chapters = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'DESC')->skip(0)->take(6)->get()->each(function ($item, $key) use ($now, $orderChapter) {
+            if (($item->money > 0) && !empty($orderChapter[$item->id])) {
+                $item->unlocked_content = true;
+            }
             $dt = new Carbon($item->created_at); //Tạo 1 datetime
             $item->after_minutes = $now->diffInMinutes($dt);
         })->toArray();
+        // dd($chapters);
+
         $first_chapter = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'ASC')->first();
         $first_chapter = $first_chapter?$first_chapter->toArray():NULL;
         $storyByAuthor = Story::joinAuthor()->getByAuthor($story['author_id'])->noById($story['id'])->get()->each(function ($item, $key) use ($now) {

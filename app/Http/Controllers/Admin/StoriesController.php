@@ -135,8 +135,8 @@ class StoriesController extends Controller
                 'status' => $data['status'],
                 'is_lock' => $data['is_lock'] ?? LockStories::LOCK['key'],
                 'propose' => $data['propose'] ?? ProposeStatus::DROP['key'],
-                'buy_money' => $data['buy_money'] ?? '',
-                'buy_position' => $data['buy_position'] ?? '',
+                'buy_money' => $data['buy_money'] ?? 0,
+                'buy_position' => $data['buy_position'] ?? NULL,
             ]);
             // Add Category
             $listStoryCategory = [];
@@ -198,8 +198,8 @@ class StoriesController extends Controller
                 'status' => $data['status'],
                 'is_lock' => $data['is_lock'] ?? LockStories::LOCK['key'],
                 'propose' => $data['propose'] ?? ProposeStatus::DROP['key'],
-                'buy_money' => $data['buy_money'] ?? '',
-                'buy_position' => $data['buy_position'] ?? '',
+                'buy_money' => $data['buy_money'] ?? 0,
+                'buy_position' => $data['buy_position'] ?? NULL,
             ];
 
             if ($request->hasFile('thumbnail')) {

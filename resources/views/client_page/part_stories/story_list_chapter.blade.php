@@ -9,6 +9,12 @@
                     <a href="{{ route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $item['position']]) }}"
                         class="flex items-center justify-between py-2 px-3 hover:text-[#252525] hover:bg-[rgba(0,0,0,.09)] border-t-[1px] border-solid border-[#dee2e6]"
                         title="{{ $item['name'] }}">
+                        @if (($item['money'] > 0) && empty($item['unlocked_content']))
+                            <i class="fa-solid fa-lock mr-1 text-[#d31f1f]"></i>
+                        @endif
+                        @if (($item['money'] > 0) && !empty($item['unlocked_content']))
+                            <i class="fa-solid fa-lock-open mr-1 text-[#28a745]"></i>
+                        @endif
                         <span class="title line-clamp-1 mr-3 flex-1">{{ ucwords($item['name']) }}</span>
                         <span
                             class="time shrink-0 w-[20%] text-center">{{ get_string_after_time($item['after_minutes']) }}</span>

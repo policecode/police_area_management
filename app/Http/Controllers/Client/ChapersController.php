@@ -117,7 +117,6 @@ class ChapersController extends Controller
             if ($user) {
                 $orderChapter = OrderChapter::GetByUser($user->id)->GetByChapter($chapter->id)->first();
                 if ($orderChapter) {
-                    $chapter->content = $this->addAdsToContent($chapter->content);
                     $chapter->unlocked_content = true;
 
                 } else {
