@@ -24,8 +24,9 @@
                 <span v-if="position.screen">Đóng chức năng</span>
                 <span v-else>Xóa theo vị trí</span>
             </a>
-            <a @click="changeScreen('import')" class="btn btn-success">Import Chương</a>
-            <a @click="handleContentLength" class="btn btn-success">Content Length</a>
+            <a @click="changeScreen('import')" class="btn btn-success" title="Thêm các chương truyện bằng file word">Import Chapter</a>
+            <a @click="handleContentLength" class="btn btn-success" title="tính toán lại số lượng từ trong mỗi chương truyện">Content Length</a>
+            <a @click="changeScreen('replace')" class="btn btn-success" title="Thay thế nội dung trong các chương truyện">Replace Content</a>
             
            <template v-if="position.screen">
             <div>
@@ -46,7 +47,7 @@
             </div>
         </template>
             <div class="row mt-4">
-                <div class="col-3">
+                <div class="col-2">
                     <select class="form-select">
                         <option selected>Open this select menu</option>
                         <option value="1">One</option>
@@ -54,11 +55,16 @@
                         <option value="3">Three</option>
                       </select>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
+                    <input v-model="querySearch.id" type="number" min="1" class="form-control" placeholder="ID...">
+                </div>
+                <div class="col-2">
                     <input v-model="querySearch.keyword" type="text" class="form-control" placeholder="Search...">
                 </div>
-                <div class="col-1">
+                <div class="col-2">
                     <button @click="searchItem" class="btn btn-success">Fillter</button>
+                    <button @click="clearFilter" class="btn btn-danger">Clear</button>
+
                 </div>
             </div>
             <div class="card shadow mb-4 mt-2">
@@ -78,6 +84,7 @@
                             <thead>
                                 <tr>
                                     <th></th>
+                                    <th>ID</th>
                                     <th>Chương</th>
                                     <th>
                                         <a  @click="orderBy('content_length')" class="link-offset-1">
@@ -114,6 +121,7 @@
                             <tfoot>
                                 <tr>
                                     <th></th>
+                                    <th>ID</th>
                                     <th>Chương</th>
                                     <th>Số từ trong chương</th>
                                     <th>Vị trí</th>
@@ -126,6 +134,7 @@
                             <tbody>
                                 <tr v-for="(item, index) in items">
                                     <td>@{{ index + 1 }}</td>
+                                    <td>@{{ item.id }}</td>
                                     <td>@{{ item.name }}</td>
                                     <td>@{{ item.content_length }}</td>
                                     <td>@{{ item.position }}</td>
@@ -231,6 +240,73 @@
             </div>
         </template>
 
+
+
+        <template v-if="screen=='replace'">
+            <div>
+                <form @submit="addReplaceContent">
+                    <legend class="text-primary">Thêm từ khóa (Cẩn thận việc lựa chọn từ khóa thay thế không dẫn đến tình trạng thay thế những từ khóa không mong muốn)</legend>
+                    <div class="row">
+                 
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="">Nội dung cũ</label>
+                                <input type="text" v-model="replaceContentDetail.old_content" class="form-control"
+                                    :class={'is-invalid':errors.old_content} placeholder="Nội dung cũ...">
+                                <div v-if="errors.old_content" class="invalid-feedback">@{{ errors.old_content[0] }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="">Nội dung mới</label>
+                                <input type="text" v-model="replaceContentDetail.new_content" class="form-control"
+                                    :class={'is-invalid':errors.new_content} placeholder="Nội dung mới...">
+                                <div v-if="errors.new_content" class="invalid-feedback">@{{ errors.new_content[0] }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Thêm Mới</button>
+                        <button @click="screen = 'list'" class="btn btn-danger">Quay lại</button>
+                    </div>
+                </form>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <h3 class="m-0 font-weight-bold text-primary">Truyện: @{{story.title}}</h3>
+                        <button type="button" class="btn btn-success m-4" @click="handleReplaceContent">Thực hiện chức năng thay đổi nội dung toàn bộ các chương truyện</button>
+                        <div v-if="resultReplaceContent.total_affected > 0" class="mb-2 text-bg-success p-4">Có @{{ resultReplaceContent.total_affected }} chương bị thay đổi ID: @{{ resultReplaceContent.affected_chapters.join(', ') }}</div>
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>ID</th>
+                                    <th>
+                                        Từ khóa cũ
+                                    </th>
+                                    <th>
+                                       Từ khóa mới
+                                    </th>
+                                   
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item, index) in replaceContentItems">
+                                    <td>@{{ index + 1 }}</td>
+                                    <td>@{{ item.id }}</td>
+                                    <td>@{{ item.old_content }}</td>
+                                    <td>@{{ item.new_content }}</td>
+                                    <td>
+                                        <a @click="deleteReplaceContent(item)" class="btn btn-danger mt-1">Xóa</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </template>
 
     </div>
     

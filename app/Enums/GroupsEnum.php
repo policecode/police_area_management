@@ -184,6 +184,29 @@ final class GroupsEnum extends Enum
         ],
     ]];
 
+    const REPLACECONTENT =   ['value' => 'Quản lý thay thế nội dung', 'permission' => [
+        [
+            'role' => 'admin.replaceContent.getItems',
+            'name' => 'Xem'
+        ],
+        [
+            'role' => 'admin.replaceContent.store',
+            'name' => 'Thêm mới'
+        ],
+        [
+            'role' => 'admin.replaceContent.update',
+            'name' => 'Cập nhật'
+        ],
+        [
+            'role' => 'admin.replaceContent.destroy',
+            'name' => 'Xóa'
+        ],
+        [
+            'role' => 'admin.replaceContent.replaceContent',
+            'name' => 'Thực hiện thay thế nội dung'
+        ],
+    ]];
+
     const VISITWWEBSITE =   ['value' => 'Theo dõi thông số trang web', 'permission' => [
         [
             'role' => 'admin.visitWebsite.getItems',

@@ -41,11 +41,36 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Tên</th>
+                                    <th>
+                                        <a  @click="orderBy('name')" class="link-offset-1">
+                                            Tên
+                                            <i v-if="isOrder('name', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('name', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
                                     <th>Email</th>
                                     <th>Nhóm</th>
-                                    <th>Ngày tạo</th>
-                                    <th>Verified</th>
+                                    <th>
+                                        <a  @click="orderBy('money')" class="link-offset-1">
+                                            Linh Thạch
+                                            <i v-if="isOrder('money', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('money', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a  @click="orderBy('created_at')" class="link-offset-1">
+                                            Ngày tạo
+                                            <i v-if="isOrder('created_at', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('created_at', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a  @click="orderBy('email_verified_at')" class="link-offset-1">
+                                            Verified
+                                            <i v-if="isOrder('email_verified_at', 'ASC')" class="fa-solid fa-sort-up"></i>
+                                            <i v-if="isOrder('email_verified_at', 'DESC')" class="fa-solid fa-sort-down"></i>
+                                        </a>
+                                    </th>
                                     <th>Sửa</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -56,6 +81,7 @@
                                     <th>Tên</th>
                                     <th>Email</th>
                                     <th>Nhóm</th>
+                                    <th>Linh thạch</th>
                                     <th>Ngày tạo</th>
                                     <th>Verified</th>
                                     <th>Sửa</th>
@@ -68,6 +94,7 @@
                                     <td>@{{ item.name }}</td>
                                     <td>@{{ item.email }}</td>
                                     <td>@{{ item.group.name }}</td>
+                                    <td>@{{ item.money }}</td>
                                     <td>@{{ displayDate(item.created_at) }}</td>
                                     <td>@{{ item.email_verified_at ? displayDate(item.email_verified_at) : 'Chưa xác thực' }}</td>
                                     <td><a @click="showItem(item)" class="btn btn-warning">Sửa</a></td>
@@ -186,6 +213,13 @@
                             <div class="mb-3">
                                 <label>Số chương truyện đã đọc</label>
                                 <div class="alert alert-primary">@{{ itemDetail.total_chapter }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label>Linh thạch</label>
+                                <div class="alert alert-primary">@{{ itemDetail.money }}</div>
                             </div>
                         </div>
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ReplaceContentController;
 use App\Http\Controllers\Client\AdSecurityController;
 use App\Http\Controllers\Client\ChapersController as ChapersClientController;
 use App\Http\Controllers\Client\AuthorController as AuthorClientController;
@@ -78,7 +79,11 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::delete('/chapers/{story}', 'ChaperController@destroyAll')->name('chapers.destroyAll')->middleware('can:admin.chapers.destroy');
         Route::post('/chapers/upload/{story}', 'ChaperController@uploadChapterByWord')->name('chapers.upload');
 
-
+        // Replace Content
+        Route::get('/replace-content/get-items', [ReplaceContentController::class, 'getItems'])->name('replaceContent.getItems')->middleware('can:admin.replaceContent.getItems');
+        Route::post('/replace-content/{story}', [ReplaceContentController::class, 'store'])->name('replaceContent.store')->middleware('can:admin.replaceContent.store');
+        Route::delete('/replace-content/{replaceContent}', [ReplaceContentController::class, 'destroy'])->name('replaceContent.destroy')->middleware('can:admin.replaceContent.destroy');
+        Route::post('/replace-content/replace-content/{story}', [ReplaceContentController::class, 'handleReplaceContent'])->name('replaceContent.replaceContent')->middleware('can:admin.replaceContent.replaceContent');
         // Author
         // Route::get('/author/get-items', 'AuthorController@getItems')->name('author.getItems');
         Route::prefix('author')->name('author.')->group(function () {

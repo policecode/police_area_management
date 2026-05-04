@@ -116,6 +116,25 @@ var app = new Vue({
             }
             return this[this.currentAction]();
         },
+        orderBy(name) {
+            if (this.querySearch.order_by == name) {
+                if (this.querySearch.order_type == 'DESC') {
+                    this.querySearch.order_type = 'ASC';
+                } else {
+                    this.querySearch.order_type = 'DESC';
+                }
+            } else {
+                this.querySearch.order_by = name;
+                this.querySearch.order_type = 'DESC';
+            }
+            this.searchItem();
+        },
+        isOrder(name, type) {
+            if (this.querySearch.order_by == name && this.querySearch.order_type == type) {
+                return true;
+            } 
+            return false;
+        },
         async save() {
             this.loading = true;
             let jsonData;

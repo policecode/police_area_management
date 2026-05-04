@@ -5,9 +5,18 @@ var vue_data = {
     currentAction: '',
     getItemUrl: '',
     items: [],
+    replaceContentItems: [],
     screen: 'list',
     itemDetail: { 
         content: ""
+    },
+    replaceContentDetail: {
+        old_content: '',
+        new_content: ''
+    },
+    resultReplaceContent: {
+        total_affected: 0,
+        affected_chapters: []
     },
     files: {},
     listId: [],
@@ -24,6 +33,7 @@ var vue_data = {
         story_id: story.id
     },
     apiUrl: FVN_LARAVEL_HOME + '/admin/chapers',
+    apiUrlReplaceContent: FVN_LARAVEL_HOME + '/admin/replace-content',
     story: story,
     position: {
         screen: false,
@@ -43,6 +53,7 @@ var app = new Vue({
         this.loaded = true;
         this.updateQueryFromUrl();
         this.searchItem();
+        this.getItemsReplaceContent();
     },
     computed: {
         countContent() {
@@ -239,6 +250,53 @@ var app = new Vue({
                     this.errors = jsonData.errors;
                 }
                 jAlert(jsonData.message);
+            }
+        },
+        async getItemsReplaceContent() {
+            this.loading = true;
+            // http://unicode-study.test/admin/chapers/get-items?is_paginate=&total=0&page=1&per_page=20&keyword=&order_by=position&order_type=DESC&story_id=25931
+            const jsonData = await new RouteApi().get(`${this.apiUrlReplaceContent}/get-items?is_paginate=&page=1&per_page=100&order_by=id&order_type=DESC&story_id=${this.story.id}`);
+            this.loading = false;
+            if (jsonData.result) {
+                this.replaceContentItems = jsonData.data;
+            
+            } else {
+                this.replaceContentItems = [];
+                // jAlert(jsonData.message);
+            }
+        },
+        async addReplaceContent(e) {
+             e.preventDefault()
+            this.loading = true;
+            jsonData = await new RouteApi().post(`${this.apiUrlReplaceContent}/${this.story.id}`,this.replaceContentDetail )
+            this.loading = false;
+            if (jsonData.status) {
+                jnotice(jsonData.message);
+                await this.getItemsReplaceContent();
+                this.replaceContentDetail = { old_content: '', new_content: '' };
+            } else {
+                jAlert(jsonData.message);
+            }
+        },
+        async deleteReplaceContent(item) {
+            if (confirm(`Do you want to delete the Replace Content: ${item.old_content}`)) {
+                let jsonData = await new RouteApi().delete(`${this.apiUrlReplaceContent}/${item.id}`, {});
+                jnotice(jsonData.message);
+                await this.getItemsReplaceContent();
+            }
+        },
+        async handleReplaceContent() {
+            if (confirm(`Bạn muốn thực hiện chức năng thay đổi nội dung toàn bộ các chương truyện?`)) {
+                this.loading = true;
+                jsonData = await new RouteApi().post(`${this.apiUrlReplaceContent}/replace-content/${this.story.id}`,{} );
+                this.loading = false;
+                 if (jsonData.status) {
+                    this.resultReplaceContent.affected_chapters = jsonData.affected_chapters;
+                    this.resultReplaceContent.total_affected = jsonData.total_affected;
+                    jnotice(jsonData.message);
+                } else {
+                    jAlert(jsonData.message);
+                }
             }
         },
         displayDate(date, timezone) {
