@@ -10,7 +10,7 @@ class OrderChapter extends Model
     use HasFactory, Filterable;
 
     public $filterKeywords = [ ]; // Sử dụng trong trường hợp có trường keyword
-    public $filterFields  = [ 'user_id', 'story_id', 'chapter_id' ]; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
+    public $filterFields  = [ ]; // SỬ dụng khi tìm kiếm (==) dữ liệu cùng với tên trường trong DB
     public $filterTextFields = []; //Ử dụng khi tìm kiếm (LIKE) dữ liệu cùng với tên trường trong DB, ưu tiên trước filterFields
     /**
      * The attributes that are mass assignable.
@@ -24,15 +24,21 @@ class OrderChapter extends Model
     private $joinUserStoryChapter = false;
 
     public function scopeGetByUser($query, $user_id) {
-        return $query->where('order_chapters.user_id', $user_id);
+        if ($user_id) {
+            return $query->where('order_chapters.user_id', $user_id);
+        }
     }
 
     public function scopeGetByStory($query, $story_id) {
-        return $query->where('order_chapters.story_id', $story_id);
+        if ($story_id) {
+            return $query->where('order_chapters.story_id', $story_id);
+        }
     }
 
     public function scopeGetByChapter($query, $chapter_id) {
-        return $query->where('order_chapters.chapter_id', $chapter_id);
+        if ($chapter_id) {
+            return $query->where('order_chapters.chapter_id', $chapter_id);
+        }
     }
 
     public function scopeJoinUserStoryChapter($query) {

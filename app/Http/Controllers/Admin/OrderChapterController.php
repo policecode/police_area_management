@@ -22,7 +22,7 @@ class OrderChapterController extends Controller
 
       try {
         //code...
-        $query = OrderChapter::JoinUserStoryChapter()->filter($request);
+        $query = OrderChapter::JoinUserStoryChapter()->GetByUser($request->user_id)->GetByStory($request->story_id)->GetByChapter($request->chapter_id)->filter($request);
         $res = [
             'result' => 1,
             'data' => [],
