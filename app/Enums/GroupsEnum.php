@@ -214,4 +214,42 @@ final class GroupsEnum extends Enum
         ],
 
     ]];
+
+    const PAYTRANSACTION =   ['value' => 'Quản lý giao dịch nạp tiền', 'permission' => [
+        [
+            'role' => 'admin.payTransaction.getItems',
+            'name' => 'Xem'
+        ],
+        [
+            'role' => 'admin.payTransaction.store',
+            'name' => 'Thêm mới'
+        ],
+        [
+            'role' => 'admin.payTransaction.update',
+            'name' => 'Cập nhật'
+        ],
+        [
+            'role' => 'admin.payTransaction.destroy',
+            'name' => 'Xóa'
+        ]
+    ]];
+
+    const ORDERCHAPTER =   ['value' => 'Quản lý đơn hàng chương truyện', 'permission' => [
+        [
+            'role' => 'admin.orderChapter.getItems',
+            'name' => 'Xem'
+        ],
+        [
+            'role' => 'admin.orderChapter.store',
+            'name' => 'Thêm mới'
+        ],
+        [
+            'role' => 'admin.orderChapter.update',
+            'name' => 'Cập nhật'
+        ],
+        [
+            'role' => 'admin.orderChapter.destroy',
+            'name' => 'Xóa'
+        ]
+    ]];
 }

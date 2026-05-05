@@ -51,6 +51,15 @@
             ['page' => 'admin.starRatings.index', 'title' => 'Quản lý đánh giá sao'],
         ],
     ])
+
+    @include('parts.backend.item_page', [
+        'title' => 'Nạp tiền',
+        'page' => 'payTransaction',
+        'icon' => 'fa-solid fa-cart-shopping',
+        'child_route' => [
+            ['page' => 'admin.orderChapter.index', 'title' => 'Mua chương'],
+        ],
+    ])
     @include('parts.backend.item_page', [
         'title' => 'Cài đặt',
         'page' => 'setting',

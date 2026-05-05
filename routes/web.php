@@ -137,6 +137,20 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         // Follow web: Theo dõi các thông số trang web
         Route::get('/visit-website', 'FollowWebController@index')->name('visitWebsite.index')->middleware('can:admin.visitWebsite.getItems');
         Route::get('/visit-website/get-items', 'FollowWebController@getItems')->name('visitWebsite.getItems')->middleware('can:admin.visitWebsite.getItems');
+
+        // Pay Transaction: Tiền giao dịch nạp vào trang web
+        Route::prefix('pay-transaction')->name('payTransaction.')->group(function () {
+            Route::get('/', 'PayTransactionController@index')->name('index')->middleware('can:admin.payTransaction.getItems');
+            Route::get('/get-items', 'PayTransactionController@getItems')->name('getItems')->middleware('can:admin.payTransaction.getItems');
+            Route::delete('/{payTransaction}', 'PayTransactionController@destroy')->name('destroy')->middleware('can:admin.payTransaction.destroy');
+        });
+
+        // Order Chapter: mua chương truyện
+        Route::prefix('order-chapter')->name('orderChapter.')->group(function () {
+            Route::get('/', 'OrderChapterController@index')->name('index')->middleware('can:admin.orderChapter.getItems');
+            Route::get('/get-items', 'OrderChapterController@getItems')->name('getItems')->middleware('can:admin.orderChapter.getItems');
+            Route::delete('/{orderChapter}', 'OrderChapterController@destroy')->name('destroy')->middleware('can:admin.orderChapter.destroy');
+        });
     });
 });
 
