@@ -96,7 +96,7 @@ class ReplaceContentController extends Controller
         DB::beginTransaction();
 
         try {
-            $replaceContents = ReplaceContent::where('story_id', $story->id)->get();
+            $replaceContents = ReplaceContent::where('story_id', $story->id)->get()->orderBy('id', 'asc');
             $affectedChapterIds = [];
 
             if ($replaceContents->isNotEmpty()) {
@@ -157,7 +157,7 @@ class ReplaceContentController extends Controller
     {
         $rules = [
             'old_content' => 'required',
-            'new_content' => 'required',
+            'new_content' => '',
         ];
 
         return $rules;
