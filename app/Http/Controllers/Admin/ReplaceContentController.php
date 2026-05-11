@@ -96,7 +96,7 @@ class ReplaceContentController extends Controller
         DB::beginTransaction();
 
         try {
-            $replaceContents = ReplaceContent::where('story_id', $story->id)->get()->orderBy('id', 'asc');
+            $replaceContents = ReplaceContent::where('story_id', $story->id)->orderBy('id', 'asc')->get();
             $affectedChapterIds = [];
 
             if ($replaceContents->isNotEmpty()) {
