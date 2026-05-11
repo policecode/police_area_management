@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ReplaceContentController;
 use App\Http\Controllers\Admin\ToolController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -48,4 +49,3 @@ Route::get('search/keyword', [HomeController::class, 'searchKeyword']);
 // Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar']);
 Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews']);
 Route::post('/member/payment/webhook', [SeePayController::class, 'handleWebhook']);
-

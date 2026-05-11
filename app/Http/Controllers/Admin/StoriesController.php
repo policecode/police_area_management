@@ -646,7 +646,7 @@ class StoriesController extends Controller
                 if ($flag) {
                     $arr_tmp_merge = array(
                         'user_id' => 1,
-                        'name' => trim($chaper_obj['name'], "@#!$*&^()_+|/<>`~"),
+                        'name' => trim($chaper_obj['name'], "@#!$*&^_+|/<>`~"),
                         'slug' => Str::slug($chaper_obj['name'], "-"),
                         'story_id' => $story->id,
                         'content_length' => count(explode(" ", $chaper_obj['content'])),

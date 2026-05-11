@@ -100,23 +100,35 @@ class ReplaceContentController extends Controller
             $affectedChapterIds = [];
 
             if ($replaceContents->isNotEmpty()) {
+                // Làm sạch các ký tự rác phổ biến trước khi thay thế nội dung
+                $hexGarbage = ['E2808B', 'E2808C', 'E2808D', 'EFBBBF'];
+                foreach ($hexGarbage as $hex) {
+                    DB::table('chapers')
+                    ->where('story_id', $story->id)
+                    ->where('content', 'LIKE', DB::raw("CONCAT('%', UNHEX('" . $hex . "'), '%')"))
+                    ->update([
+                        'content' => DB::raw("REPLACE(content, UNHEX('" . $hex . "'), '')")
+                    ]);
+                }
+                // Xử lý từng cụm từ cần thay thế
                 foreach ($replaceContents as $item) {
-                    // Thêm (?i) vào trước từ khóa để ép MySQL SELECT không phân biệt hoa thường
-                    $pattern = '(?i)' . $item->old_content;
-
+                    $cleanOldContent = preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $item->old_content);
+                    $cleanNewContent = preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $item->new_content);  
+                    // Tạo pattern (giữ nguyên cách dùng (?i) của bạn)
+                    $pattern = '(?i)' . preg_quote($cleanOldContent, '/');
                     // 1. Tìm các chương chứa nội dung này (không phân biệt hoa thường)
                     $ids = DB::table('chapers')
                         ->where('story_id', $story->id)
                         ->where('content', 'REGEXP', $pattern)
                         ->pluck('id')
                         ->toArray();
-
+                 
                     if (!empty($ids)) {
                         $affectedChapterIds = array_unique(array_merge($affectedChapterIds, $ids));
-
-                        // 2. Thực hiện cập nhật
-                        $quotedOld = DB::getPdo()->quote($item->old_content);
-                        $quotedNew = DB::getPdo()->quote($item->new_content);
+                        
+                        // 2. Thực hiện cập nhật 
+                        $quotedOld = DB::getPdo()->quote($cleanOldContent);
+                        $quotedNew = DB::getPdo()->quote($cleanNewContent);
 
                         DB::table('chapers')
                             ->whereIn('id', $ids)
@@ -140,7 +152,6 @@ class ReplaceContentController extends Controller
             return response()->json(['status' => 0, 'message' => $e->getMessage()], 400);
         }
     }
-
 
     private function rules($request)
     {
