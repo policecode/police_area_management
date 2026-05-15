@@ -83,7 +83,7 @@
                                         <a :href="item.url_chapter" target="_blank">@{{ item.chapter_title }} (ID: @{{ item.chapter_id }})</a>
                                     </td>
                                     <td>@{{ item.money }} LT</td>
-                                    <td>@{{ displayDate(item.created_at, true) }}</td>
+                                    <td>@{{ item.created_at }}</td>
                                     <td><a @click="showItem(item)" class="btn btn-warning">Chi tiết</a></td>
                                     <td><a @click="deleteItem(item)" class="btn btn-danger">Xóa</a></td>
                                 </tr>

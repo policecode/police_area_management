@@ -26,21 +26,25 @@ $user = Auth::user();
                         <i class="fa-regular fa-money-bill-1 mr-2"></i>Nạp linh thạch
                     </a>
                 </li>
-                 {{-- <li class=""><a href="{{route('member.payment')}}" title="Lịch sử giao dịch"><i
-                             class="fa-solid fa-file-invoice-dollar mr-2"></i>Lịch sử giao dịch</a>
-                     <ul>
-                         <li><a href="https://blhvip.vn/lich-su-mua-chuong" class="" title="Lịch sử mua chương">Lịch
-                                 sử mua chương</a></li>
-                         <li><a href="{{route('member.payment')}}" class="" title="Lịch sử nạp Linh Thạch">Lịch
+                 <li class="">
+                    <a @click="show_dropdown_menu = !show_dropdown_menu" href="javascript:void(0)" title="Lịch sử giao dịch">
+                        <i class="fa-solid fa-file-invoice-dollar mr-2"></i>
+                        Lịch sử giao dịch
+                    </a>
+                    <span class="btn-dropdown-menu " :class="{'open': show_dropdown_menu }"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
+                     <ul :class="{'block': show_dropdown_menu}" class="dropdown-menu">
+                         <li><a href="{{ route('member.history_payments') }}" class="" title="Lịch sử nạp Linh Thạch">Lịch
                                  sử nạp Linh Thạch</a></li>
-                         <li><a href="https://blhvip.vn/lich-su-ung-ho" class="" title="Lịch sử ủng hộ">Lịch sử
+                         <li><a href="{{ route('member.history_orders') }}" class="" title="Lịch sử mua chương">Lịch
+                                 sử mua chương</a></li>
+                         {{-- <li><a href="https://blhvip.vn/lich-su-ung-ho" class="" title="Lịch sử ủng hộ">Lịch sử
                                  ủng hộ</a></li>
                          <li><a href="https://blhvip.vn/lich-su-de-cu" class="" title="Lịch sử đề cử">Lịch sử
-                                 đề cử</a></li>
+                                 đề cử</a></li> --}}
                      </ul>
-                     <span class="btn-dropdown-menu "><i class="fa fa-angle-left" aria-hidden="true"></i></span>
+                     
                  </li>
-                 <li><a href="{{route('member.alert')}}" class="" title="Thông báo"><i
+                 {{-- <li><a href="{{route('member.alert')}}" class="" title="Thông báo"><i
                              class="fa-solid fa-bell mr-2"></i>Thông báo</a></li> --}}
                  <li><a href="{{route('member.mystory')}}" 
                     class="@if(request()->routeIs('member.mystory') || request()->routeIs('member.mystory.favorites') || request()->routeIs('member.mystory.copyright')) active @endif" 
@@ -77,6 +81,7 @@ $user = Auth::user();
     var vue_member_sidebar_app = {
         loading: false,
         show_navbar: false,
+        show_dropdown_menu: false,
         user: {{ Illuminate\Support\Js::from($user) }},
         pointInTime: null
     };

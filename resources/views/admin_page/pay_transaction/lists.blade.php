@@ -84,7 +84,7 @@ $paymentTransactionStatus = PaymentTransactionStatus::asArray();
                                     <td>@{{ formatMoney(item.amount) }}</td>
                                     <td>@{{ item.code }}</td>
                                     <td>@{{ item.status_name }}</td>
-                                    <td>@{{ displayDate(item.transaction_date, true) }}</td>
+                                    <td>@{{ item.transaction_date }}</td>
                                     <td><a @click="showItem(item)" class="btn btn-warning">Chi tiết</a></td>
                                     <td><a @click="deleteItem(item)" class="btn btn-danger">Xóa</a></td>
                                 </tr>

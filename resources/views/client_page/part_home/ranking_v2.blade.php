@@ -157,9 +157,9 @@
                     class="box-ranking bg-white rounded overflow-hidden border border-solid border-[rgba(0,0,0,.125)] h-full flex flex-col shadow-[0_0_1px_rgba(0,0,0,.13)]">
                     <div class="head relative p-4 border-b-[1px] border-solid border-[rgba(0,0,0,.125)]">
                         <h2 class="font-bold text-[1.125rem] text-center">Bán nhiều trong tháng</h2>
-                        {{-- <a href="https://blhvip.vn/truyen-hot" title="Tất cả"
+                        <a :href="top_pay_url" title="Tất cả"
                             class="readmore text-[#128c7e] text-[0.875rem] absolute top-1/2 right-4 -translate-y-1/2">Tất
-                            cả <i class="ml-2 fa-solid fa-right-long"></i></a> --}}
+                            cả <i class="ml-2 fa-solid fa-right-long"></i></a>
                     </div>
                     <ul class="list-story">
                         <li v-if="topOrderItems[0]" class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
@@ -171,7 +171,7 @@
                                         class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{topOrderItems[0].title}}</a>
                                 </h3>
                                 <p class="text-[0.75rem] text-[#007bff]">Linh thạch bán được: @{{topOrderItems[0].money}} LT</p>
-                               <a :href="items[0].author_url" :title="items[0].author_name"
+                               <a :href="topOrderItems[0].author_url" :title="topOrderItems[0].author_name"
                                     class="block text-[0.75rem] text-[#6c757d] w-fit">@{{ items[0].author_name }}</a>
                             </div>
                             <a :href="topOrderItems[0].url" :title="topOrderItems[0].title"
@@ -205,6 +205,7 @@
         loading: false,
         items: [],
         view_url: '#',
+        top_pay_url: '#',
         querySearch: {
             total: 0,
             page: 1,
@@ -304,6 +305,7 @@
                 
                 if (jsonData.result) {
                     this.topOrderItems = jsonData.data;
+                    this.top_pay_url = jsonData.top_pay_url;
                 } else {
                     this.topOrderItems = [];
                 }

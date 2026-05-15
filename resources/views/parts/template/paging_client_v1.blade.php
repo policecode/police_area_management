@@ -31,6 +31,7 @@ if ($page + $maxviewBtn <= $max_page) {
 } else {
     $after = $max_page;
 }
+
 $isLastPage = true;
 if ($after + 2 >= $max_page) {
     $isLastPage = false;

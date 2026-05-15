@@ -6,6 +6,7 @@ use App\Enums\PaymentTransactionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
+use Carbon\Carbon;
 
 class PayTransaction extends Model
 {
@@ -23,6 +24,12 @@ class PayTransaction extends Model
         'user_id', 'getway', 'transaction_date', 'account_number', 'sub_account', 'transfer_type', 'amount', 'money_web', 'code', 'transactions_code', 'status'
     ];
 
+     protected function serializeDate(\DateTimeInterface $date)
+    {
+        // Chuyển về múi giờ +7 trước khi format
+        return Carbon::instance($date)->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i:s');
+    }
+
     private $joinUser = false;
 
     public function getStatusNameAttribute()
@@ -36,6 +43,16 @@ class PayTransaction extends Model
             }
         }
         return '';
+    }
+
+    public function scopeGetByUser($query, $userId)
+    {
+        return $query->where('pay_transactions.user_id', $userId);
+    }
+
+    public function scopeGetByStatus($query, $status)
+    {
+        return $query->where('pay_transactions.status', $status);
     }
 
     public function scopeJoinUsers($query)

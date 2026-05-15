@@ -16,6 +16,7 @@ use App\Http\Controllers\Member\ResetPasswordController as MemberResetPasswordCo
 use App\Http\Controllers\Member\ProfileController as MemberProfileController;
 use App\Http\Controllers\Member\ReportChapterController;
 use App\Http\Controllers\Member\MemberActionController;
+use App\Http\Controllers\Member\OrderController;
 use App\Http\Controllers\Payment\SeePayController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -206,6 +207,7 @@ Route::group(['middleware' => ['throttle:30,1']], function () {
     Route::get('/truyen-hot', [TopStoryController::class, 'hotStory'])->name('client.hot-story');
     Route::get('/truyen-full', [TopStoryController::class, 'fullStory'])->name('client.full-story');
     Route::get('/truyen-xem-nhieu/{view_slug}', [TopStoryController::class, 'viewStory'])->name('client.view-story');
+    Route::get('/truyen-mua-nhieu', [TopStoryController::class, 'topPayStory'])->name('client.top-pay-story');
 
     Route::get('/search', [SearchController::class, 'index'])->name('client.search');
     Route::get('/super-search', [SearchController::class, 'superSearch'])->name('client.superSearch');
@@ -276,6 +278,9 @@ Route::group(['middleware' => ['throttle:20,1']], function () {
     Route::post('/api/member/payment/qrcode', [SeePayController::class, 'getQrCode'])->name('member.payment.qrcode');
     Route::post('/api/member/payment/check-status', [SeePayController::class, 'checkPaymentStatus'])->name('member.payment.check_status');
     Route::post('/api/member/order-chapter', [ChapersClientController::class, 'buyChapter'])->name('member.payment.buy_chaper');
+    // ======================= Lịch sử mua chương =======================
+    Route::get('/member/my-story/history-orders', [OrderController::class, 'historyOrders'])->name('member.history_orders');
+    Route::get('/member/my-story/history-payments', [OrderController::class, 'historyPayments'])->name('member.history_payments');
 
 });
 

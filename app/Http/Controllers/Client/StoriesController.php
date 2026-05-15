@@ -279,6 +279,7 @@ class StoriesController extends Controller
             $res = [
                 'result' => 1,
                 'data' => [],
+                'top_pay_url' => route('client.top-pay-story'),
                 'page' => $query->getPageNumber(),
                 'per_page' => $query->getPerPage(),
                 'total' => 0

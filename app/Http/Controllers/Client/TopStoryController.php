@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Chaper;
+use App\Models\OrderMonth;
 use App\Models\Story;
 use App\Models\StoryCategory;
 use App\Models\ViewDay;
@@ -260,5 +261,56 @@ class TopStoryController extends Controller
             'view_slug' => $view_slug
         );
         return view('client_page.view_story', $dataView);
+    }
+
+     public function topPayStory(Request $request)
+    {
+        $queryDefault = array(
+            'page' => 1,
+            'per_page' => 12,
+            'key' => get_key_by_day('month'),
+            'order_by' => 'money',
+            'order_type' => 'DESC',
+        );
+        $page_title = 'Bán Nhiều Trong Tháng';
+        $description = 'Danh Sách Truyện Được Mua Nhiều Trong Tháng';
+  
+        $request->merge(array_merge($queryDefault, $request->query()));
+        $query = OrderMonth::filter($request);
+
+        $count = $query->getTotal();
+        $colection = $query->joinStory()->get();
+        $listStory  = $colection->each(function ($item, $key) {
+            $item->thumbnail = route('index') . '/' . $item->thumbnail;
+            $isResult = strpos($item->title, '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
+        })->toArray();
+        // dd($listStory);
+
+        $breadcrumb = [
+            [
+                "title" => "Trang chủ",
+                "url" => route('index', [])
+            ],
+            [
+                "title" => $page_title,
+                "url" => ''
+            ]
+        ];
+
+        $dataView = array(
+            'page_title' => $page_title,
+            'records' => $listStory,
+            'total_records' => $count,
+            'per_page' => $request->per_page,
+            'page' => $request->page,
+            'breadcrumb' => $breadcrumb,
+            'description' => $description,
+        );
+        return view('client_page.top_pay_story', $dataView);
     }
 }

@@ -299,6 +299,11 @@ $user = Auth::user();
     @if (!$is_admin)
         {{-- @include('parts.ads.ads_modal_redirect') --}}
     @endif
+    {{-- Quảng cáo adsense Start --}}
+    @if (((bool) env('IS_ADSENSE', false)) && ($chaper['money'] == 0))
+        @include('parts.ads.adsense_social')
+    @endif
+    {{-- Quảng cáo adsense End --}}
 
     {{-- <a id="scroll-to-top-btn" class="bottom-right"><i class="fas fa-angle-double-up"></i></a> --}}
     <script>

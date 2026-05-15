@@ -50,7 +50,7 @@ $user = Auth::user();
                             <template v-if="items.length">
                                 <div v-for="(item, index) in items"
                                     class="item-story-search p-2 border-b border-[#d9d9d9] hover:bg-[#f5f5f5]">
-                                    <a :href="item.url" class="flex" title="Quang Âm Chi Ngoại">
+                                    <a :href="item.url" class="flex" :title="item.title">
                                         <div class="img w-[60px] relative">
                                             <div class="c-img pt-[140%] rounded-md overflow-hidden">
                                                 <picture>
@@ -372,6 +372,7 @@ $user = Auth::user();
                     <li><a href="{{ route('client.new-update') }}" title="">Mới cập nhật</a></li>
                     <li><a href="{{ route('client.hot-story') }}" title="">Truyện hay</a></li>
                     <li><a href="{{ route('client.view-story', ['view_slug' => 'day']) }}" title="">Xem nhiều</a></li>
+                    <li><a href="{{ route('client.top-pay-story') }}" title="">Bán chạy</a></li>
                     <li><a href="{{ route('client.superSearch') }}" title="">Filter</a></li>
 
                     {{-- <li><a href="https://forum.banlong.us/" title="">Giao diện cũ</a></li>

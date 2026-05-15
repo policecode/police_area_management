@@ -35,6 +35,14 @@
                 @endif
             </li>
 
+             <li>
+                @if (request()->routeIs('client.top-pay-story'))
+                        <a href="javascript:void(0)" title="Bán chạy" class="block p-2 rounded bg-[#0e6d62]">Bán chạy</a>
+                @else
+                    <a href="{{route('client.top-pay-story')}}" title="Bán chạy" class="block p-2 rounded">Bán chạy</a>
+                @endif
+            </li>
+
             <li>
                 @if (request()->routeIs('client.superSearch'))
                     <a href="javascript:void(0)" title="Tìm kiếm nâng cao" class="block p-2 rounded bg-[#0e6d62]">Filter</a>

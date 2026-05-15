@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Filterable;
+use Carbon\Carbon;
+
 class OrderChapter extends Model
 {
     use HasFactory, Filterable;
@@ -20,7 +22,14 @@ class OrderChapter extends Model
     protected $fillable = [
         'user_id', 'story_id', 'chapter_id', 'money'
     ];
-
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        // Chuyển về múi giờ +7 trước khi format
+        return Carbon::instance($date)->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i:s');
+    }
+    // protected $casts = [
+    //     'created_at' => 'datetime:d/m/Y H:i:s',
+    // ];
     private $joinUserStoryChapter = false;
 
     public function scopeGetByUser($query, $user_id) {
