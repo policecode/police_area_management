@@ -52,9 +52,9 @@
                                         </div>
                                         <div class="story-info lg:text-[0.875rem]">
                                             <p
-                                                class="text-[#28a745] mr-1 whitespace-nowrap">Tổng số LT bán được: {{ $item['total_money'] }}
+                                                class="text-[#28a745] mr-1 whitespace-nowrap">Tổng LT bán được: {{ $item['total_money'] }}
                                                 LT</p>
-                                            <p class="text-[#007bff] mr-1 whitespace-nowrap">Bán được trong tháng: {{ $item['money'] }}
+                                            <p class="text-[#007bff] mr-1 whitespace-nowrap">Bán trong tháng: {{ $item['money'] }}
                                                 LT</p>
                                             <p class="text-[#dc3545] mr-1 whitespace-nowrap">Số lượt xem: {{ $item['view_count'] }}</p>
                                             
