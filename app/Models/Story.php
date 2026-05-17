@@ -71,12 +71,18 @@ class Story extends Model
 
     public function getUrlAttribute()
     {
-        return route('client.story', ['story_slug' => $this->slug]);
+        if ($this->slug) {
+            return route('client.story', ['story_slug' => $this->slug]);
+        }
+        return '';
     }
 
     public function getDevUrlAttribute()
     {
-        return route('client.dev_total_20_chapter', ['story_slug' => $this->slug]);
+         if ($this->slug) {
+             return route('client.dev_total_20_chapter', ['story_slug' => $this->slug]);
+         }
+         return '';
     }
 
     public function scopeNoById($query, $id) {
