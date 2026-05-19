@@ -367,8 +367,9 @@ var app = new Vue({
                 page: 1,
                 per_page: 20,
                 keyword: '',
-                order_by: 'id',
-                order_type: 'DESC'
+                order_by: 'position',
+                order_type: 'DESC',
+                story_id: this.story.id
             };
             this.searchItem();
         },

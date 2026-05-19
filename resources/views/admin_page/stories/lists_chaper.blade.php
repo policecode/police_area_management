@@ -47,19 +47,15 @@
             </div>
         </template>
             <div class="row mt-4">
-                <div class="col-2">
-                    <select class="form-select">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                      </select>
-                </div>
+           
                 <div class="col-2">
                     <input v-model="querySearch.id" type="number" min="1" class="form-control" placeholder="ID...">
                 </div>
                 <div class="col-2">
                     <input v-model="querySearch.keyword" type="text" class="form-control" placeholder="Search...">
+                </div>
+                <div class="col-2">
+                    <input v-model="querySearch.content" type="text" class="form-control" placeholder="Nội dung chương truyện...">
                 </div>
                 <div class="col-2">
                     <button @click="searchItem" class="btn btn-success">Fillter</button>
