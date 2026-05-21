@@ -359,6 +359,106 @@ class ChapersController extends Controller
         }
     }
 
+    public function getTotalBuyChapter(Request $request, $story_id) {
+        try {
+            // Lấy tổng số chương đã mua của truyện
+                $orderChapterList = OrderChapter::GetByStory($story_id)->GetByUser(Auth::id())->get()->pluck('chapter_id')->toArray();
+            // Lấy danh sách các chương truyện chưa mua
+                $chaperList = Chaper::SelectNotContent()->getByStory($story_id)->GetByMoney()->GetByNotId($orderChapterList)->orderBy('position', 'ASC')->get();
+                $totalChapter = count($chaperList);
+                $totalCoint = $chaperList->sum('money');
+                return response()->json([
+                    'status' => 1,
+                    'total_chapter' => $totalChapter,
+                    'total_coint' => $totalCoint,
+                    'data' => $chaperList
+                ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function handleBuyComboChapter(Request $request) {
+        DB::beginTransaction();
+        try {
+            $validator = Validator::make($request->all(), [
+                'story_id' => 'required',
+                'start_position' => 'required',
+                'end_position' => 'required'
+            ], $this->messages(), $this->attributes());
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 0,
+                    'errors' => $validator->errors(),
+                    'message' => 'validation'
+                ]);
+            }
+            $data = $validator->validated();
+            $user = User::find(Auth::id());
+            $story = Story::find($data['story_id']);
+            // Lấy tổng số chương đã mua của truyện
+            $orderChapterList = OrderChapter::GetByStory($data['story_id'])->GetByUser($user->id)->get()->pluck('chapter_id')->toArray();
+            // Lấy danh sách chương cần mua
+            $chaperList = Chaper::SelectNotContent()->getByStory($data['story_id'])->GetByMoney()->GetByNotId($orderChapterList)->whereBetween('position', [$data['start_position'], $data['end_position']])->orderBy('position', 'ASC')->get();
+            $totalCoint = $chaperList->sum('money');
+            $totalChapter = count($chaperList);
+            if ($user->money < $totalCoint) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Số dư không đủ để mua combo chương'
+                ], 400);
+            }
+            // Trừ tiền người dùng
+            $user->money -= $totalCoint;
+            $user->update();
+            // Tạo bản ghi mua chương
+            $dataInsert = [];
+            foreach ($chaperList as $chaper) {
+                $dataInsert[] = [
+                    'user_id' => $user->id,
+                    'story_id' => $data['story_id'],
+                    'chapter_id' => $chaper->id,
+                    'money' => $chaper->money,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
+            OrderChapter::insert($dataInsert);
+            // Cập nhật doanh thu cho truyện
+            $story = Story::find($data['story_id']);
+            $story->total_money += $totalCoint;
+            $story->update();
+            // Cập nhật doanh thu của tháng
+            $orderMonth = OrderMonth::GetByStory($data['story_id'])->getByKey(get_key_by_day('month'))->first();
+            if ($orderMonth) {
+                $orderMonth->money += $totalCoint;
+                $orderMonth->update();
+            } else {
+                OrderMonth::create([
+                    'story_id' => $data['story_id'],
+                    'money' => $totalCoint,
+                    'key' => get_key_by_day('month')
+                ]);
+            }
+
+            DB::commit();
+            return response()->json([
+                'status' => 1,
+                'message' => 'Mua combo ' . $totalChapter . ' chương với giá ' . number_format($totalCoint) . ' LT thành công'
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
     private function rules($request)
     {
         $rules = [
@@ -386,6 +486,8 @@ class ChapersController extends Controller
         return [
             'story_id' => 'Tên truyện',
             'chaper_id' => 'Tên chương',
+            'start_position' => 'Vị trí bắt đầu',
+            'end_position' => 'Vị trí kết thúc'
         ];
     }
 }

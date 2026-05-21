@@ -238,7 +238,7 @@ Route::group(['middleware' => ['throttle:30,1']], function () {
 });
 
 // Member Auth
-Route::group(['middleware' => ['throttle:20,1']], function () {
+Route::group(['middleware' => ['throttle:30,1']], function () {
     // Login bằng mạng xã hội
     Route::get('/auth/google', [MemberLoginController::class, 'redirectSocialiteGoogle'])->name('auth.socialite.google');
     Route::get('/auth/google/callback', [MemberLoginController::class, 'loginSocialiteGoogle'])->name('auth.socialite.google.callback');
@@ -278,6 +278,9 @@ Route::group(['middleware' => ['throttle:20,1']], function () {
     Route::post('/api/member/payment/qrcode', [SeePayController::class, 'getQrCode'])->name('member.payment.qrcode');
     Route::post('/api/member/payment/check-status', [SeePayController::class, 'checkPaymentStatus'])->name('member.payment.check_status');
     Route::post('/api/member/order-chapter', [ChapersClientController::class, 'buyChapter'])->name('member.payment.buy_chaper');
+    Route::get('/api/member/total-buy-chapter/{story_id}', [ChapersClientController::class, 'getTotalBuyChapter'])->name('member.payment.total-buy-chapter');
+    Route::post('/api/member/buy-combo-chapter', [ChapersClientController::class, 'handleBuyComboChapter'])->name('member.payment.buy-combo-chapter');
+
     // ======================= Lịch sử mua chương =======================
     Route::get('/member/my-story/history-orders', [OrderController::class, 'historyOrders'])->name('member.history_orders');
     Route::get('/member/my-story/history-payments', [OrderController::class, 'historyPayments'])->name('member.history_payments');
@@ -303,4 +306,7 @@ Route::group(['middleware' => ['throttle:20,1']], function () {
     // Handle story
     Route::post('/api/member/save-favorite-story', [MemberActionController::class, 'saveFavoriteStory']);
     Route::get('api/member/my-story', [MemberProfileController::class, 'callApiMyStory']);
+
+    // 
+    
 });

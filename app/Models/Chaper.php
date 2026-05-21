@@ -47,6 +47,20 @@ class Chaper extends Model
         return $query;
     }
 
+    public function scopeGetByMoney($query) {
+        $query->where('money', '>',0);
+        return $query;
+    }
+
+    public function scopeGetByNotId($query, $id) {
+        if (is_array($id)) {
+            $query->whereNotIn('id', $id);
+        } else {
+            $query->where('id', '!=', $id);
+        }
+        return $query;
+    }
+
     public function scopeJoinStory($query) {
         if ($this->joinStory ) {
             return $query;
@@ -60,7 +74,7 @@ class Chaper extends Model
     }
 
     public function scopeSelectNotContent($query) {
-        $query->select('id', 'name', 'slug', 'view', 'position', 'created_at', 'updated_at');
+        $query->select('id', 'name', 'slug', 'view', 'position', 'money', 'created_at', 'updated_at');
         return $query;
     }
 

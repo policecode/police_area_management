@@ -100,8 +100,10 @@ $user = Auth::user();
                             <a @click="buyChapter" href="javascript:void(0)" title="Mở khóa chương"
                                 class="btn btn-green !rounded mb-1 min-w-[200px] w-fit mx-auto unlock-chapter-btn"
                                 data-chapter="297136">Mở khóa chương</a>
-                                
-                            {{-- <a href="javascript:void(0)" title="Mở Combo/Full" class="btn btn-open !rounded text-white bg-[#f90] min-w-[200px] w-fit mx-auto mb-1 btn-unlock-all-chapter"><i class="fa-solid fa-gift mr-2"></i> Mở Combo/Full</a> --}}
+
+                            <a @click="showFormBuyCombo" href="javascript:void(0)" title="Mở Combo/Full"
+                                class="btn btn-open !rounded text-white bg-[#f90] min-w-[200px] w-fit mx-auto mb-1 btn-unlock-all-chapter"><i
+                                    class="fa-solid fa-gift mr-2"></i> Mở Combo/Full</a>
                             <a href="{{ route('member.payment.client') }}" title="Thêm Linh Thạch"
                                 class="btn btn-green !rounded mb-1 min-w-[200px] w-fit mx-auto"><i
                                     class="fa-solid fa-crown mr-1"></i> Thêm Linh Thạch</a>
@@ -152,7 +154,7 @@ $user = Auth::user();
 
         </section>
 
-        <div v-if="loading" id="loader" >
+        <div v-if="loading" id="loader">
             <div class="sk-cube-grid">
                 <div class="sk-cube sk-cube1"></div>
                 <div class="sk-cube sk-cube2"></div>
@@ -279,6 +281,132 @@ $user = Auth::user();
                 </div>
             </div>
         </div>
+        {{-- Combo Mua chuowng Start --}}
+        <div v-if="show_buy_chapter" class="jconfirm-light jconfirm-open" :class="{ 'jconfirm': show_buy_chapter }">
+            <div class="jconfirm-bg"
+                style="transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.36, 0.55, 0.19, 1);"></div>
+            <div class="jconfirm-scrollpane">
+                <div class="jconfirm-row">
+                    <div class="jconfirm-cell">
+                        <div class="jconfirm-holder" style="padding-top: 40px; padding-bottom: 40px;">
+                            <div class="jc-bs3-container container">
+                                <div
+                                    class="jc-bs3-row row justify-content-md-center justify-content-sm-center justify-content-xs-center justify-content-lg-center">
+                                    <div class="jconfirm-box-container jconfirm-animated open-full-combo-box jconfirm-no-transition"
+                                        style="transform: translate(0px, 0px); transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.36, 0.55, 0.19, 1);">
+                                        <div class="jconfirm-box jconfirm-hilight-shake jconfirm-type-default jconfirm-type-animated"
+                                            role="dialog" aria-labelledby="jconfirm-box27957" tabindex="-1"
+                                            style="transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.36, 0.55, 0.19, 1); transition-property: all, margin;">
+                                            <div @click="show_buy_chapter = false" class="jconfirm-closeIcon"
+                                                style="display: block;">×</div>
+                                            <div class="jconfirm-title-c"><span class="jconfirm-icon-c"></span><span
+                                                    class="jconfirm-title">
+                                                    <p class="title-open-full-combo">Mở Khóa Combo</p>
+                                                </span></div>
+                                            {{-- Step 1 --}}
+                                            <div v-if="buy_combo_chapter.show == 'step_1'"
+                                                class="jconfirm-content-pane no-scroll"
+                                                style="transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.36, 0.55, 0.19, 1); height: 298.422px; max-height: 741.141px;">
+                                                <div class="jconfirm-content" id="jconfirm-box27957">
+                                                    <div class="show-form-unlock-chapter-combo-result">
+                                                        <form
+                                                            class="relative text-[14px] md:text-[16px] pb-[5px] show-form-unlock-chapter-combo">
+
+                                                            <div class="text-[#128c7e]">
+                                                                <p class="mb-[2px]">- Số chương còn lại bạn chưa mở là
+                                                                    <span
+                                                                        class="font-bold italic">@{{ buy_combo_chapter.total_chapter }}</span>
+                                                                    ,
+                                                                    tương ứng là <span
+                                                                        class="font-bold italic">@{{ buy_combo_chapter.total_coint }}LT</span>
+                                                                    !
+                                                                </p>
+
+                                                            </div>
+                                                            <p class="mb-1 mt-3 font-bold text-[#128c7e]">Từ chương (STT)
+                                                            </p>
+                                                            <select class="border border-[#ced4da] rounded py-2 w-[100%]"
+                                                                v-model="buy_combo.start">
+                                                                <option v-for="item in buy_combo_chapter.list_chapter"
+                                                                    :value="item.position">@{{ item.name }}</option>
+                                                            </select>
+
+                                                            <p class="mb-1 mt-3 font-bold text-[#128c7e]">Đến chương (STT)
+                                                            </p>
+                                                            <select class="border border-[#ced4da] rounded py-2 w-[100%]"
+                                                                v-model="buy_combo.end">
+                                                                <option v-for="item in buy_combo_chapter.list_chapter"
+                                                                    :value="item.position">@{{ item.name }}</option>
+                                                            </select>
+                                                            <p v-if="buy_combo.start > buy_combo.end"
+                                                                class="text-[14px] text-[#ef1310]">Hãy lựa chọn chương theo
+                                                                thứ tự tăng dần để mua combo!</p>
+
+                                                            <p class="my-4 text-[#128c7e]">Hệ thống sẽ tự động lọc những
+                                                                chương bạn đã mở!</p>
+                                                            <div class="jconfirm-buttons !float-none !pb-0 inline-block">
+                                                                <button @click="handleBuyCombo" type="button"
+                                                                    class="btn btn-main-shadow !mb-0">Mở Combo</button>
+                                                            </div>
+                                                            <div class="jconfirm-buttons">
+                                                                <button @click="show_buy_chapter = false" type="button"
+                                                                    class="btn btn-default">Hủy</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- Step 1  --}}
+                                            {{-- Step 2 --}}
+                                            <div v-if="buy_combo_chapter.show === 'step_2'"
+                                                class="jconfirm-content-pane no-scroll"
+                                                style="transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.36, 0.55, 0.19, 1); height: 104.422px; max-height: 741.141px;">
+                                                <div class="jconfirm-content" id="jconfirm-box68931">
+                                                    <div class="show-form-unlock-chapter-combo-result">
+                                                        <div class="show-form-unlock-chapter-combo-result">
+                                                            <form
+                                                                class="relative text-[14px] md:text-[16px] pb-[5px] formValidation"
+                                                                accept-charset="utf8">
+
+                                                                <div class="text-[#128c7e] mb-4">
+                                                                    <p class="mb-[2px]">- Số chương sẽ mở: <span
+                                                                            class="font-bold italic">@{{ buy_combo_chapter.show_chapter }}</span></p>
+                                                                    <p class="mb-[2px]">- Giá: <span
+                                                                            class="font-bold italic">@{{ buy_combo_chapter.show_coint }}LT</span></p>
+                                                                </div>
+                                                                <div
+                                                                    class="jconfirm-buttons !float-none !pb-0 inline-block">
+                                                                    <button @click="handleBuyComboServer" type="button"
+                                                                        class="btn btn-main-shadow !mb-0">Thanh
+                                                                        toán</button>
+                                                                    <button @click="buy_combo_chapter.show = 'step_1'"
+                                                                        type="button"
+                                                                        class="btn btn-gray-shadow !mb-0 btn-unlock-all-chapter">Quay
+                                                                        lại</button>
+                                                                </div>
+                                                                <div class="jconfirm-buttons">
+                                                                    <button @click="show_buy_chapter = false"
+                                                                        type="button"
+                                                                        class="btn btn-default">Hủy</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- Step 2 --}}
+                                            <div class="jconfirm-clear"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- Combo Mua chuowng End --}}
+
     </div>
 
     {{-- Comment Start --}}
@@ -300,7 +428,7 @@ $user = Auth::user();
         {{-- @include('parts.ads.ads_modal_redirect') --}}
     @endif
     {{-- Quảng cáo adsense Start --}}
-    @if (((bool) env('IS_ADSENSE', false)) && ($chaper['money'] == 0))
+    @if (((bool) env('IS_ADSENSE', false)) && $chaper['money'] == 0)
         @include('parts.ads.adsense_social')
     @endif
     {{-- Quảng cáo adsense End --}}
@@ -311,6 +439,7 @@ $user = Auth::user();
             loading: false,
             show_setting: false,
             show_error_report: false,
+            show_buy_chapter: false,
             user: {{ Illuminate\Support\Js::from($user) }},
             show: {
                 chapter_top: false,
@@ -336,6 +465,18 @@ $user = Auth::user();
                 story_id: {{ $story['id'] }},
                 chapter_id: {{ $chaper['id'] }},
                 content: ''
+            },
+            buy_combo_chapter: {
+                total_chapter: 0,
+                total_coint: 0,
+                list_chapter: [],
+                show: 'step_1',
+                show_chapter: 0,
+                show_coint: 0
+            },
+            buy_combo: {
+                start: 0,
+                end: 0,
             },
             story: {{ Illuminate\Support\Js::from($story) }},
             chaper: {{ Illuminate\Support\Js::from($chaper) }},
@@ -457,7 +598,61 @@ $user = Auth::user();
                     if (jsonData.status) {
                         jAlertCLient(jsonData.message, 'success');
                         setTimeout(() => {
-                           location.reload();
+                            location.reload();
+                        }, 3000);
+                    } else {
+                        jAlertCLient(jsonData.message, 'danger');
+                    }
+                },
+                async getBuyComboChapter() {
+                    this.loading = true;
+                    let jsonData = await new RouteApi().get(
+                        `${this.apiMember}/total-buy-chapter/${this.story.id}`);
+                    if (jsonData.status) {
+                        this.buy_combo_chapter.total_chapter = jsonData.total_chapter;
+                        this.buy_combo_chapter.total_coint = jsonData.total_coint;
+                        this.buy_combo_chapter.show = 'step_1';
+                        this.buy_combo_chapter.list_chapter = jsonData.data;
+                        this.buy_combo.start = jsonData.data[0].position;
+                        this.buy_combo.end = jsonData.data[jsonData.data.length - 1].position;
+                    } else {
+                        jAlertCLient(jsonData.message, 'danger');
+                    }
+                    this.loading = false;
+                },
+                async showFormBuyCombo() {
+                    await this.getBuyComboChapter();
+                    this.show_buy_chapter = true;
+                },
+                handleBuyCombo() {
+                    if (this.buy_combo.start > this.buy_combo.end) {
+                        jAlertCLient("Hãy lựa chọn chương theo thứ tự tăng dần để mua combo!", 'danger');
+                        return;
+                    }
+                    // Xử lý logic mua combo ở đây
+                    this.buy_combo_chapter.show_chapter = 0;
+                    this.buy_combo_chapter.show_coint = 0;
+                    for (let i = 0; i < this.buy_combo_chapter.list_chapter.length; i++) {
+                        const chapter = this.buy_combo_chapter.list_chapter[i];
+                        if (chapter.position >= this.buy_combo.start && chapter.position <= this.buy_combo.end) {
+                            this.buy_combo_chapter.show_chapter += 1;
+                            this.buy_combo_chapter.show_coint += chapter.money;
+                        }
+                    }
+                    this.buy_combo_chapter.show = 'step_2';
+                },
+                async handleBuyComboServer() {
+                    this.loading = true;
+                    let jsonData = await new RouteApi().post(`${this.apiMember}/buy-combo-chapter`, {
+                        story_id: this.story.id,
+                        start_position: this.buy_combo.start,
+                        end_position: this.buy_combo.end
+                    });
+                    this.loading = false;
+                    if (jsonData.status) {
+                        jAlertCLient(jsonData.message, 'success');
+                        setTimeout(() => {
+                            location.reload();
                         }, 3000);
                     } else {
                         jAlertCLient(jsonData.message, 'danger');
