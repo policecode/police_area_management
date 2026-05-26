@@ -6,6 +6,7 @@ use App\Enums\FavoriteStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
+use App\Models\CoppyrightStory;
 use App\Models\OrderChapter;
 use App\Models\OrderMonth;
 use App\Models\Story;
@@ -188,7 +189,14 @@ class ChapersController extends Controller
                     'key' => get_key_by_day('month')
                 ]);
             }
-    
+            // Lưu vào mục công pháp đã mua
+            $checkerCopyrightStory = CoppyrightStory::GetByUser($user->id)->GetByStory($story->id)->first();
+            if (!$checkerCopyrightStory) {
+                CoppyrightStory::create([
+                    'user_id' => $user->id,
+                    'story_id' => $story->id
+                ]);
+            }
             DB::commit();
             return response()->json([
                 'status' => 1,
@@ -442,6 +450,15 @@ class ChapersController extends Controller
                     'story_id' => $data['story_id'],
                     'money' => $totalCoint,
                     'key' => get_key_by_day('month')
+                ]);
+            }
+
+            // Lưu vào mục công pháp đã mua
+            $checkerCopyrightStory = CoppyrightStory::GetByUser($user->id)->GetByStory($story->id)->first();
+            if (!$checkerCopyrightStory) {
+                CoppyrightStory::create([
+                    'user_id' => $user->id,
+                    'story_id' => $story->id
                 ]);
             }
 

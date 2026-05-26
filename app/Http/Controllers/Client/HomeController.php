@@ -67,28 +67,9 @@ class HomeController extends Controller
             }
         })->toArray();
 
-        // Thể loại truyện vả mặt
-        // $category = Category::getBySlug('va-mat')->first();
-        // if ($category) {
-        //     $full_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('id', 'DESC')->skip(0)->take(6)->get();
-        //     $story_arr = $full_stories_collection->pluck('id');
-        //     $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
-        //     $full_stories = $full_stories_collection->each(function ($item, $key) use ($listStoryCat) {
-        //         $item->thumbnail = route('index') . '/' . $item->thumbnail;
-        //         $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
-        //         $isResult = strpos($item->title, '(c)');
-        //         if ($isResult) {
-        //             $item->is_convert = true;
-        //         } else {
-        //             $item->is_convert = false;
-        //         }
-        //     })->toArray();
-        // } else {
-        //     $full_stories = [];
-        // }
         // Biên tập viên đề cử
      
-        $propose_stories_collection = Story::joinAuthorAndChapter()->GetByPropose(ProposeStatus::PROPOSE['key'])->orderBy('last_chapers', 'DESC')->get();
+        $propose_stories_collection = Story::joinAuthorAndChapter()->GetByPropose(ProposeStatus::PROPOSE['key'])->GetByUnLock(LockStories::LOCK['key'])->orderBy('last_chapers', 'DESC')->get();
         $story_arr = $propose_stories_collection->pluck('id');
         $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
         $propose_stories = $propose_stories_collection->each(function ($item, $key) use ($listStoryCat) {
@@ -117,20 +98,9 @@ class HomeController extends Controller
         } else {
             $nucuong_stories = [];
         }
-        // Truyện convert
-        // $convert_stories_collection = Story::joinAuthor()->where('title', 'LIKE', "%(c)%")->GetByUnLock(LockStories::LOCK['key'])->orderBy('id', 'DESC')->skip(0)->take(9)->get();
-        // $convert_stories = $convert_stories_collection->each(function ($item, $key) {
-        //     $item->thumbnail = route('index') . '/' . $item->thumbnail;
-        //     $isResult = strpos($item->title, '(c)');
-        //     if ($isResult) {
-        //         $item->is_convert = true;
-        //     } else {
-        //         $item->is_convert = false;
-        //     }
-        // })->toArray();
 
         // Bình luận mới nhất
-        $last_comments_collection = Story::JoinLastComment()->GetLastComment()->orderBy('last_comment_id', 'DESC')->skip(0)->take(16)->get();
+        $last_comments_collection = Story::JoinLastComment()->GetLastComment()->GetByUnLock(LockStories::LOCK['key'])->orderBy('last_comment_id', 'DESC')->skip(0)->take(16)->get();
         $last_comments = $last_comments_collection->each(function ($item, $key) use ($now) {
             $dt = new Carbon($item->created_at); //Tạo 1 datetime
             $item->after_minutes = $now->diffInMinutes($dt);
@@ -141,8 +111,6 @@ class HomeController extends Controller
             'hot_stories' => $hot_stories,
             'new_stories' => $new_stories,
             'new_chapters' => $new_chapters,
-            // 'full_stories' => $full_stories,
-            // 'convert_stories' => $convert_stories,
             'propose_stories' => $propose_stories,
             'nucuong_stories' => $nucuong_stories,
             'last_comments' => $last_comments,
@@ -165,7 +133,7 @@ class HomeController extends Controller
             $request->merge([
                 'keyword' => Str::slug($request->keyword, " ")
             ]);
-            $query = Story::filter($request)->joinAuthorAndChapter();
+            $query = Story::filter($request)->GetByUnLock(LockStories::LOCK['key'])->joinAuthorAndChapter();
             $res = [
                 'result' => 1,
                 'data' => [],

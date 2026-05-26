@@ -220,15 +220,15 @@ class TopStoryController extends Controller
         }
         $request->merge(array_merge($queryDefault, $request->query()));
           if ($view_slug == 'day') {
-            $query = ViewDay::filter($request);
+            $query = ViewDay::joinStory()->GetByKey($request->key)->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
         } elseif ($view_slug == 'week') {
-            $query = ViewWeek::filter($request);
+            $query = ViewWeek::joinStory()->GetByKey($request->key)->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
         } elseif ($view_slug == 'month') {
-            $query = ViewMonth::filter($request);
+            $query = ViewMonth::joinStory()->GetByKey($request->key)->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
         }
-        $count = $query->getTotal();
+        $count = $query->count();
 
-        $colection = $query->joinStory()->get();
+        $colection = $query->skip(($request->page - 1) * $request->per_page)->take($request->per_page)->get();
         $listStory  = $colection->each(function ($item, $key) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $isResult = strpos($item->title, '(c)');
@@ -276,10 +276,10 @@ class TopStoryController extends Controller
         $description = 'Danh Sách Truyện Được Mua Nhiều Trong Tháng';
   
         $request->merge(array_merge($queryDefault, $request->query()));
-        $query = OrderMonth::filter($request);
+        $query = OrderMonth::joinStory()->GetByKey($request->key)->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
 
-        $count = $query->getTotal();
-        $colection = $query->joinStory()->get();
+        $count = $query->count();
+        $colection = $query->skip(($request->page - 1) * $request->per_page)->take($request->per_page)->get();
         $listStory  = $colection->each(function ($item, $key) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $isResult = strpos($item->title, '(c)');

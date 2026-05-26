@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Member;
 
 use App\Enums\FavoriteStatus;
+use App\Enums\LockStories;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\CoppyrightStory;
@@ -11,6 +12,7 @@ use App\Models\User;
 use App\Models\UserReadStory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
@@ -110,9 +112,9 @@ class ProfileController extends Controller
             'order_type' => 'DESC'
         );
         $request->merge(array_merge($queryDefault, $request->query()));
-        $query = UserReadStory::JoinStoryChapterAuthor()->GetByUser(Auth::id())->GetByLastChapter();
+        $query = UserReadStory::JoinStoryChapterAuthor()->where('s.is_lock', LockStories::LOCK['key'])->GetByUser(Auth::id())->GetByLastChapter()->orderBy($request->order_by, $request->order_type);
         $count = $query->count();
-        $collection = $query->filter($request)->get()->each(function ($item, $key) {
+        $collection = $query->skip(($request->page - 1) * $request->per_page)->take($request->per_page)->get()->each(function ($item, $key) {
             $isResult = strpos($item['story_title'], '(c)');
             if ($isResult) {
                 $item->is_convert = true;
@@ -152,9 +154,9 @@ class ProfileController extends Controller
             'order_type' => 'DESC'
         );
         $request->merge(array_merge($queryDefault, $request->query()));
-        $query = UserReadStory::JoinStoryAuthor()->GetByUser(Auth::id())->GetByFavorite(FavoriteStatus::LIKE['id']);
+        $query = UserReadStory::JoinStoryAuthor()->where('s.is_lock', LockStories::LOCK['key'])->GetByUser(Auth::id())->GetByFavorite(FavoriteStatus::LIKE['id'])->orderBy($request->order_by, $request->order_type);
         $count = $query->count();
-        $collection = $query->filter($request)->get()->each(function ($item, $key) {
+        $collection = $query->skip(($request->page - 1) * $request->per_page)->take($request->per_page)->get()->each(function ($item, $key) {
             $isResult = strpos($item['story_title'], '(c)');
             if ($isResult) {
                 $item->is_convert = true;

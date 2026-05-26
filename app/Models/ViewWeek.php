@@ -23,14 +23,14 @@ class ViewWeek extends Model
     private $joinStory = false;
     public function scopeGetByStory($query, $story_id) {
         if (is_array($story_id)) {
-            $query->whereIn('story_id', $story_id);
+            $query->whereIn('view_weeks.story_id', $story_id);
         } else {
-            $query->where('story_id', $story_id);
+            $query->where('view_weeks.story_id', $story_id);
         }
         return $query;
     }
     public function scopeGetByKey($query, $key) {
-        $query->where('key', $key);
+        $query->where('view_weeks.key', $key);
         return $query;
     }
 

@@ -24,14 +24,14 @@ class ViewDay extends Model
     
     public function scopeGetByStory($query, $story_id) {
         if (is_array($story_id)) {
-            $query->whereIn('story_id', $story_id);
+            $query->whereIn('view_days.story_id', $story_id);
         } else {
-            $query->where('story_id', $story_id);
+            $query->where('view_days.story_id', $story_id);
         }
         return $query;
     }
     public function scopeGetByKey($query, $key) {
-        $query->where('key', $key);
+        $query->where('view_days.key', $key);
         return $query;
     }
 

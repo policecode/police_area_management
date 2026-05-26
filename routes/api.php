@@ -46,6 +46,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
 });
 Route::get('search/keyword', [HomeController::class, 'searchKeyword']);
 
-// Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar']);
+Route::get('/story/action-order-chapter-gen-coppyright', [ToolController::class, 'handleStoryCopyright']);
 Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews']);
 Route::post('/member/payment/webhook', [SeePayController::class, 'handleWebhook']);

@@ -230,14 +230,14 @@ class StoriesController extends Controller
         try {
             $view_url = '';
             if ($request->view == 'day') {
-                $query = ViewDay::filter($request)->getByKey(get_key_by_day('date'));
+                $query = ViewDay::joinStory()->getByKey(get_key_by_day('date'))->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
                 $view_url = route('client.view-story', ['view_slug' => 'day']);
             } elseif ($request->view == 'week') {
-                $query = ViewWeek::filter($request)->getByKey(get_key_by_day('week'));
+                $query = ViewWeek::joinStory()->getByKey(get_key_by_day('week'))->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
                 $view_url = route('client.view-story', ['view_slug' => 'week']);
 
             } elseif ($request->view == 'month') {
-                $query = ViewMonth::filter($request)->getByKey(get_key_by_day('month'));
+                $query = ViewMonth::joinStory()->getByKey(get_key_by_day('month'))->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
                 $view_url = route('client.view-story', ['view_slug' => 'month']);
 
             } elseif ($request->view == 'all') {
@@ -247,14 +247,14 @@ class StoriesController extends Controller
                 'result' => 1,
                 'data' => [],
                 'view_url' => $view_url,
-                'page' => $query->getPageNumber(),
-                'per_page' => $query->getPerPage(),
+                'per_page' => $request->per_page,
+                'page' => $request->page,
                 'total' => 0
             ];
             if($request->is_paginate){
-                $res['total'] = $query->getTotal();
+                $res['total'] = $query->count();
             }else{
-                $colection = $query->joinStory()->get();
+                $colection = $query->skip(($request->page - 1) * $request->per_page)->take($request->per_page)->get();
                 // $story_arr= $colection->pluck('id');
                 // $listStoryCat = StoryCategory::getListCategoryByStory( $story_arr);
                 $res['data']  = $colection->each(function ($item, $key) {
@@ -275,7 +275,7 @@ class StoriesController extends Controller
 
     public function getTopOrderStories(Request $request) {
         try {
-            $query = OrderMonth::filter($request)->getByKey(get_key_by_day('month'));
+            $query = OrderMonth::joinStory()->getByKey(get_key_by_day('month'))->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
             $res = [
                 'result' => 1,
                 'data' => [],
@@ -285,9 +285,9 @@ class StoriesController extends Controller
                 'total' => 0
             ];
             if($request->is_paginate){
-                $res['total'] = $query->getTotal();
+                $res['total'] = $query->count();
             }else{
-                $res['data']  = $query->joinStory()->get()->each(function ($item, $key) {
+                $res['data']  = $query->skip(($request->page - 1) * $request->per_page)->take($request->per_page)->get()->each(function ($item, $key) {
                     $item->thumbnail = route('index') . '/' . $item->thumbnail;
                     $item->url = route('client.story', ['story_slug' => $item->slug]);
                     $item->author_url = route('client.author', ['author_slug' => $item['author_slug']]);
