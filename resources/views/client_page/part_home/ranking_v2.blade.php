@@ -27,7 +27,7 @@
                             class="readmore text-[#128c7e] text-[0.875rem] absolute top-1/2 right-4 -translate-y-1/2">Tất
                             cả <i class="ml-2 fa-solid fa-right-long"></i></a>
                     </div>
-                    <ul class="list-story">
+                    <ul v-if="items.length > 0" class="list-story">
                         <li v-if="items[0]" class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
                             <span
                                 class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">1</span>
@@ -37,8 +37,8 @@
                                         class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{ items[0].title }}</a>
                                 </h3>
                                 <p class="text-[0.75rem] text-[#007bff]">@{{ items[0].view }} Lượt xem</p>
-                                <a :href="items[0].author_url" :title="items[0].author_name"
-                                    class="block text-[0.75rem] text-[#6c757d] w-fit">@{{ items[0].author_name }}</a>
+                                <a :href="items[0].author_url" :title="items[0]?.author_name"
+                                    class="block text-[0.75rem] text-[#6c757d] w-fit">@{{ items[0]?.author_name }}</a>
                             </div>
                             <a :href="items[0].url" :title="items[0].title"
                                 class="book-cover block w-[52px] h-[87px] shrink-0 img-h-full mr-2">
@@ -258,6 +258,7 @@
                 let jsonData = await new RouteApi().get(this.getItemUrl);
                 this.querySearch.total = jsonData.total;
             },
+
             buildQueryItem(task, changeUrl) {
                 if (changeUrl == undefined) {
                     changeUrl = true;

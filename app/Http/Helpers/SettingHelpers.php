@@ -55,6 +55,9 @@ class SettingHelpers
 
   public function getOptionValue($option_key) {
     $this->setOption($option_key);
+    if ($this->_options[$option_key] == 1) {
+      return NULL;
+    }
     return $this->_options[$option_key];
   }
 

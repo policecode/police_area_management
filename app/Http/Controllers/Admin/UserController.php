@@ -40,6 +40,9 @@ class UserController extends Controller
         } else {
             $rules['email'] = 'required|email|unique:users,email';
         }
+        if ($request->money > 0) {
+            $rules['money'] = 'integer|min:0';
+        }
         return $rules;
     }
 

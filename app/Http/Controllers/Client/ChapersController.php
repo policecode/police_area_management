@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Enums\FavoriteStatus;
+use App\Enums\LockStories;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\SettingHelpers;
 use App\Models\Chaper;
@@ -23,6 +24,20 @@ use Illuminate\Support\Facades\Validator;
 
 class ChapersController extends Controller
 {
+    private function isCoppyrightStory($story) {
+        if ($story['is_lock'] != LockStories::LOCK['key']) {
+            $user = Auth::user();
+            if ($user) {
+                $isCoppyright =CoppyrightStory::GetByUser($user->id)->GetByStory($story['id'])->first();
+                if (!$isCoppyright) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -39,6 +54,10 @@ class ChapersController extends Controller
             }
         }
         $story = Story::getBySlug($story_slug)->joinAuthor()->first()->toArray();
+        $isCoppyright = $this->isCoppyrightStory($story);
+        if ($isCoppyright) {
+            abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
+        }
         $story['link'] = route('client.story', ['story_slug' => $story['slug']]);
         $isResult = strpos($story['title'], '(c)');
         if ($isResult) {

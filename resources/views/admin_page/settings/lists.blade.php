@@ -14,7 +14,7 @@
     <div id="app">
         <div>
             <form @submit="save($event, 'page-one')">
-                <legend class="text-primary">{{ $page_title }}</legend>
+                <legend class="text-primary">{{ $page_title }} (Để giá trị là 1 nếu muốn ẩn)</legend>
                 <table class="table table-success table-bordered">
                     <tbody>
                         <tr>
@@ -51,7 +51,7 @@
                             <th>Web title</th>
                             <td>
                                 <input type="text" v-model="itemDetail.fvn_web_title" class="form-control"
-                                    :class={'is-invalid':errors.title} placeholder="Nội dung title cuar trang web...">
+                                    :class={'is-invalid':errors.fvn_web_title} placeholder="Nội dung title cuar trang web...">
                             </td>
                         </tr>
                         <tr>
@@ -64,6 +64,48 @@
                             <th>Content bottom</th>
                             <td>
                                 <fvn-text-editor v-model="itemDetail.fvn_content_bottom" label="Nội dung giới thiệu ở cuối trang web..." class="bg-light"></fvn-text-editor>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Link đến nhóm telegram</th>
+                            <td>
+                                <input type="text" v-model="itemDetail.fvn_telegram_link" class="form-control"
+                                    :class={'is-invalid':errors.fvn_telegram_link} placeholder="Link đến nhóm telegram...">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Link đến nhóm facebook</th>
+                            <td>
+                                <input type="text" v-model="itemDetail.fvn_facebook_link" class="form-control"
+                                    :class={'is-invalid':errors.fvn_facebook_link} placeholder="Link đến nhóm facebook...">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Link đến nhóm tiktok</th>
+                            <td>
+                                <input type="text" v-model="itemDetail.fvn_tiktok_link" class="form-control"
+                                    :class={'is-invalid':errors.fvn_tiktok_link} placeholder="Link đến nhóm tiktok...">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Link đến nhóm discord</th>
+                            <td>
+                                <input type="text" v-model="itemDetail.fvn_discord_link" class="form-control"
+                                    :class={'is-invalid':errors.fvn_discord_link} placeholder="Link đến nhóm discord...">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Link đến nhóm instagram</th>
+                            <td>
+                                <input type="text" v-model="itemDetail.fvn_instagram_link" class="form-control"
+                                    :class={'is-invalid':errors.fvn_instagram_link} placeholder="Link đến nhóm instagram...">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Link đến nhóm twitter</th>
+                            <td>
+                                <input type="text" v-model="itemDetail.fvn_twitter_link" class="form-control"
+                                    :class={'is-invalid':errors.fvn_twitter_link} placeholder="Link đến nhóm twitter...">
                             </td>
                         </tr>
                     </tbody>

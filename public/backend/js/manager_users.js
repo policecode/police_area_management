@@ -6,7 +6,12 @@ var vue_data = {
     items: [],
     screen: 'list',
     itemDetail: {
-        group_id: ""
+        group_id: "",
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+        money: 0
     },
     listId: [],
     errors: {},
@@ -55,7 +60,12 @@ var app = new Vue({
         },
         closeItem() {
             this.itemDetail = {
-                group_id: ""
+                group_id: "",
+                name: "",
+                email: "",
+                password: "",
+                password_confirmation: "",
+                money: 0
             };
             this.errors = {};
             this.screen = 'list';
