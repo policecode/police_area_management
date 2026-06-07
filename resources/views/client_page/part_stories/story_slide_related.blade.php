@@ -22,10 +22,12 @@
                              {{ ucwords($item['title']) }}
                          </a>
                      </h3>
-                     <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}" title="{{ ucwords($item['author_name']) }}"
-                         class="cate lg:text-[0.875rem]">
-                         {{ ucwords($item['author_name']) }}
-                     </a>
+                     @if (!empty($item['author_slug']))
+                        <a href="{{ route('client.author', ['author_slug' => $item['author_slug']]) }}" title="{{ ucwords($item['author_name']) }}"
+                            class="cate lg:text-[0.875rem]">
+                            {{ ucwords($item['author_name']) }}
+                        </a>
+                     @endif
                  </div>
              </div>
          @endforeach
