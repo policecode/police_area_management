@@ -9,6 +9,7 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\StoriesController as StoriesClientController;
 use App\Http\Controllers\Client\SearchController;
 use App\Http\Controllers\Client\TopStoryController;
+use App\Http\Controllers\Member\AudioController;
 use App\Http\Controllers\Member\CommentController as MemberCommentController;
 use App\Http\Controllers\Member\LoginController as MemberLoginController;
 use App\Http\Controllers\Member\RegisterController as MemberRegisterController;
@@ -32,14 +33,14 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// Render audio
+// Route::post('/text-to-speech', [AudioController::class, 'generateAudio']);
+Route::get('/text-to-speech', [AudioController::class, 'generateAudio']);
 
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth', 'verified']], function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', 'DashboardController@index')->name('dashboard')->middleware('can:admin.users.getItems');
-
-
-
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', 'UserController@index')->name('index')->middleware('can:admin.users.getItems');
             Route::get('/get-items', 'UserController@getItems')->name('getItems')->middleware('can:admin.users.getItems');
@@ -289,6 +290,7 @@ Route::group(['middleware' => ['throttle:30,1']], function () {
 
 // Member Action
 Route::group(['middleware' => ['throttle:20,1']], function () {
+      
     // Comment
     Route::get('/api/member/list-comment', [MemberCommentController::class, 'getListComments']);
     Route::post('/api/member/post-comment', [MemberCommentController::class, 'postComment']);
@@ -307,6 +309,5 @@ Route::group(['middleware' => ['throttle:20,1']], function () {
     Route::post('/api/member/save-favorite-story', [MemberActionController::class, 'saveFavoriteStory']);
     Route::get('api/member/my-story', [MemberProfileController::class, 'callApiMyStory']);
 
-    // 
-    
-});
+  
+    });
