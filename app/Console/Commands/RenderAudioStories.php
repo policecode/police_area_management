@@ -155,9 +155,7 @@ class RenderAudioStories extends Command
                 continue; // Bỏ qua chương này và tiếp tục với chương tiếp theo
             }
 
-            // ===============================================================
-
-
+           sleep(10);
         }
     }
 }
