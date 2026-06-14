@@ -146,7 +146,9 @@ class RenderAudioStories extends Command
                         'duration' => $duration,
                         'status' => AudioStatus::SUCCESS['key']
                     ]); // Cập nhật trạng thái thành "Đang xử lý" để tránh trùng lặp khi có nhiều tiến trình cùng chạy
-                    dd($result);
+                    $story->update([
+                        'last_audio_id' => $audio->id
+                    ]);
                 } else {
                     Log::error('Xử lý tạo file: Không tìm thấy file audio tạm thời để tải lên Cloud.');
                 }
