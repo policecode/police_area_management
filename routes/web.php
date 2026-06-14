@@ -34,8 +34,7 @@ use Illuminate\Http\Request;
 |
 */
 // Render audio
-// Route::post('/text-to-speech', [AudioController::class, 'generateAudio']);
-Route::get('/text-to-speech', [AudioController::class, 'generateAudio']);
+// Route::get('/text-to-speech', [AudioController::class, 'generateAudio']);
 
 
 Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['auth', 'verified']], function () {
@@ -86,6 +85,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::post('/replace-content/replace-content/{story}', [ReplaceContentController::class, 'handleReplaceContent'])->name('replaceContent.replaceContent')->middleware('can:admin.replaceContent.replaceContent');
         Route::post('/replace-content/{story}', [ReplaceContentController::class, 'store'])->name('replaceContent.store')->middleware('can:admin.replaceContent.store');
         Route::delete('/replace-content/{replaceContent}', [ReplaceContentController::class, 'destroy'])->name('replaceContent.destroy')->middleware('can:admin.replaceContent.destroy');
+
+        // Chapers Audio
+        Route::get('/chapers-audio/get-items', 'ChapterAudioController@getItems')->name('chapersAudio.getItems')->middleware('can:admin.chapersAudio.getItems');
+        Route::get('/chapers-audio/{story}', 'ChapterAudioController@index')->name('chapersAudio.index')->middleware('can:admin.chapersAudio.getItems');
+        Route::post('/chapers-audio/{story}', 'ChapterAudioController@store')->name('chapersAudio.store')->middleware('can:admin.chapersAudio.store');
+        Route::put('/chapers-audio/{story}/{chaper}', 'ChapterAudioController@update')->name('chapersAudio.update')->middleware('can:admin.chapersAudio.update');
+
         // Author
         // Route::get('/author/get-items', 'AuthorController@getItems')->name('author.getItems');
         Route::prefix('author')->name('author.')->group(function () {
@@ -222,6 +228,7 @@ Route::group(['middleware' => ['throttle:30,1']], function () {
     Route::get('/story/top-rating', [StoriesClientController::class, 'getTopViewStories'])->name('story.top-rating');
     Route::get('/story/top-orders', [StoriesClientController::class, 'getTopOrderStories'])->name('story.top-orders');
     Route::post('/story/star-rating', [StoriesClientController::class, 'ratingStar'])->middleware(['auth', 'verified'])->name('story.rating');
+    Route::get('/audio/{story_slug}', [StoriesClientController::class, 'audioStories'])->name('client.story.audio');
     Route::get('/{story_slug}', [StoriesClientController::class, 'index'])->name('client.story');
     // Lấy 20 chương truyện đầu tiên gộp nội dung thành 1 trang
     Route::get('/dev-total-20-chapter/{story_slug}', [StoriesClientController::class, 'devTotal20Chapter'])->name('client.dev_total_20_chapter');
@@ -231,7 +238,7 @@ Route::group(['middleware' => ['throttle:30,1']], function () {
     Route::post('/read/increase-views', [ChapersClientController::class, 'increaseViews'])->name('client.chaper.view');
     Route::get('/read-api/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'callChapterApi'])->name('client.api.chaper');
     Route::get('/{story_slug}/chuong-{chaper_position}', [ChapersClientController::class, 'index'])->middleware(['visit_website'])->name('client.chaper');
-    
+
 
     // Route::get('/read/{story_slug}/{chaper_slug}', [ChapersClientController::class, 'index']);
 

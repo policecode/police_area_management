@@ -152,9 +152,13 @@ use App\Enums\ProposeStatus;
                                             <i v-if="item.is_lock == 2" class="fa-solid fa-lock"></i>
                                             <i v-else class="fa-solid fa-lock-open"></i>
                                         </a>
-                                        <a :href="linkChapers(item.id)" class="btn btn-success mb-1"
+                                        <a :href="item.admin_chapter_url" class="btn btn-success mb-1"
                                             title="Danh sách các chương">
                                             <i class="fa-solid fa-book"></i>
+                                        </a>
+                                        <a :href="item.admin_chapter_audio_url" class="btn btn-info mb-1"
+                                            title="Danh sách audio các chương">
+                                            <i class="fa-solid fa-music"></i>
                                         </a>
                                         <a @click="showItem(item)" class="btn btn-warning mb-1" title="Sửa">
                                             <i class="fa-solid fa-wrench"></i>

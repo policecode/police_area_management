@@ -3,7 +3,7 @@ import edge_tts
 import sys
 import os
 import re
-
+# sudo -H pip3 install -r /var/www/hachoangdaide.online/storage/app/scripts/requirements.txt => Cài đặt thư viện edge-tts trên server mỗi khi có cập nhật mới
 async def download_chunk(semaphore, text, voice, output_file):
     if not text or len(text.strip()) <= 1:
         return

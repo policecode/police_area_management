@@ -21,6 +21,8 @@ class Chaper extends Model
         'user_id', 'name', 'slug', 'story_id', 'content', 'position', 'view', 'content_length', 'money'
     ];
     private $joinStory = false;
+    private $joinAudio = false;
+
     public function scopeGetByPosition($query, $position) {
         $query->where('position', $position);
         return $query;
@@ -70,6 +72,18 @@ class Chaper extends Model
             $join->on('chapers.story_id', '=', 'stories.id');
         });
         $this->joinStory = true;
+        return $query;
+    }
+
+    public function scopeJoinAudio($query) {
+        if ($this->joinAudio ) {
+            return $query;
+        }
+        $query->select('chapers.id', 'chapers.name', 'chapers.story_id', 'chapers.content_length', 'chapers.position', 'chapers.money', 'chapers.created_at',  'audio_chapters.file_path', 'audio_chapters.file_size', 'audio_chapters.duration', 'audio_chapters.status', 'audio_chapters.listen_count', 'audio_chapters.created_at', 'audio_chapters.updated_at')
+        ->leftJoin('audio_chapters', function($join) {
+            $join->on('chapers.id', '=', 'audio_chapters.chapter_id');
+        });
+        $this->joinAudio = true;
         return $query;
     }
 

@@ -84,6 +84,9 @@ class StoriesController extends Controller
                     $item->thumbnail = route('index') . '/' . $item->thumbnail;
                     $item->category = $listCat[$item->id];
                     $item->category_obj = $listCatName[$item->id];
+                    $item->admin_chapter_url = route('admin.chapers.index', ['story' => $item->id]);
+                    $item->admin_chapter_audio_url = route('admin.chapersAudio.index', ['story' => $item->id]);
+
                 });
                 $res['data'] = $results;
             }

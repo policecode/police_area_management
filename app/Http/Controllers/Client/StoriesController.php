@@ -136,6 +136,91 @@ class StoriesController extends Controller
 
     }
 
+    public function audioStories(Request $request, $story_slug) {
+          // $option = SettingHelpers::getInstance();
+        $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
+        if (!$story) {
+            // dd($story);
+            abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
+        }
+        $isCoppyright = $this->isCoppyrightStory($story);
+        if ($isCoppyright || strpos($story->title, '(c)')) {
+            // Không làm audio truyện convert
+            abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
+        }
+        $story->thumbnail = asset($story->thumbnail);
+
+        // $story = $story->toArray();
+        // Lấy các chương mới nhất của truyện và kiểm tra xem người dùng đã mua chương đó chưa
+        $orderChapter = [];
+        if (Auth::check()) {
+            $orderChapter = OrderChapter::getByUser(Auth::id())->GetByStory($story->id)->get()->groupBy('chapter_id')->toArray();
+        }
+        $now = Carbon::now();
+        $chapters = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'ASC')->skip(0)->take(20)->get()->each(function ($item, $key) use ($now, $orderChapter) {
+            if (($item->money > 0) && !empty($orderChapter[$item->id])) {
+                $item->unlocked_content = true;
+            }
+            $dt = new Carbon($item->created_at); //Tạo 1 datetime
+            $item->after_minutes = $now->diffInMinutes($dt);
+        })->toArray();
+        // dd($chapters);
+
+
+        $storyByAuthor = Story::joinAuthor()->getByAuthor($story['author_id'])->noById($story['id'])->get()->each(function ($item, $key) use ($now) {
+            $item->thumbnail = route('index') . '/' . $item->thumbnail;
+            $isResult = strpos($item['title'], '(c)');
+            if ($isResult) {
+                $item->is_convert = true;
+            } else {
+                $item->is_convert = false;
+            }
+        })->toArray();
+
+        $starRatings = StarRating::JoinUser()->where('story_id', $story['id'])->orderBy('created_at', 'DESC')->skip(0)->take(6)->get()->toArray();
+        // dd($starRatings->toArray());
+        $breadcrumb = [
+            [
+                "title" => "Trang chủ",
+                "url" => route('index', [])
+            ],
+            [
+                "title" => "audio",
+                "url" => '#'
+            ],
+            [
+                "title" => $story['title'],
+                "url" => route('client.story', [
+                    'story_slug' => $story['slug']
+                ])
+            ]
+        ];
+     
+
+        // Title Header
+        $page_title = ucwords($story['title']).' | '.ucwords($story['author_name']);
+        // Desccription Header
+        $description = str_replace('<br />',' ', $story['description']);
+        $arrDesc = explode(' ', $description, 50);
+        unset($arrDesc[49]);
+        $newArrDesc = array_filter($arrDesc, function($value) {
+            return $value;
+        });
+        $description = implode(' ', $newArrDesc);
+
+        $dataView = array(
+            'page_title' => $page_title,
+            'story' => $story,
+            'breadcrumb' => $breadcrumb,
+            'description' => $description,
+            'chapters' => $chapters,
+            'story_by_author' => $storyByAuthor,
+            'star_ratings' => $starRatings
+        );
+        
+        return view('client_page.audio_stories', $dataView);
+    }
+
     public function getListChapers(Request $request) {
         try {
             //code...

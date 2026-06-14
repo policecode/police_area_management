@@ -207,6 +207,21 @@ final class GroupsEnum extends Enum
         ],
     ]];
 
+    const CHAPTERAUDIO =   ['value' => 'Quản lý audio các chương truyện', 'permission' => [
+        [
+            'role' => 'admin.chapersAudio.getItems',
+            'name' => 'Xem'
+        ],
+        [
+            'role' => 'admin.chapersAudio.store',
+            'name' => 'Thêm mới'
+        ],
+        [
+            'role' => 'admin.chapersAudio.update',
+            'name' => 'Cập nhật'
+        ]
+    ]];
+
     const VISITWWEBSITE =   ['value' => 'Theo dõi thông số trang web', 'permission' => [
         [
             'role' => 'admin.visitWebsite.getItems',

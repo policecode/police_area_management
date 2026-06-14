@@ -1,0 +1,1247 @@
+/* ===== CSS AUDIO PLAYER =====  */
+/* ===================================================
+           FVN AUDIO PLAYER — Biến CSS
+        =================================================== */
+:root {
+    --ap-bg: #0f0f0f;
+    --ap-surface: #181818;
+    --ap-surface2: #242424;
+    --ap-border: rgba(255, 255, 255, 0.08);
+    --ap-accent: #1db954;
+    --ap-accent-glow: rgba(29, 185, 84, 0.35);
+    --ap-text1: #ffffff;
+    --ap-text2: rgba(255, 255, 255, 0.7);
+    --ap-text3: rgba(255, 255, 255, 0.45);
+    --ap-radius: 12px;
+    --ap-radius-sm: 8px;
+    /* Mobile: 2 hàng — khoảng 116px */
+    --ap-bar-h: 116px;
+    --ap-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* Desktop: 1 hàng — vẫn gọn */
+@media (min-width: 768px) {
+    :root {
+        --ap-bar-h: 80px;
+    }
+}
+
+/* ===================================================
+           AUDIO PLAYER BAR — Thanh cố định dưới cùng
+        =================================================== */
+#fvnPlayerBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: rgba(15, 15, 15, 0.96);
+    border-top: 1px solid var(--ap-border);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
+    transform: translateY(110%);
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#fvnPlayerBar.ap-show {
+    transform: translateY(0);
+}
+
+/* Seek bar — nằm trên cùng của bar */
+.ap-seek-wrap {
+    position: relative;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: height var(--ap-transition);
+}
+.ap-seek-wrap:hover {
+    height: 5px;
+}
+.ap-seek-wrap:hover .ap-seek-thumb {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+.ap-seek-buf {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    pointer-events: none;
+}
+.ap-seek-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--ap-accent), #4ade80);
+    border-radius: 999px;
+    pointer-events: none;
+    transition: width 0.1s linear;
+}
+.ap-seek-thumb {
+    position: absolute;
+    top: 50%;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    transform: translateX(-50%) scale(0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        opacity 0.2s,
+        transform 0.2s;
+    margin-top: -6px;
+}
+.ap-seek-input {
+    position: absolute;
+    inset: -8px 0;
+    height: calc(100% + 16px);
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    z-index: 2;
+}
+
+/* Body của bar — MOBILE: 2 hàng thẳng dọ
+           Hàng 1: info (thumbnail + tên truyện/chương) + nút close
+           Hàng 2: tất cả controls
+        */
+.ap-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 12px 10px;
+}
+
+/* Hàng 1: info + close */
+.ap-row-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+/* Hàng 2: tất cả controls */
+.ap-row-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 4px;
+}
+
+/* LEFT: thumbnail + info */
+.ap-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+.ap-thumb-wrap {
+    position: relative;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+}
+.ap-thumb {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+#fvnPlayerBar.ap-playing .ap-thumb {
+    animation: apThumbRotate 8s linear infinite;
+}
+@keyframes apThumbRotate {
+    from {
+        border-radius: 6px;
+    }
+    25% {
+        border-radius: 50%;
+    }
+    75% {
+        border-radius: 50%;
+    }
+    to {
+        border-radius: 6px;
+    }
+}
+.ap-thumb-ring {
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    border: 2px solid var(--ap-accent);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+#fvnPlayerBar.ap-playing .ap-thumb-ring {
+    opacity: 1;
+    border-radius: 50%;
+    animation: apPulse 2s ease-in-out infinite;
+}
+@keyframes apPulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 var(--ap-accent-glow);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(29, 185, 84, 0);
+    }
+}
+/* Text info — luôn hiện trên mọi màn hình */
+.ap-text {
+    min-width: 0;
+    flex: 1;
+}
+.ap-story {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ap-text1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 0 2px;
+}
+.ap-chapter {
+    font-size: 10px;
+    color: var(--ap-text2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+/* Nút close — luôn hiện */
+.ap-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ap-text3);
+    font-size: 15px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all var(--ap-transition);
+    flex-shrink: 0;
+}
+.ap-close:hover {
+    color: var(--ap-text1);
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
+}
+
+/* Controls — các nút trong hàng 2 */
+.ap-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ap-text1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0;
+    transition: all var(--ap-transition);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    flex-shrink: 0;
+}
+.ap-btn:focus-visible {
+    outline: 2px solid var(--ap-accent);
+    outline-offset: 2px;
+}
+
+/* Nút tuầ 15s — luôn hiện */
+.ap-btn-sec {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+    color: var(--ap-text2);
+    flex-direction: column;
+    display: flex;
+}
+.ap-btn-sec:hover {
+    color: var(--ap-text1);
+    transform: scale(1.1);
+}
+.ap-btn-sec:active {
+    transform: scale(0.95);
+}
+.ap-btn-label {
+    font-size: 8px;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+/* Nút Play/Pause */
+.ap-btn-play {
+    width: 42px;
+    height: 42px;
+    font-size: 17px;
+    background: var(--ap-accent);
+    color: #000;
+    box-shadow: 0 0 18px var(--ap-accent-glow);
+    transition:
+        background var(--ap-transition),
+        transform var(--ap-transition),
+        box-shadow var(--ap-transition);
+}
+.ap-btn-play:hover {
+    background: #1ed760;
+    transform: scale(1.08);
+    box-shadow: 0 0 28px var(--ap-accent-glow);
+}
+.ap-btn-play:active {
+    transform: scale(0.95);
+}
+.ap-btn-play i {
+    transition: all 0.18s;
+}
+
+/* Loading spin */
+#fvnPlayerBar.ap-loading .ap-btn-play i {
+    animation: apSpin 0.6s linear infinite;
+}
+@keyframes apSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Thời gian — luôn hiện */
+.ap-time {
+    font-size: 10px;
+    color: var(--ap-text2);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+.ap-time-sep {
+    margin: 0 2px;
+    opacity: 0.4;
+}
+
+/* Tốc độ phát — luôn hiện */
+.ap-speed-wrap {
+    position: relative;
+    display: block;
+}
+.ap-speed-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    color: var(--ap-text1);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 7px;
+    cursor: pointer;
+    transition: background var(--ap-transition);
+    font-family: inherit;
+    white-space: nowrap;
+}
+.ap-speed-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+.ap-speed-menu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    background: #282828;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--ap-radius-sm);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition:
+        opacity 0.2s,
+        transform 0.2s,
+        visibility 0.2s;
+    z-index: 100;
+    min-width: 80px;
+}
+.ap-speed-menu.ap-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.ap-speed-opt {
+    display: block;
+    width: 100%;
+    padding: 9px 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ap-text2);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition:
+        background 0.15s,
+        color 0.15s;
+    font-family: inherit;
+}
+.ap-speed-opt:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+.ap-speed-opt.ap-active {
+    color: var(--ap-accent);
+    font-weight: 700;
+}
+
+/* Âm lượng — luôn hiện (slider ẩn trên mobile nhỏ, chỉ icon) */
+.ap-vol-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Nút Auto-Next */
+.ap-btn-autonext {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    color: var(--ap-text3);
+    border-radius: 6px;
+    position: relative;
+    border: 1px solid transparent;
+    transition: all var(--ap-transition);
+}
+.ap-btn-autonext:hover {
+    color: var(--ap-text2);
+}
+/* Trạng thái BẬT */
+.ap-btn-autonext.ap-autonext-on {
+    color: var(--ap-accent);
+    background: rgba(29, 185, 84, 0.12);
+    border-color: rgba(29, 185, 84, 0.3);
+    box-shadow: 0 0 8px rgba(29, 185, 84, 0.2);
+}
+/* Chấm nhỏ trạng thái */
+.ap-btn-autonext::after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ap-text3);
+    transition: background var(--ap-transition);
+}
+.ap-btn-autonext.ap-autonext-on::after {
+    background: var(--ap-accent);
+    box-shadow: 0 0 4px var(--ap-accent);
+}
+.ap-vol-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ap-text2);
+    font-size: 14px;
+    padding: 4px;
+    transition: color var(--ap-transition);
+}
+.ap-vol-icon:hover {
+    color: var(--ap-text1);
+}
+/* Slider chỉ hiện từ 480px */
+.ap-vol-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0;
+    height: 4px;
+    opacity: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        var(--ap-accent) var(--vol-pct, 100%),
+        rgba(255, 255, 255, 0.2) var(--vol-pct, 100%)
+    );
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+    transition:
+        width 0.3s,
+        opacity 0.3s;
+}
+.ap-vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+.ap-vol-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+/* Responsive — desktop: 1 hàng ngang truyền thống */
+@media (min-width: 768px) {
+    .ap-body {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        padding: 0 16px;
+        height: var(--ap-bar-h);
+    }
+    .ap-row-info {
+        margin-bottom: 0;
+        width: auto;
+        flex: 0 1 auto;
+        max-width: 240px;
+    }
+    .ap-row-controls {
+        width: auto;
+        justify-content: center;
+        flex: 1;
+    }
+    .ap-info {
+        flex: 1;
+        max-width: 240px;
+    }
+    .ap-thumb-wrap {
+        width: 48px;
+        height: 48px;
+    }
+    .ap-thumb {
+        width: 48px;
+        height: 48px;
+    }
+    .ap-btn-play {
+        width: 46px;
+        height: 46px;
+        font-size: 18px;
+    }
+    .ap-btn-sec {
+        width: 40px;
+        height: 40px;
+    }
+    .ap-vol-slider {
+        width: 72px;
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .ap-time {
+        font-size: 11px;
+    }
+    .ap-story {
+        font-size: 12px;
+    }
+    .ap-chapter {
+        font-size: 10px;
+    }
+    /* Nhóm options (right) */
+    .ap-options {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+    .ap-close {
+        width: 30px;
+        height: 30px;
+    }
+}
+@media (min-width: 1024px) {
+    :root {
+        --ap-bar-h: 82px;
+    }
+    .ap-btn-play {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    .ap-row-info {
+        max-width: 280px;
+    }
+    .ap-info {
+        max-width: 280px;
+    }
+    .ap-story {
+        font-size: 13px;
+    }
+}
+
+/* Body padding khi bar hiện */
+body.has-ap {
+    padding-bottom: calc(var(--ap-bar-h) + 4px) !important;
+}
+
+/* ===================================================
+           CHAPTER LIST — Danh sách chương audio
+        =================================================== */
+.fvn-chapter-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    transition: background 0.15s;
+    cursor: pointer;
+}
+.fvn-chapter-row:hover {
+    background: rgba(29, 185, 84, 0.04);
+}
+.fvn-chapter-row.fvn-playing {
+    background: rgba(29, 185, 84, 0.08);
+}
+.fvn-chapter-row.fvn-playing .fvn-ch-num {
+    color: var(--ap-accent);
+}
+.fvn-chapter-row.fvn-playing .fvn-ch-name {
+    color: var(--ap-accent);
+    font-weight: 600;
+}
+
+.fvn-ch-num {
+    flex-shrink: 0;
+    width: 44px;
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+    font-variant-numeric: tabular-nums;
+    padding: 14px 0;
+}
+.fvn-ch-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    margin-right: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Equalizer animation khi playing */
+.fvn-equalizer {
+    display: none;
+    gap: 2px;
+    align-items: flex-end;
+    height: 16px;
+}
+.fvn-playing .fvn-equalizer {
+    display: flex;
+}
+.fvn-playing .fvn-ch-icon .fvn-eq-icon {
+    display: none;
+}
+.fvn-eq-bar {
+    width: 3px;
+    background: var(--ap-accent);
+    border-radius: 1px;
+    animation: apEq 0.8s ease-in-out infinite alternate;
+}
+.fvn-eq-bar:nth-child(1) {
+    height: 8px;
+    animation-delay: 0s;
+}
+.fvn-eq-bar:nth-child(2) {
+    height: 14px;
+    animation-delay: 0.15s;
+}
+.fvn-eq-bar:nth-child(3) {
+    height: 6px;
+    animation-delay: 0.3s;
+}
+.fvn-eq-bar:nth-child(4) {
+    height: 11px;
+    animation-delay: 0.45s;
+}
+@keyframes apEq {
+    from {
+        transform: scaleY(0.3);
+    }
+    to {
+        transform: scaleY(1);
+    }
+}
+.fvn-ch-info {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 8px 12px 0;
+}
+.fvn-ch-name {
+    font-size: 13px;
+    color: #252525;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 0 2px;
+    line-height: 1.4;
+}
+.fvn-ch-meta {
+    font-size: 11px;
+    color: #999;
+}
+.fvn-ch-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 12px;
+}
+.fvn-ch-play-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(29, 185, 84, 0.1);
+    border: 1px solid rgba(29, 185, 84, 0.3);
+    color: var(--ap-accent);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+.fvn-ch-play-btn:hover {
+    background: var(--ap-accent);
+    color: #000;
+    box-shadow: 0 0 12px var(--ap-accent-glow);
+    transform: scale(1.1);
+}
+.fvn-ch-time {
+    font-size: 11px;
+    color: #bbb;
+    display: none;
+}
+@media (min-width: 480px) {
+    .fvn-ch-time {
+        display: block;
+    }
+}
+/* ============================================================
+   DANH SÁCH AUDIO — 2 trạng thái
+   - has-audio  : Có link audio → nút Play xanh
+   - no-audio   : Chưa có audio → nút Tạo AI cam
+============================================================ */
+
+/* --- Container --- */
+.fvn-audio-list {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.09);
+    margin-bottom: 24px;
+}
+
+.fvn-audio-list__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 2px solid #f0f0f0;
+    background: #fafafa;
+}
+
+.fvn-audio-list__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.fvn-audio-list__title .icon-sound {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #1db954, #17a349);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(29, 185, 84, 0.35);
+}
+
+.fvn-audio-list__badge {
+    font-size: 11px;
+    font-weight: 600;
+    background: #f0fdf4;
+    color: #1db954;
+    border: 1px solid #bbf7d0;
+    border-radius: 999px;
+    padding: 2px 10px;
+}
+
+/* --- Custom Scrollbar cho danh sách chương --- */
+.fvn-audio-list ul::-webkit-scrollbar {
+    width: 5px;
+}
+.fvn-audio-list ul::-webkit-scrollbar-track {
+    background: #f4f4f4;
+    border-radius: 999px;
+}
+.fvn-audio-list ul::-webkit-scrollbar-thumb {
+    background: #1db954;
+    border-radius: 999px;
+}
+.fvn-audio-list ul::-webkit-scrollbar-thumb:hover {
+    background: #17a349;
+}
+
+/* --- Hàng chương --- */
+.fvn-aud-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border-bottom: 1px solid #f4f4f4;
+    transition: background 0.15s ease;
+    position: relative;
+    min-height: 64px;
+}
+.fvn-aud-row:last-child {
+    border-bottom: none;
+}
+.fvn-aud-row:hover {
+    background: #f9f9f9;
+}
+
+/* Trạng thái đang phát */
+.fvn-aud-row.fvn-playing {
+    background: linear-gradient(
+        90deg,
+        rgba(29, 185, 84, 0.08) 0%,
+        rgba(29, 185, 84, 0.03) 100%
+    );
+    box-shadow: inset 0 0 0 1px rgba(29, 185, 84, 0.15);
+}
+.fvn-aud-row.fvn-playing::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #1db954, #17a349);
+    border-radius: 0 3px 3px 0;
+    box-shadow: 2px 0 10px rgba(29, 185, 84, 0.4);
+}
+.fvn-playing .fvn-aud-num {
+    color: #1db954;
+    font-weight: 700;
+}
+.fvn-playing .fvn-aud-name {
+    color: #1db954 !important;
+    font-weight: 600;
+}
+/* Nút play → pause khi đang phát */
+.fvn-playing .fvn-btn-play {
+    background: #17a349;
+    box-shadow: 0 0 14px rgba(29, 185, 84, 0.6);
+}
+.fvn-playing .fvn-btn-play .fvn-icon-play {
+    display: none;
+}
+.fvn-playing .fvn-btn-play .fvn-icon-pause {
+    display: flex;
+}
+.fvn-btn-play .fvn-icon-pause {
+    display: none;
+}
+/* Badge "Đang nghe" */
+.fvn-now-playing-badge {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #1db954;
+    background: rgba(29, 185, 84, 0.1);
+    border: 1px solid rgba(29, 185, 84, 0.25);
+    border-radius: 999px;
+    padding: 2px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    animation: badgePulse 2s ease-in-out infinite;
+}
+.fvn-playing .fvn-now-playing-badge {
+    display: inline-flex;
+}
+@keyframes badgePulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.fvn-aud-num {
+    flex-shrink: 0;
+    width: 46px;
+    text-align: center;
+    font-size: 12px;
+    color: #bbb;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+}
+.fvn-playing .fvn-aud-num {
+    color: #1db954;
+    font-weight: 700;
+}
+
+/* --- Equalizer icon --- */
+.fvn-aud-eq {
+    flex-shrink: 0;
+    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+}
+.fvn-eq-bars {
+    display: none;
+    gap: 2px;
+    align-items: flex-end;
+    height: 18px;
+}
+.fvn-playing .fvn-eq-bars {
+    display: flex;
+}
+.fvn-playing .fvn-eq-static {
+    display: none;
+}
+.fvn-eq-static {
+    display: flex;
+}
+.fvn-eq-b {
+    width: 3px;
+    background: #1db954;
+    border-radius: 1px;
+    animation: eqBounce 0.9s ease-in-out infinite alternate;
+}
+.fvn-eq-b:nth-child(1) {
+    height: 8px;
+    animation-delay: 0s;
+}
+.fvn-eq-b:nth-child(2) {
+    height: 15px;
+    animation-delay: 0.15s;
+}
+.fvn-eq-b:nth-child(3) {
+    height: 6px;
+    animation-delay: 0.3s;
+}
+.fvn-eq-b:nth-child(4) {
+    height: 12px;
+    animation-delay: 0.45s;
+}
+@keyframes eqBounce {
+    from {
+        transform: scaleY(0.25);
+    }
+    to {
+        transform: scaleY(1);
+    }
+}
+
+/* --- Thông tin chương --- */
+.fvn-aud-info {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 8px 12px 0;
+}
+
+.fvn-aud-name {
+    font-size: 13.5px;
+    color: #222;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    margin: 0 0 4px;
+    line-height: 1.4;
+    transition: color 0.15s;
+}
+.fvn-aud-row:hover .fvn-aud-name,
+.fvn-aud-row.has-audio:hover .fvn-aud-name {
+    color: #1db954;
+}
+.fvn-aud-row.no-audio:hover .fvn-aud-name {
+    color: #ff7043;
+}
+
+.fvn-aud-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #aaa;
+}
+
+.fvn-aud-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+/* Tag "Có audio" */
+.fvn-aud-tag.tag-has {
+    background: #f0fdf4;
+    color: #1db954;
+    border: 1px solid #bbf7d0;
+}
+/* Tag "Chưa có audio" */
+.fvn-aud-tag.tag-none {
+    background: #fff7f0;
+    color: #ff7043;
+    border: 1px solid #ffd5c8;
+}
+
+/* --- Khu vực action --- */
+.fvn-aud-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px 0 8px;
+}
+
+/* Nút PLAY */
+.fvn-btn-play {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #1db954;
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        transform 0.2s,
+        box-shadow 0.2s;
+    flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(29, 185, 84, 0.35);
+}
+.fvn-btn-play:hover {
+    background: #17a349;
+    transform: scale(1.12);
+    box-shadow: 0 4px 18px rgba(29, 185, 84, 0.5);
+}
+.fvn-btn-play:active {
+    transform: scale(0.96);
+}
+/* Khi đang phát: icon pause */
+.fvn-playing .fvn-btn-play {
+    background: #17a349;
+}
+
+/* Nút TẠO AUDIO */
+.fvn-btn-generate {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1.5px solid #ff7043;
+    background: #fff7f4;
+    color: #ff7043;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: inherit;
+}
+.fvn-btn-generate:hover {
+    background: #ff7043;
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(255, 112, 67, 0.4);
+    transform: translateY(-1px);
+}
+.fvn-btn-generate:active {
+    transform: translateY(0) scale(0.97);
+}
+.fvn-btn-generate i {
+    font-size: 11px;
+}
+/* Trạng thái đang tạo */
+.fvn-btn-generate.generating {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.fvn-btn-generate.generating i {
+    animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Thời gian (ẩn trên mobile) */
+.fvn-aud-time {
+    font-size: 11px;
+    color: #ccc;
+    white-space: nowrap;
+    display: none;
+}
+@media (min-width: 480px) {
+    .fvn-aud-time {
+        display: block;
+    }
+}
+
+/* Text "Chờ tạo..." */
+.fvn-aud-pending {
+    font-size: 11px;
+    color: #ccc;
+    font-style: italic;
+    white-space: nowrap;
+    display: none;
+}
+@media (min-width: 560px) {
+    .fvn-aud-pending {
+        display: block;
+    }
+}
+
+/* ============================================================
+   TRẠNG THÁI ĐANG TẠO AUDIO
+============================================================ */
+
+/* Nền hàng đang tạo */
+.fvn-aud-row.generating {
+    background: linear-gradient(
+        90deg,
+        rgba(99, 102, 241, 0.05) 0%,
+        rgba(99, 102, 241, 0.02) 100%
+    );
+}
+.fvn-aud-row.generating::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #6366f1, #8b5cf6);
+    border-radius: 0 3px 3px 0;
+}
+/* Icon spinner tím */
+.fvn-aud-row.generating .fvn-aud-eq i {
+    color: #6366f1 !important;
+    animation: spin 1.2s linear infinite;
+}
+/* Tên chương màu tím nhạt */
+.fvn-aud-row.generating .fvn-aud-name {
+    color: #6366f1;
+}
+
+/* Tag "Đang tạo" */
+.fvn-aud-tag.tag-gen {
+    background: #eef2ff;
+    color: #6366f1;
+    border: 1px solid #c7d2fe;
+}
+
+/* Progress bar chạy ngang — dưới tên chương */
+.fvn-gen-progress {
+    margin-top: 5px;
+    height: 3px;
+    background: #e0e7ff;
+    border-radius: 999px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 180px;
+}
+.fvn-gen-progress__bar {
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #6366f1);
+    background-size: 200% 100%;
+    border-radius: 999px;
+    animation: genSlide 1.6s ease-in-out infinite;
+}
+@keyframes genSlide {
+    0% {
+        background-position: 200% 0;
+        width: 20%;
+        margin-left: 0;
+    }
+    50% {
+        background-position: 0% 0;
+        width: 60%;
+        margin-left: 20%;
+    }
+    100% {
+        background-position: -200% 0;
+        width: 20%;
+        margin-left: 80%;
+    }
+}
+
+/* Nút hủy */
+.fvn-btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid #c7d2fe;
+    background: #eef2ff;
+    color: #6366f1;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    font-family: inherit;
+}
+.fvn-btn-cancel:hover {
+    background: #6366f1;
+    color: #fff;
+    border-color: #6366f1;
+    box-shadow: 0 3px 12px rgba(99, 102, 241, 0.35);
+}
+
+/* Badge "Đang tạo" dưới actions */
+.fvn-gen-label {
+    font-size: 10px;
+    color: #6366f1;
+    font-weight: 600;
+    white-space: nowrap;
+    display: none;
+}
+@media (min-width: 480px) {
+    .fvn-gen-label {
+        display: block;
+    }
+}
