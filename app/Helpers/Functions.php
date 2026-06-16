@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-define('FVN_VERSION_LARAVEL', '1.0.6');
+define('FVN_VERSION_LARAVEL', '1.0.7');
 
 function get_all_categories($type = 1)
 {
