@@ -215,9 +215,27 @@ var app = new Vue({
         },
         async handleContentLength(e) {
             e.preventDefault()
-            
+            ìf (!confirm(`Bạn muốn tính toán lại số lượng từ trong mỗi chương truyện?`)) {
+                return;
+            }
             this.loading = true;
             jsonData = await new RouteApi().get(`${FVN_LARAVEL_HOME}/api/manager/stories/auto-convert-content-length-chapter/${this.story.id}` );
+            this.loading = false;
+
+             if (jsonData.status) {
+                this.getItems();
+                jnotice(jsonData.message);
+            } else {
+                jAlert(jsonData.message);
+            }
+        },
+        async handleFreeFullChapter(e) {
+            e.preventDefault()
+            if (!confirm(`Bạn muốn hạ giá các chương truyện có giá tiền lớn hơn 0 xuống 0 đồng?`)) {
+                return;
+            }
+            this.loading = true;
+            jsonData = await new RouteApi().post(`${this.apiUrl}/auto-convert-free-full-chapter/${this.story.id}`, {} );
             this.loading = false;
 
              if (jsonData.status) {

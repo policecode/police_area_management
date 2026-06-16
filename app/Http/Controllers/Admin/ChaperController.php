@@ -204,11 +204,11 @@ class ChaperController extends Controller
             $deleteQuery = Chaper::getByStory($story->id);
             if ($condition['start'] > 0) {
                 $deleteQuery->where('position', '>=', $condition['start']);
-            } 
+            }
             if ($condition['end'] > 0) {
                 $deleteQuery->where('position', '<=', $condition['end']);
-            } 
-            $status= $deleteQuery->delete();
+            }
+            $status = $deleteQuery->delete();
             $story->update([
                 'last_chapers' => NULL,
                 'chaper_id' => NULL,
@@ -225,6 +225,28 @@ class ChaperController extends Controller
                 'status' => 0,
                 'message' => $e->getMessage()
             ], 400);
+        }
+    }
+
+    public function autoConvertFreeFullChapter(Request $request, $story)
+    {
+        try {
+            $listStory = Chaper::GetByStory($story)->GetByMoney()->get();
+            $incrent = 0;
+            foreach ($listStory as $key => $chapter) {
+                $chapter->money = 0;
+                $chapter->update();
+                $incrent++;
+            }
+            return response()->json([
+                'message' => 'Hạ giá: ' . $incrent . ' chương xuống 0 đồng',
+                'status' => 1,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+                'status' => 0,
+            ]);
         }
     }
 
@@ -341,7 +363,7 @@ class ChaperController extends Controller
                 return response()->json([
                     'status' => 1,
                     'data' => [],
-                    'message' => 'Add '.count($dataInsert).' Chapter'
+                    'message' => 'Add ' . count($dataInsert) . ' Chapter'
                 ]);
             }
         } catch (\Throwable $e) {
@@ -375,14 +397,14 @@ class ChaperController extends Controller
                             $str = $str . $textElement->getText() . " ";
                         }
                     }
-                    $arrStr[] = $str.'<br/>';
+                    $arrStr[] = $str . '<br/>';
                 } elseif ($element instanceof \PhpOffice\PhpWord\Element\Text) {
-                    $arrStr[] = $element->getText().'<br/>';
+                    $arrStr[] = $element->getText() . '<br/>';
                 } elseif ($element instanceof \PhpOffice\PhpWord\Element\Title) {
                     $textElement = $element->getText();
                     if ($textElement instanceof \PhpOffice\PhpWord\Element\Text) {
                         $arrStr[] = $textElement->getText();
-                    } elseif($textElement instanceof \PhpOffice\PhpWord\Element\TextRun) {
+                    } elseif ($textElement instanceof \PhpOffice\PhpWord\Element\TextRun) {
                         $textChildElements = $textElement->getElements();
                         $str = '';
                         foreach ($textChildElements as $textChildElement) {

@@ -27,6 +27,7 @@
             <a @click="changeScreen('import')" class="btn btn-success" title="Thêm các chương truyện bằng file word">Import Chapter</a>
             <a @click="handleContentLength" class="btn btn-success" title="tính toán lại số lượng từ trong mỗi chương truyện">Content Length</a>
             <a @click="changeScreen('replace')" class="btn btn-success" title="Thay thế nội dung trong các chương truyện">Replace Content</a>
+            <a @click="handleFreeFullChapter" class="btn btn-success" title="Thay thế nội dung trong các chương truyện">Free Full Chapter</a>
             
            <template v-if="position.screen">
             <div>

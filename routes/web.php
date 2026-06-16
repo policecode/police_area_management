@@ -72,6 +72,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         // Route::resource('stories', 'StoriesController');
 
         // Chapers
+        Route::post('/chapers/auto-convert-free-full-chapter/{story}', 'ChaperController@autoConvertFreeFullChapter')->name('chapers.autoConvertFreeFullChapter');
         Route::get('/chapers/get-items', 'ChaperController@getItems')->name('chapers.getItems')->middleware('can:admin.chapers.getItems');
         Route::get('/chapers/{story}', 'ChaperController@index')->name('chapers.index')->middleware('can:admin.chapers.getItems');
         Route::post('/chapers/{story}', 'ChaperController@store')->name('chapers.store')->middleware('can:admin.chapers.store');
