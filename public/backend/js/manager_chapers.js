@@ -215,7 +215,7 @@ var app = new Vue({
         },
         async handleContentLength(e) {
             e.preventDefault()
-            ìf (!confirm(`Bạn muốn tính toán lại số lượng từ trong mỗi chương truyện?`)) {
+            if (!confirm(`Bạn muốn tính toán lại số lượng từ trong mỗi chương truyện?`)) {
                 return;
             }
             this.loading = true;
