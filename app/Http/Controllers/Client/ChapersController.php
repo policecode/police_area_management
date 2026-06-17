@@ -24,11 +24,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ChapersController extends Controller
 {
-    private function isCoppyrightStory($story) {
+    private function isCoppyrightStory($story)
+    {
         if ($story['is_lock'] != LockStories::LOCK['key']) {
             $user = Auth::user();
             if ($user) {
-                $isCoppyright =CoppyrightStory::GetByUser($user->id)->GetByStory($story['id'])->first();
+                $isCoppyright = CoppyrightStory::GetByUser($user->id)->GetByStory($story['id'])->first();
                 if (!$isCoppyright) {
                     return true;
                 }
@@ -53,10 +54,25 @@ class ChapersController extends Controller
                 $is_admin = true;
             }
         }
+        
+        if ($user) {
+            $checkUser = TopMemberDay::GetByUser($user->id)->GetByKey(get_key_by_day('date'))->first();
+            if ($checkUser && $checkUser->exp_day > 300) {
+                abort(404, json_encode([
+                    'page_title' => 'Hôm nay bạn tu luyện đủ rồi',
+                    'message_title' => 'Hôm nay bạn tu luyện đủ rồi',
+                    'message' => 'Hãy nhập vào hồng trần, giải khai những tâm ma đạo hữu còn vướng bận, tu luyện nhiều quá dễ bị tẩu hỏa nhập ma',
+                ]));
+            }
+        }
         $story = Story::getBySlug($story_slug)->joinAuthor()->first()->toArray();
         $isCoppyright = $this->isCoppyrightStory($story);
         if ($isCoppyright) {
-            abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
+            abort(404, json_encode([
+            'page_title' => 'Trang web không tồn tại',
+            'message_title' => 'Opps! Lạc đường rồi.',
+            'message' => 'Trang bạn đang tìm kiếm có vẻ như không tồn tại trong vũ trụ này. Có thể nó đã bị xóa hoặc đường dẫn bị sai.',
+        ]));
         }
         $story['link'] = route('client.story', ['story_slug' => $story['slug']]);
         $isResult = strpos($story['title'], '(c)');
@@ -68,7 +84,7 @@ class ChapersController extends Controller
         $chaperList = Chaper::selectNotContent()->getByStory($story['id'])->orderBy('position', 'ASC')->get();
         // Lấy chương truyện theo vị trí
         $chaper = $this->getChapterContent($chaper_position, $story['id']);
-  
+
         // dd($chaper);
 
         $linkPrev = '#';
@@ -86,12 +102,12 @@ class ChapersController extends Controller
             # code...
         }
         $chaper['link'] = route('client.chaper', ['story_slug' => $story['slug'], 'chaper_position' => $chaper['position']]);
-        
+
         // dd($chaper['content_length']);
         if (!$is_admin) {
             $chaper['content'] = $this->addAdsToContent($chaper['content']);
         }
-        
+
         $breadcrumb = [
             [
                 "title" => "Trang chủ",
@@ -125,7 +141,8 @@ class ChapersController extends Controller
         }
     }
 
-    private function getChapterContent($chaper_position, $story_id) {
+    private function getChapterContent($chaper_position, $story_id)
+    {
         $chapter = Chaper::getByPosition($chaper_position)->getByStory($story_id)->first();
         if (!($chapter->content_length > 0)) {
             // Cập nhật lại sôt từ của chương
@@ -138,19 +155,19 @@ class ChapersController extends Controller
                 $orderChapter = OrderChapter::GetByUser($user->id)->GetByChapter($chapter->id)->first();
                 if ($orderChapter) {
                     $chapter->unlocked_content = true;
-
                 } else {
-                    $chapter->content = mb_substr($chapter->content, 0, 500). '...';
+                    $chapter->content = mb_substr($chapter->content, 0, 500) . '...';
                 }
             } else {
-                $chapter->content = mb_substr($chapter->content, 0, 500). '...';
+                $chapter->content = mb_substr($chapter->content, 0, 500) . '...';
             }
         }
         $chapter = $chapter->toArray();
         return $chapter;
     }
 
-    public function buyChapter(Request $request) {
+    public function buyChapter(Request $request)
+    {
         DB::beginTransaction();
         try {
             if (!Auth::id()) {
@@ -176,7 +193,7 @@ class ChapersController extends Controller
                     'message' => 'Bạn đã mua chương này rồi'
                 ], 400);
             }
-         
+
             if ($user->money < $chaper->money) {
                 return response()->json([
                     'status' => 0,
@@ -220,7 +237,7 @@ class ChapersController extends Controller
             return response()->json([
                 'status' => 1,
                 'message' => 'Mua chương thành công'
-             
+
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -231,15 +248,16 @@ class ChapersController extends Controller
         }
     }
 
-    public function addAdsToContent($content) {
+    public function addAdsToContent($content)
+    {
         $arr = explode(" ", $content);
         $newArr = [];
-        for ($i=0; $i < count($arr); $i++) { 
+        for ($i = 0; $i < count($arr); $i++) {
             $newArr[] = $arr[$i];
-                if (($i + 1) % 500 == 0) {
-                    $newArr[] = ' <span >'.env('KEY_TEXT_CHAPTER').'</span> ';
-                }
+            if (($i + 1) % 500 == 0) {
+                $newArr[] = ' <span >' . env('KEY_TEXT_CHAPTER') . '</span> ';
             }
+        }
         return implode(" ", $newArr);
     }
 
@@ -288,47 +306,47 @@ class ChapersController extends Controller
             $chaper->view += 1;
             $chaper->update();
             $story->view_count += 1;
-            $story->total_percentage = round(($story->view_count/$story->total_chapter) * 100, 2);
+            $story->total_percentage = round(($story->view_count / $story->total_chapter) * 100, 2);
             $story->update();
             $view_day = ViewDay::getByStory($data['story_id'])->getByKey(get_key_by_day())->first();
             if ($view_day) {
                 $view_day->view += 1;
-                $view_day->percentage = round(($view_day->view/$story->total_chapter) * 100, 2);
+                $view_day->percentage = round(($view_day->view / $story->total_chapter) * 100, 2);
                 $view_day->update();
             } else {
                 ViewDay::create([
                     'story_id' => $data['story_id'],
                     'view' => 1,
                     'key' => get_key_by_day(),
-                    'percentage' => round((1/$story->total_chapter) * 100, 2)
+                    'percentage' => round((1 / $story->total_chapter) * 100, 2)
                 ]);
             }
 
             $view_week = ViewWeek::getByStory($data['story_id'])->getByKey(get_key_by_day('week'))->first();
             if ($view_week) {
                 $view_week->view += 1;
-                $view_week->percentage = round(($view_week->view/$story->total_chapter) * 100, 2);
+                $view_week->percentage = round(($view_week->view / $story->total_chapter) * 100, 2);
                 $view_week->update();
             } else {
                 ViewWeek::create([
                     'story_id' => $data['story_id'],
                     'view' => 1,
                     'key' => get_key_by_day('week'),
-                    'percentage' => round((1/$story->total_chapter) * 100, 2)
+                    'percentage' => round((1 / $story->total_chapter) * 100, 2)
                 ]);
             }
 
             $view_month = ViewMonth::getByStory($data['story_id'])->getByKey(get_key_by_day('month'))->first();
             if ($view_month) {
                 $view_month->view += 1;
-                $view_month->percentage = round(($view_month->view/$story->total_chapter) * 100, 2);
+                $view_month->percentage = round(($view_month->view / $story->total_chapter) * 100, 2);
                 $view_month->update();
             } else {
                 ViewMonth::create([
                     'story_id' => $data['story_id'],
                     'view' => 1,
                     'key' => get_key_by_day('month'),
-                    'percentage' => round((1/$story->total_chapter) * 100, 2)
+                    'percentage' => round((1 / $story->total_chapter) * 100, 2)
                 ]);
             }
             // Xử lý khi đã đăng nhập
@@ -386,21 +404,21 @@ class ChapersController extends Controller
         }
     }
 
-    public function getTotalBuyChapter(Request $request, $story_id) {
+    public function getTotalBuyChapter(Request $request, $story_id)
+    {
         try {
             // Lấy tổng số chương đã mua của truyện
-                $orderChapterList = OrderChapter::GetByStory($story_id)->GetByUser(Auth::id())->get()->pluck('chapter_id')->toArray();
+            $orderChapterList = OrderChapter::GetByStory($story_id)->GetByUser(Auth::id())->get()->pluck('chapter_id')->toArray();
             // Lấy danh sách các chương truyện chưa mua
-                $chaperList = Chaper::SelectNotContent()->getByStory($story_id)->GetByMoney()->GetByNotId($orderChapterList)->orderBy('position', 'ASC')->get();
-                $totalChapter = count($chaperList);
-                $totalCoint = $chaperList->sum('money');
-                return response()->json([
-                    'status' => 1,
-                    'total_chapter' => $totalChapter,
-                    'total_coint' => $totalCoint,
-                    'data' => $chaperList
-                ]);
-
+            $chaperList = Chaper::SelectNotContent()->getByStory($story_id)->GetByMoney()->GetByNotId($orderChapterList)->orderBy('position', 'ASC')->get();
+            $totalChapter = count($chaperList);
+            $totalCoint = $chaperList->sum('money');
+            return response()->json([
+                'status' => 1,
+                'total_chapter' => $totalChapter,
+                'total_coint' => $totalCoint,
+                'data' => $chaperList
+            ]);
         } catch (\Throwable $e) {
             return response()->json([
                 'status' => 0,
@@ -409,7 +427,8 @@ class ChapersController extends Controller
         }
     }
 
-    public function handleBuyComboChapter(Request $request) {
+    public function handleBuyComboChapter(Request $request)
+    {
         DB::beginTransaction();
         try {
             $validator = Validator::make($request->all(), [

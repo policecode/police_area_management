@@ -1,8 +1,10 @@
  <div class="swiper-container slide-story__related mb-3">
      <div class="swiper-wrapper">
          @foreach ($related_stories as $item)
+            @if (!empty($item['story_slug']))
              <div class="swiper-slide">
                  <div class="card-story max-w-[300px]">
+                        
                      <a href="{{ route('client.story', ['story_slug' => $item['slug']]) }}" title="{{ $item['title'] }}"
                          class="img c-img pt-[138%] rounded-md overflow-hidden shadow-[0_7px_10px_1px_rgba(34,34,34,.1)] relative">
                          <picture>
@@ -30,6 +32,8 @@
                      @endif
                  </div>
              </div>
+            @endif
+
          @endforeach
      </div>
      <div

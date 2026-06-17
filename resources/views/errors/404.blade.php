@@ -1,3 +1,7 @@
+    @php
+    // Giải mã chuỗi JSON từ $exception thành một Object
+    $errorData = json_decode($exception->getMessage());
+    @endphp
     <!DOCTYPE html>
     <html lang="en">
 
@@ -5,7 +9,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Trang web không tồn tại</title>
+        <title>{{ $errorData->page_title}}</title>
         <style>
             :root {
                 /* Màu nền tối rất sâu */
@@ -134,12 +138,10 @@
     <body>
         <div class="error-container">
             <h1 class="error-code">404</h1>
-
-            <h2 class="error-title">Opps! Lạc đường rồi.</h2>
+            <h2 class="error-title">{{ $errorData->message_title}}</h2>
 
             <p class="error-description">
-                Trang bạn đang tìm kiếm có vẻ như không tồn tại trong vũ trụ này.
-                Có thể nó đã bị xóa hoặc đường dẫn bị sai.
+                {{ $errorData->message}}
             </p>
 
             <a href="{{ route('index') }}" class="btn-home">Quay lại Trang Chủ</a>
