@@ -49,6 +49,10 @@ class ReplaceContentController extends Controller
             ]);
         }
         $data = $validator->validated();
+        //  return response()->json([
+        //         'status' => 1,
+        //         'data' => $data
+        //     ]);
         $isCheck = ReplaceContent::GetByStory($story->id)->GetByOldContent($data['old_content'])->first();
         if ($isCheck) {
             return response()->json([

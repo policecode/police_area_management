@@ -292,8 +292,8 @@
                                 <tr v-for="(item, index) in replaceContentItems">
                                     <td>@{{ index + 1 }}</td>
                                     <td>@{{ item.id }}</td>
-                                    <td>@{{ item.old_content }}</td>
-                                    <td>@{{ item.new_content }}</td>
+                                    <td>"@{{ item.old_content }}"</td>
+                                    <td>"@{{ item.new_content }}"</td>
                                     <td>
                                         <a @click="deleteReplaceContent(item)" class="btn btn-danger mt-1">Xóa</a>
                                     </td>
