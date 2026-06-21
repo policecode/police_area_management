@@ -23,11 +23,12 @@ use Illuminate\Support\Facades\Validator;
 
 class StoriesController extends Controller
 {
-    private function isCoppyrightStory($story) {
+    private function isCoppyrightStory($story)
+    {
         if ($story['is_lock'] != LockStories::LOCK['key']) {
             $user = Auth::user();
             if ($user) {
-                $isCoppyright =CoppyrightStory::GetByUser($user->id)->GetByStory($story['id'])->first();
+                $isCoppyright = CoppyrightStory::GetByUser($user->id)->GetByStory($story['id'])->first();
                 if (!$isCoppyright) {
                     return true;
                 }
@@ -48,14 +49,22 @@ class StoriesController extends Controller
         $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
         if (!$story) {
             // dd($story);
-            abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
+            abort(404,  json_encode([
+                'page_title' => 'Trang web không tồn tại',
+                'message_title' => 'Opps! Lạc đường rồi.',
+                'message' => 'Trang bạn đang tìm kiếm có vẻ như không tồn tại trong vũ trụ này. Có thể nó đã bị xóa hoặc đường dẫn bị sai.',
+            ]));
         }
         $isCoppyright = $this->isCoppyrightStory($story);
         if ($isCoppyright) {
-            abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
+            abort(404,  json_encode([
+                'page_title' => 'Trang web không tồn tại',
+                'message_title' => 'Opps! Lạc đường rồi.',
+                'message' => 'Trang bạn đang tìm kiếm có vẻ như không tồn tại trong vũ trụ này. Có thể nó đã bị xóa hoặc đường dẫn bị sai.',
+            ]));
         }
         $story->thumbnail = asset($story->thumbnail);
- 
+
         // $story = $story->toArray();
         // Lấy các chương mới nhất của truyện và kiểm tra xem người dùng đã mua chương đó chưa
         $orderChapter = [];
@@ -73,7 +82,7 @@ class StoriesController extends Controller
         // dd($chapters);
 
         $first_chapter = Chaper::joinStory()->getByStory($story['id'])->orderBy('position', 'ASC')->first();
-        $first_chapter = $first_chapter?$first_chapter->toArray():NULL;
+        $first_chapter = $first_chapter ? $first_chapter->toArray() : NULL;
         $storyByAuthor = Story::joinAuthor()->getByAuthor($story['author_id'])->noById($story['id'])->get()->each(function ($item, $key) use ($now) {
             $item->thumbnail = route('index') . '/' . $item->thumbnail;
             $isResult = strpos($item['title'], '(c)');
@@ -107,15 +116,15 @@ class StoriesController extends Controller
                 ])
             ]
         ];
-     
+
 
         // Title Header
-        $page_title = ucwords($story['title']).' | '.ucwords($story['author_name']);
+        $page_title = ucwords($story['title']) . ' | ' . ucwords($story['author_name']);
         // Desccription Header
-        $description = str_replace('<br />',' ', $story['description']);
+        $description = str_replace('<br />', ' ', $story['description']);
         $arrDesc = explode(' ', $description, 50);
         unset($arrDesc[49]);
-        $newArrDesc = array_filter($arrDesc, function($value) {
+        $newArrDesc = array_filter($arrDesc, function ($value) {
             return $value;
         });
         $description = implode(' ', $newArrDesc);
@@ -131,13 +140,13 @@ class StoriesController extends Controller
             'first_chapter' => $first_chapter,
             'star_ratings' => $starRatings
         );
-        
-        return view('client_page.stories', $dataView);
 
+        return view('client_page.stories', $dataView);
     }
 
-    public function audioStories(Request $request, $story_slug) {
-          // $option = SettingHelpers::getInstance();
+    public function audioStories(Request $request, $story_slug)
+    {
+        // $option = SettingHelpers::getInstance();
         $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
         if (!$story) {
             // dd($story);
@@ -195,15 +204,15 @@ class StoriesController extends Controller
                 ])
             ]
         ];
-     
+
 
         // Title Header
-        $page_title = ucwords($story['title']).' | '.ucwords($story['author_name']);
+        $page_title = ucwords($story['title']) . ' | ' . ucwords($story['author_name']);
         // Desccription Header
-        $description = str_replace('<br />',' ', $story['description']);
+        $description = str_replace('<br />', ' ', $story['description']);
         $arrDesc = explode(' ', $description, 50);
         unset($arrDesc[49]);
-        $newArrDesc = array_filter($arrDesc, function($value) {
+        $newArrDesc = array_filter($arrDesc, function ($value) {
             return $value;
         });
         $description = implode(' ', $newArrDesc);
@@ -217,11 +226,12 @@ class StoriesController extends Controller
             'story_by_author' => $storyByAuthor,
             'star_ratings' => $starRatings
         );
-        
+
         return view('client_page.audio_stories', $dataView);
     }
 
-    public function getListChapers(Request $request) {
+    public function getListChapers(Request $request)
+    {
         try {
             //code...
             $query = Chaper::joinStory()->filter($request);
@@ -232,16 +242,15 @@ class StoriesController extends Controller
                 'per_page' => $query->getPerPage(),
                 'total' => 0
             ];
-            if($request->is_paginate){
+            if ($request->is_paginate) {
                 $res['total'] = $query->getTotal();
-            }else{
+            } else {
                 $orderChapter = [];
                 if (Auth::check()) {
-                     $orderChapter = OrderChapter::getByUser(Auth::id())->GetByStory($request->story_id)->get()->groupBy('chapter_id')->toArray();
-                     
+                    $orderChapter = OrderChapter::getByUser(Auth::id())->GetByStory($request->story_id)->get()->groupBy('chapter_id')->toArray();
                 }
                 $now = Carbon::now();
-                $res['data']  = $query->get()->each(function ($item, $key) use($now, $orderChapter){
+                $res['data']  = $query->get()->each(function ($item, $key) use ($now, $orderChapter) {
                     $item->url = route('client.chaper', [
                         'story_slug' => $item->story_slug,
                         'chaper_position' => $item->position,
@@ -253,19 +262,22 @@ class StoriesController extends Controller
                 });
             }
             return response()->json($res);
-          } catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             return response()->json([
-                'result' => 0, 'data'=> [], 'message' => $e->getMessage()
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
             ], 400);
-          }
+        }
     }
 
-    public function ratingStar(Request $request) {
+    public function ratingStar(Request $request)
+    {
         try {
             $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => 0, 
+                    'status' => 0,
                     'errors' => $validator->errors(),
                     'message' => 'validation'
                 ]);
@@ -275,14 +287,14 @@ class StoriesController extends Controller
             $data = $validator->validated();
             $user = Auth::user();
             $flag = StarRating::getByUser($user->id)->getByStory($data['story_id'])->first();
-         
+
             if ($flag) {
                 return response()->json([
-                    'status' => 0, 
+                    'status' => 0,
                     'message' => 'Bạn đã đánh giá bộ công pháp này, bạn có thể tìm hiểu những bộ công pháp',
                 ]);
             }
-  
+
             $voteStar = StarRating::create([
                 'user_id' => $user->id,
                 'story_id' => $data['story_id'],
@@ -291,27 +303,29 @@ class StoriesController extends Controller
                 'content' => $data['content']
             ]);
             $starAvg = StarRating::getByStory($voteStar->story_id)->get()->avg('point_star');
-    
+
             $story = Story::find($voteStar->story_id);
             $story->star_count = $story->star_count + 1;
             $story->star_average = number_format($starAvg, 1);
             $story->update();
-           
+
             DB::commit();
             return response()->json([
-                'status' => 1, 
+                'status' => 1,
                 'data' => $starAvg,
                 'message' => 'Cảm ơn bạn đã đưa ra đánh giá cho bộ công pháp này'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 0, 'message' => $e->getMessage()
+                'status' => 0,
+                'message' => $e->getMessage()
             ], 400);
         }
     }
 
-    public function getTopViewStories(Request $request) {
+    public function getTopViewStories(Request $request)
+    {
         try {
             $view_url = '';
             if ($request->view == 'day') {
@@ -320,11 +334,9 @@ class StoriesController extends Controller
             } elseif ($request->view == 'week') {
                 $query = ViewWeek::joinStory()->getByKey(get_key_by_day('week'))->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
                 $view_url = route('client.view-story', ['view_slug' => 'week']);
-
             } elseif ($request->view == 'month') {
                 $query = ViewMonth::joinStory()->getByKey(get_key_by_day('month'))->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
                 $view_url = route('client.view-story', ['view_slug' => 'month']);
-
             } elseif ($request->view == 'all') {
                 # code...
             }
@@ -336,9 +348,9 @@ class StoriesController extends Controller
                 'page' => $request->page,
                 'total' => 0
             ];
-            if($request->is_paginate){
+            if ($request->is_paginate) {
                 $res['total'] = $query->count();
-            }else{
+            } else {
                 $colection = $query->skip(($request->page - 1) * $request->per_page)->take($request->per_page)->get();
                 // $story_arr= $colection->pluck('id');
                 // $listStoryCat = StoryCategory::getListCategoryByStory( $story_arr);
@@ -347,18 +359,21 @@ class StoriesController extends Controller
                     $item->url = route('client.story', ['story_slug' => $item->slug]);
                     $item->author_url = route('client.author', ['author_slug' => $item['author_slug']]);
                     // $item->categories = $listStoryCat[$item->id] ? $listStoryCat[$item->id] : [];
-                    
+
                 });
             }
             return response()->json($res);
         } catch (\Throwable $e) {
             return response()->json([
-                'result' => 0, 'data'=> [], 'message' => $e->getMessage()
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
             ], 400);
         }
     }
 
-    public function getTopOrderStories(Request $request) {
+    public function getTopOrderStories(Request $request)
+    {
         try {
             $query = OrderMonth::joinStory()->getByKey(get_key_by_day('month'))->where('stories.is_lock', LockStories::LOCK['key'])->orderBy($request->order_by, $request->order_type);
             $res = [
@@ -369,20 +384,21 @@ class StoriesController extends Controller
                 'per_page' => $query->getPerPage(),
                 'total' => 0
             ];
-            if($request->is_paginate){
+            if ($request->is_paginate) {
                 $res['total'] = $query->count();
-            }else{
+            } else {
                 $res['data']  = $query->skip(($request->page - 1) * $request->per_page)->take($request->per_page)->get()->each(function ($item, $key) {
                     $item->thumbnail = route('index') . '/' . $item->thumbnail;
                     $item->url = route('client.story', ['story_slug' => $item->slug]);
                     $item->author_url = route('client.author', ['author_slug' => $item['author_slug']]);
-                    
                 });
             }
             return response()->json($res);
         } catch (\Throwable $e) {
             return response()->json([
-                'result' => 0, 'data'=> [], 'message' => $e->getMessage()
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -421,7 +437,8 @@ class StoriesController extends Controller
         ];
     }
 
-    public function devTotal20Chapter(Request $request, $story_slug) {
+    public function devTotal20Chapter(Request $request, $story_slug)
+    {
         $story = Story::with('categories')->joinAuthor()->getBySlug($story_slug)->first();
         if (!$story) {
             abort(404, 'Không tìm thấy truyện', ['page_title' => 'Không tìm thấy truyện']);
@@ -440,7 +457,7 @@ class StoriesController extends Controller
         }
         $contentDesc = handleFixSpellingErrors($contentDesc);
         $content = handleFixSpellingErrors($content);
-        
+
         $dataView = array(
             'page_title' => ucwords($story['title']) . ' - ' . ucwords('Dev Total 20 Chapter'),
             'story' => $story,
