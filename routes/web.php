@@ -77,6 +77,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::get('/chapers/{story}', 'ChaperController@index')->name('chapers.index')->middleware('can:admin.chapers.getItems');
         Route::post('/chapers/{story}', 'ChaperController@store')->name('chapers.store')->middleware('can:admin.chapers.store');
         Route::put('/chapers/{story}/{chaper}', 'ChaperController@update')->name('chapers.update')->middleware('can:admin.chapers.update');
+        Route::post('/chapers/position-plus/{story}/{postion}', 'ChaperController@positionPlus')->name('chapers.positionPlus')->middleware('can:admin.chapers.update');
         Route::delete('/chapers/{story}/{chaper}', 'ChaperController@destroy')->name('chapers.destroy')->middleware('can:admin.chapers.destroy');
         Route::delete('/chapers/{story}', 'ChaperController@destroyAll')->name('chapers.destroyAll')->middleware('can:admin.chapers.destroy');
         Route::post('/chapers/upload/{story}', 'ChaperController@uploadChapterByWord')->name('chapers.upload');

@@ -141,6 +141,8 @@
                                     <td>
                                         <a @click="showItem(item)" class="btn btn-warning">Sửa</a>
                                         <a @click="deleteItem(item)" class="btn btn-danger mt-1">Xóa</a>
+                                        <a @click="handlePositionPlusChapter($event, item)" class="btn btn-success mt-1">Position</a>
+
                                     </td>
                                 </tr>
                             </tbody>

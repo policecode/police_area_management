@@ -245,6 +245,22 @@ var app = new Vue({
                 jAlert(jsonData.message);
             }
         },
+        async handlePositionPlusChapter(e, item) {
+            e.preventDefault()
+            if (!confirm(`Bạn muốn tạo khoảng trống từ ${item.name}, vị trí ${item.position} phải không?`)) {
+                return;
+            }
+            this.loading = true;
+            jsonData = await new RouteApi().post(`${this.apiUrl}/position-plus/${this.story.id}/${item.position}`, {} );
+            this.loading = false;
+
+             if (jsonData.status) {
+                this.getItems();
+                jnotice(jsonData.message);
+            } else {
+                jAlert(jsonData.message);
+            }
+        },
         async save(e) {
             e.preventDefault()
             this.loading = true;

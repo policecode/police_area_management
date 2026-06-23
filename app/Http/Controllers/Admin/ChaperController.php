@@ -163,6 +163,28 @@ class ChaperController extends Controller
         }
     }
 
+    public function positionPlus(Request $request, $story, $position)
+    {
+        try {
+          
+
+            DB::beginTransaction();
+            Chaper::GetByStory($story)->where('position', '>=', $position)->increment('position');
+
+            DB::commit();
+            return response()->json([
+                'status' => 1,
+                'message' => 'Update position success'
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *
