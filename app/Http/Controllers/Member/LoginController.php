@@ -91,7 +91,7 @@ public function login(Request $request)
         if ($isUser) {
             if (!$isUser->email_verified_at) {
                 $isUser->email_verified_at = Carbon::now();
-                $isUser->save();
+                $isUser->update();
             }
             Auth::login($isUser, true);
         } else {
