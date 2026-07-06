@@ -89,6 +89,10 @@ public function login(Request $request)
         $user = Socialite::driver('google')->user();
         $isUser = User::getByEmail($user['email'])->first();
         if ($isUser) {
+            if (!$isUser->email_verified_at) {
+                $isUser->email_verified_at = Carbon::now();
+                $isUser->save();
+            }
             Auth::login($isUser, true);
         } else {
             // Chưa có tài khoản, tiến hành tạo mới và đăng nhập
