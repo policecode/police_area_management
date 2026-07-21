@@ -36,7 +36,6 @@ class ChaperController extends Controller
         // $request->merge(array_merge($queryDefault, $request->query()));
 
         try {
-            //code...
             $query = Chaper::filter($request);
             $res = [
                 'result' => 1,
@@ -119,9 +118,52 @@ class ChaperController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($story, Chaper $chaper)
+    public function showListChapter($story)
     {
-        dd($story);
+        if (!env('DOWNLOAD_STORY')) {
+            return response()->json([
+                'result' => 0,
+                'message' => 'Không Cho phép sử dụng tính năng này'
+            ]);
+        }
+        try {
+            $data = Chaper::SelectNotContent()->getByStory($story)->orderBy('position', 'ASC')->get();
+            return response()->json([
+                'result' => 1,
+                'data' => $data,
+                'total' => $data->count()
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function showDetailChapter($story, $position)
+    {
+        if (!env('DOWNLOAD_STORY')) {
+            return response()->json([
+                'result' => 0,
+                'message' => 'Không Cho phép sử dụng tính năng này'
+            ]);
+        }
+        try {
+            $chaper = Chaper::GetByStory($story)->GetByPosition($position)->first();
+            return response()->json([
+                'status' => 1,
+                'data' => $chaper,
+                'message' => 'Get success'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -166,7 +208,7 @@ class ChaperController extends Controller
     public function positionPlus(Request $request, $story, $position)
     {
         try {
-          
+
 
             DB::beginTransaction();
             Chaper::GetByStory($story)->where('position', '>=', $position)->increment('position');

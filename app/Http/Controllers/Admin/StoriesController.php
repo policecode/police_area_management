@@ -41,10 +41,11 @@ class StoriesController extends Controller
 
         return view('admin_page.stories.lists', $dataView);
     }
-    
+
     public function getItems(Request $request)
     {
-        // Thêm dữ liệu vào trong query
+
+
         if ($request->category_id) {
             $list_story_id = StoryCategory::GetByCategoryId($request->category_id)->get()->pluck('story_id')->toArray();
             if (count($list_story_id) <= 1) {
@@ -80,14 +81,15 @@ class StoriesController extends Controller
                         $listCatName[$key][] = $items[$i];
                     }
                 }
+                
                 $results->each(function ($item, $key) use ($listCat, $listCatName) {
                     $item->thumbnail = route('index') . '/' . $item->thumbnail;
-                    $item->category = $listCat[$item->id];
-                    $item->category_obj = $listCatName[$item->id];
+                    $item->category = $listCat[$item->id]??[];
+                    $item->category_obj = $listCatName[$item->id]??[];
                     $item->admin_chapter_url = route('admin.chapers.index', ['story' => $item->id]);
                     $item->admin_chapter_audio_url = route('admin.chapersAudio.index', ['story' => $item->id]);
-
                 });
+                // dd($listStoryCat);
                 $res['data'] = $results;
             }
             return response()->json($res);
@@ -283,6 +285,31 @@ class StoriesController extends Controller
         }
     }
 
+    public function showStory($story)
+    {
+        if (!env('DOWNLOAD_STORY')) {
+            return response()->json([
+                'result' => 0,
+                'message' => 'Không Cho phép sử dụng tính năng này'
+            ]);
+        }
+        try {
+            $dataStory = Story::JoinAuthor()->GetById($story)->first();
+            $dataStory->thumbnail = route('index') . '/' . $dataStory->thumbnail;
+            $dataStory->category = StoryCategory::JoinCategory()->GetByStoryId($dataStory->id)->get();
+            return response()->json([
+                'status' => 1,
+                'data' => $dataStory,
+                'message' => 'Get story success'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
     public function handleListStories(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -337,7 +364,7 @@ class StoriesController extends Controller
         }
     }
 
-    
+
 
     private function rules($request)
     {
@@ -465,11 +492,11 @@ class StoriesController extends Controller
                 }
             }
             return response()->json([
-                'message' => 'Cập nhật thành công: ' . $incrent.' chương',
+                'message' => 'Cập nhật thành công: ' . $incrent . ' chương',
                 'status' => 1,
             ]);
         } catch (\Throwable $th) {
-             return response()->json([
+            return response()->json([
                 'message' => $th->getMessage(),
                 'status' => 0,
             ]);

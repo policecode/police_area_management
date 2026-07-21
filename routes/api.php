@@ -39,10 +39,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
             Route::get('/auto-convert-total-chapter', 'StoriesController@autoConvertTotalChapter');
             Route::get('/auto-convert-content-length-chapter/{story}', 'StoriesController@autoConvertContentLength');
             Route::delete('/auto_delete_{story}', 'StoriesController@destroy');
+            Route::get('/{story}', 'StoriesController@showStory');
+            Route::get('/{story}/chapters', 'ChaperController@showListChapter');
+            Route::get('/{story}/chapters/{position}', 'ChaperController@showDetailChapter');
         });
-
-        
     });
+
+   
 });
 Route::get('search/keyword', [HomeController::class, 'searchKeyword']);
 

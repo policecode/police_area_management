@@ -77,6 +77,7 @@ use App\Enums\ProposeStatus;
                                     <th>
                                         <input type="checkbox" v-model="checkAll" value="1" />
                                     </th>
+                                    <th>ID</th>
                                     <th>Ảnh bìa</th>
                                     <th>
                                         <a @click="orderBy('title')" class="link-offset-1">
@@ -115,6 +116,7 @@ use App\Enums\ProposeStatus;
                             <tfoot>
                                 <tr>
                                     <th></th>
+                                    <th>ID</th>
                                     <th width="10%">Ảnh bìa</th>
                                     <th>Tên truyện</th>
                                     <th>Thể loại</th>
@@ -130,6 +132,7 @@ use App\Enums\ProposeStatus;
                                     <td>
                                         <input type="checkbox" v-model="listId" :value="item.id" />
                                     </td>
+                                    <td>@{{ item.id }}</td>
                                     <td><img :src="item.thumbnail" class="img-thumbnail w-100" /></td>
                                     <td>
                                         <a :href="item.url" :title="item.url" target="_blank">@{{ item.title }}</a>
