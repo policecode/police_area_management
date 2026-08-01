@@ -64,7 +64,9 @@
         'title' => 'Cài đặt',
         'page' => 'setting',
         'icon' => 'fa-solid fa-gear',
-        'child_route' => [],
+        'child_route' => [
+            ['page' => 'admin.setting.affiliate', 'title' => 'Affiliate']
+        ],
     ])
     @include('parts.backend.item_page', [
         'title' => 'Phân quyền',

@@ -28,10 +28,99 @@ class SettingController extends Controller
         return view('admin_page.settings.lists', $dataView);
     }
 
+    public function affiliate()
+    {
+        $option = SettingHelpers::getInstance();
+        $result = $option->get(['affiliate_in_chapter']);
+        $dataView = array(
+            'page_title' => 'Cài đặt quảng cáo trên trang web',
+            'options' => $result
+        );
+        return view('admin_page.settings.list_affiliate', $dataView);
+    }
+
     public function settingPageOne(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 0,
+                    'errors' => $validator->errors(),
+                    'message' => 'validation'
+                ]);
+            }
+            DB::beginTransaction();
+
+            if ($request->hasFile('fvn_shortcut_icon')) {
+                $image = $request->file('fvn_shortcut_icon')->store('stories/settings');
+                $result = Option::getByOptionKey('fvn_shortcut_icon')->first();
+                if ($result) {
+                    Storage::delete($result->option_value);
+                    $result->option_value = $image;
+                    $result->save();
+                } else {
+                    Option::create([
+                        'option_key' => 'fvn_shortcut_icon',
+                        'option_value' => $image,
+                        'autoload' => OptionAutoload::YES['key']
+                    ]);
+                }
+            }
+            if ($request->hasFile('fvn_logo')) {
+                $image = $request->file('fvn_logo')->store('stories/settings');
+                $result = Option::getByOptionKey('fvn_logo')->first();
+                if ($result) {
+                    Storage::delete($result->option_value);
+                    $result->option_value = $image;
+                    $result->save();
+                } else {
+                    Option::create([
+                        'option_key' => 'fvn_logo',
+                        'option_value' => $image,
+                        'autoload' => OptionAutoload::YES['key']
+                    ]);
+                }
+            }
+
+            $data = $validator->validated();
+
+            foreach ($data as $key => $value) {
+                if (!trim($value)) {
+                    continue;
+                }
+                $result = Option::getByOptionKey($key)->first();
+                if ($result) {
+                    $result->option_value = $value;
+                    $result->save();
+                } else {
+                    Option::create([
+                        'option_key' => $key,
+                        'option_value' => $value,
+                        'autoload' => OptionAutoload::YES['key']
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return response()->json([
+                'status' => 1,
+                'data' => [],
+                'message' => 'Update success'
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function settingPageAffiliate(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), ['affiliate_in_chapter' => ''], $this->messages(), $this->attributes());
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 0,
@@ -117,7 +206,7 @@ class SettingController extends Controller
             'fvn_tiktok_link' => '',
             'fvn_discord_link' => '',
             'fvn_instagram_link' => '',
-            'fvn_twitter_link' => ''
+            'fvn_twitter_link' => '',
         ];
 
         return $rules;
