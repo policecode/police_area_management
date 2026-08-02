@@ -32,10 +32,12 @@ class SettingController extends Controller
     {
         $option = SettingHelpers::getInstance();
         $result = $option->get(['affiliate_in_chapter']);
+        // $option->templateOptionDB();
         $dataView = array(
             'page_title' => 'Cài đặt quảng cáo trên trang web',
             'options' => $result
         );
+        // dd($result);
         return view('admin_page.settings.list_affiliate', $dataView);
     }
 

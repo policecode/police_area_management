@@ -16,37 +16,39 @@
                 <legend class="text-primary">{{ $page_title }}</legend>
                 <table class="table table-success table-bordered">
                     <tbody>
-
-                        <tr>
-                            <th width="20%" rowspan="3">Link in Chapter</th>
-                            <td>
-                                <input type="text" v-model="itemDetail.fvn_telegram_link" class="form-control"
-                                    :class={'is-invalid':errors.fvn_telegram_link} placeholder="Link affiliate...">
-                          
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="row">
+                        <template v-for="(item, index) in itemDetail.affiliate_in_chapter">
+                            <tr>
+                                <th width="20%" rowspan="3">Link in Chapter @{{ index + 1 }}</th>
+                                <td>
+                                    <input type="text" v-model="item.link" class="form-control"
+                                        :placeholder="`Link affiliate ${index + 1}...`">
+                              
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                
+                                        <div class="input-group col-9">
+                                            <input type="file" @change="uploadFile($event, `affiliate_in_chapter_banner_${index}`)" class="form-control"
+                                                accept=".png, .jpg, .jpeg, .gif" />
+                                        </div>
+                                        <div class="col-3">
+                                            <img v-if="`images.affiliate_in_chapter_banner_${index}`" :src="`images.affiliate_in_chapter_banner_${index}`
+                                                class="rounded mx-auto d-block w-25" alt="Logo page" />
+                                            <img v-else-if="item.banner" :src="getUrlUmages(item.banner)"
+                                                class="rounded mx-auto d-block w-25" alt="Logo page" />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <fvn-text-editor v-model="item.desc" label="Giới thiệu về sản phẩm..." class="bg-light"></fvn-text-editor>
+                                </td>
+                            </tr>
                             
-                                    <div class="input-group col-9">
-                                        <input type="file" @change="uploadFile($event, 'fvn_logo')" class="form-control"
-                                            accept=".png">
-                                    </div>
-                                    <div class="col-3">
-                                        <img v-if="images.fvn_logo" :src="images.fvn_logo"
-                                            class="rounded mx-auto d-block w-25" alt="Logo page" />
-                                        <img v-else-if="itemDetail.fvn_logo" :src="getUrlUmages(itemDetail.fvn_logo)"
-                                            class="rounded mx-auto d-block w-25" alt="Logo page" />
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <fvn-text-editor v-model="itemDetail.fvn_content_top" label="Giới thiệu về sản phẩm..." class="bg-light"></fvn-text-editor>
-                            </td>
-                        </tr>
+                        </template>
 
                         {{-- <tr>
                             <th>Web title</th>

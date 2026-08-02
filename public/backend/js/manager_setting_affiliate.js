@@ -7,8 +7,7 @@ var vue_data = {
     itemDetail: options,
     files: {},
     images: {
-        fvn_shortcut_icon: "",
-        fvn_logo: ""
+
     },
     listId: [],
     errors: {},
@@ -33,6 +32,11 @@ var app = new Vue({
     el: '#app',
     data: vue_data,
     mounted: function () {
+        for (let index = 0; index < this.itemDetail.affiliate_in_chapter.length; index++) {
+            this.images[`affiliate_in_chapter_banner_${index}`] = '';
+        }
+        console.log(this.images);
+                
     },
     computed: {
     },
@@ -112,9 +116,16 @@ var app = new Vue({
             
             for (let i in this.itemDetail) {
                 if ((Array.isArray(this.itemDetail[i]) || (typeof this.itemDetail[i] == 'object'))) {
-                    let valueObj = this.itemDetail[i];
+                    const valueObj = this.itemDetail[i];
                     for (const key in valueObj) {
-                        data.append(i + '[' + key + ']', valueObj[key]);
+                        if ((Array.isArray(valueObj[key]) || (typeof valueObj[key] == 'object'))) {
+                            const valueObj_1 = valueObj[key];
+                            for (const key_1 in valueObj_1) {
+                                data.append(`${i}[${key}][${key_1}]`, valueObj_1[key_1]);
+                            }
+                        } else {
+                            data.append(`${i}[${key}]`, valueObj[key]);
+                        }
                     }
                 } else {
                     if (this.itemDetail[i]) {
