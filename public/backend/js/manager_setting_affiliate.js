@@ -7,7 +7,8 @@ var vue_data = {
     itemDetail: options,
     files: {},
     images: {
-
+        affiliate_in_chapter_banner_1: '',
+        affiliate_in_chapter_banner_2: ''
     },
     listId: [],
     errors: {},
@@ -32,11 +33,7 @@ var app = new Vue({
     el: '#app',
     data: vue_data,
     mounted: function () {
-        for (let index = 0; index < this.itemDetail.affiliate_in_chapter.length; index++) {
-            this.images[`affiliate_in_chapter_banner_${index}`] = '';
-        }
-        console.log(this.images);
-                
+        
     },
     computed: {
     },
@@ -80,24 +77,25 @@ var app = new Vue({
             if (!files.length) return;
             
             let reader = new FileReader();
-            if (name == 'fvn_shortcut_icon') {
-                this.files.fvn_shortcut_icon = files[0];
+  
+            if (name == 'affiliate_in_chapter_banner_1') {
+                this.files.affiliate_in_chapter_banner_1 = files[0];
                 
                 await reader.readAsDataURL(files[0]);
                 reader.onload = function() {
                     // console.log(reader.result);
-                    app.images.fvn_shortcut_icon = reader.result;
-
+                    app.images.affiliate_in_chapter_banner_1 = reader.result;
                 }
                 
             }
-            if (name == 'fvn_logo') {
-                this.files.fvn_logo = files[0];
+     
+            if (name == 'affiliate_in_chapter_banner_2') {
+                this.files.affiliate_in_chapter_banner_2 = files[0];
                 
                 await reader.readAsDataURL(files[0]);
                 reader.onload = function() {
                     // console.log(reader.result);
-                    app.images.fvn_logo = reader.result;
+                    app.images.affiliate_in_chapter_banner_2 = reader.result;
                 }
                 
             }
@@ -117,7 +115,11 @@ var app = new Vue({
             for (let i in this.itemDetail) {
                 if ((Array.isArray(this.itemDetail[i]) || (typeof this.itemDetail[i] == 'object'))) {
                     const valueObj = this.itemDetail[i];
+                    
                     for (const key in valueObj) {
+                        if (valueObj[key] == null) {
+                            valueObj[key] = '';
+                        }
                         if ((Array.isArray(valueObj[key]) || (typeof valueObj[key] == 'object'))) {
                             const valueObj_1 = valueObj[key];
                             for (const key_1 in valueObj_1) {
@@ -143,13 +145,28 @@ var app = new Vue({
             jsonData = await new RouteApi().post(`${this.apiUrl}/${router}`,data, 'form' );
             this.loading = false;
             
+            console.log(jsonData);
             if (jsonData.status) {
+                
                 jnotice(jsonData.message);
              
             } else {
                 jAlert(jsonData.message);
             }
         },
+        async templateDatabase(e) {
+            e.preventDefault();
+        
+            this.loading = true;
+            let jsonData = await new RouteApi().post(`${this.apiUrl}/page-affiliate/template-database`,{});
+            this.loading = false;
+            if (jsonData.status) {
+                jnotice(jsonData.message);
+            } else {
+                jAlert(jsonData.message);
+            }
+        },
+
         displayDate(date, timezone) {
             if (date) {
                 if (timezone) {

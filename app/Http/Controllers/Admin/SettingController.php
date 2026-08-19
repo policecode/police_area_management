@@ -31,7 +31,7 @@ class SettingController extends Controller
     public function affiliate()
     {
         $option = SettingHelpers::getInstance();
-        $result = $option->get(['affiliate_in_chapter']);
+        $result = $option->get(['affiliate_in_chapter_1', 'affiliate_in_chapter_2']);
         // $option->templateOptionDB();
         $dataView = array(
             'page_title' => 'Cài đặt quảng cáo trên trang web',
@@ -39,6 +39,27 @@ class SettingController extends Controller
         );
         // dd($result);
         return view('admin_page.settings.list_affiliate', $dataView);
+    }
+
+    public function templateDatabase()
+    {
+        try {
+            $option = SettingHelpers::getInstance();
+            $result = $option->templateOptionDB();
+        
+             return response()->json([
+                'status' => 1,
+                'data' => [],
+                'message' => 'Thêm dữ liệu mẫu thành công'
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => 0,
+                'data' => [],
+                'message' => 'Có lỗi xảy ra'
+            ]);
+        }
     }
 
     public function settingPageOne(Request $request)
@@ -122,7 +143,7 @@ class SettingController extends Controller
     public function settingPageAffiliate(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), ['affiliate_in_chapter' => ''], $this->messages(), $this->attributes());
+            $validator = Validator::make($request->all(), ['affiliate_in_chapter_1' => '', 'affiliate_in_chapter_2' => ''], $this->messages(), $this->attributes());
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 0,
@@ -130,55 +151,56 @@ class SettingController extends Controller
                     'message' => 'validation'
                 ]);
             }
-            DB::beginTransaction();
-
-            if ($request->hasFile('fvn_shortcut_icon')) {
-                $image = $request->file('fvn_shortcut_icon')->store('stories/settings');
-                $result = Option::getByOptionKey('fvn_shortcut_icon')->first();
-                if ($result) {
-                    Storage::delete($result->option_value);
-                    $result->option_value = $image;
-                    $result->save();
-                } else {
-                    Option::create([
-                        'option_key' => 'fvn_shortcut_icon',
-                        'option_value' => $image,
-                        'autoload' => OptionAutoload::YES['key']
-                    ]);
-                }
-            }
-            if ($request->hasFile('fvn_logo')) {
-                $image = $request->file('fvn_logo')->store('stories/settings');
-                $result = Option::getByOptionKey('fvn_logo')->first();
-                if ($result) {
-                    Storage::delete($result->option_value);
-                    $result->option_value = $image;
-                    $result->save();
-                } else {
-                    Option::create([
-                        'option_key' => 'fvn_logo',
-                        'option_value' => $image,
-                        'autoload' => OptionAutoload::YES['key']
-                    ]);
-                }
-            }
-
             $data = $validator->validated();
 
-            foreach ($data as $key => $value) {
-                if (!trim($value)) {
-                    continue;
+            DB::beginTransaction();
+            if ($request->hasFile('affiliate_in_chapter_banner_1')) {
+                $image = $request->file('affiliate_in_chapter_banner_1')->store('stories/settings');
+                if ($data['affiliate_in_chapter_1']['banner']) {
+                    Storage::delete($data['affiliate_in_chapter_1']['banner']);
                 }
+                $data['affiliate_in_chapter_1']['banner'] = $image;
+            }
+            if ($request->hasFile('affiliate_in_chapter_banner_2')) {
+                $image = $request->file('affiliate_in_chapter_banner_2')->store('stories/settings');
+                if ($data['affiliate_in_chapter_2']['banner']) {
+                Storage::delete($data['affiliate_in_chapter_1']['banner']);
+                }
+                $data['affiliate_in_chapter_2']['banner'] = $image;
+                
+            }
+
+
+            foreach ($data as $key => $value) {
+                
                 $result = Option::getByOptionKey($key)->first();
                 if ($result) {
-                    $result->option_value = $value;
+                    if (is_array($value)) {
+                        $result->option_value = json_encode($value);
+                    } else {
+                        if (!trim($value)) {
+                            continue;
+                        }
+                        $result->option_value = $value;
+                    }
                     $result->save();
                 } else {
-                    Option::create([
-                        'option_key' => $key,
-                        'option_value' => $value,
-                        'autoload' => OptionAutoload::YES['key']
-                    ]);
+                    if (is_array($value)) {
+                        Option::create([
+                            'option_key' => $key,
+                            'option_value' => json_encode($value),
+                            'autoload' => OptionAutoload::YES['key']
+                        ]);
+                    } else {
+                        if (!trim($value)) {
+                            continue;
+                        }
+                        Option::create([
+                            'option_key' => $key,
+                            'option_value' => $value,
+                            'autoload' => OptionAutoload::YES['key']
+                        ]);
+                    }
                 }
             }
 

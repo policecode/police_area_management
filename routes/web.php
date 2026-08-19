@@ -134,10 +134,11 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
 
         // Setting
         Route::get('/settings', 'SettingController@index')->name('setting.index')->middleware('can:admin.setting.pageOne');
-        Route::get('/settings/affiliate', 'SettingController@affiliate')->name('setting.affiliate')->middleware('can:admin.setting.pageOne');
-
         Route::post('/settings/page-one', 'SettingController@settingPageOne')->name('setting.pageOne')->middleware('can:admin.setting.pageOne');
+
+        Route::get('/settings/affiliate', 'SettingController@affiliate')->name('setting.affiliate')->middleware('can:admin.setting.pageOne');
         Route::post('/settings/page-affiliate', 'SettingController@settingPageAffiliate')->name('setting.pageAffiliate')->middleware('can:admin.setting.pageOne');
+        Route::post('/settings/page-affiliate/template-database', 'SettingController@templateDatabase')->name('setting.templateDatabase')->middleware('can:admin.setting.pageOne');
 
         // Groups: Phân quyền
         Route::get('/groups', 'GroupController@index')->name('groups.index')->middleware('can:admin.groups.getItems');

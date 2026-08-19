@@ -12,31 +12,39 @@
     </script>
     <div id="app">
         <div>
-            <form @submit="save($event, 'page-one')">
+            <form @submit="save($event, 'page-affiliate')">
                 <legend class="text-primary">{{ $page_title }}</legend>
+                <div class="row mt-4 mb-4">
+                    <div class="col-2">
+                        <a @click="templateDatabase" class="btn btn-primary">Template Data</a>
+                    </div>
+
+                </div>
                 <table class="table table-success table-bordered">
                     <tbody>
-                        <template v-for="(item, index) in itemDetail.affiliate_in_chapter">
+                        <template>
                             <tr>
-                                <th width="20%" rowspan="3">Link in Chapter @{{ index + 1 }}</th>
+                                <th width="20%" rowspan="3">Link in Chapter 1</th>
                                 <td>
-                                    <input type="text" v-model="item.link" class="form-control"
-                                        :placeholder="`Link affiliate ${index + 1}...`">
-                              
+                                    <input type="text" v-model="itemDetail.affiliate_in_chapter_1.link" class="form-control"
+                                        :placeholder="`Link affiliate 1...`">
+
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <div class="row">
-                                
+
                                         <div class="input-group col-9">
-                                            <input type="file" @change="uploadFile($event, `affiliate_in_chapter_banner_${index}`)" class="form-control"
-                                                accept=".png, .jpg, .jpeg, .gif" />
+                                            <input type="file"
+                                                @change="uploadFile($event, 'affiliate_in_chapter_banner_1')"
+                                                class="form-control" accept=".png, .jpg, .jpeg, .gif" />
                                         </div>
                                         <div class="col-3">
-                                            <img v-if="`images.affiliate_in_chapter_banner_${index}`" :src="`images.affiliate_in_chapter_banner_${index}`
+                                            <img v-if="images.affiliate_in_chapter_banner_1"
+                                                :src="images.affiliate_in_chapter_banner_1"
                                                 class="rounded mx-auto d-block w-25" alt="Logo page" />
-                                            <img v-else-if="item.banner" :src="getUrlUmages(item.banner)"
+                                            <img v-else-if="itemDetail.affiliate_in_chapter_1.banner" :src="getUrlUmages(itemDetail.affiliate_in_chapter_1.banner)"
                                                 class="rounded mx-auto d-block w-25" alt="Logo page" />
                                         </div>
                                     </div>
@@ -44,12 +52,49 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <fvn-text-editor v-model="item.desc" label="Giới thiệu về sản phẩm..." class="bg-light"></fvn-text-editor>
+                                    <fvn-text-editor v-model="itemDetail.affiliate_in_chapter_1.desc" label="Giới thiệu về sản phẩm..."
+                                        class="bg-light"></fvn-text-editor>
                                 </td>
                             </tr>
-                            
+
                         </template>
 
+                        <template>
+                            <tr>
+                                <th width="20%" rowspan="3">Link in Chapter 2</th>
+                                <td>
+                                    <input type="text" v-model="itemDetail.affiliate_in_chapter_2.link" class="form-control"
+                                        :placeholder="`Link affiliate 2...`">
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="row">
+
+                                        <div class="input-group col-9">
+                                            <input type="file"
+                                                @change="uploadFile($event, 'affiliate_in_chapter_banner_2')"
+                                                class="form-control" accept=".png, .jpg, .jpeg, .gif" />
+                                        </div>
+                                        <div class="col-3">
+                                            <img v-if="images.affiliate_in_chapter_banner_2"
+                                                :src="images.affiliate_in_chapter_banner_2"
+                                                class="rounded mx-auto d-block w-25" alt="Logo page" />
+                                            <img v-else-if="itemDetail.affiliate_in_chapter_2.banner" :src="getUrlUmages(itemDetail.affiliate_in_chapter_2.banner)"
+                                                class="rounded mx-auto d-block w-25" alt="Logo page" />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <fvn-text-editor v-model="itemDetail.affiliate_in_chapter_2.desc" label="Giới thiệu về sản phẩm..."
+                                        class="bg-light"></fvn-text-editor>
+                                </td>
+                            </tr>
+
+                        </template>
                         {{-- <tr>
                             <th>Web title</th>
                             <td>

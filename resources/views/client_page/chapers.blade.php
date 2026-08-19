@@ -1,6 +1,21 @@
 <?php
 use Illuminate\Support\Facades\Auth;
+use App\Http\Helpers\SettingHelpers;
+$option = SettingHelpers::getInstance();
 $user = Auth::user();
+
+$affiliate;
+switch (mt_rand(1, 2)) {
+    case 1:
+        $affiliate = $option->getOptionValue('affiliate_in_chapter_1');
+        break;
+    case 2:
+        $affiliate = $option->getOptionValue('affiliate_in_chapter_2');
+        break;
+    default:
+        $affiliate = $option->getOptionValue('affiliate_in_chapter_2');
+        break;
+}
 
 ?>
 @extends('layouts.frontend_v1')
@@ -71,15 +86,29 @@ $user = Auth::user();
                         <span class="mr-2 last:mr-0"><i class="fa-solid fa-clock mr-1"></i>
                             {{ dateFormat($chaper['created_at']) }}</span>
                     </p>
-                    <div :style="{
+                    
+                    <div v-if="isAffiliate" :style="{
                         fontSize: styles.fontSize + 'px',
                         lineHeight: styles.lineHeight + 'px',
                         fontFamily: styles.fontFamily
                     }"
                         v-html="chaper.content" class="s-content text-justify mt-4 published-content px-1">
-                        {{-- <canvas ref="myCanvas" style="width: 100%; height: 100%;"></canvas> --}}
-                        {{-- {!! $chaper['content'] !!} --}}
                     </div>
+                    {{-- affiliate --}}
+                    <div v-else class="bg-[#f0f0f0] text-center">
+                     
+                        {!!$affiliate['desc']!!}
+                        <p style="font-size: 16px;margin-bottom: 0.4rem;">
+                            <a @click="affLinkClick" id="affLink" href="{{$affiliate['link']}}" target="_blank" rel="noopener"><b>{{$affiliate['link']}}</b></a></p>
+                        <p class="flex justify-center" style="font-size: 16px;margin-bottom: 0.4rem;">
+                            <a @click="affLinkClick" href="{{$affiliate['link']}}" target="_blank" rel="noopener">
+                                <img src="{{asset($affiliate['banner'])}}" alt="" style="max-width: 410px; width: 100%;">
+                            </a>
+                        </p>
+                        <h4 class="text-center text-primary" style="font-size: 20px;margin: 1rem 0;">Hahoangdaide xin chân thành cảm ơn!</h4>
+                    </div>
+                    {{-- affiliate --}}
+                    
                 </div>
 
 
@@ -492,7 +521,13 @@ $user = Auth::user();
                 this.addHistoryReadStory();
             },
             computed: {
-
+                isAffiliate() {
+                    if (!(this.chaper.position % 10 == 0) || (this.chaper.money > 0)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
             },
             methods: {
                 isAuthLogin() {
@@ -577,6 +612,11 @@ $user = Auth::user();
                         block: 'start' // Căn lề trên của mục tiêu sát mép trình duyệt
                     });
                 },
+                affLinkClick() {
+                    this.chaper.position += 1;
+                    
+                },
+
                 async sendReportChapter() {
                     let jsonData = await new RouteApi().post(`${this.apiMember}/report-chapter`, this
                         .itemDetail);

@@ -8,7 +8,7 @@ use App\Models\Option;
 class SettingHelpers
 {
   private $_options = [];
-  private $_key_to_array_value = ['affiliate_in_chapter'];
+  private $_key_to_array_value = ['affiliate_in_chapter_1', 'affiliate_in_chapter_2'];
   static private $_instance = NULL;
   private function __construct() {
     $listOptions = Option::getByAutoLoad(OptionAutoload::YES['key'])->get();
@@ -96,17 +96,19 @@ class SettingHelpers
   }
 
   public function templateOptionDB() {
-    $affiliate_in_chapter = [
-      [
+    $affiliate_in_chapter_1 = [
         'link' => '',
         'desc' => '',
         'banner' => ''
-      ]
+    ];
+    $affiliate_in_chapter_2 = [
+        'link' => '',
+        'desc' => '',
+        'banner' => ''
     ];
 
-    Option::insertOrIgnore(
-      ['option_key' => 'affiliate_in_chapter', 'option_value' => json_encode($affiliate_in_chapter), 'autoload' => OptionAutoload::YES['key']]
-    );
+    Option::insertOrIgnore(['option_key' => 'affiliate_in_chapter_1', 'option_value' => json_encode($affiliate_in_chapter_1), 'autoload' => OptionAutoload::YES['key']]);
+    Option::insertOrIgnore(['option_key' => 'affiliate_in_chapter_2', 'option_value' => json_encode($affiliate_in_chapter_2), 'autoload' => OptionAutoload::YES['key']]);
   }
 
 }
