@@ -86,29 +86,34 @@ switch (mt_rand(1, 2)) {
                         <span class="mr-2 last:mr-0"><i class="fa-solid fa-clock mr-1"></i>
                             {{ dateFormat($chaper['created_at']) }}</span>
                     </p>
-                    
-                    <div v-if="isAffiliate" :style="{
-                        fontSize: styles.fontSize + 'px',
-                        lineHeight: styles.lineHeight + 'px',
-                        fontFamily: styles.fontFamily
-                    }"
+
+                    <div v-if="isAffiliate"
+                        :style="{
+                            fontSize: styles.fontSize + 'px',
+                            lineHeight: styles.lineHeight + 'px',
+                            fontFamily: styles.fontFamily
+                        }"
                         v-html="chaper.content" class="s-content text-justify mt-4 published-content px-1">
                     </div>
                     {{-- affiliate --}}
                     <div v-else class="bg-[#f0f0f0] text-center">
-                     
-                        {!!$affiliate['desc']!!}
+
+                        {!! $affiliate['desc'] !!}
                         <p style="font-size: 16px;margin-bottom: 0.4rem;">
-                            <a @click="affLinkClick" id="affLink" href="{{$affiliate['link']}}" target="_blank" rel="noopener"><b>{{$affiliate['link']}}</b></a></p>
+                            <a @click="affLinkClick" id="affLink" href="{{ $affiliate['link'] }}" target="_blank"
+                                rel="noopener"><b>{{ $affiliate['link'] }}</b></a>
+                        </p>
                         <p class="flex justify-center" style="font-size: 16px;margin-bottom: 0.4rem;">
-                            <a @click="affLinkClick" href="{{$affiliate['link']}}" target="_blank" rel="noopener">
-                                <img src="{{asset($affiliate['banner'])}}" alt="" style="max-width: 410px; width: 100%;">
+                            <a @click="affLinkClick" href="{{ $affiliate['link'] }}" target="_blank" rel="noopener">
+                                <img src="{{ asset($affiliate['banner']) }}" alt=""
+                                    style="max-width: 410px; width: 100%;">
                             </a>
                         </p>
-                        <h4 class="text-center text-primary" style="font-size: 20px;margin: 1rem 0;">Hahoangdaide xin chân thành cảm ơn!</h4>
+                        <h4 class="text-center text-primary" style="font-size: 20px;margin: 1rem 0;">Hahoangdaide xin chân
+                            thành cảm ơn!</h4>
                     </div>
                     {{-- affiliate --}}
-                    
+
                 </div>
 
 
@@ -399,9 +404,11 @@ switch (mt_rand(1, 2)) {
 
                                                                 <div class="text-[#128c7e] mb-4">
                                                                     <p class="mb-[2px]">- Số chương sẽ mở: <span
-                                                                            class="font-bold italic">@{{ buy_combo_chapter.show_chapter }}</span></p>
+                                                                            class="font-bold italic">@{{ buy_combo_chapter.show_chapter }}</span>
+                                                                    </p>
                                                                     <p class="mb-[2px]">- Giá: <span
-                                                                            class="font-bold italic">@{{ buy_combo_chapter.show_coint }}LT</span></p>
+                                                                            class="font-bold italic">@{{ buy_combo_chapter.show_coint }}LT</span>
+                                                                    </p>
                                                                 </div>
                                                                 <div
                                                                     class="jconfirm-buttons !float-none !pb-0 inline-block">
@@ -614,7 +621,7 @@ switch (mt_rand(1, 2)) {
                 },
                 affLinkClick() {
                     this.chaper.position += 1;
-                    
+
                 },
 
                 async sendReportChapter() {

@@ -54,7 +54,6 @@ class ChapersController extends Controller
                 $is_admin = true;
             }
         }
-        
         if ($user) {
             $checkUser = TopMemberDay::GetByUser($user->id)->GetByKey(get_key_by_day('date'))->first();
             if ($checkUser && $checkUser->exp_day > 300) {
@@ -65,14 +64,15 @@ class ChapersController extends Controller
                 ]));
             }
         }
+
         $story = Story::getBySlug($story_slug)->joinAuthor()->first()->toArray();
         $isCoppyright = $this->isCoppyrightStory($story);
         if ($isCoppyright) {
             abort(404, json_encode([
-            'page_title' => 'Trang web không tồn tại',
-            'message_title' => 'Opps! Lạc đường rồi.',
-            'message' => 'Trang bạn đang tìm kiếm có vẻ như không tồn tại trong vũ trụ này. Có thể nó đã bị xóa hoặc đường dẫn bị sai.',
-        ]));
+                'page_title' => 'Trang web không tồn tại',
+                'message_title' => 'Opps! Lạc đường rồi.',
+                'message' => 'Trang bạn đang tìm kiếm có vẻ như không tồn tại trong vũ trụ này. Có thể nó đã bị xóa hoặc đường dẫn bị sai.',
+            ]));
         }
         $story['link'] = route('client.story', ['story_slug' => $story['slug']]);
         $isResult = strpos($story['title'], '(c)');
@@ -85,7 +85,10 @@ class ChapersController extends Controller
         // Lấy chương truyện theo vị trí
         $chaper = $this->getChapterContent($chaper_position, $story['id']);
 
-        // dd($chaper);
+        if ($request->is_lock_chapter) {
+            // Tránh tình trạng spam
+            $chaper['content'] = $this->shuffleKeepFirst($chaper['content']);
+        }
 
         $linkPrev = '#';
         $linkNext = '#';
@@ -164,6 +167,26 @@ class ChapersController extends Controller
         }
         $chapter = $chapter->toArray();
         return $chapter;
+    }
+
+    private function shuffleKeepFirst($content)
+    {
+        // 1. Tách chuỗi thành mảng dựa trên ký tự <br>
+        $pieces = explode('<br>', $content);
+
+        if (count($pieces) > 1) {
+            // 2. Tách phần tử đầu tiên ra khỏi mảng
+            $first = array_shift($pieces);
+
+            // 3. Đảo lộn ngẫu nhiên các phần tử còn lại
+            shuffle($pieces);
+
+            // 4. Đưa phần tử đầu tiên trở lại vị trí ban đầu
+            array_unshift($pieces, $first);
+        }
+        // 3. Nối các phần tử lại thành chuỗi
+        $result = implode('<br>', $pieces);
+        return $result;
     }
 
     public function buyChapter(Request $request)
