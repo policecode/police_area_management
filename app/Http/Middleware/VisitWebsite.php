@@ -21,10 +21,13 @@ class VisitWebsite
     {
         try {
             if (Auth::id()) {
-                $result = ClientVisitWebsite::getByKey(get_key_by_day())->getByIpAdress($request->ip())->GetByUser(Auth::id())->first();
+                $result = ClientVisitWebsite::getByKey(get_key_by_day())->GetByUser(Auth::id())->first();
                 if ($result) {
                     $result->count += 1;
                     $result->save();
+                    if ($result->count > 450) {
+                        $request->merge(array_merge(['is_lock_chapter' => true], $request->query()));
+                    }
                 } else {
                     $insertData = [
                         'ip_address' => $request->ip(),
@@ -35,9 +38,7 @@ class VisitWebsite
                     // dd($insertData);
                     $client = ClientVisitWebsite::create($insertData);
                 }
-                if ($result->count > 350) {
-                    $request->merge(array_merge(['is_lock_chapter' => true], $request->query()));
-                }
+
 
                 // Hạn chế việc gửi nhiều request
                 $key = 'user-call-' . Auth::id();
@@ -49,18 +50,15 @@ class VisitWebsite
                     RateLimiter::hit($key, 60);
                 }
             } else {
-                // $result = ClientVisitWebsite::getByKey(get_key_by_day())->getByIpAdress($request->ip())->whereNull('user_id')->first();
-                // if ($result) {
-                //     $result->count += 1;
-                //     $result->save();
-                // } else {
-                //     $insertData = [
-                //         'ip_address' => $request->ip(),
-                //         'key' => get_key_by_day(),
-                //         'count' => 1
-                //     ];
-                //     $client = ClientVisitWebsite::create($insertData);
-                // }
+                // Hạn chế việc gửi nhiều request
+                $key = 'ip-call-' . $request->ip();
+                // Kiểm tra nếu thực hiện quá 5 request trong vòng 60 giây
+                if (RateLimiter::tooManyAttempts($key, 7)) {
+                    $request->merge(array_merge(['is_lock_chapter' => true], $request->query()));
+                } else {
+                    // Ghi nhận một request mới (timeout sau 60 giây)
+                    RateLimiter::hit($key, 60);
+                }
             }
         } catch (\Throwable $th) {
             //throw $th;
