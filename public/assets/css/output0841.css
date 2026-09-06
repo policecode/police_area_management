@@ -2274,6 +2274,10 @@ body::-webkit-scrollbar-thumb {
   font-family: 'Roboto',sans-serif;
 }
 
+.text-0 {
+  font-size: 0px !important;
+}
+
 .\!text-\[1\.125rem\] {
   font-size: 1.125rem !important;
 }

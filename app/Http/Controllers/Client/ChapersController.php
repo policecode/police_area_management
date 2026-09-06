@@ -278,7 +278,7 @@ class ChapersController extends Controller
         for ($i = 0; $i < count($arr); $i++) {
             $newArr[] = $arr[$i];
             if (($i + 1) % 500 == 0) {
-                $newArr[] = ' <span >' . env('KEY_TEXT_CHAPTER') . '</span> ';
+                $newArr[] = ' <span class="text-0">' . env('KEY_TEXT_CHAPTER') . '</span> ';
             }
         }
         return implode(" ", $newArr);
