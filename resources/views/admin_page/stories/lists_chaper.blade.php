@@ -29,6 +29,9 @@
             <a @click="changeScreen('replace')" class="btn btn-success" title="Thay thế nội dung trong các chương truyện">Replace Content</a>
             <a @click="handleFreeFullChapter" class="btn btn-success" title="Tự động tạo chương truyện miễn phí">Free Full Chapter</a>
             
+            <a v-if="file_url" :href="file_url" target="_blank" title="Tải file EPUB">Download EPUB</a>
+            <a v-else @click="handleRenderFileEpub" class="btn btn-success" title="Tự động tạo file EPUB">Render File EPUB</a>
+            
            <template v-if="position.screen">
             <div>
                 <legend class="text-danger">Xóa theo vị trí</legend>

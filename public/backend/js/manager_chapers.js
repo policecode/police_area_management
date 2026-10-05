@@ -40,6 +40,7 @@ var vue_data = {
         start:0,
         end: 0
     },
+    file_url: '',
     pointInTime: null
 };
 // Vue.component('autocomplete', VueBootstrapTypeahead);
@@ -240,6 +241,22 @@ var app = new Vue({
 
              if (jsonData.status) {
                 this.getItems();
+                jnotice(jsonData.message);
+            } else {
+                jAlert(jsonData.message);
+            }
+        },
+        async handleRenderFileEpub(e) {
+            e.preventDefault()
+            if (!confirm(`Bạn muốn tạo file EPUB cho truyện này?`)) {
+                return;
+            }
+            this.loading = true;
+            jsonData = await new RouteApi().post(`${this.apiUrl}/render-file-epub/${this.story.id}`, {} );
+            this.loading = false;
+
+             if (jsonData.status) {
+                this.file_url = jsonData.file_path;
                 jnotice(jsonData.message);
             } else {
                 jAlert(jsonData.message);

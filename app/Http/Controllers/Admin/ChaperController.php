@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Author;
 use App\Models\Chaper;
 use App\Models\Story;
 use Carbon\Carbon;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Support\Str;
+use ZipArchive;
 
 class ChaperController extends Controller
 {
@@ -432,6 +434,213 @@ class ChaperController extends Controller
             }
         } catch (\Throwable $e) {
             DB::rollBack();
+            return response()->json([
+                'status' => 0,
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function renderFileEpub(Request $request, Story $story)
+    {
+
+        // Tăng thời gian thực thi cho truyện dài hơn 1000 chương
+        ini_set('max_execution_time', 300);
+
+        try {
+            $fileName = 'truyen_epub' . '.epub';
+            $filePath = storage_path('app/public/' . $fileName);
+
+            $zip = new ZipArchive();
+            if ($zip->open($filePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== TRUE) {
+                throw new \Exception("Không thể tạo file EPUB tại đường dẫn này.");
+            }
+
+            // 1. File mimetype bắt buộc đứng đầu và không nén
+            $zip->addFromString('mimetype', 'application/epub+zip');
+            $zip->setCompressionName('mimetype', ZipArchive::CM_STORE);
+
+            // 2. META-INF/container.xml
+            $containerXml = '<?xml version="1.0" encoding="UTF-8"?>
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+    <rootfiles>
+        <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+    </rootfiles>
+</container>';
+            $zip->addFromString('META-INF/container.xml', $containerXml);
+
+            // Lấy thông tin tác giả (kiểm tra nếu quan hệ tồn tại để tránh lỗi null)
+            $author = $story->author_id ? Author::find($story->author_id) : null;
+            $authorName = $author ? $author->name : 'Đang cập nhật';
+
+            $storyTitle = htmlspecialchars($story->title ?? $story->name ?? 'Truyện', ENT_QUOTES, 'UTF-8');
+
+            // Xử lý chuyển đổi các thẻ <br> thành xuống dòng cho phần Giới thiệu
+            $rawDescription = $story->description ?? '';
+            $cleanDescription = html_entity_decode($rawDescription);
+            $cleanDescription = preg_replace('/<br\s*[\/]?>/i', "\n", $cleanDescription);
+            $storyDescription = nl2br(htmlspecialchars($cleanDescription, ENT_QUOTES, 'UTF-8'));
+
+            // 3. Tạo trang Giới thiệu truyện (intro.xhtml)
+            $introPageHtml = '<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Giới thiệu truyện</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <div class="intro-container" style="text-align: center; margin-top: 20px;">
+        <h1>' . $storyTitle . '</h1>
+        <h3>Tác giả: ' . htmlspecialchars($authorName, ENT_QUOTES, 'UTF-8') . '</h3>
+        <hr style="width: 50%; margin: 20px auto;"/>
+    </div>
+    <div class="description-container" style="text-align: left; padding: 0 10px;">
+        <h4>Giới thiệu:</h4>
+        <div>' . $storyDescription . '</div>
+    </div>
+</body>
+</html>';
+            $zip->addFromString('OEBPS/intro.xhtml', $introPageHtml);
+
+            // Lấy danh sách chương bằng cursor để tối ưu RAM cho truyện 1000+ chương
+            $chapers = Chaper::getByStory($story->id)
+                ->select('position', 'name', 'content')
+                ->orderBy('position', 'ASC')
+                ->cursor();
+
+            $manifestItems = '';
+            $spineItems = '';
+            $ncxNavPoints = '';
+            $htmlNavList = '';
+            $playOrderCount = 1;
+
+            // Thêm mục Giới thiệu vào đầu mục lục NCX
+            $ncxNavPoints  .= '    <navPoint id="nav_intro" playOrder="' . $playOrderCount++ . '">
+        <navLabel><text>Giới thiệu truyện</text></navLabel>
+        <content src="intro.xhtml"/>
+    </navPoint>' . "\n";
+
+            // Thêm mục Mục lục vào sau Giới thiệu trong NCX
+            $ncxNavPoints  .= '    <navPoint id="nav_toc_page" playOrder="' . $playOrderCount++ . '">
+        <navLabel><text>Mục Lục</text></navLabel>
+        <content src="toc.xhtml"/>
+    </navPoint>' . "\n";
+
+            // 4. Duyệt qua từng chương để tạo file xhtml riêng biệt
+            foreach ($chapers as $chaper) {
+                $id = 'chapter_' . $chaper->position;
+                $fileNameXhtml = $id . '.xhtml';
+
+                $chapterTitle = htmlspecialchars($chaper->name, ENT_QUOTES, 'UTF-8');
+
+                $rawChapterContent = $chaper->content ?? '';
+                $cleanChapterContent = html_entity_decode($rawChapterContent);
+                $cleanChapterContent = preg_replace('/<br\s*[\/]?>/i', "\n", $cleanChapterContent);
+                $chapterContent = nl2br(htmlspecialchars(strip_tags($cleanChapterContent), ENT_QUOTES, 'UTF-8'));
+
+                $xhtmlContent = '<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>' . $chapterTitle . '</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <div class="chapter-container">
+        <h1>' . $chapterTitle . '</h1>
+        <div class="content">' . $chapterContent . '</div>
+    </div>
+</body>
+</html>';
+
+                $zip->addFromString('OEBPS/' . $fileNameXhtml, $xhtmlContent);
+
+                $manifestItems .= '    <item id="' . $id . '" href="' . $fileNameXhtml . '" media-type="application/xhtml+xml"/>' . "\n";
+                $spineItems    .= '    <itemref idref="' . $id . '"/>' . "\n";
+
+                $ncxNavPoints  .= '    <navPoint id="nav_' . $chaper->position . '" playOrder="' . $playOrderCount++ . '">
+        <navLabel><text>' . $chapterTitle . '</text></navLabel>
+        <content src="' . $fileNameXhtml . '"/>
+    </navPoint>' . "\n";
+
+                $htmlNavList   .= '        <li><a href="' . $fileNameXhtml . '">' . $chapterTitle . '</a></li>' . "\n";
+            }
+
+            // 5. Tạo file CSS cơ bản
+            $cssContent = 'body { font-family: sans-serif; margin: 5%; line-height: 1.6; } h1 { font-size: 1.3em; text-align: center; color: #333; }';
+            $zip->addFromString('OEBPS/style.css', $cssContent);
+
+            // 6. Tạo trang Mục lục HTML hiển thị
+            $tocPageHtml = '<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Mục Lục</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <h1>Mục Lục Truyện</h1>
+    <ul style="list-style-type: none; padding: 0;">
+' . $htmlNavList . '
+    </ul>
+</body>
+</html>';
+            $zip->addFromString('OEBPS/toc.xhtml', $tocPageHtml);
+
+            // QUAN TRỌNG: Đưa cả intro.xhtml và toc.xhtml vào manifest và sắp xếp thứ tự hiển thị (spine) lên đầu sách
+            $manifestItems = '    <item id="intro" href="intro.xhtml" media-type="application/xhtml+xml"/>' . "\n" .
+                '    <item id="toc_page" href="toc.xhtml" media-type="application/xhtml+xml"/>' . "\n" .
+                $manifestItems;
+
+            $spineItems = '    <itemref idref="intro"/>' . "\n" .
+                '    <itemref idref="toc_page"/>' . "\n" .
+                $spineItems;
+
+            // 7. Tạo file điều hướng toc.ncx chuẩn
+            $tocNcx = '<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+    <head>
+        <meta name="dtb:uid" content="urn:uuid:story-' . $story->id . '"/>
+        <meta name="dtb:depth" content="1"/>
+        <meta name="dtb:totalPageCount" content="0"/>
+        <meta name="dtb:maxPageNumber" content="0"/>
+    </head>
+    <docTitle><text>' . $storyTitle . '</text></docTitle>
+    <navMap>
+' . $ncxNavPoints . '
+    </navMap>
+</ncx>';
+            $zip->addFromString('OEBPS/toc.ncx', $tocNcx);
+
+            // 8. Tạo file gói dữ liệu content.opf
+            $contentOpf = '<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-id="BookId" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:title>' . $storyTitle . '</dc:title>
+        <dc:creator opf:role="aut">' . htmlspecialchars($authorName, ENT_QUOTES, 'UTF-8') . '</dc:creator>
+        <dc:language>vi</dc:language>
+        <dc:identifier id="BookId" opf:scheme="UUID">urn:uuid:story-' . $story->id . '</dc:identifier>
+    </metadata>
+    <manifest>
+        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+        <item id="style" href="style.css" media-type="text/css"/>
+' . $manifestItems . '
+    </manifest>
+    <spine toc="ncx">
+' . $spineItems . '
+    </spine>
+</package>';
+            $zip->addFromString('OEBPS/content.opf', $contentOpf);
+
+            $zip->close();
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'File EPUB with Intro & TOC created successfully',
+                'file_path' => Storage::url($fileName)
+            ]);
+        } catch (\Throwable $e) {
             return response()->json([
                 'status' => 0,
                 'message' => $e->getMessage()
