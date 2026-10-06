@@ -446,7 +446,7 @@ class ChaperController extends Controller
         ini_set('max_execution_time', 300);
 
         try {
-            $fileName = 'truyen_epub_' . $story->id . '.epub';
+            $fileName = 'truyen_epub.epub';
             $filePath = storage_path('app/public/' . $fileName);
 
             $zip = new ZipArchive();
