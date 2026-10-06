@@ -443,12 +443,10 @@ class ChaperController extends Controller
 
     public function renderFileEpub(Request $request, Story $story)
     {
-
-        // Tăng thời gian thực thi cho truyện dài hơn 1000 chương
         ini_set('max_execution_time', 300);
 
         try {
-            $fileName = 'truyen_epub' . '.epub';
+            $fileName = 'truyen_epub_' . $story->id . '.epub';
             $filePath = storage_path('app/public/' . $fileName);
 
             $zip = new ZipArchive();
@@ -469,7 +467,72 @@ class ChaperController extends Controller
 </container>';
             $zip->addFromString('META-INF/container.xml', $containerXml);
 
-            // Lấy thông tin tác giả (kiểm tra nếu quan hệ tồn tại để tránh lỗi null)
+            // --- XỬ LÝ ẢNH BÌA ĐA ĐỊNH DẠNG ---
+            $hasCover = false;
+            $coverExtension = 'jpg';
+            $coverMimeType = 'image/jpeg';
+            $coverManifestItem = '';
+            $coverSpineItem = '';
+            $metaCoverTag = '';
+
+            // Lấy đường dẫn ảnh từ cột thumbnail
+            $coverField = $story->thumbnail ?? null;
+
+            if ($coverField) {
+                $localPath = public_path($coverField);
+                if (!file_exists($localPath)) {
+                    $localPath = storage_path('app/public/' . $coverField);
+                }
+                if (!file_exists($localPath)) {
+                    $localPath = storage_path('app/' . $coverField);
+                }
+
+                if (file_exists($localPath)) {
+                    $coverContentData = file_get_contents($localPath);
+                    $ext = strtolower(pathinfo($localPath, PATHINFO_EXTENSION));
+
+                    $mimeTypes = [
+                        'jpg'  => 'image/jpeg',
+                        'jpeg' => 'image/jpeg',
+                        'png'  => 'image/png',
+                        'webp' => 'image/webp',
+                        'gif'  => 'image/gif',
+                        'bmp'  => 'image/bmp'
+                    ];
+
+                    if (array_key_exists($ext, $mimeTypes)) {
+                        $coverExtension = $ext;
+                        $coverMimeType = $mimeTypes[$ext];
+                    }
+
+                    $zip->addFromString('OEBPS/cover.' . $coverExtension, $coverContentData);
+                    $hasCover = true;
+
+                    $coverPageHtml = '<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Ảnh bìa</title>
+    <style>body { margin: 0; padding: 0; text-align: center; background-color: #fff; }</style>
+</head>
+<body>
+    <div>
+        <img src="cover.' . $coverExtension . '" alt="Cover" style="max-width: 100%; height: auto;" />
+    </div>
+</body>
+</html>';
+                    $zip->addFromString('OEBPS/cover.xhtml', $coverPageHtml);
+
+                    // Khai báo chuẩn cho manifest và spine của ảnh bìa
+                    $coverManifestItem = '    <item id="cover-image" href="cover.' . $coverExtension . '" media-type="' . $coverMimeType . '"/>' . "\n" .
+                        '    <item id="cover-page" href="cover.xhtml" media-type="application/xhtml+xml"/>' . "\n";
+                    $coverSpineItem = '    <itemref idref="cover-page"/>' . "\n";
+                    $metaCoverTag = '    <meta name="cover" content="cover-image"/>' . "\n";
+                }
+            }
+            // ------------------------------------
+
+            // Lấy thông tin tác giả
             $author = $story->author_id ? Author::find($story->author_id) : null;
             $authorName = $author ? $author->name : 'Đang cập nhật';
 
@@ -493,6 +556,7 @@ class ChaperController extends Controller
     <div class="intro-container" style="text-align: center; margin-top: 20px;">
         <h1>' . $storyTitle . '</h1>
         <h3>Tác giả: ' . htmlspecialchars($authorName, ENT_QUOTES, 'UTF-8') . '</h3>
+        <h3>Website: ' . env('APP_URL') . '</h3>
         <hr style="width: 50%; margin: 20px auto;"/>
     </div>
     <div class="description-container" style="text-align: left; padding: 0 10px;">
@@ -515,7 +579,15 @@ class ChaperController extends Controller
             $htmlNavList = '';
             $playOrderCount = 1;
 
-            // Thêm mục Giới thiệu vào đầu mục lục NCX
+            // Thêm mục Ảnh bìa vào mục lục NCX (nếu có)
+            if ($hasCover) {
+                $ncxNavPoints  .= '    <navPoint id="nav_cover" playOrder="' . $playOrderCount++ . '">
+        <navLabel><text>Ảnh bìa</text></navLabel>
+        <content src="cover.xhtml"/>
+    </navPoint>' . "\n";
+            }
+
+            // Thêm mục Giới thiệu vào mục lục NCX
             $ncxNavPoints  .= '    <navPoint id="nav_intro" playOrder="' . $playOrderCount++ . '">
         <navLabel><text>Giới thiệu truyện</text></navLabel>
         <content src="intro.xhtml"/>
@@ -535,8 +607,10 @@ class ChaperController extends Controller
                 $chapterTitle = htmlspecialchars($chaper->name, ENT_QUOTES, 'UTF-8');
 
                 $rawChapterContent = $chaper->content ?? '';
-                $cleanChapterContent = html_entity_decode($rawChapterContent);
-                $cleanChapterContent = preg_replace('/<br\s*[\/]?>/i', "\n", $cleanChapterContent);
+                $cleanChapterContent = preg_replace('/<\s*br\s*[\/]?>/i', "\n", $rawChapterContent);
+                $cleanChapterContent = preg_replace('/<\/\s*[a-zA-Z0-9]+\s*>/i', "\n", $cleanChapterContent);
+                $cleanChapterContent = preg_replace('/<[a-zA-Z0-9]+(\s+[^>]*)?>/i', '', $cleanChapterContent);
+                $cleanChapterContent = html_entity_decode($cleanChapterContent);
                 $chapterContent = nl2br(htmlspecialchars(strip_tags($cleanChapterContent), ENT_QUOTES, 'UTF-8'));
 
                 $xhtmlContent = '<?xml version="1.0" encoding="utf-8"?>
@@ -588,12 +662,14 @@ class ChaperController extends Controller
 </html>';
             $zip->addFromString('OEBPS/toc.xhtml', $tocPageHtml);
 
-            // QUAN TRỌNG: Đưa cả intro.xhtml và toc.xhtml vào manifest và sắp xếp thứ tự hiển thị (spine) lên đầu sách
-            $manifestItems = '    <item id="intro" href="intro.xhtml" media-type="application/xhtml+xml"/>' . "\n" .
+            // Đưa ảnh bìa, intro, toc vào manifest và sắp xếp thứ tự hiển thị (spine) lên đầu sách
+            $manifestItems = ($hasCover ? $coverManifestItem : '') .
+                '    <item id="intro" href="intro.xhtml" media-type="application/xhtml+xml"/>' . "\n" .
                 '    <item id="toc_page" href="toc.xhtml" media-type="application/xhtml+xml"/>' . "\n" .
                 $manifestItems;
 
-            $spineItems = '    <itemref idref="intro"/>' . "\n" .
+            $spineItems = ($hasCover ? $coverSpineItem : '') .
+                '    <itemref idref="intro"/>' . "\n" .
                 '    <itemref idref="toc_page"/>' . "\n" .
                 $spineItems;
 
@@ -613,7 +689,7 @@ class ChaperController extends Controller
 </ncx>';
             $zip->addFromString('OEBPS/toc.ncx', $tocNcx);
 
-            // 8. Tạo file gói dữ liệu content.opf
+            // 8. Tạo file gói dữ liệu content.opf (Đã gắn thêm $metaCoverTag và $manifestItems đầy đủ)
             $contentOpf = '<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" unique-id="BookId" version="2.0">
     <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
@@ -621,7 +697,7 @@ class ChaperController extends Controller
         <dc:creator opf:role="aut">' . htmlspecialchars($authorName, ENT_QUOTES, 'UTF-8') . '</dc:creator>
         <dc:language>vi</dc:language>
         <dc:identifier id="BookId" opf:scheme="UUID">urn:uuid:story-' . $story->id . '</dc:identifier>
-    </metadata>
+' . $metaCoverTag . '    </metadata>
     <manifest>
         <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
         <item id="style" href="style.css" media-type="text/css"/>
@@ -637,7 +713,7 @@ class ChaperController extends Controller
 
             return response()->json([
                 'status' => 1,
-                'message' => 'File EPUB with Intro & TOC created successfully',
+                'message' => 'File EPUB with Cover, Intro & TOC created successfully',
                 'file_path' => Storage::url($fileName)
             ]);
         } catch (\Throwable $e) {

@@ -81,7 +81,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => ['aut
         Route::delete('/chapers/{story}/{chaper}', 'ChaperController@destroy')->name('chapers.destroy')->middleware('can:admin.chapers.destroy');
         Route::delete('/chapers/{story}', 'ChaperController@destroyAll')->name('chapers.destroyAll')->middleware('can:admin.chapers.destroy');
         Route::post('/chapers/upload/{story}', 'ChaperController@uploadChapterByWord')->name('chapers.upload');
-        Route::post('/chapers/render-file-epub/{story}', 'ChaperController@renderFileEpub')->name('chapers.renderFileEpub');
+        Route::get('/chapers/render-file-epub/{story}', 'ChaperController@renderFileEpub')->name('chapers.renderFileEpub');
 
         // Replace Content
         Route::get('/replace-content/get-items', [ReplaceContentController::class, 'getItems'])->name('replaceContent.getItems')->middleware('can:admin.replaceContent.getItems');
