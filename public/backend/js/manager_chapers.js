@@ -7,7 +7,7 @@ var vue_data = {
     items: [],
     replaceContentItems: [],
     screen: 'list',
-    itemDetail: { 
+    itemDetail: {
         content: ""
     },
     replaceContentDetail: {
@@ -37,7 +37,7 @@ var vue_data = {
     story: story,
     position: {
         screen: false,
-        start:0,
+        start: 0,
         end: 0
     },
     file_url: '',
@@ -58,12 +58,12 @@ var app = new Vue({
     },
     computed: {
         countContent() {
-            str1 = this.itemDetail.content.replace(/(^\s*)|(\s*$)/gi,"");
+            str1 = this.itemDetail.content.replace(/(^\s*)|(\s*$)/gi, "");
             //convert 2 or more spaces to 1  
-            str1 = str1.replace(/[ ]{2,}/gi," ");
+            str1 = str1.replace(/[ ]{2,}/gi, " ");
             // exclude newline with a start spacing  
-            str1 = str1.replace(/\n /,"\n");
-		    return str1.split(' ').length;
+            str1 = str1.replace(/\n /, "\n");
+            return str1.split(' ').length;
         }
     },
     methods: {
@@ -110,7 +110,7 @@ var app = new Vue({
         isOrder(name, type) {
             if (this.querySearch.order_by == name && this.querySearch.order_type == type) {
                 return true;
-            } 
+            }
             return false;
         },
         async deleteItem(item) {
@@ -122,7 +122,7 @@ var app = new Vue({
         },
         async deleteAllItem() {
             if (confirm(`Bạn muốn xóa các chương từ vị trí ${this.position.start} đến ${this.position.end}`)) {
-                let jsonData = await new RouteApi().delete(`${this.apiUrl}/${this.story.id}`,this.position                );
+                let jsonData = await new RouteApi().delete(`${this.apiUrl}/${this.story.id}`, this.position);
                 jnotice(jsonData.message);
                 this.getItems();
             }
@@ -135,7 +135,7 @@ var app = new Vue({
             this.loading = true;
             this.buildQueryItem();
             const jsonData = await new RouteApi().get(this.getItemUrl);
-            
+
             this.loading = false;
             if (jsonData.result) {
                 this.items = jsonData.data;
@@ -180,35 +180,35 @@ var app = new Vue({
         async uploadFile(e, name) {
             let files = e.target.files || e.dataTransfer.files;
             if (!files.length) return;
-            
+
             let reader = new FileReader();
             if (name == 'thumbnail') {
                 this.files.thumbnail = files[0];
-                
+
                 await reader.readAsDataURL(files[0]);
-                reader.onload = function() {
+                reader.onload = function () {
                     // console.log(reader.result);
                     app.itemDetail.thumbnail = reader.result;
                 }
-                
+
             }
-             if (name == 'fvn_file_word') {
-                 this.files.fvn_list_word = files;
+            if (name == 'fvn_file_word') {
+                this.files.fvn_list_word = files;
             }
         },
         async handleUploadChapter(e) {
             e.preventDefault()
             var data = new FormData();
-             for (let key in this.files.fvn_list_word) {
-                
-                data.append('fvn_list_word['+key+']', this.files.fvn_list_word[key]);
+            for (let key in this.files.fvn_list_word) {
+
+                data.append('fvn_list_word[' + key + ']', this.files.fvn_list_word[key]);
             }
-            
+
             this.loading = true;
-            jsonData = await new RouteApi().post(`${this.apiUrl}/upload/${this.story.id}`,data, 'form' );
+            jsonData = await new RouteApi().post(`${this.apiUrl}/upload/${this.story.id}`, data, 'form');
             this.loading = false;
 
-             if (jsonData.status) {
+            if (jsonData.status) {
                 jnotice(jsonData.message);
             } else {
                 jAlert(jsonData.message);
@@ -220,10 +220,10 @@ var app = new Vue({
                 return;
             }
             this.loading = true;
-            jsonData = await new RouteApi().get(`${FVN_LARAVEL_HOME}/api/manager/stories/auto-convert-content-length-chapter/${this.story.id}` );
+            jsonData = await new RouteApi().get(`${FVN_LARAVEL_HOME}/api/manager/stories/auto-convert-content-length-chapter/${this.story.id}`);
             this.loading = false;
 
-             if (jsonData.status) {
+            if (jsonData.status) {
                 this.getItems();
                 jnotice(jsonData.message);
             } else {
@@ -236,10 +236,10 @@ var app = new Vue({
                 return;
             }
             this.loading = true;
-            jsonData = await new RouteApi().post(`${this.apiUrl}/auto-convert-free-full-chapter/${this.story.id}`, {} );
+            jsonData = await new RouteApi().post(`${this.apiUrl}/auto-convert-free-full-chapter/${this.story.id}`, {});
             this.loading = false;
 
-             if (jsonData.status) {
+            if (jsonData.status) {
                 this.getItems();
                 jnotice(jsonData.message);
             } else {
@@ -247,15 +247,33 @@ var app = new Vue({
             }
         },
         async handleRenderFileEpub(e) {
-            e.preventDefault()
-            if (!confirm(`Bạn muốn tạo file EPUB cho truyện này?`)) {
-                return;
+            e.preventDefault();
+            let position;
+
+            while (true) {
+                let input = prompt("Vui lòng nhập vị trí chương truyện (để 0 là lấy toàn bộ nội dung):", "0");
+
+                // Nếu người dùng bấm Cancel (trả về null), thoát vòng lặp
+                if (input === null) {
+                    return;
+                }
+
+                // Chuyển đổi giá trị sang số và kiểm tra điều kiện
+                position = Number(input);
+                
+                if (input.trim() !== "" && !isNaN(position) && position >= 0) {
+                    break; // Thoát vòng lặp khi nhập đúng
+                } else {
+                    alert("Dữ liệu không hợp lệ! Vui lòng nhập lại một số >= 0.");
+                }
             }
+
+           
             this.loading = true;
-            jsonData = await new RouteApi().post(`${this.apiUrl}/render-file-epub/${this.story.id}`, {} );
+            jsonData = await new RouteApi().post(`${this.apiUrl}/render-file-epub/${this.story.id}`, {position: position});
             this.loading = false;
 
-             if (jsonData.status) {
+            if (jsonData.status) {
                 this.file_url = jsonData.file_path;
                 jnotice(jsonData.message);
             } else {
@@ -268,10 +286,10 @@ var app = new Vue({
                 return;
             }
             this.loading = true;
-            jsonData = await new RouteApi().post(`${this.apiUrl}/position-plus/${this.story.id}/${item.position}`, {} );
+            jsonData = await new RouteApi().post(`${this.apiUrl}/position-plus/${this.story.id}/${item.position}`, {});
             this.loading = false;
 
-             if (jsonData.status) {
+            if (jsonData.status) {
                 this.getItems();
                 jnotice(jsonData.message);
             } else {
@@ -283,9 +301,9 @@ var app = new Vue({
             this.loading = true;
             let jsonData;
             if (this.itemDetail.id) {
-                jsonData = await new RouteApi().put(`${this.apiUrl}/${this.story.id}/${this.itemDetail.id}`,this.itemDetail )
+                jsonData = await new RouteApi().put(`${this.apiUrl}/${this.story.id}/${this.itemDetail.id}`, this.itemDetail)
             } else {
-                jsonData = await new RouteApi().post(`${this.apiUrl}/${this.story.id}`,this.itemDetail );
+                jsonData = await new RouteApi().post(`${this.apiUrl}/${this.story.id}`, this.itemDetail);
             }
             this.loading = false;
             if (jsonData.status) {
@@ -310,16 +328,16 @@ var app = new Vue({
             this.loading = false;
             if (jsonData.result) {
                 this.replaceContentItems = jsonData.data;
-            
+
             } else {
                 this.replaceContentItems = [];
                 // jAlert(jsonData.message);
             }
         },
         async addReplaceContent(e) {
-             e.preventDefault()
+            e.preventDefault()
             this.loading = true;
-            jsonData = await new RouteApi().post(`${this.apiUrlReplaceContent}/${this.story.id}`,this.replaceContentDetail )
+            jsonData = await new RouteApi().post(`${this.apiUrlReplaceContent}/${this.story.id}`, this.replaceContentDetail)
             this.loading = false;
             if (jsonData.status) {
                 jnotice(jsonData.message);
@@ -339,9 +357,9 @@ var app = new Vue({
         async handleReplaceContent() {
             if (confirm(`Bạn muốn thực hiện chức năng thay đổi nội dung toàn bộ các chương truyện?`)) {
                 this.loading = true;
-                jsonData = await new RouteApi().post(`${this.apiUrlReplaceContent}/replace-content/${this.story.id}`,{} );
+                jsonData = await new RouteApi().post(`${this.apiUrlReplaceContent}/replace-content/${this.story.id}`, {});
                 this.loading = false;
-                 if (jsonData.status) {
+                if (jsonData.status) {
                     this.resultReplaceContent.affected_chapters = jsonData.affected_chapters;
                     this.resultReplaceContent.total_affected = jsonData.total_affected;
                     jnotice(jsonData.message);
@@ -430,11 +448,11 @@ var app = new Vue({
 
     },
     watch: {
-        'itemDetail.name' (newVal) {
+        'itemDetail.name'(newVal) {
             if (newVal) {
                 this.itemDetail.slug = fvnChangeToSlug(newVal);
             }
         },
-      
+
     },
 });

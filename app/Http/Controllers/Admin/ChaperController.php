@@ -443,8 +443,12 @@ class ChaperController extends Controller
 
     public function renderFileEpub(Request $request, Story $story)
     {
-        ini_set('max_execution_time', 300);
 
+        ini_set('max_execution_time', 300);
+        $position = 0;
+        if(!empty($request->position)){
+            $position = (int)$request->position;
+        }
         try {
             $fileName = 'truyen_epub.epub';
             $filePath = storage_path('app/public/' . $fileName);
@@ -557,6 +561,7 @@ class ChaperController extends Controller
         <h1>' . $storyTitle . '</h1>
         <h3>Tác giả: ' . htmlspecialchars($authorName, ENT_QUOTES, 'UTF-8') . '</h3>
         <h3>Website: ' . env('APP_URL') . '</h3>
+        <h3>Keywords: hắc hoàng đại đế; hachoangdaide; hac hoang dai de; hachoangde </h3>
         <hr style="width: 50%; margin: 20px auto;"/>
     </div>
     <div class="description-container" style="text-align: left; padding: 0 10px;">
@@ -601,6 +606,9 @@ class ChaperController extends Controller
 
             // 4. Duyệt qua từng chương để tạo file xhtml riêng biệt
             foreach ($chapers as $chaper) {
+                if ($chaper->position > $position) {
+                    break; // Bỏ qua các chương có position nhỏ hơn giá trị đã nhập
+                }
                 $id = 'chapter_' . $chaper->position;
                 $fileNameXhtml = $id . '.xhtml';
 

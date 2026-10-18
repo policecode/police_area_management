@@ -162,8 +162,8 @@ $user = Auth::user();
                                                     class="btn btn-border-green w-full">Chi tiết tài khoản</a>
                                             </div>
                                             <div class="basis-1/2 px-1 mb-2">
-                                                <a href="{{route('member.gilfcode')}}" title="Nhập giftcode"
-                                                    class="btn btn-border-green w-full">Nhập giftcode</a>
+                                                <a href="{{route('member.mystory.copyright')}}" title="Công pháp đã mua"
+                                                    class="btn btn-border-green w-full">Công pháp đã mua</a>
                                             </div>
                                             <div class="basis-1/2 px-1 mb-2">
                                                 <a href="{{route('auth.logout')}}" title="Đăng xuất"

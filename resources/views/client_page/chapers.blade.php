@@ -529,7 +529,7 @@ switch (mt_rand(1, 2)) {
             },
             computed: {
                 isAffiliate() {
-                    if (!(this.chaper.position % 10 == 0) || (this.chaper.money > 0)) {
+                    if (!(this.chaper.position % 5 == 0) || (this.chaper.money > 0)) {
                         return true;
                     } else {
                         return false;
