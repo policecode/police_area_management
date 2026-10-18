@@ -44,7 +44,7 @@ $option = SettingHelpers::getInstance();
                     @enderror
               
                     <button type="submit" class="btn btn-green w-full !rounded-md lg:text-[1.125rem] mb-4">Đăng nhập</button>
-                    <a href="{{route('member.form_forgot_password')}}" title="Quên mật khẩu" class="link text-[#222] block w-fit mx-auto mb-4" style="cursor: pointer;">Quên mật khẩu</a>
+                    {{-- <a href="{{route('member.form_forgot_password')}}" title="Quên mật khẩu" class="link text-[#222] block w-fit mx-auto mb-4" style="cursor: pointer;">Quên mật khẩu</a> --}}
                     <a href="{{ route('member.form_register') }}" title="Đăng ký" class="btn btn-border-green !flex w-fit mx-auto !rounded-md min-w-[200px]">Đăng ký</a>
                 </form>
                 <p class="mt-5 text-center">Hoặc đăng nhập qua</p>

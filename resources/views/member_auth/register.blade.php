@@ -23,7 +23,7 @@ $option = SettingHelpers::getInstance();
                         <div class="flex items-center justify-between mb-2 head-all text-white p-4" style="background-color: #128c7e">{{session('msg')}}</div>
                     @endif
                 </div>
-                <form action="{{ route('member.store') }}" class="form formValidation" method="POST" accept-charset="utf8">
+                {{-- <form action="{{ route('member.store') }}" class="form formValidation" method="POST" accept-charset="utf8">
                     @csrf
                     @method('POST')
                     <input type="text" value="{{old('name')}}" name="name" placeholder="Nhập họ và tên"
@@ -56,8 +56,8 @@ $option = SettingHelpers::getInstance();
                     <button type="submit" class="btn btn-green w-full !rounded-md lg:text-[1.125rem] mb-4">Đăng ký</button>
                     <a href="{{ route('member.form_login') }}" title="Đăng nhập"
                         class="btn btn-border-green !flex w-fit mx-auto !rounded-md min-w-[200px]">Đăng nhập</a>
-                </form>
-                <p class="mt-5 text-center">Hoặc đăng nhập qua</p>
+                </form> --}}
+                <p class="mt-5 text-center">Đăng nhập qua</p>
                 <div class="text-center">
                     <a href="{{ route('auth.socialite.google') }}" class="smooth icon-login-social google" title="Đăng nhập qua Google"><i class="fa-brands fa-google"></i></a>
                 </div>
