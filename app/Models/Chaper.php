@@ -63,6 +63,11 @@ class Chaper extends Model
         return $query;
     }
 
+    public function scopeWhereHasChinese($query, string $column = 'content')
+    {
+        return $query->whereRaw("{$column} REGEXP '[\\\\x{4e00}-\\\\x{9fff}]'");
+    }
+
     public function scopeJoinStory($query) {
         if ($this->joinStory ) {
             return $query;

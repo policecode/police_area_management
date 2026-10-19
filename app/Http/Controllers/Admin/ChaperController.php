@@ -36,9 +36,11 @@ class ChaperController extends Controller
     {
         // Thêm dữ liệu vào trong query
         // $request->merge(array_merge($queryDefault, $request->query()));
-
         try {
             $query = Chaper::filter($request);
+            if ($request->is_chinese == 'true') {
+                $query = $query->WhereHasChinese('content');
+            }
             $res = [
                 'result' => 1,
                 'data' => [],

@@ -62,6 +62,9 @@
                     <input v-model="querySearch.content" type="text" class="form-control" placeholder="Nội dung chương truyện...">
                 </div>
                 <div class="col-2">
+                    <input v-model="querySearch.is_chinese" type="checkbox" class="check" /> Chinese
+                </div>
+                <div class="col-2">
                     <button @click="searchItem" class="btn btn-success">Fillter</button>
                     <button @click="clearFilter" class="btn btn-danger">Clear</button>
 

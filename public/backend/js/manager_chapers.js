@@ -28,6 +28,7 @@ var vue_data = {
         page: 1,
         per_page: 20,
         keyword: '',
+        is_chinese: false,
         order_by: 'position',
         order_type: 'DESC',
         story_id: story.id
