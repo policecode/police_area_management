@@ -131,7 +131,11 @@ class ChaperController extends Controller
             ]);
         }
         try {
-            $query = Chaper::SelectNotContent()->getByStory($story)->orderBy('position', 'ASC');
+            if ($request->is_all_chapters) {
+                $query = Chaper::SelectNotContent()->skip(0)->take(1000);
+            } else {
+                $query = Chaper::SelectNotContent()->getByStory($story)->orderBy('position', 'ASC');
+            }
             if ($request->is_chinese) {
                 $query = $query->WhereHasChinese('content');
             }
