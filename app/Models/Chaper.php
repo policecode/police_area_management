@@ -93,7 +93,7 @@ class Chaper extends Model
     }
 
     public function scopeSelectNotContent($query) {
-        $query->select('id', 'name', 'slug', 'view', 'position', 'money', 'created_at', 'updated_at');
+        $query->select('id', 'story_id', 'name', 'slug', 'view', 'position', 'money', 'created_at', 'updated_at');
         return $query;
     }
 
