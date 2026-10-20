@@ -42,6 +42,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'middleware' => []], 
             Route::get('/{story}', 'StoriesController@showStory');
             Route::get('/{story}/chapters', 'ChaperController@showListChapter');
             Route::get('/{story}/chapters/{position}', 'ChaperController@showDetailChapter');
+            Route::post('/chapters/{chaper}', 'ChaperController@updateDetail');
+
         });
     });
 

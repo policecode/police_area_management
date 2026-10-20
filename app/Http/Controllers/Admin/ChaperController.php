@@ -49,7 +49,7 @@ class ChaperController extends Controller
                 'total' => 0
             ];
             if ($request->is_paginate) {
-                $res['total'] = $query->getTotal();
+                $res['total'] = $query->count();
             } else {
                 $res['data']  = $query->get();
             }
@@ -122,7 +122,7 @@ class ChaperController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showListChapter($story)
+    public function showListChapter(Request $request, $story)
     {
         if (!env('DOWNLOAD_STORY')) {
             return response()->json([
@@ -131,7 +131,11 @@ class ChaperController extends Controller
             ]);
         }
         try {
-            $data = Chaper::SelectNotContent()->getByStory($story)->orderBy('position', 'ASC')->get();
+            $query = Chaper::SelectNotContent()->getByStory($story)->orderBy('position', 'ASC');
+            if ($request->is_chinese) {
+                $query = $query->WhereHasChinese('content');
+            }
+            $data = $query->get();
             return response()->json([
                 'result' => 1,
                 'data' => $data,
@@ -165,6 +169,37 @@ class ChaperController extends Controller
             return response()->json([
                 'result' => 0,
                 'data' => [],
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function updateDetail(Request $request, Chaper $chaper)
+    {
+        if (!env('DOWNLOAD_STORY')) {
+            return response()->json([
+                'result' => 0,
+                'message' => 'Không Cho phép sử dụng tính năng này'
+            ]);
+        }
+        try {
+            DB::beginTransaction();
+      
+            $chaper->update([
+                'content' => $request->content,
+                'content_length' => count(explode(" ", $request->content))
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'status' => 1,
+                'data' => $chaper,
+                'message' => 'Update success'
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 0,
                 'message' => $e->getMessage()
             ], 400);
         }
@@ -448,7 +483,7 @@ class ChaperController extends Controller
 
         ini_set('max_execution_time', 300);
         $position = 0;
-        if(!empty($request->position)){
+        if (!empty($request->position)) {
             $position = (int)$request->position;
         }
         try {
