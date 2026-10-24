@@ -132,7 +132,7 @@ class ChaperController extends Controller
         }
         try {
             if ($request->is_all_chapters) {
-                $query = Chaper::SelectNotContent()->skip(0)->take(1000);
+                $query = Chaper::SelectNotContent()->skip(0)->take(1000)->orderBy('id', 'DESC');
             } else {
                 $query = Chaper::SelectNotContent()->getByStory($story)->orderBy('position', 'ASC');
             }
