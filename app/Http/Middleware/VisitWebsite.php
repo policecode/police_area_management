@@ -25,7 +25,7 @@ class VisitWebsite
                 if ($result) {
                     $result->count += 1;
                     $result->save();
-                    if ($result->count > 450) {
+                    if ($result->count > 300) {
                         $request->merge(array_merge(['is_lock_chapter' => true], $request->query()));
                     }
                 } else {
