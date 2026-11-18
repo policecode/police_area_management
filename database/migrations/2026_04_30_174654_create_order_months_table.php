@@ -15,7 +15,7 @@ class CreateOrderMonthsTable extends Migration
     {
         Schema::create('order_months', function (Blueprint $table) {
             $table->id();
-            $table->string('story_id');
+            $table->integer('story_id');
             $table->integer('money');
             $table->integer('key');
         });

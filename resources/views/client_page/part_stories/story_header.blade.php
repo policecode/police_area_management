@@ -60,7 +60,8 @@
                         class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2">
                         <i class="fa-solid fa-book-open-reader mr-2"></i>Đọc từ đầu
                     </a>
-                    <a @click="saveFavoriteStory" href="javascript:void(0)"class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2 btn-favorite-story not-login ">
+                    <a @click="saveFavoriteStory"
+                        href="javascript:void(0)"class="btn btn-green hover:text-white font-bold mr-2 last:mr-0 sm:min-w-[130px] mb-2 btn-favorite-story not-login ">
                         <i class="fa-solid fa-book mr-2"></i>
                         <span v-if="itemDetail.is_favorite" class="save-story-text">Bỏ lưu</span>
                         <span v-else class="save-story-text">Lưu công pháp</span>
@@ -72,14 +73,15 @@
                     </a>
                 </div>
                 <div class="interaction-btns flex flex-wrap">
-                    {{-- <a href="javascript:void(0)" title="Ủng hộ"
-                                    class="btn-item sm:min-w-[130px] flex-1 sm:flex-none text-[#128c7e] hover:text-[#128c7e] flex flex-col justify-center items-center text-[0.875rem] rounded py-1 px-2 hover:shadow-[0_0.5em_0.5em_-0.3em_rgba(14,109,98,1)]"
-                                    modal-rs-target="modal_donate">
-                                    <i class="fa-solid fa-hand-holding-heart mb-2"></i>
-                                    <span class="text">Ủng hộ</span>
-                                </a> --}}
-                    <a @click="showFormStar" href="javascript:void(0)" title="Ủng hộ"
-                        class="btn-item sm:min-w-[130px] flex-1 sm:flex-none text-[#128c7e] hover:text-[#128c7e] flex flex-col justify-center items-center text-[0.875rem] rounded py-1 px-2 hover:shadow-[0_0.5em_0.5em_-0.3em_rgba(14,109,98,1)]" :class="{ 'text-[#ffd700]': itemDetail.is_ratings > 0 }">
+                    {{-- <a @click="showFormDonate" href="javascript:void(0)" title="Ủng hộ"
+                        class="btn-item sm:min-w-[130px] flex-1 sm:flex-none text-[#128c7e] hover:text-[#128c7e] flex flex-col justify-center items-center text-[0.875rem] rounded py-1 px-2 hover:shadow-[0_0.5em_0.5em_-0.3em_rgba(14,109,98,1)]"
+                        modal-rs-target="modal_donate">
+                        <i class="fa-solid fa-hand-holding-heart mb-2"></i>
+                        <span class="text">Ủng hộ</span>
+                    </a> --}}
+                    <a @click="showFormStar" href="javascript:void(0)" title="Đánh giá"
+                        class="btn-item sm:min-w-[130px] flex-1 sm:flex-none text-[#128c7e] hover:text-[#128c7e] flex flex-col justify-center items-center text-[0.875rem] rounded py-1 px-2 hover:shadow-[0_0.5em_0.5em_-0.3em_rgba(14,109,98,1)]"
+                        :class="{ 'text-[#ffd700]': itemDetail.is_ratings > 0 }">
                         <i class="fa-solid fa-star mb-2"></i>
                         <span v-if="itemDetail.is_ratings > 0" class="text">Đã đánh giá</span>
                         <span v-else class="text">Đánh giá</span>
@@ -138,7 +140,7 @@
         </div>
     </div>
 
-    
+
     <div @click="closeFormStar"
         class="close_form_star fixed top-0 right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-[#00000099] duration-500 md:inset-0"
         :class="{ 'invisible pointer-events-none opacity-0': !showStar }">
@@ -171,12 +173,12 @@
                 </div>
 
                 <p class="lg:text-[0.875rem] font-bold mb-2">
-                        Bình luận <span class="text-[#dc3545]">(*)</span> : @{{ itemStar.content.length }}/500
-                    </p>
-                    <textarea v-model="itemStar.content"
-                        class="form-control border border-solid border-[#ebebeb] bg-white rounded-md h-16 resize-none mb-2 w-full px-3 py-2"
-                        ></textarea>
-                    <p v-if="errors.content" class="text-note text-[#d31f1f] mb-4">Nội dung đánh giá ít nhất 30 ký tự và không nhiều hơn 500 ký tự!</p>
+                    Bình luận <span class="text-[#dc3545]">(*)</span> : @{{ itemStar.content.length }}/500
+                </p>
+                <textarea v-model="itemStar.content"
+                    class="form-control border border-solid border-[#ebebeb] bg-white rounded-md h-16 resize-none mb-2 w-full px-3 py-2"></textarea>
+                <p v-if="errors.content" class="text-note text-[#d31f1f] mb-4">Nội dung đánh giá ít nhất 30 ký tự và
+                    không nhiều hơn 500 ký tự!</p>
                 <div class="flex items-center justify-between">
                     <button type="button" @click="voteStar()" class="btn btn-green !rounded">Đánh giá</button>
                     <p class="count-rating text-[#128c7e] lg:text-[0.875rem]">Đánh giá: @{{ itemDetail.star_count }} lượt</p>
@@ -184,15 +186,47 @@
             </form>
         </div>
     </div>
+
+    <div @click="closeFormStar"
+        class="close_form_star fixed top-0 right-0 left-0 z-50 flex h-full w-full items-center justify-center overflow-hidden overflow-y-auto overflow-x-hidden bg-[#00000099] duration-500 md:inset-0"
+        :class="{ 'invisible pointer-events-none opacity-0': !showDonate }">
+        <div class="popup-form md:max-w-[500px] bg-white relative mx-auto max-h-screen w-full max-w-[90%] overflow-y-auto rounded-md md:h-auto"
+            modal-rs-content="">
+            <span @click="showDonate = false"
+                class="close-modal bg-[#128c7e] rounded p-1 flex w-6 h-6 items-center justify-center cursor-pointer absolute top-4 right-4 z-[1]"
+                modal-rs-close="">
+                <img src="{{ asset('assets/images/close-modal.png') }}" alt="">
+            </span>
+            <p class="font-bold text-[#000] text-[1.3rem] p-4 border-b-[1px] border-solid border-[#ebebeb]">Ủng hộ
+                contributor</p>
+            <form action="https://blhvip.vn/send-donate-story" method="POST" class="form p-4 formValidation"
+                accept-charset="utf8" absolute="" data-success="NOTIFICATION.toastrMessageReload">
+                <input type="hidden" name="_token" value="3taJGLJRHP9gvIynLNwctFxeXK4GYxyGR1GdgZxB"> <input
+                    type="hidden" name="story" value="637">
+                <p class="text font-bold mb-2">Số Linh Thạch</p>
+                <input type="number" name="amount" value="200" min="200" step="10" required="" placeholder="Nhập số Linh Thạch"
+                    class="form-control border border-solid border-[#ebebeb] bg-white rounded-md"/>
+                <p class="sub text-[#128c7e] text-[0.75rem] italic mb-4 mt-1">Mức ủng hộ tối thiểu 200LT và là bội số
+                    của 10LT</p>
+                <p class="text font-bold mb-2">Lời nhắn (nếu có)</p>
+                <textarea
+                    class="form-control border border-solid border-[#ebebeb] bg-white rounded-md h-16 resize-none mb-4 w-full px-3 py-2"
+                    name="content"></textarea>
+                <button type="submit" class="btn btn-green !rounded">Gửi ủng hộ</button>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script>
     var vue_story_header_app = {
         showStar: false,
+        showDonate: false,
         user: {{ Illuminate\Support\Js::from($user) }},
         itemDetail: {{ Illuminate\Support\Js::from($story) }},
         itemStar: {
-            story_id: {{$story['id']}},
+            story_id: {{ $story['id'] }},
             point_star: 0,
             content: ''
         },
@@ -211,7 +245,7 @@
         data: vue_story_header_app,
         mounted: function() {
             // console.log(this.itemDetail);
-            
+
         },
         computed: {
             renderStar() {
@@ -266,16 +300,23 @@
                     jAlertCLient("Bạn cần đăng nhập tài khoản để sử dụng chức năng này", 'danger');
                     return true;
                 }
-             },
-             showFormStar() {
+            },
+            showFormStar() {
                 if (this.isAuthLogin()) {
                     return;
                 }
                 this.showStar = true
-             },
+            },
+            showFormDonate() {
+                if (this.isAuthLogin()) {
+                    return;
+                }
+                this.showDonate = true
+            },
             closeFormStar(e) {
                 if (e.target.classList.contains('close_form_star')) {
                     this.showStar = false;
+                    this.showDonate = false;
                 }
 
             },
@@ -308,7 +349,7 @@
             async saveFavoriteStory() {
                 let jsonData = await new RouteApi().post(`${this.apiMemberUrl}/save-favorite-story`, {
                     story_id: this.itemDetail.id
-                }); 
+                });
                 if (jsonData.status) {
                     jAlertCLient(jsonData.message, 'success');
                     this.itemDetail.is_favorite = jsonData.is_favorite;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\FavoriteStatus;
 use App\Enums\LockStories;
 use App\Enums\ProposeStatus;
 use App\Enums\StatusStory;
@@ -11,8 +12,10 @@ use App\Models\Category;
 use App\Models\Chaper;
 use App\Models\Story;
 use App\Models\StoryCategory;
+use App\Models\UserReadStory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -39,17 +42,22 @@ class HomeController extends Controller
                 $item->is_convert = false;
             }
         })->toArray();
-        // Truyện Mới
-        $new_stories = Story::joinAuthor()->GetByUnLock(LockStories::LOCK['key'])->orderBy('created_at', 'DESC')->skip(0)->take(15)->get();
-        $new_stories = $new_stories->each(function ($item, $key) use ($now) {
-            $item->thumbnail = route('index') . '/' . $item->thumbnail;
-            $isResult = strpos($item->title, '(c)');
-            if ($isResult) {
-                $item->is_convert = true;
-            } else {
-                $item->is_convert = false;
-            }
-        })->toArray();
+        $favorite_stories = [];
+        if (Auth::id()) {
+            $favorite_stories = UserReadStory::JoinStoryChapterAuthor()->GetByUser(Auth::id())->GetByFavorite(FavoriteStatus::LIKE['id'])->orderBy('last_chapers', 'DESC')->skip(0)->take(15)->get();
+        
+            $favorite_stories = $favorite_stories->each(function ($item, $key) use ($now) {
+                $item->after_minutes = $now->diffInMinutes(new Carbon($item->last_chapers));
+                $isResult = strpos($item->title, '(c)');
+                if ($isResult) {
+                    $item->is_convert = true;
+                } else {
+                    $item->is_convert = false;
+                }
+            })->toArray();
+            // dd($favorite_stories);
+
+        }
         // Chương truyện mới
         $new_chapters = Story::joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('last_chapers', 'DESC')->skip(0)->take(15)->get();
         // $story_arr= $new_chapter->pluck('id');
@@ -82,7 +90,7 @@ class HomeController extends Controller
         // Thể loại truyện Hệ Thống
         $category = Category::getBySlug('he-thong')->first();
         if ($category) {
-            $nucuong_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('last_chapers', 'DESC')->skip(0)->take(14)->get();
+            $nucuong_stories_collection = Story::getByCategory($category['id'])->joinAuthorAndChapter()->GetByUnLock(LockStories::LOCK['key'])->orderBy('last_chapers', 'DESC')->skip(0)->take(20)->get();
             $story_arr = $nucuong_stories_collection->pluck('id');
             $listStoryCat = StoryCategory::getListCategoryByStory($story_arr);
             $nucuong_stories = $nucuong_stories_collection->each(function ($item, $key) use ($listStoryCat) {
@@ -109,7 +117,7 @@ class HomeController extends Controller
         $dataView = array(
             'page_title' => $option->getOptionValue('fvn_web_title'),
             'hot_stories' => $hot_stories,
-            'new_stories' => $new_stories,
+            'favorite_stories' => $favorite_stories,
             'new_chapters' => $new_chapters,
             'propose_stories' => $propose_stories,
             'nucuong_stories' => $nucuong_stories,

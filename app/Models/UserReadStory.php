@@ -48,7 +48,7 @@ class UserReadStory extends Model
         if ($this->joinStoryChapterAuthor) {
             return $query;
         }
-        $query->select('user_read_stories.*', 's.title as story_title', 's.slug as story_slug', 'c.name as chapter_title', 'c.position as chapter_position', 'a.name as author_name', 'a.slug as author_slug')
+        $query->select('user_read_stories.*', 's.title as story_title', 's.slug as story_slug', 's.last_chapers', 'c.name as chapter_title', 'c.position as chapter_position', 'a.name as author_name', 'a.slug as author_slug')
         ->leftJoin('stories as s', function($join) {
             $join->on('user_read_stories.story_id', '=', 's.id');
         })

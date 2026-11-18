@@ -17,7 +17,7 @@ class ViewMonth extends Model
      * @var array
      */
     protected $fillable = [
-        'story_id', 'view', 'key', 'percentage'
+        'story_id', 'view', 'key', 'users_care', 'total_care', 'donate'
     ];
     public $timestamps = false;
     private $joinStory = false;
@@ -38,7 +38,7 @@ class ViewMonth extends Model
         if ($this->joinStory ) {
             return $query;
         }
-        $query->select('stories.*', 'view_months.view', 'view_months.key', 'view_months.percentage', 'authors.name AS author_name', 'authors.slug AS author_slug')
+        $query->select('stories.*', 'view_months.view', 'view_months.key', 'authors.name AS author_name', 'authors.slug AS author_slug', 'view_months.total_care', 'view_months.donate')
         ->leftJoin('stories', function($join) {
             $join->on('view_months.story_id', '=', 'stories.id');
         })

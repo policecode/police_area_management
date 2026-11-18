@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Member;
 
 use App\Enums\FavoriteStatus;
+use App\Enums\LockStories;
 use App\Http\Controllers\Controller;
+use App\Models\OrderMonth;
 use App\Models\Story;
 use App\Models\TopMemberDay;
 use App\Models\User;
 use App\Models\UserReadStory;
+use App\Models\ViewMonth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,11 +20,12 @@ use Illuminate\Support\Facades\Validator;
 
 class MemberActionController extends Controller
 {
-     public function __construct()
+    public function __construct()
     {
         $this->middleware(['auth', 'verified'])->except(['getTopMember']);
     }
-    public function uploadAction(Request $request, $action) {
+    public function uploadAction(Request $request, $action)
+    {
         // action: avatar, banner
         if (!in_array($action, ['avatar', 'banner'])) {
             return response()->json([
@@ -53,15 +57,14 @@ class MemberActionController extends Controller
                 'message' => 'Tải lên thất bại.'
             ]);
         }
-
     }
 
     public function saveFavoriteStory(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
-            'story_id' => 'required|exists:stories,id'
-        ]);
+                'story_id' => 'required|exists:stories,id'
+            ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 0,
@@ -72,7 +75,7 @@ class MemberActionController extends Controller
 
             DB::beginTransaction();
             $data = $validator->validated();
-        
+
             $story = Story::find($data['story_id']);
             $user = User::find(Auth::id());
             $userReadStory = UserReadStory::GetByUser($user->id)->GetByStory($story->id)->first();
@@ -107,9 +110,9 @@ class MemberActionController extends Controller
                 $is_favorite = true;
             }
             // $story->update();
-        
+
             // Xử lý khi đã đăng nhập
-         
+
             DB::commit();
             return response()->json([
                 'status' => 1,
@@ -126,12 +129,13 @@ class MemberActionController extends Controller
         }
     }
 
-    public function updateProfile(Request $request) {
-        
+    public function updateProfile(Request $request)
+    {
+
         $validator = Validator::make($request->all(), $this->rules($request), $this->messages(), $this->attributes());
         if ($validator->fails()) {
             return response()->json([
-                'status' => 0, 
+                'status' => 0,
                 'errors' => $validator->errors(),
                 'message' => 'validation'
             ]);
@@ -159,41 +163,42 @@ class MemberActionController extends Controller
         }
     }
 
-    public function getTopMember(Request $request) {
-          try {
-            if ($request->view == 'day') {
-                $query = TopMemberDay::filter($request)->getByKey(get_key_by_day());
-            } elseif ($request->view == 'all') {
-                $query = User::filter($request);
-            }
+    public function getTopMember(Request $request)
+    {
+        try {
 
+            $member_top =  User::orderBy('exp', 'DESC')->skip(0)->take(10)->get()->each(function ($item, $key) {
+                $item->profile_url = route('member.profile', ['user_id' => $item['id']]);
+            });
+            $member_top_day = TopMemberDay::joinUser()->getByKey(get_key_by_day())->orderBy('exp_day', 'DESC')->skip(0)->take(10)->get()->each(function ($item, $key) {
+                $item->profile_url = route('member.profile', ['user_id' => $item['user_id']]);
+                $item->avatar_url = $item->avatar ? asset($item->avatar) : asset('assets/images/avatar_default.png');
+            });
+            $top_order = OrderMonth::joinStory()->getByKey(get_key_by_day('month'))->where('stories.is_lock', LockStories::LOCK['key'])->orderBy('money', 'DESC')->skip(0)->take(10)->get()->each(function ($item, $key) {
+                    $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                    $item->url = route('client.story', ['story_slug' => $item->slug]);
+                    $item->author_url = route('client.author', ['author_slug' => $item['author_slug']]);
+                });
+            $top_care = ViewMonth::joinStory()->getByKey(get_key_by_day('month'))->where('stories.is_lock', LockStories::LOCK['key'])->orderBy('total_care', 'DESC')->skip(0)->take(10)->get()->each(function ($item, $key) {
+                $item->thumbnail = route('index') . '/' . $item->thumbnail;
+                $item->url = route('client.story', ['story_slug' => $item->slug]);
+                $item->author_url = route('client.author', ['author_slug' => $item['author_slug']]);
+            });
+            // dd($top_care->toArray());
             $res = [
                 'result' => 1,
-                'data' => [],
-                'page' => $query->getPageNumber(),
-                'per_page' => $query->getPerPage(),
-                'total' => 0
+                'member_top' => $member_top->toArray(),
+                'member_top_day' => $member_top_day->toArray(),
+                'top_order' => $top_order->toArray(),
+                'top_care' => $top_care->toArray(),
             ];
-            if($request->is_paginate){
-                $res['total'] = $query->getTotal();
-            }else{
-                if ($request->view == 'all') {
-                    $colection = $query->get();
-                    $res['data']  = $colection->each(function ($item, $key) {
-                        $item->profile_url = route('member.profile', ['user_id' => $item['id']]);
-                    });
-                } else {
-                    $colection = $query->joinUser()->get();
-                    $res['data']  = $colection->each(function ($item, $key) {
-                        $item->profile_url = route('member.profile', ['user_id' => $item['user_id']]);
-                        $item->avatar_url = $item->avatar ? asset($item->avatar) : asset('assets/images/avatar_default.png');
-                    });
-                }
-            }
+
             return response()->json($res);
         } catch (\Throwable $e) {
             return response()->json([
-                'result' => 0, 'data'=> [], 'message' => $e->getMessage()
+                'result' => 0,
+                'data' => [],
+                'message' => $e->getMessage()
             ], 400);
         }
     }

@@ -16,7 +16,6 @@ switch (mt_rand(1, 2)) {
         $affiliate = $option->getOptionValue('affiliate_in_chapter_2');
         break;
 }
-
 ?>
 @extends('layouts.frontend_v1')
 @section('head')

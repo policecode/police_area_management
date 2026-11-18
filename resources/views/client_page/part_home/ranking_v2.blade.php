@@ -74,34 +74,35 @@
                             cả <i class="ml-2 fa-solid fa-right-long"></i></a> --}}
                     </div>
                     <ul class="list-story">
-                        <li v-if="memberTopItems[0]" class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
+                        <li v-if="memberTopItems[0]"
+                            class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
                             <span
                                 class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">1</span>
                             <div class="content flex-1 mr-2">
                                 <h3>
                                     <a :href="memberTopItems[0].profile_url" :title="memberTopItems[0].name"
-                                        class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{memberTopItems[0].name}}</a>
+                                        class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{ memberTopItems[0].name }}</a>
                                 </h3>
-                                <p class="text-[0.75rem] text-[#007bff]">Tu vi: @{{memberTopItems[0].level_info.name}}</p>
-                             
+                                <p class="text-[0.75rem] text-[#007bff]">Tu vi: @{{ memberTopItems[0].level_info.name }}</p>
+
                             </div>
                             <a :href="memberTopItems[0].profile_url" :title="memberTopItems[0].name"
                                 class="book-cover block w-[52px] h-[87px] shrink-0 img-h-full mr-2">
                                 <picture>
-                                    <img loading="lazy"
-                                        :src="memberTopItems[0].avatar_url"
+                                    <img loading="lazy" :src="memberTopItems[0].avatar_url"
                                         :alt="memberTopItems[0].name" class="img-fluid">
                                 </picture>
                             </a>
                         </li>
-                        <li v-for="(item, index) in memberTopItems" v-if="index > 0" class="flex items-center p-2 border-b-[1px] border-solid border-[#f4f4f4]">
+                        <li v-for="(item, index) in memberTopItems" v-if="index > 0"
+                            class="flex items-center p-2 border-b-[1px] border-solid border-[#f4f4f4]">
                             <span
                                 class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">@{{ index + 1 }}</span>
                             <a :href="item.profile_url" :title="item.name"
-                                class="title text-[0.75rem] text-[#444] flex-1 mr-2 line-clamp-1">@{{item.name}}</a>
-                            <span class="text-[11px]">@{{item.level_info.name}}</span>
+                                class="title text-[0.75rem] text-[#444] flex-1 mr-2 line-clamp-1">@{{ item.name }}</a>
+                            <span class="text-[11px]">@{{ item.level_info.name }}</span>
                         </li>
-           
+
                     </ul>
                 </div>
             </div>
@@ -112,40 +113,41 @@
                 <div
                     class="box-ranking bg-white rounded overflow-hidden border border-solid border-[rgba(0,0,0,.125)] h-full flex flex-col shadow-[0_0_1px_rgba(0,0,0,.13)]">
                     <div class="head relative p-4 border-b-[1px] border-solid border-[rgba(0,0,0,.125)]">
-                        <h2 class="font-bold text-[1.125rem] text-center">Khổ tu (Ngày @{{layNgayHomNay()}})</h2>
+                        <h2 class="font-bold text-[1.125rem] text-center">Khổ tu (Ngày @{{ layNgayHomNay() }})</h2>
                         {{-- <a href="https://blhvip.vn/truyen-hot" title="Tất cả"
                             class="readmore text-[#128c7e] text-[0.875rem] absolute top-1/2 right-4 -translate-y-1/2">Tất
                             cả <i class="ml-2 fa-solid fa-right-long"></i></a> --}}
                     </div>
                     <ul class="list-story">
-                        <li v-if="memberTopDayItems[0]" class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
+                        <li v-if="memberTopDayItems[0]"
+                            class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
                             <span
                                 class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">1</span>
                             <div class="content flex-1 mr-2">
                                 <h3>
                                     <a :href="memberTopDayItems[0].profile_url" :title="memberTopDayItems[0].name"
-                                        class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{memberTopDayItems[0].name}}</a>
+                                        class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{ memberTopDayItems[0].name }}</a>
                                 </h3>
-                                <p class="text-[0.75rem] text-[#007bff]">Kinh nghiệm: @{{memberTopDayItems[0].exp_day}}</p>
-                             
+                                <p class="text-[0.75rem] text-[#007bff]">Kinh nghiệm: @{{ memberTopDayItems[0].exp_day }}</p>
+
                             </div>
                             <a :href="memberTopDayItems[0].profile_url" :title="memberTopDayItems[0].name"
                                 class="book-cover block w-[52px] h-[87px] shrink-0 img-h-full mr-2">
                                 <picture>
-                                    <img loading="lazy"
-                                        :src="memberTopDayItems[0].avatar_url"
+                                    <img loading="lazy" :src="memberTopDayItems[0].avatar_url"
                                         :alt="memberTopDayItems[0].name" class="img-fluid">
                                 </picture>
                             </a>
                         </li>
-                        <li v-for="(item, index) in memberTopDayItems" v-if="index > 0" class="flex items-center p-2 border-b-[1px] border-solid border-[#f4f4f4]">
+                        <li v-for="(item, index) in memberTopDayItems" v-if="index > 0"
+                            class="flex items-center p-2 border-b-[1px] border-solid border-[#f4f4f4]">
                             <span
                                 class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">@{{ index + 1 }}</span>
                             <a :href="item.profile_url" :title="item.name"
-                                class="title text-[0.75rem] text-[#444] flex-1 mr-2 line-clamp-1">@{{item.name}}</a>
-                            <span class="text-[11px]">@{{item.exp_day}}</span>
+                                class="title text-[0.75rem] text-[#444] flex-1 mr-2 line-clamp-1">@{{ item.name }}</a>
+                            <span class="text-[11px]">@{{ item.exp_day }}</span>
                         </li>
-           
+
                     </ul>
                 </div>
             </div>
@@ -157,40 +159,90 @@
                     class="box-ranking bg-white rounded overflow-hidden border border-solid border-[rgba(0,0,0,.125)] h-full flex flex-col shadow-[0_0_1px_rgba(0,0,0,.13)]">
                     <div class="head relative p-4 border-b-[1px] border-solid border-[rgba(0,0,0,.125)]">
                         <h2 class="font-bold text-[1.125rem] text-center">Bán nhiều trong tháng</h2>
-                        <a :href="top_pay_url" title="Tất cả"
+                        <a href="{{ route('client.top-pay-story') }}" title="Tất cả"
                             class="readmore text-[#128c7e] text-[0.875rem] absolute top-1/2 right-4 -translate-y-1/2">Tất
                             cả <i class="ml-2 fa-solid fa-right-long"></i></a>
                     </div>
                     <ul class="list-story">
-                        <li v-if="topOrderItems[0]" class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
+                        <li v-if="topOrderItems[0]"
+                            class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
                             <span
                                 class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">1</span>
                             <div class="content flex-1 mr-2">
                                 <h3>
                                     <a :href="topOrderItems[0].url" :title="topOrderItems[0].title"
-                                        class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{topOrderItems[0].title}}</a>
+                                        class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{ topOrderItems[0].title }}</a>
                                 </h3>
-                                <p class="text-[0.75rem] text-[#007bff]">Linh thạch bán được: @{{topOrderItems[0].money}} LT</p>
-                               <a :href="topOrderItems[0].author_url" :title="topOrderItems[0].author_name"
+                                <p class="text-[0.75rem] text-[#007bff]">Linh thạch bán được: @{{ topOrderItems[0].money }} LT
+                                </p>
+                                <a :href="topOrderItems[0].author_url" :title="topOrderItems[0].author_name"
                                     class="block text-[0.75rem] text-[#6c757d] w-fit">@{{ items[0].author_name }}</a>
                             </div>
                             <a :href="topOrderItems[0].url" :title="topOrderItems[0].title"
                                 class="book-cover block w-[52px] h-[87px] shrink-0 img-h-full mr-2">
                                 <picture>
-                                    <img loading="lazy"
-                                        :src="topOrderItems[0].thumbnail"
+                                    <img loading="lazy" :src="topOrderItems[0].thumbnail"
                                         :alt="topOrderItems[0].title" class="img-fluid">
                                 </picture>
                             </a>
                         </li>
-                        <li v-for="(item, index) in topOrderItems" v-if="index > 0" class="flex items-center p-2 border-b-[1px] border-solid border-[#f4f4f4]">
+                        <li v-for="(item, index) in topOrderItems" v-if="index > 0"
+                            class="flex items-center p-2 border-b-[1px] border-solid border-[#f4f4f4]">
                             <span
                                 class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">@{{ index + 1 }}</span>
                             <a :href="item.url" :title="item.title"
-                                class="title text-[0.75rem] text-[#444] flex-1 mr-2 line-clamp-1">@{{item.title}}</a>
-                            <span class="text-[11px]">@{{item.money}} LT</span>
+                                class="title text-[0.75rem] text-[#444] flex-1 mr-2 line-clamp-1">@{{ item.title }}</a>
+                            <span class="text-[11px]">@{{ item.money }} LT</span>
                         </li>
-           
+
+                    </ul>
+                </div>
+            </div>
+            {{-- End --}}
+
+            {{-- Start --}}
+            <div class="basis-full xl:basis-1/3 px-2 mb-4">
+                <div
+                    class="box-ranking bg-white rounded overflow-hidden border border-solid border-[rgba(0,0,0,.125)] h-full flex flex-col shadow-[0_0_1px_rgba(0,0,0,.13)]">
+                    <div class="head relative p-4 border-b-[1px] border-solid border-[rgba(0,0,0,.125)]">
+                        <h2 class="font-bold text-[1.125rem] text-center">Xu hướng tháng</h2>
+                        {{-- <a href="{{ route('client.top-pay-story') }}" title="Tất cả"
+                            class="readmore text-[#128c7e] text-[0.875rem] absolute top-1/2 right-4 -translate-y-1/2">Tất
+                            cả <i class="ml-2 fa-solid fa-right-long"></i></a> --}}
+                    </div>
+                    <ul class="list-story">
+                        <li v-if="topCareItems[0]"
+                            class="rank-1 flex p-2 border-b-[1px] border-solid border-[#f4f4f4]">
+                            <span
+                                class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">1</span>
+                            <div class="content flex-1 mr-2">
+                                <h3>
+                                    <a :href="topCareItems[0].url" :title="topCareItems[0].title"
+                                        class="title font-bold text-[#444] text-[0.875rem] line-clamp-1">@{{ topCareItems[0].title }}</a>
+                                </h3>
+                                <p class="text-[0.75rem] text-[#007bff]">Độ quan tâm: @{{ topCareItems[0].total_care }}
+                                    điểm
+                                </p>
+                                <a :href="topCareItems[0].author_url" :title="topCareItems[0].author_name"
+                                    class="block text-[0.75rem] text-[#6c757d] w-fit">@{{ topCareItems[0].author_name }}</a>
+                            </div>
+                            <a :href="topCareItems[0].url" :title="topCareItems[0].title"
+                                class="book-cover block w-[52px] h-[87px] shrink-0 img-h-full mr-2">
+                                <picture>
+                                    <img loading="lazy" :src="topCareItems[0].thumbnail"
+                                        :alt="topCareItems[0].title" class="img-fluid">
+                                </picture>
+                            </a>
+                        </li>
+                        <li v-for="(item, index) in topCareItems" v-if="index > 0"
+                            class="flex items-center p-2 border-b-[1px] border-solid border-[#f4f4f4]">
+                            <span
+                                class="number shrink-0 min-w-[20px] h-5 rounded-full inline-flex items-center justify-center bg-[#ededed] text-[#666] text-[11px] mr-2">@{{ index + 1 }}</span>
+                            <a :href="item.url" :title="item.title"
+                                class="title text-[0.75rem] text-[#444] flex-1 mr-2 line-clamp-1">@{{ item.title }}</a>
+                            <span class="text-[11px]">@{{ item.total_care }} điểm</span>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -218,6 +270,7 @@
         memberTopItems: [],
         memberTopDayItems: [],
         topOrderItems: [],
+        topCareItems: [],
         apiUrl: FVN_LARAVEL_HOME + '/story',
         apiMemberUrl: FVN_LARAVEL_HOME + '/api/member',
         pointInTime: null,
@@ -235,8 +288,7 @@
             searchItem() {
                 this.getItems();
                 this.getItemMemberTop();
-                this.getItemMemberTopDay();
-                this.getTopOrderItems();
+                // this.getTopOrderItems();
             },
 
             async getItems() {
@@ -282,38 +334,54 @@
             },
             async getItemMemberTop() {
                 this.memberTopItems = [];
-                const jsonData = await new RouteApi().get(`${this.apiMemberUrl}/list-top-member?page=1&per_page=10&view=all&order_by=exp&order_type=DESC`);
-                
+                this.memberTopDayItems = [];
+                this.topOrderItems = [];
+                this.topCareItems = [];
+                const jsonData = await new RouteApi().get(`${this.apiMemberUrl}/list-top-member`);
+
                 if (jsonData.result) {
-                    this.memberTopItems = jsonData.data;
+                    this.memberTopItems = jsonData.member_top;
+                    this.memberTopDayItems = jsonData.member_top_day;
+                    this.topOrderItems = jsonData.top_order;
+                    this.topCareItems = jsonData.top_care;
                 } else {
                     this.memberTopItems = [];
-                }
-            },
-            async getItemMemberTopDay() {
-                this.memberTopDayItems = [];
-                const jsonData = await new RouteApi().get(`${this.apiMemberUrl}/list-top-member?page=1&per_page=10&view=day&order_by=exp_day&order_type=DESC`);
-                
-                if (jsonData.result) {
-                    this.memberTopDayItems = jsonData.data;
-                } else {
                     this.memberTopDayItems = [];
-                }
-            },
-            async getTopOrderItems() {
-                this.topOrderItems = [];
-                const jsonData = await new RouteApi().get(`${this.apiUrl}/top-orders?page=1&per_page=10&order_by=money&order_type=DESC`);
-                
-                if (jsonData.result) {
-                    this.topOrderItems = jsonData.data;
-                    this.top_pay_url = jsonData.top_pay_url;
-                } else {
                     this.topOrderItems = [];
+                    this.topCareItems = [];
+
                 }
             },
-            layNgayHomNay() {
+
+            // async getTopOrderItems() {
+            //     this.topOrderItems = [];
+            //     const jsonData = await new RouteApi().get(
+            //         `${this.apiUrl}/top-orders?page=1&per_page=10&order_by=money&order_type=DESC`);
+
+            //     if (jsonData.result) {
+            //         this.topOrderItems = jsonData.data;
+            //         this.top_pay_url = jsonData.top_pay_url;
+            //     } else {
+            //         this.topOrderItems = [];
+            //     }
+            // },
+            layNgayHomNay(view = 'day') {
                 const hienTai = new Date();
-                const dinhDangVN = hienTai.toLocaleDateString('vi-VN');
+                let dinhDangVN = '';
+                if (view == 'day') {
+                    dinhDangVN = hienTai.toLocaleDateString('vi-VN');
+
+                } else if (view == 'week') {
+                    dinhDangVN = hienTai.toLocaleDateString('vi-VN', {
+                        month: '2-digit', // Hiển thị tháng 2 chữ số (vd: 11)
+                        year: 'numeric' // Hiển thị đầy đủ năm (vd: 2026)
+                    });
+                } else if (view == 'month') {
+                    dinhDangVN = hienTai.toLocaleDateString('vi-VN', {
+                        month: '2-digit', // Hiển thị tháng 2 chữ số (vd: 11)
+                        year: 'numeric' // Hiển thị đầy đủ năm (vd: 2026)
+                    });
+                }
                 return dinhDangVN;
             }
         },
